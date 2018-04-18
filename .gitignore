@@ -18,3 +18,12 @@ win7x64_vs12/pilo.v12.suo
 *.idb
 *.pdb
 *.o
+linuxx64_gcc/tmp/test-libpilocore/out/Debug_Static/test-libpilocore_gcc4.8_x64_Debug_Static
+output/bin/perf-libpilocore_vs12_x64_Release_Static.exe
+output/bin/test-libpilocore_gcc4.8_x64_Debug_Static
+output/bin/perf-libpilocore_vs12_x64_Release_Static.exe
+output/lib/libpilocore_gcc4.8_x64_Debug_Static.a
+output/lib/libpilocore_vs12_x64_Release_Static.lib
+output/bin/perf-libpilocore_vs12_x64_Release_Static.exe
+output/bin/perf-libpilocore_vs12_x64_Release_Static.exe
+output/lib/libpilocore_vs12_x64_Release_Static.lib
