@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="pilo">
+      <UniqueIdentifier>{c206a3d1-e65a-47b6-8b82-76fadfc96602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core">
+      <UniqueIdentifier>{3ab75130-3199-4af9-a924-afd85bb1f58e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\container">
+      <UniqueIdentifier>{c6e1d576-ace9-4194-aedd-02b263ffb0c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\datetime">
+      <UniqueIdentifier>{39e8e0e7-ae50-476a-9a9e-5978e052cef3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\fs">
+      <UniqueIdentifier>{299a3199-b655-4ae9-b85a-0c826cd92dd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\io">
+      <UniqueIdentifier>{7a0a81ca-84f2-4cf2-996c-c776705a379a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\memory">
+      <UniqueIdentifier>{16fdffac-c9dc-4692-a811-3308e231cc71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\string">
+      <UniqueIdentifier>{d110535c-d6d2-473e-a50d-001162deeeaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\threading">
+      <UniqueIdentifier>{c41b346b-3ac7-4031-86ff-e0fe3c2d8640}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pilo\main.cpp">
+      <Filter>pilo</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\testing_module.cpp">
+      <Filter>pilo</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\container\functional_test_module_class_fixed_array.cpp">
+      <Filter>pilo\core\container</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\container\functional_test_module_class_fixed_bin_heap.cpp">
+      <Filter>pilo\core\container</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\container\functional_test_module_class_singly_linked_selflist.cpp">
+      <Filter>pilo\core\container</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\datetime\functional_test_module_class_datetime.cpp">
+      <Filter>pilo\core\datetime</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\fs\functional_test_module_fs_util.cpp">
+      <Filter>pilo\core\fs</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\io\functional_test_module_class_fixed_memory_stream.cpp">
+      <Filter>pilo\core\io</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_compactable_memory_pool.cpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_compactable_overlapped_memory_pool.cpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_dynamic_buffer.cpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_io_buffer.cpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_memory_pool.cpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_overlapped_memory_pool.cpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_portable_object_pool.cpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\memory\presure_test_portable_object_pool.cpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\string\functional_test_module_class_auto_astring.cpp">
+      <Filter>pilo\core\string</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\string\functional_test_module_class_dynamic_astring..cpp">
+      <Filter>pilo\core\string</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\string\functional_test_module_class_fixed_astring.cpp">
+      <Filter>pilo\core\string</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\string\functional_test_module_class_fixed_wstring.cpp">
+      <Filter>pilo\core\string</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\string\functional_test_module_class_string_util.cpp">
+      <Filter>pilo\core\string</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\threading\functional_test_module_class_basic_thread.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\threading\functional_test_module_class_nonrecursive_mutex.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\threading\functional_test_module_class_nonrecursive_timed_mutex.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\threading\functional_test_module_class_recursive_mutex.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\threading\functional_test_module_class_recursive_timed_mutex.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\fs\functional_test_module_file.cpp">
+      <Filter>pilo\core\fs</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pilo\pilo_test.hpp">
+      <Filter>pilo</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\sample_data.hpp">
+      <Filter>pilo</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\testing_module.hpp">
+      <Filter>pilo</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\container\functional_test_module_class_fixed_array.hpp">
+      <Filter>pilo\core\container</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\container\functional_test_module_class_fixed_bin_heap.hpp">
+      <Filter>pilo\core\container</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\container\functional_test_module_class_singly_linked_selflist.hpp">
+      <Filter>pilo\core\container</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\datetime\functional_test_module_class_datetime.hpp">
+      <Filter>pilo\core\datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\fs\functional_test_module_fs_util.hpp">
+      <Filter>pilo\core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\io\functional_test_module_class_fixed_memory_stream.hpp">
+      <Filter>pilo\core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_compactable_memory_pool.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_compactable_overlapped_memory_pool.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_dynamic_buffer.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_io_buffer.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_memory_pool.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_overlapped_memory_pool.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_portable_object_pool.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\memory\presure_test.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\memory\presure_test_portable_object_pool.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\string\functional_test_module_class_auto_astring.hpp">
+      <Filter>pilo\core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\string\functional_test_module_class_dynamic_astring.hpp">
+      <Filter>pilo\core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\string\functional_test_module_class_fixed_astring.hpp">
+      <Filter>pilo\core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\string\functional_test_module_class_fixed_wstring.hpp">
+      <Filter>pilo\core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\string\functional_test_module_class_string_util.hpp">
+      <Filter>pilo\core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\threading\functional_test_module_class_basic_thread.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\threading\functional_test_module_class_nonrecursive_mutex.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\threading\functional_test_module_class_nonrecursive_timed_mutex.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\threading\functional_test_module_class_recursive_mutex.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\threading\functional_test_module_class_recursive_timed_mutex.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\threading\functional_test_modules_threading_common.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\fs\functional_test_module_file.hpp">
+      <Filter>pilo\core\fs</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

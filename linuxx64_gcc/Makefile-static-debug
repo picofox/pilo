@@ -22,7 +22,7 @@ LIBS += -L$(PILO_OUTPUT_LIB_DIR) -l$(LibCoreName)
 
 CPPFLAGS += $(INCLUDES)
 
-VPATH = $(CoreSrcDir):$(CoreSrcDir)/core:$(CoreSrcDir)/core/dll:$(CoreSrcDir)/core/fs:$(CoreSrcDir)/core/datetime:$(CoreSrcDir)/core/io:$(CoreSrcDir)/core/string:$(CoreSrcDir)/core/threading:$(CoreSrcDir)/core/debug/heap:$(CoreSrcDir)/core/net:$(CoreSrcDir)/core/pattern:$(CoreSrcDir)/core/random:$(CoreSrcDir)/core/info:$(CoreSrcDir)/core/process
+VPATH = $(CoreSrcDir):$(CoreSrcDir)/core:$(CoreSrcDir)/core/dll:$(CoreSrcDir)/core/fs:$(CoreSrcDir)/core/datetime:$(CoreSrcDir)/core/io:$(CoreSrcDir)/core/string:$(CoreSrcDir)/core/threading:$(CoreSrcDir)/core/debug:$(CoreSrcDir)/core/net:$(CoreSrcDir)/core/pattern:$(CoreSrcDir)/core/random:$(CoreSrcDir)/core/info:$(CoreSrcDir)/core/process
 
 core : $(CoreObjects) 
 	@if [ ! -d $(TmpCoreBuildDir_DebugStatic) ] ; \

@@ -123,9 +123,6 @@
     <ClInclude Include="pilo\core\fs\fs_util.hpp">
       <Filter>pilo\core\fs</Filter>
     </ClInclude>
-    <ClInclude Include="pilo\core\fs\io_device.hpp">
-      <Filter>pilo\core\fs</Filter>
-    </ClInclude>
     <ClInclude Include="pilo\core\info\cpu.hpp">
       <Filter>pilo\core\info</Filter>
     </ClInclude>
@@ -312,11 +309,14 @@
     <ClInclude Include="pilo\core\pattern\lazy_singletion_mts.hpp">
       <Filter>pilo\core\pattern</Filter>
     </ClInclude>
-    <ClInclude Include="pilo\core\io\file.hpp">
-      <Filter>pilo\core\io</Filter>
-    </ClInclude>
     <ClInclude Include="pilo\core\debug\debug_new.hpp">
       <Filter>pilo\core\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\fs\file.hpp">
+      <Filter>pilo\core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\fs\io_device.hpp">
+      <Filter>pilo\core\fs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -17,3 +17,4 @@ win7x64_vs12/pilo.v12.suo
 *.log
 *.idb
 *.pdb
+*.o

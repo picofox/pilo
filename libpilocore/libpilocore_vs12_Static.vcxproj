@@ -30,7 +30,7 @@
     <ClInclude Include="pilo\core\dll\dynamic_link_library.hpp" />
     <ClInclude Include="pilo\core\fs\async_directory_changer_handler.hpp" />
     <ClInclude Include="pilo\core\fs\directory_change_monitor.hpp" />
-    <ClInclude Include="pilo\core\io\file.hpp" />
+    <ClInclude Include="pilo\core\fs\file.hpp" />
     <ClInclude Include="pilo\core\fs\fs_util.hpp" />
     <ClInclude Include="pilo\core\fs\io_device.hpp" />
     <ClInclude Include="pilo\core\info\cpu.hpp" />
