@@ -26,7 +26,7 @@
     <ClInclude Include="pilo\core\container\singly_linked_selflist.hpp" />
     <ClInclude Include="pilo\core\coredefs.hpp" />
     <ClInclude Include="pilo\core\datetime\datetime.hpp" />
-    <ClInclude Include="pilo\core\debug\heap\debug_new.hpp" />
+    <ClInclude Include="pilo\core\debug\debug_new.hpp" />
     <ClInclude Include="pilo\core\dll\dynamic_link_library.hpp" />
     <ClInclude Include="pilo\core\fs\async_directory_changer_handler.hpp" />
     <ClInclude Include="pilo\core\fs\directory_change_monitor.hpp" />
@@ -108,7 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pilo\core\datetime\datetime.cpp" />
-    <ClCompile Include="pilo\core\debug\heap\debug_new.cpp" />
+    <ClCompile Include="pilo\core\debug\debug_new.cpp" />
     <ClCompile Include="pilo\core\dll\dynamic_link_library.cpp" />
     <ClCompile Include="pilo\core\fs\directory_change_monitor.cpp" />
     <ClCompile Include="pilo\core\fs\fs_util.cpp" />
@@ -307,7 +307,6 @@ if not exist $(ProjectDir)..\output\include\core\fs md $(ProjectDir)..\output\in
 if not exist $(ProjectDir)..\output\include\core\process md $(ProjectDir)..\output\include\core\process
 if not exist $(ProjectDir)..\output\include\core\dll md $(ProjectDir)..\output\include\core\dll
 if not exist $(ProjectDir)..\output\include\core\debug md $(ProjectDir)..\output\include\core\debug
-if not exist $(ProjectDir)..\output\include\core\debug\heap md $(ProjectDir)..\output\include\core\debug\heap
 if not exist $(ProjectDir)..\output\include\core\random md $(ProjectDir)..\output\include\core\random
 if not exist $(ProjectDir)..\output\include\core\pattern md $(ProjectDir)..\output\include\core\pattern
 copy /Y pilo\sysdef.hpp $(ProjectDir)..\output\include\sysdef.hpp
@@ -359,7 +358,7 @@ copy /Y pilo\core\fs\io_device.hpp $(ProjectDir)..\output\include\core\fs\io_dev
 copy /Y pilo\core\fs\directory_change_monitor.hpp $(ProjectDir)..\output\include\core\fs\directory_change_monitor.hpp
 copy /Y pilo\core\process\*.hpp $(ProjectDir)..\output\include\core\process
 copy /Y pilo\core\dll\*.hpp $(ProjectDir)..\output\include\core\dll
-copy /Y pilo\core\debug\heap\debug_new.hpp $(ProjectDir)..\output\include\core\debug\heap\debug_new.hpp
+copy /Y pilo\core\debug\debug_new.hpp $(ProjectDir)..\output\include\core\debug\debug_new.hpp
 copy /Y pilo\core\random\simple_random.hpp $(ProjectDir)..\output\include\core\random\simple_random.hpp
 copy /Y pilo\core\pattern\lazy_singletion_mts.hpp $(ProjectDir)..\output\include\core\pattern\lazy_singletion_mts.hpp</Command>
     </PostBuildEvent>
@@ -388,6 +387,7 @@ copy /Y pilo\core\pattern\lazy_singletion_mts.hpp $(ProjectDir)..\output\include
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)pilo</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

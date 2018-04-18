@@ -58,9 +58,6 @@
     <Filter Include="pilo\core\threading">
       <UniqueIdentifier>{5a7c9905-b985-4fc3-8e96-1937fba70c5f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pilo\core\debug\heap">
-      <UniqueIdentifier>{dd13e9d4-725c-4544-b8d7-abfcd08df9eb}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pilo\compat.hpp">
@@ -315,11 +312,11 @@
     <ClInclude Include="pilo\core\pattern\lazy_singletion_mts.hpp">
       <Filter>pilo\core\pattern</Filter>
     </ClInclude>
-    <ClInclude Include="pilo\core\debug\heap\debug_new.hpp">
-      <Filter>pilo\core\debug\heap</Filter>
-    </ClInclude>
     <ClInclude Include="pilo\core\io\file.hpp">
       <Filter>pilo\core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\debug\debug_new.hpp">
+      <Filter>pilo\core\debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -404,8 +401,8 @@
     <ClCompile Include="pilo\core\process\process_util.cpp">
       <Filter>pilo\core\process</Filter>
     </ClCompile>
-    <ClCompile Include="pilo\core\debug\heap\debug_new.cpp">
-      <Filter>pilo\core\debug\heap</Filter>
+    <ClCompile Include="pilo\core\debug\debug_new.cpp">
+      <Filter>pilo\core\debug</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
