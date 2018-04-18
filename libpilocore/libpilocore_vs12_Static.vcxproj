@@ -18,6 +18,124 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pilo\compat.hpp" />
+    <ClInclude Include="pilo\core\container\fixed_array.hpp" />
+    <ClInclude Include="pilo\core\container\fixed_bin_heap.hpp" />
+    <ClInclude Include="pilo\core\container\fixed_bitset.hpp" />
+    <ClInclude Include="pilo\core\container\singly_linked_selflist.hpp" />
+    <ClInclude Include="pilo\core\coredefs.hpp" />
+    <ClInclude Include="pilo\core\datetime\datetime.hpp" />
+    <ClInclude Include="pilo\core\debug\heap\debug_new.hpp" />
+    <ClInclude Include="pilo\core\dll\dynamic_link_library.hpp" />
+    <ClInclude Include="pilo\core\fs\async_directory_changer_handler.hpp" />
+    <ClInclude Include="pilo\core\fs\directory_change_monitor.hpp" />
+    <ClInclude Include="pilo\core\io\file.hpp" />
+    <ClInclude Include="pilo\core\fs\fs_util.hpp" />
+    <ClInclude Include="pilo\core\fs\io_device.hpp" />
+    <ClInclude Include="pilo\core\info\cpu.hpp" />
+    <ClInclude Include="pilo\core\io\fixed_memory_istream.hpp" />
+    <ClInclude Include="pilo\core\io\fixed_memory_ostream.hpp" />
+    <ClInclude Include="pilo\core\io\format_output.hpp" />
+    <ClInclude Include="pilo\core\io\istream_interface.hpp" />
+    <ClInclude Include="pilo\core\io\memory_istream_adapter.hpp" />
+    <ClInclude Include="pilo\core\io\memory_ostream_adapter.hpp" />
+    <ClInclude Include="pilo\core\io\ostream_interface.hpp" />
+    <ClInclude Include="pilo\core\log\syncronizedlocaltextlog.h" />
+    <ClInclude Include="pilo\core\memory\autoreset_object_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\compactable_autoreset_object_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\compactable_memory_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\compactable_object_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\compactable_overlapped_memory_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\dynamic_buffer.hpp" />
+    <ClInclude Include="pilo\core\memory\dynamic_object_ring_buffer.hpp" />
+    <ClInclude Include="pilo\core\memory\dynamic_overlapped_memory_piece.hpp" />
+    <ClInclude Include="pilo\core\memory\fixed_buffer.hpp" />
+    <ClInclude Include="pilo\core\memory\fixed_memory_piece.hpp" />
+    <ClInclude Include="pilo\core\memory\fixed_overlapped_memory_piece.hpp" />
+    <ClInclude Include="pilo\core\memory\heap_memory_allocator.hpp" />
+    <ClInclude Include="pilo\core\memory\io_buffer.hpp" />
+    <ClInclude Include="pilo\core\memory\memory.hpp" />
+    <ClInclude Include="pilo\core\memory\memory_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\object_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\overlapped_memory_pool.hpp" />
+    <ClInclude Include="pilo\core\net\basic_socket.hpp" />
+    <ClInclude Include="pilo\core\net\basic_socket_server.hpp" />
+    <ClInclude Include="pilo\core\net\initiative_tcp_socket.hpp" />
+    <ClInclude Include="pilo\core\net\iocp_socket.hpp" />
+    <ClInclude Include="pilo\core\net\iocp_socket_server.hpp" />
+    <ClInclude Include="pilo\core\net\iocp_tcp_listen_socket.hpp" />
+    <ClInclude Include="pilo\core\net\iocp_tcp_socket.hpp" />
+    <ClInclude Include="pilo\core\net\iocp_udp_socket.hpp" />
+    <ClInclude Include="pilo\core\net\ipv4_address.hpp" />
+    <ClInclude Include="pilo\core\net\ipv4_mask.hpp" />
+    <ClInclude Include="pilo\core\net\net_sys_header.hpp" />
+    <ClInclude Include="pilo\core\net\passive_tcp_socket.hpp" />
+    <ClInclude Include="pilo\core\net\socket_platform.hpp" />
+    <ClInclude Include="pilo\core\net\tcp_socket_buffer.hpp" />
+    <ClInclude Include="pilo\core\parameter.hpp" />
+    <ClInclude Include="pilo\core\pattern\lazy_singletion_mts.hpp" />
+    <ClInclude Include="pilo\core\process\process.hpp" />
+    <ClInclude Include="pilo\core\process\process_util.hpp" />
+    <ClInclude Include="pilo\core\random\simple_random.hpp" />
+    <ClInclude Include="pilo\core\string\auto_astring.hpp" />
+    <ClInclude Include="pilo\core\string\dynamic_astring.hpp" />
+    <ClInclude Include="pilo\core\string\fixed_astring.hpp" />
+    <ClInclude Include="pilo\core\string\fixed_wstring.hpp" />
+    <ClInclude Include="pilo\core\string\string_util.hpp" />
+    <ClInclude Include="pilo\core\threading\advanced_mutex_locker.hpp" />
+    <ClInclude Include="pilo\core\threading\atomic.hpp" />
+    <ClInclude Include="pilo\core\threading\basic_thread.hpp" />
+    <ClInclude Include="pilo\core\threading\dummy_mutex.hpp" />
+    <ClInclude Include="pilo\core\threading\dummy_read_write_lock.hpp" />
+    <ClInclude Include="pilo\core\threading\mutex_locker.hpp" />
+    <ClInclude Include="pilo\core\threading\nonrecursive_mutex.hpp" />
+    <ClInclude Include="pilo\core\threading\nonrecursive_timed_mutex.hpp" />
+    <ClInclude Include="pilo\core\threading\read_write_lock.hpp" />
+    <ClInclude Include="pilo\core\threading\recursive_mutex.hpp" />
+    <ClInclude Include="pilo\core\threading\recursive_timed_mutex.hpp" />
+    <ClInclude Include="pilo\core\threading\sync_condition_variable_any.hpp" />
+    <ClInclude Include="pilo\core\threading\win_interlocked.hpp" />
+    <ClInclude Include="pilo\error.hpp" />
+    <ClInclude Include="pilo\lang_feature.hpp" />
+    <ClInclude Include="pilo\sysdef.hpp" />
+    <ClInclude Include="pilo\topics\path_finding\astar_2d_behaviour.hpp" />
+    <ClInclude Include="pilo\topics\path_finding\astar_2d_fixed_bin_heap_opened_list.hpp" />
+    <ClInclude Include="pilo\topics\path_finding\astar_2d_path_finder.hpp" />
+    <ClInclude Include="pilo\topics\path_finding\astar_2d_priority_opened_list.hpp" />
+    <ClInclude Include="pilo\topics\path_finding\path_2d_map.hpp" />
+    <ClInclude Include="pilo\types.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pilo\core\datetime\datetime.cpp" />
+    <ClCompile Include="pilo\core\debug\heap\debug_new.cpp" />
+    <ClCompile Include="pilo\core\dll\dynamic_link_library.cpp" />
+    <ClCompile Include="pilo\core\fs\directory_change_monitor.cpp" />
+    <ClCompile Include="pilo\core\fs\fs_util.cpp" />
+    <ClCompile Include="pilo\core\info\cpu.cpp" />
+    <ClCompile Include="pilo\core\io\format_output.cpp" />
+    <ClCompile Include="pilo\core\net\basic_socket.cpp" />
+    <ClCompile Include="pilo\core\net\initiative_tcp_socket.cpp" />
+    <ClCompile Include="pilo\core\net\iocp_socket.cpp" />
+    <ClCompile Include="pilo\core\net\iocp_socket_server.cpp" />
+    <ClCompile Include="pilo\core\net\iocp_tcp_listen_socket.cpp" />
+    <ClCompile Include="pilo\core\net\iocp_tcp_socket.cpp" />
+    <ClCompile Include="pilo\core\net\ipv4_address.cpp" />
+    <ClCompile Include="pilo\core\net\ipv4_mask.cpp" />
+    <ClCompile Include="pilo\core\net\passive_tcp_socket.cpp" />
+    <ClCompile Include="pilo\core\net\socket_platform.cpp" />
+    <ClCompile Include="pilo\core\process\process_util.cpp" />
+    <ClCompile Include="pilo\core\random\simple_random.cpp" />
+    <ClCompile Include="pilo\core\string\dynamic_astring.cpp" />
+    <ClCompile Include="pilo\core\string\string_util.cpp" />
+    <ClCompile Include="pilo\core\threading\basic_thread.cpp" />
+    <ClCompile Include="pilo\core\threading\nonrecursive_mutex.cpp" />
+    <ClCompile Include="pilo\core\threading\nonrecursive_timed_mutex.cpp" />
+    <ClCompile Include="pilo\core\threading\read_write_lock.cpp" />
+    <ClCompile Include="pilo\core\threading\recursive_mutex.cpp" />
+    <ClCompile Include="pilo\core\threading\recursive_timed_mutex.cpp" />
+    <ClCompile Include="pilo\error.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5EF7AC64-347A-4A6B-B749-36E5ABD45F8D}</ProjectGuid>
     <RootNamespace>libpilocore</RootNamespace>
@@ -170,6 +288,7 @@ copy /Y pilo\core\pattern\lazy_singletion_mts.hpp $(ProjectDir)..\output\include
       <AdditionalIncludeDirectories>$(ProjectDir)pilo</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>_PILO_DEBUG_HEAP;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -346,152 +465,6 @@ copy /Y pilo\core\random\simple_random.hpp $(ProjectDir)..\output\include\core\r
 copy /Y pilo\core\pattern\lazy_singletion_mts.hpp $(ProjectDir)..\output\include\core\pattern\lazy_singletion_mts.hpp</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="pilo\core\container\fixed_array.hpp" />
-    <ClInclude Include="pilo\core\container\fixed_bin_heap.hpp" />
-    <ClInclude Include="pilo\core\container\fixed_bitset.hpp" />
-    <ClInclude Include="pilo\core\container\singly_linked_selflist.hpp" />
-    <ClInclude Include="pilo\core\debug\heap\debug_new.hpp" />
-    <ClInclude Include="pilo\core\dll\dynamic_link_library.hpp" />
-    <ClInclude Include="pilo\core\fs\async_directory_changer_handler.hpp" />
-    <ClInclude Include="pilo\core\fs\directory_change_monitor.hpp" />
-    <ClInclude Include="pilo\core\fs\file.hpp" />
-    <ClInclude Include="pilo\core\fs\fs_util.hpp" />
-    <ClInclude Include="pilo\core\info\cpu.hpp" />
-    <ClInclude Include="pilo\core\io\fixed_memory_istream.hpp" />
-    <ClInclude Include="pilo\core\io\fixed_memory_ostream.hpp" />
-    <ClInclude Include="pilo\core\fs\io_device.hpp" />
-    <ClInclude Include="pilo\core\io\istream_interface.hpp" />
-    <ClInclude Include="pilo\core\io\memory_iostream.hpp" />
-    <ClInclude Include="pilo\core\io\iostream_interface.hpp" />
-    <ClInclude Include="pilo\core\io\memory_istream_adapter.hpp" />
-    <ClInclude Include="pilo\core\io\memory_ostream_adapter.hpp" />
-    <ClInclude Include="pilo\core\io\ostream_interface.hpp" />
-    <ClInclude Include="pilo\core\memory\autoreset_object_pool.hpp" />
-    <ClInclude Include="pilo\core\memory\compactable_autoreset_object_pool.hpp" />
-    <ClInclude Include="pilo\core\memory\compactable_memory_pool.hpp" />
-    <ClInclude Include="pilo\core\memory\compactable_object_pool.hpp" />
-    <ClInclude Include="pilo\core\memory\compactable_overlapped_memory_pool.hpp" />
-    <ClInclude Include="pilo\core\memory\dynamic_buffer.hpp" />
-    <ClInclude Include="pilo\core\memory\dynamic_overlapped_memory_piece.hpp" />
-    <ClInclude Include="pilo\core\memory\fixed_buffer.hpp" />
-    <ClInclude Include="pilo\core\memory\fixed_memory_piece.hpp" />
-    <ClInclude Include="pilo\core\memory\dynamic_object_ring_buffer.hpp" />
-    <ClInclude Include="pilo\core\memory\heap_memory_allocator.hpp" />
-    <ClInclude Include="pilo\core\memory\io_buffer.hpp" />
-    <ClInclude Include="pilo\core\memory\memory.hpp" />
-    <ClInclude Include="pilo\core\memory\fixed_overlapped_memory_piece.hpp" />
-    <ClInclude Include="pilo\core\memory\memory_pool.hpp" />
-    <ClInclude Include="pilo\core\memory\object_pool.hpp" />
-    <ClInclude Include="pilo\core\memory\overlapped_memory_pool.hpp" />
-    <ClInclude Include="pilo\core\net\basic_socket.hpp" />
-    <ClInclude Include="pilo\core\net\basic_socket_server.hpp" />
-    <ClInclude Include="pilo\core\net\epoll_socket.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="pilo\core\net\epoll_socket_server.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="pilo\core\net\epoll_tcp_listen_socket.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="pilo\core\net\epoll_tcp_socket.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="pilo\core\net\epoll_udp_socket.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="pilo\core\net\initiative_tcp_socket.hpp" />
-    <ClInclude Include="pilo\core\net\iocp_socket.hpp" />
-    <ClInclude Include="pilo\core\net\iocp_socket_server.hpp" />
-    <ClInclude Include="pilo\core\net\iocp_tcp_listen_socket.hpp" />
-    <ClInclude Include="pilo\core\net\iocp_tcp_socket.hpp" />
-    <ClInclude Include="pilo\core\net\iocp_udp_socket.hpp" />
-    <ClInclude Include="pilo\core\net\ipv4_address.hpp" />
-    <ClInclude Include="pilo\core\net\net_sys_header.hpp" />
-    <ClInclude Include="pilo\core\net\ipv4_mask.hpp" />
-    <ClInclude Include="pilo\core\net\passive_tcp_socket.hpp" />
-    <ClInclude Include="pilo\core\net\socket_platform.hpp" />
-    <ClInclude Include="pilo\core\net\tcp_socket_buffer.hpp" />
-    <ClInclude Include="pilo\core\pattern\lazy_singletion_mts.hpp" />
-    <ClInclude Include="pilo\core\process\process.hpp" />
-    <ClInclude Include="pilo\core\process\process_util.hpp" />
-    <ClInclude Include="pilo\core\random\simple_random.hpp" />
-    <ClInclude Include="pilo\core\string\auto_astring.hpp" />
-    <ClInclude Include="pilo\core\string\dynamic_astring.hpp" />
-    <ClInclude Include="pilo\core\threading\advanced_mutex_locker.hpp" />
-    <ClInclude Include="pilo\core\threading\atomic.hpp" />
-    <ClInclude Include="pilo\core\datetime\datetime.hpp" />
-    <ClInclude Include="pilo\core\threading\dummy_read_write_lock.hpp" />
-    <ClInclude Include="pilo\core\threading\mutex_locker.hpp" />
-    <ClInclude Include="pilo\core\threading\basic_thread.hpp" />
-    <ClInclude Include="pilo\core\threading\nonrecursive_mutex.hpp" />
-    <ClInclude Include="pilo\compat.hpp" />
-    <ClInclude Include="pilo\core\coredefs.hpp" />
-    <ClInclude Include="pilo\core\io\format_output.hpp" />
-    <ClInclude Include="pilo\core\string\fixed_astring.hpp" />
-    <ClInclude Include="pilo\core\string\fixed_wstring.hpp" />
-    <ClInclude Include="pilo\core\string\string_util.hpp" />
-    <ClInclude Include="pilo\core\threading\dummy_mutex.hpp" />
-    <ClInclude Include="pilo\core\threading\nonrecursive_timed_mutex.hpp" />
-    <ClInclude Include="pilo\core\threading\read_write_lock.hpp" />
-    <ClInclude Include="pilo\core\threading\recursive_mutex.hpp" />
-    <ClInclude Include="pilo\core\threading\recursive_timed_mutex.hpp" />
-    <ClInclude Include="pilo\core\threading\sync_condition_variable_any.hpp" />
-    <ClInclude Include="pilo\core\threading\win_interlocked.hpp" />
-    <ClInclude Include="pilo\error.hpp" />
-    <ClInclude Include="pilo\core\parameter.hpp" />
-    <ClInclude Include="pilo\lang_feature.hpp" />
-    <ClInclude Include="pilo\sysdef.hpp" />
-    <ClInclude Include="pilo\topics\path_finding\astar_2d_behaviour.hpp" />
-    <ClInclude Include="pilo\topics\path_finding\astar_2d_fixed_bin_heap_opened_list.hpp" />
-    <ClInclude Include="pilo\topics\path_finding\astar_2d_path_finder.hpp" />
-    <ClInclude Include="pilo\topics\path_finding\astar_2d_priority_opened_list.hpp" />
-    <ClInclude Include="pilo\topics\path_finding\path_2d_map.hpp" />
-    <ClInclude Include="pilo\types.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="pilo\core\datetime\datetime.cpp" />
-    <ClCompile Include="pilo\core\debug\heap\debug_new.cpp" />
-    <ClCompile Include="pilo\core\dll\dynamic_link_library.cpp" />
-    <ClCompile Include="pilo\core\fs\directory_change_monitor.cpp" />
-    <ClCompile Include="pilo\core\fs\fs_util.cpp" />
-    <ClCompile Include="pilo\core\info\cpu.cpp" />
-    <ClCompile Include="pilo\core\net\basic_socket.cpp" />
-    <ClCompile Include="pilo\core\net\epoll_socket.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="pilo\core\net\epoll_socket_server.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="pilo\core\net\epoll_tcp_listen_socket.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="pilo\core\net\epoll_tcp_socket.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="pilo\core\net\initiative_tcp_socket.cpp" />
-    <ClCompile Include="pilo\core\net\iocp_socket.cpp" />
-    <ClCompile Include="pilo\core\net\iocp_socket_server.cpp" />
-    <ClCompile Include="pilo\core\net\iocp_tcp_listen_socket.cpp" />
-    <ClCompile Include="pilo\core\net\iocp_tcp_socket.cpp" />
-    <ClCompile Include="pilo\core\net\ipv4_address.cpp" />
-    <ClCompile Include="pilo\core\net\ipv4_mask.cpp" />
-    <ClCompile Include="pilo\core\net\passive_tcp_socket.cpp" />
-    <ClCompile Include="pilo\core\net\socket_platform.cpp" />
-    <ClCompile Include="pilo\core\process\process_util.cpp" />
-    <ClCompile Include="pilo\core\random\simple_random.cpp" />
-    <ClCompile Include="pilo\core\string\dynamic_astring.cpp" />
-    <ClCompile Include="pilo\core\threading\basic_thread.cpp" />
-    <ClCompile Include="pilo\core\threading\nonrecursive_mutex.cpp" />
-    <ClCompile Include="pilo\core\io\format_output.cpp" />
-    <ClCompile Include="pilo\core\string\string_util.cpp" />
-    <ClCompile Include="pilo\core\threading\nonrecursive_timed_mutex.cpp" />
-    <ClCompile Include="pilo\core\threading\read_write_lock.cpp" />
-    <ClCompile Include="pilo\core\threading\recursive_mutex.cpp" />
-    <ClCompile Include="pilo\core\threading\recursive_timed_mutex.cpp" />
-    <ClCompile Include="pilo\error.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

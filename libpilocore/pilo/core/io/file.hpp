@@ -13,7 +13,7 @@ namespace pilo
 {
     namespace core
     {
-        namespace fs
+        namespace io
         {   
             template<   
                 size_t _PathCapacity,
