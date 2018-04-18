@@ -1,0 +1,149 @@
+include Makefile.inc
+
+#Makefile-static-release
+
+
+CONF_NAME=Release
+CPPFLAGS += -ggdb -O2
+LDFLAGS += -O2	
+
+LibCoreName = pilocore_gcc$(GCC_VER_MAJOR).$(GCC_VER_MINOR)_$(PLATFORM_NAME)_$(CONF_NAME)_Static
+LibCoreStatic = lib$(LibCoreName).a
+
+CoreSources := $(shell find -P $(CoreSrcDir) -name "*.cpp" -exec basename {} \;)
+CoreObjects := $(CoreSources:.cpp=.o)
+CoreDepends := $(CoreObjects:.o=.d)
+
+TmpCoreBuildDir_ReleaseStatic = $(TmpCoreBuildDir)/Release_Static
+TmpCoreOutDir_ReleaseStatic = $(TmpCoreOutDir)/Release_Static
+TmpCoreTestOutDir_ReleaseStatic = $(TmpCoreTestOutDir)/Release_Static/
+
+LIBS += -L$(PILO_OUTPUT_LIB_DIR) -l$(LibCoreName) 
+
+CPPFLAGS += $(INCLUDES)
+
+VPATH = $(CoreSrcDir):$(CoreSrcDir)/core:$(CoreSrcDir)/core/dll:$(CoreSrcDir)/core/fs:$(CoreSrcDir)/core/datetime:$(CoreSrcDir)/core/io:$(CoreSrcDir)/core/string:$(CoreSrcDir)/core/threading:$(CoreSrcDir)/core/debug/heap:$(CoreSrcDir)/core/net:$(CoreSrcDir)/core/pattern:$(CoreSrcDir)/core/random:$(CoreSrcDir)/core/info:$(CoreSrcDir)/core/process
+
+
+core : $(CoreObjects) 
+	@if [ ! -d $(TmpCoreBuildDir_ReleaseStatic) ] ; \
+        then \
+                echo "Creating build tmp dir -> $(TmpCoreBuildDir_ReleaseStatic) ..."; \
+		$(MKDIR) -p $(TmpCoreBuildDir_ReleaseStatic); \
+	fi
+	@if [ ! -d $(TmpCoreOutDir_ReleaseStatic) ] ; \
+        then \
+                echo "Creating output tmp dir -> $(TmpCoreOutDir_ReleaseStatic) ..."; \
+                $(MKDIR) -p $(TmpCoreOutDir_ReleaseStatic); \
+        fi
+
+
+	$(AR) -rv $(TmpCoreOutDir_ReleaseStatic)/$(LibCoreStatic)  $^
+
+depend : $(CoreDepends)
+$(CoreDepends): %.d:%.cpp
+	@set -e; rm -f $@; \
+	$(CC) -MM $(CPPFLAGS) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+
+sinclude $(CoreDepends)
+
+debug:
+	echo $(PILO_OUTPUT_LIB_DIR)/$(LibCoreStatic);
+
+clean : 
+	echo $(PILO_DIR)
+	rm -f *.d
+	rm -f *.d.*
+	rm -f *.o
+	$(RM) -f $(CoreObjects)
+	$(RM) -f $(TmpCoreOutDir_ReleaseStatic)/*
+	$(RM) -f $(TmpCoreOutDir_ReleaseStatic)/lib/$(LibCoreStatic)
+	$(RM) -f $(TmpCoreTestOutDir_ReleaseStatic)/*
+
+
+install :
+	$(INSTALL) -D $(TmpCoreOutDir_ReleaseStatic)/$(LibCoreStatic) $(PILO_OUTPUT_LIB_DIR)
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR) ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR); \
+        fi
+	$(INSTALL) $(CoreSrcDir)/*.hpp $(PILO_OUTPUT_INC_DIR)
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core; \
+        fi
+	$(INSTALL) $(CoreSrcDir)/core/*.hpp $(PILO_OUTPUT_INC_DIR)/core
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/datetime ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/datetime; \
+        fi
+	$(INSTALL) $(CoreSrcDir)/core/datetime/*.hpp $(PILO_OUTPUT_INC_DIR)/core/datetime
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/string ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/string; \
+        fi
+	$(INSTALL) $(CoreSrcDir)/core/string/*.hpp $(PILO_OUTPUT_INC_DIR)/core/string
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/io ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/io; \
+        fi
+	$(INSTALL) $(CoreSrcDir)/core/io/*.hpp $(PILO_OUTPUT_INC_DIR)/core/io
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/threading ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/threading; \
+        fi
+	$(INSTALL) $(CoreSrcDir)/core/threading/*.hpp $(PILO_OUTPUT_INC_DIR)/core/threading
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/memory ] ; \
+	then \
+		$(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/memory; \
+	fi
+	$(INSTALL) $(CoreSrcDir)/core/memory/*.hpp $(PILO_OUTPUT_INC_DIR)/core/memory
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/container ] ; \
+	then \
+	$(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/container; \
+	fi
+	$(INSTALL) $(CoreSrcDir)/core/container/*.hpp $(PILO_OUTPUT_INC_DIR)/core/container
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIRa/core/fs) ] ; \
+	then \
+		$(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/fs; \
+	fi
+	$(INSTALL) $(CoreSrcDir)/core/fs/*.hpp $(PILO_OUTPUT_INC_DIR)/core/fs
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIRa/core/process) ] ; \
+	then \
+		$(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/process; \
+	fi
+	$(INSTALL) $(CoreSrcDir)/core/process/*.hpp $(PILO_OUTPUT_INC_DIR)/core/process
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIRa/core/random) ] ; \
+	then \
+		$(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/random; \
+	fi
+	$(INSTALL) $(CoreSrcDir)/core/random/*.hpp $(PILO_OUTPUT_INC_DIR)/core/random
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIRa/pattern/random) ] ; \
+	then \
+		$(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/pattern; \
+	fi
+	$(INSTALL) $(CoreSrcDir)/core/pattern/*.hpp $(PILO_OUTPUT_INC_DIR)/core/pattern
+
+uninstall :
+	@if [ -e $(PILO_OUTPUT_LIB_DIR)/$(LibCoreStatic) ] ; \
+        then \
+		$(RM) $(PILO_OUTPUT_LIB_DIR)/$(LibCoreStatic); \
+        fi
+	find $(PILO_OUTPUT_INC_DIR) -name *.hpp -exec $(RM) -f {} \;
+
+.PHONY : clean install uninstall

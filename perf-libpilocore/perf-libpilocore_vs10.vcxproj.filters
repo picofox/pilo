@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="pilo">
+      <UniqueIdentifier>{ee7bd2e0-9426-4cd2-9d15-638912b1ded0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core">
+      <UniqueIdentifier>{f085ab0c-1b0c-4d12-953d-bc07618d1de4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\datetime">
+      <UniqueIdentifier>{85f029f5-7a48-4607-baef-7ea07fd74805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\threading">
+      <UniqueIdentifier>{9425bac2-45c3-4ae7-b477-8587daa1e110}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pilo\main.cpp">
+      <Filter>pilo</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\datetime\perf_datetime_now_tick.cpp">
+      <Filter>pilo\core\datetime</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\threading\perf_nonrecursive_mutex.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\threading\perf_nonrecursive_timed_mutex.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\threading\perf_recursive_mutex.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\threading\perf_recursive_timed_mutex.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pilo\pilo_perf_common.hpp">
+      <Filter>pilo</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

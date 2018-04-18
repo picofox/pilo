@@ -1,0 +1,146 @@
+include Makefile.inc
+
+#Makefile-shared-release
+
+CONF_NAME=Release
+CPPFLAGS += -ggdb -O2
+LDFLAGS += -O2
+
+LibCoreName = pilocore_gcc$(GCC_VER_MAJOR).$(GCC_VER_MINOR)_$(PLATFORM_NAME)_$(CONF_NAME)_Shared
+LibCoreShared = lib$(LibCoreName).so
+
+CoreSources := $(shell find -P $(CoreSrcDir) -name "*.cpp" -exec basename {} \;)
+CoreObjects := $(CoreSources:.cpp=.o)
+CoreDepends := $(CoreObjects:.o=.d)
+
+CoreTestSources := $(shell find -P $(CoreTestSrcDir) -name "*.cpp" -exec basename {} \;)
+CoreTestObjects := $(CoreTestSources:.cpp=.o)
+CoreTestDepends := $(CoreTestObjects:.o=.d)
+CoreSharedTest = test-libpilocore_gcc$(GCC_VER_MAJOR).$(GCC_VER_MINOR)_$(PLATFORM_NAME)_$(CONF_NAME)_Shared
+
+TmpCoreBuildDir_ReleaseShared = $(TmpCoreBuildDir)/Release_Shared
+TmpCoreOutDir_ReleaseShared = $(TmpCoreOutDir)/Release_Shared
+TmpCoreTestOutDir_ReleaseShared = $(TmpCoreTestOutDir)/Release_Shared
+
+LIBS += -L$(PILO_OUTPUT_LIB_DIR) -l$(LibCoreName) 
+
+CPPFLAGS += $(INCLUDES)
+CPPFLAGS += -fPIC
+
+VPATH = $(CoreSrcDir):$(CoreSrcDir)/core:$(CoreSrcDir)/core/dll:$(CoreSrcDir)/core/datetime:$(CoreSrcDir)/core/io:$(CoreSrcDir)/core/string:$(CoreSrcDir)/core/threading
+VPATH += $(CoreTestSrcDir):$(CoreTestSrcDir)/core:$(CoreTestSrcDir)/core/io:$(CoreTestSrcDir)/core/string:$(CoreTestSrcDir)/core/threading:$(CoreTestSrcDir)/core/memory:$(CoreTestSrcDir)/core/container
+
+core : $(CoreObjects) 
+	@if [ ! -d $(TmpCoreBuildDir_ReleaseShared) ] ; \
+        then \
+                echo "Creating build tmp dir -> $(TmpCoreBuildDir_ReleaseShared) ..."; \
+		$(MKDIR) -p $(TmpCoreBuildDir_ReleaseShared); \
+	fi
+	@if [ ! -d $(TmpCoreOutDir_ReleaseShared) ] ; \
+        then \
+                echo "Creating output tmp dir -> $(TmpCoreOutDir_ReleaseShared) ..."; \
+                $(MKDIR) -p $(TmpCoreOutDir_ReleaseShared); \
+        fi
+	$(CC) -shared $^ -o $(TmpCoreOutDir_ReleaseShared)/$(LibCoreShared)
+
+
+coretest : $(CoreTestObjects)
+	@if [ ! -d $(TmpCoreTestOutDir_ReleaseShared) ] ; \
+        then \
+                echo "Creating build tmp dir -> $(TmpCoreTestOutDir_ReleaseShared) ..."; \
+                $(MKDIR) -p $(TmpCoreTestOutDir_ReleaseShared); \
+        fi
+	$(CC) $^ $(LDFLAGS) -o $(TmpCoreTestOutDir_ReleaseShared)/$(CoreSharedTest) $(LIBS)
+	
+
+depend : $(CoreDepends)
+$(CoreDepends): %.d:%.cpp
+	@set -e; rm -f $@; \
+	$(CC) -MM $(CPPFLAGS) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+
+sinclude $(CoreDepends)
+
+
+clean : 
+	echo $(PILO_DIR)
+	rm -f *.d
+	rm -f *.d.*
+	rm -f *.o
+	$(RM) -f $(CoreObjects)
+	$(RM) -f $(TmpCoreOutDir_ReleaseShared)/*
+	$(RM) -f $(TmpCoreOutDir_ReleaseShared)/lib/$(LibCoreShared)
+	$(RM) -f $(TmpCoreTestOutDir_ReleaseShared)/*
+
+
+install-core :
+	$(INSTALL) -D $(TmpCoreOutDir_ReleaseShared)/$(LibCoreShared) $(PILO_OUTPUT_LIB_DIR)
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR) ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR); \
+        fi
+	$(INSTALL) $(CoreSrcDir)/*.hpp $(PILO_OUTPUT_INC_DIR)
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core; \
+        fi
+	$(INSTALL) $(CoreSrcDir)/core/*.hpp $(PILO_OUTPUT_INC_DIR)/core
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/datetime ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/datetime; \
+        fi
+	$(INSTALL) $(CoreSrcDir)/core/datetime/*.hpp $(PILO_OUTPUT_INC_DIR)/core/datetime
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/string ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/string; \
+        fi
+	$(INSTALL) $(CoreSrcDir)/core/string/*.hpp $(PILO_OUTPUT_INC_DIR)/core/string
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/io ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/io; \
+        fi
+	$(INSTALL) $(CoreSrcDir)/core/io/*.hpp $(PILO_OUTPUT_INC_DIR)/core/io
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/threading ] ; \
+        then \
+                $(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/threading; \
+        fi
+	$(INSTALL) $(CoreSrcDir)/core/threading/*.hpp $(PILO_OUTPUT_INC_DIR)/core/threading
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/memory ] ; \
+	then \
+		$(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/memory; \
+	fi
+	$(INSTALL) $(CoreSrcDir)/core/memory/*.hpp $(PILO_OUTPUT_INC_DIR)/core/memory
+
+	@if [ ! -d $(PILO_OUTPUT_INC_DIR)/core/container ] ; \
+	then \
+	$(MKDIR) -p $(PILO_OUTPUT_INC_DIR)/core/container; \
+	fi
+	$(INSTALL) $(CoreSrcDir)/core/container/*.hpp $(PILO_OUTPUT_INC_DIR)/core/container
+
+install-core-test :
+	$(INSTALL) -D $(TmpCoreTestOutDir_ReleaseShared)/$(CoreSharedTest) $(PILO_OUTPUT_BIN_DIR)
+
+uninstall-core-test:
+	@if [ -e $(PILO_OUTPUT_BIN_DIR)/$(CoreSharedTest) ] ; \
+        then \
+                $(RM) $(PILO_OUTPUT_BIN_DIR)/$(CoreSharedTest); \
+        fi
+
+
+uninstall-core :
+	@if [ -e $(PILO_OUTPUT_LIB_DIR)/$(LibCoreShared) ] ; \
+        then \
+		$(RM) $(PILO_OUTPUT_LIB_DIR)/$(LibCoreShared); \
+        fi
+	find $(PILO_OUTPUT_INC_DIR) -name *.hpp -exec $(RM) -f {} \;
+
+.PHONY : cleancore install-core uninstall-core

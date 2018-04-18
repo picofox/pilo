@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B55B5D33-F90F-4A9D-83BC-04035DF4BDE6}</ProjectGuid>
+    <RootNamespace>testlibpilocore</RootNamespace>
+    <ProjectName>test-libpilocore_vs12_Static</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)..\output\bin\</OutDir>
+    <IntDir>$(SolutionDir)tmp\$(ProjectName)\$(Platform)\$(Configuration)\$(ConfigurationType)\</IntDir>
+    <TargetName>test-libpilocore_vs12_$(PlatformName)_$(Configuration)_Static</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\output\bin\</OutDir>
+    <IntDir>$(SolutionDir)tmp\$(ProjectName)\$(Platform)\$(Configuration)\$(ConfigurationType)\</IntDir>
+    <TargetName>test-libpilocore_vs12_$(PlatformName)_$(Configuration)_Static</TargetName>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)../output/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <SDLCheck>true</SDLCheck>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>_DEBUG_MEM_OBJ_POOL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libpilocore_vs12_$(PlatformName)_$(Configuration)_Static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\output\lib\</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)../output/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\output\lib\;$(BOOST_HOME)\bin\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libpilocore_vs12_$(PlatformName)_$(Configuration)_Static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="pilo\core\container\functional_test_module_class_fixed_array.hpp" />
+    <ClInclude Include="pilo\core\container\functional_test_module_class_fixed_bin_heap.hpp" />
+    <ClInclude Include="pilo\core\container\functional_test_module_class_singly_linked_selflist.hpp" />
+    <ClInclude Include="pilo\core\datetime\functional_test_module_class_datetime.hpp" />
+    <ClInclude Include="pilo\core\fs\functional_test_module_file.hpp" />
+    <ClInclude Include="pilo\core\fs\functional_test_module_fs_util.hpp" />
+    <ClInclude Include="pilo\core\io\functional_test_module_class_fixed_memory_stream.hpp" />
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_compactable_memory_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_compactable_overlapped_memory_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_dynamic_buffer.hpp" />
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_io_buffer.hpp" />
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_memory_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_overlapped_memory_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\functional_test_module_class_portable_object_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\presure_test.hpp" />
+    <ClInclude Include="pilo\core\memory\presure_test_portable_object_pool.hpp" />
+    <ClInclude Include="pilo\core\string\functional_test_module_class_auto_astring.hpp" />
+    <ClInclude Include="pilo\core\string\functional_test_module_class_dynamic_astring.hpp" />
+    <ClInclude Include="pilo\core\string\functional_test_module_class_fixed_astring.hpp" />
+    <ClInclude Include="pilo\core\string\functional_test_module_class_fixed_wstring.hpp" />
+    <ClInclude Include="pilo\core\string\functional_test_module_class_string_util.hpp" />
+    <ClInclude Include="pilo\core\threading\functional_test_modules_threading_common.hpp" />
+    <ClInclude Include="pilo\core\threading\functional_test_module_class_basic_thread.hpp" />
+    <ClInclude Include="pilo\core\threading\functional_test_module_class_nonrecursive_mutex.hpp" />
+    <ClInclude Include="pilo\core\threading\functional_test_module_class_nonrecursive_timed_mutex.hpp" />
+    <ClInclude Include="pilo\core\threading\functional_test_module_class_recursive_mutex.hpp" />
+    <ClInclude Include="pilo\core\threading\functional_test_module_class_recursive_timed_mutex.hpp" />
+    <ClInclude Include="pilo\pilo_test.hpp" />
+    <ClInclude Include="pilo\sample_data.hpp" />
+    <ClInclude Include="pilo\testing_module.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pilo\core\container\functional_test_module_class_fixed_array.cpp" />
+    <ClCompile Include="pilo\core\container\functional_test_module_class_fixed_bin_heap.cpp" />
+    <ClCompile Include="pilo\core\container\functional_test_module_class_singly_linked_selflist.cpp" />
+    <ClCompile Include="pilo\core\datetime\functional_test_module_class_datetime.cpp" />
+    <ClCompile Include="pilo\core\fs\functional_test_module_file.cpp" />
+    <ClCompile Include="pilo\core\fs\functional_test_module_fs_util.cpp" />
+    <ClCompile Include="pilo\core\io\functional_test_module_class_fixed_memory_stream.cpp" />
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_compactable_memory_pool.cpp" />
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_compactable_overlapped_memory_pool.cpp" />
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_dynamic_buffer.cpp" />
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_io_buffer.cpp" />
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_memory_pool.cpp" />
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_overlapped_memory_pool.cpp" />
+    <ClCompile Include="pilo\core\memory\functional_test_module_class_portable_object_pool.cpp" />
+    <ClCompile Include="pilo\core\memory\presure_test_portable_object_pool.cpp" />
+    <ClCompile Include="pilo\core\string\functional_test_module_class_auto_astring.cpp" />
+    <ClCompile Include="pilo\core\string\functional_test_module_class_dynamic_astring..cpp" />
+    <ClCompile Include="pilo\core\string\functional_test_module_class_fixed_astring.cpp" />
+    <ClCompile Include="pilo\core\string\functional_test_module_class_fixed_wstring.cpp" />
+    <ClCompile Include="pilo\core\string\functional_test_module_class_string_util.cpp" />
+    <ClCompile Include="pilo\core\threading\functional_test_module_class_basic_thread.cpp" />
+    <ClCompile Include="pilo\core\threading\functional_test_module_class_nonrecursive_mutex.cpp" />
+    <ClCompile Include="pilo\core\threading\functional_test_module_class_nonrecursive_timed_mutex.cpp" />
+    <ClCompile Include="pilo\core\threading\functional_test_module_class_recursive_mutex.cpp" />
+    <ClCompile Include="pilo\core\threading\functional_test_module_class_recursive_timed_mutex.cpp" />
+    <ClCompile Include="pilo\main.cpp" />
+    <ClCompile Include="pilo\testing_module.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

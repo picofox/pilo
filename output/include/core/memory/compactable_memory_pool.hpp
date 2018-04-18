@@ -1,0 +1,215 @@
+#pragma once
+
+#include "core/threading/dummy_mutex.hpp"
+#include "core/container/singly_linked_selflist.hpp"
+#include "core/threading/mutex_locker.hpp"
+#include "core/memory/memory_pool.hpp"
+
+namespace pilo
+{
+    namespace core
+    {
+        namespace memory
+        {
+            template <  size_t _UnitSize,
+                        size_t _Step,
+                        typename _Lock = pilo::core::threading::dummy_mutex>
+            class compactable_memory_pool 
+                : public memory_pool<_UnitSize, _Step, _Lock>
+            {
+            public:
+                typedef _Lock                                   lock_type;
+                typedef memory_pool<_UnitSize, _Step, _Lock>    base_type;
+                typedef typename base_type::piece_type          piece_type;
+                typedef typename base_type::unit_node           unit_node;
+ //               typedef typename base_type::unit_type           unit_type;
+                typedef typename base_type::piece_list          piece_list;
+                typedef typename base_type::unit_list           unit_list;
+                typedef void*                                   pointer;
+                typedef const void*                             const_pointer;
+                typedef size_t                                  size_type;
+
+            protected:
+                bool m_manual_compact;
+
+
+            protected:
+                bool _need_compact_nolock() const
+                {
+                    size_type piece_count = this->piece_count_nolock();
+                    size_type free_obj_count = base_type::m_free_unit_list.size();
+                    return (piece_count > 3) && (free_obj_count / (size_t) _Step) >= (piece_count / 2);
+                }
+
+                bool _has_nolock(void* ptr) const
+                {
+                    const piece_type* piece = base_type::m_full_piece_list.begin();
+                    
+                    for (; piece != nullptr; piece = base_type::m_full_piece_list.next(piece))
+                    {
+                        if (piece->has(ptr))
+                        {
+                            return true;
+                        }
+                    }
+                    piece = base_type::m_available_piece_list.begin();
+                    for (; piece != nullptr; piece = base_type::m_available_piece_list.next(piece))
+                    {
+                        if (piece->has(ptr))
+                        {
+                            return true;
+                        }
+                    }
+                    
+                    return false;
+                }
+
+                bool _compact_piece_nolock(piece_type* piece)
+                {
+                    unit_node* u;
+                    unit_list tmp_list;
+
+                    while (u = base_type::m_free_unit_list.pop_front(), u != nullptr)
+                    {
+                        if (piece->dealloc_unit(u))
+                        {
+                            if (piece->empty())
+                            {
+                                piece->clear(); //reset this piece, set it's internal list to null
+                                while (u = tmp_list.pop_front(), u != nullptr) //restore all node that not belong to this list
+                                {
+                                    base_type::m_free_unit_list.push_back(u);
+                                }
+                                    
+                                return true;  //piece emptied
+                            }
+                        }
+                        else //not belong to this list, save it for now.
+                        {
+                            tmp_list.push_back(u);
+                        }
+                    }
+
+                    //restore those node that not belong this piece to free list.
+                    while (u = tmp_list.pop_front(), u != nullptr)
+                    {
+                        base_type::m_free_unit_list.push_back(u);
+                    }
+
+                    return false;                   
+                }
+
+                void _compact_nolock()
+                {
+                    piece_type*     piece;
+                    piece_list      tmp_list, empty_list;
+                    size_type       piece_count = piece_count_nolock();
+
+                    // full list
+                    while (piece = base_type::m_full_piece_list.pop_front(), piece != nullptr)
+                    {
+                        if (this->_compact_piece_nolock(piece))
+                        {
+                            empty_list.push_back(piece);
+                        }
+                        else if (piece->available())
+                        {
+                            base_type::m_available_piece_list.push_back(piece);
+                        }
+                        else
+                        {
+                            tmp_list.push_back(piece);
+                        }
+
+                        if (base_type::m_free_unit_list.empty()) 
+                        {
+                            break;
+                        }
+                    }
+                    while (piece = tmp_list.pop_front(), piece != nullptr)
+                    {
+                        base_type::m_full_piece_list.push_back(piece);
+                    } 
+
+                    // avail list
+                    while (piece = base_type::m_available_piece_list.pop_front(), piece != nullptr)
+                    {
+                        if (this->_compact_piece_nolock(piece))
+                        {
+                            empty_list.push_back(piece);
+                        }
+                        else
+                        {
+                            tmp_list.push_back(piece);
+                        }
+                        if (base_type::m_free_unit_list.empty()) 
+                        {
+                            break;
+                        }
+                    }
+                    while (piece = tmp_list.pop_front(), piece != nullptr)
+                    {
+                        base_type::m_available_piece_list.push_back(piece);
+                    }
+
+                    M_ASSERT(base_type::m_free_unit_list.empty());
+
+                    // empty list
+                    while (piece = empty_list.pop_front(), piece != nullptr)
+                    {
+                        if (piece_count > 3)
+                        {
+                            delete piece;
+                            piece_count --;
+                        }
+                        else
+                        {
+                            base_type::m_available_piece_list.push_back(piece);
+                        }
+                    }
+                }
+
+            public:
+                compactable_memory_pool(bool manual_compact = false) : m_manual_compact(manual_compact)
+                {
+                    
+                }
+
+                void set_manual_compact(bool enable)
+                {
+                    pilo::core::threading::mutex_locker<lock_type>   locker(base_type::m_lock);
+                    m_manual_compact = enable;
+                }
+                
+                bool is_manual_compact() const
+                {
+                    pilo::core::threading::mutex_locker<lock_type>   locker(base_type::m_lock);
+                    return m_manual_compact;
+                }
+
+                size_type piece_count_nolock() const
+                {
+                    return base_type::m_full_piece_list.size() + base_type::m_available_piece_list.size();
+                }
+
+                inline void compact()
+                {
+                    pilo::core::threading::mutex_locker<lock_type>   locker(base_type::m_lock);
+                    _compact_nolock();
+                }
+                inline void deallocate(pointer ptr)
+                {
+                    pilo::core::threading::mutex_locker<lock_type>   locker(base_type::m_lock);
+                    
+                    unit_node* unode = (unit_node*)ptr;
+                    base_type::m_free_unit_list.push_back(unode);
+                    
+                    if (_need_compact_nolock() && (!m_manual_compact))
+                    {
+                        _compact_nolock();
+                    }
+                }
+            };
+        }
+    }
+}

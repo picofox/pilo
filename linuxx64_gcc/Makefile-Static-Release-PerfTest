@@ -1,0 +1,57 @@
+include Makefile.inc
+include Makefile.Boost.Inc
+
+#Makefile-Static-Release-PerfTest
+
+
+CONF_NAME=Release
+CPPFLAGS += -ggdb -o2
+
+
+LibCoreName = pilocore_gcc$(GCC_VER_MAJOR).$(GCC_VER_MINOR)_$(PLATFORM_NAME)_$(CONF_NAME)_Static
+LibCoreStatic = lib$(LibCoreName).a
+
+
+PerfTestSources := $(shell find -P $(PerfTestSrcDir) -name "*.cpp" -exec basename {} \;)
+PerfTestObjects := $(PerfTestSources:.cpp=.o)
+PerfTestDepends := $(PerfTestObjects:.o=.d)
+PerfStaticTest = perf-libpilocore_gcc$(GCC_VER_MAJOR).$(GCC_VER_MINOR)_$(PLATFORM_NAME)_$(CONF_NAME)_Static
+
+TmpPerfTestOutDir_DebugStatic = $(TmpPerfTestOutDir)/Debug_Static
+
+LIBS += -L$(PILO_OUTPUT_LIB_DIR) -l$(LibCoreName) 
+
+CPPFLAGS += $(TEST_INCLUDES)
+
+VPATH += $(PerfTestSrcDir):$(PerfTestSrcDir)/core:$(PerfTestSrcDir)/core/threading $(PerfTestSrcDir)/core:$(PerfTestSrcDir)/core/datetime
+
+perftest : $(PerfTestObjects)
+	@if [ ! -d $(TmpPerfTestOutDir_DebugStatic) ] ; \
+        then \
+                echo "Creating build tmp dir -> $(TmpPerfTestOutDir_DebugStatic) ..."; \
+                $(MKDIR) -p $(TmpPerfTestOutDir_DebugStatic); \
+        fi
+	$(CC) $(LDFLAGS) $^ $(BOOST_STATIC_LIBS) -o $(TmpPerfTestOutDir_DebugStatic)/$(PerfStaticTest) $(LIBS)
+	
+debug:
+	echo $(TmpPerfTestOutDir_DebugStatic)
+
+clean : 
+	echo $(PILO_DIR)
+	rm -f *.d
+	rm -f *.d.*
+	rm -f *.o
+	$(RM) -f $(TmpPerfTestOutDir_DebugStatic)/*
+
+
+install :
+	$(INSTALL) -D $(TmpPerfTestOutDir_DebugStatic)/$(PerfStaticTest) $(PILO_OUTPUT_BIN_DIR)
+
+uninstall:
+	@if [ -e $(PILO_OUTPUT_BIN_DIR)/$(PerfStaticTest) ] ; \
+        then \
+                $(RM) $(PILO_OUTPUT_BIN_DIR)/$(PerfStaticTest); \
+        fi
+
+
+.PHONY : clean install uninstall

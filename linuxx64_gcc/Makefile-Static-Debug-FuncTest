@@ -1,0 +1,59 @@
+include Makefile.inc
+
+#Makefile-Static-Debug-FuncTest
+
+
+CONF_NAME=Debug
+CPPFLAGS += -ggdb -D_PILO_DEBUG
+
+
+LibCoreName = pilocore_gcc$(GCC_VER_MAJOR).$(GCC_VER_MINOR)_$(PLATFORM_NAME)_$(CONF_NAME)_Static
+LibCoreStatic = lib$(LibCoreName).a
+
+
+FuncTestSources := $(shell find -P $(FuncTestSrcDir) -name "*.cpp" -exec basename {} \;)
+FuncTestObjects := $(FuncTestSources:.cpp=.o)
+FuncTestDepends := $(FuncTestObjects:.o=.d)
+FuncStaticTest = test-libpilocore_gcc$(GCC_VER_MAJOR).$(GCC_VER_MINOR)_$(PLATFORM_NAME)_$(CONF_NAME)_Static
+
+TmpFuncTestOutDir_DebugStatic = $(TmpFuncTestOutDir)/Debug_Static
+
+LIBS += -L$(PILO_OUTPUT_LIB_DIR) -l$(LibCoreName) 
+
+CPPFLAGS += $(TEST_INCLUDES)
+
+VPATH += $(FuncTestSrcDir):$(FuncTestSrcDir)/core:$(FuncTestSrcDir)/core/io:$(FuncTestSrcDir)/core/string:$(FuncTestSrcDir)/core/threading:$(FuncTestSrcDir)/core/memory:$(FuncTestSrcDir)/core/container:$(FuncTestSrcDir)/core/datetime:$(FuncTestSrcDir)/core/fs
+
+functest : $(FuncTestObjects)
+	@if [ ! -d $(TmpFuncTestOutDir_DebugStatic) ] ; \
+        then \
+                echo "Creating build tmp dir -> $(TmpFuncTestOutDir_DebugStatic) ..."; \
+                $(MKDIR) -p $(TmpFuncTestOutDir_DebugStatic); \
+        fi
+	$(CC) $(LDFLAGS)  $^ -o $(TmpFuncTestOutDir_DebugStatic)/$(FuncStaticTest) $(LIBS)
+	
+debug:
+#	echo $(TmpFuncTestOutDir_DebugStatic)
+#	echo $(FuncTestSrcDir)
+	echo $(FuncTestSources)	
+#	echo $(TmpFuncTestOutDir_DebugStatic)
+
+clean : 
+	echo $(PILO_DIR)
+	rm -f *.d
+	rm -f *.d.*
+	rm -f *.o
+	$(RM) -f $(TmpFuncTestOutDir_DebugStatic)/*
+
+
+install :
+	$(INSTALL) -D $(TmpFuncTestOutDir_DebugStatic)/$(FuncStaticTest) $(PILO_OUTPUT_BIN_DIR)
+
+uninstall:
+	@if [ -e $(PILO_OUTPUT_BIN_DIR)/$(FuncStaticTest) ] ; \
+        then \
+                $(RM) $(PILO_OUTPUT_BIN_DIR)/$(FuncStaticTest); \
+        fi
+
+
+.PHONY : clean install uninstall
