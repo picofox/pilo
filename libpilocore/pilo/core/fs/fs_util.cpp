@@ -813,7 +813,7 @@ namespace pilo
 
                 OVERLAPPED overlapvar = { 0 };
                 LARGE_INTEGER li_size;
-                li_size.QuadPart = size_to_lock;
+                li_size.QuadPart = (size_to_lock == MC_INVALID_SIZE) ? UINT64_MAX : size_to_lock;
                 LARGE_INTEGER li_start_pos;
                 li_start_pos.QuadPart = start_pos;
                 overlapvar.Offset = li_start_pos.LowPart;
@@ -891,7 +891,7 @@ namespace pilo
 #           ifdef  WINDOWS
                 OVERLAPPED overlapvar = { 0 };
                 LARGE_INTEGER li_size;
-                li_size.QuadPart = size_to_lock;
+                li_size.QuadPart = (size_to_lock == MC_INVALID_SIZE) ? UINT64_MAX : size_to_lock;
                 LARGE_INTEGER li_start_pos;
                 li_start_pos.QuadPart = start_pos;
                 overlapvar.Offset = li_start_pos.LowPart;
