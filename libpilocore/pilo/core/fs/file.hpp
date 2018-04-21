@@ -4,7 +4,7 @@
 #include "core/fs/io_device.hpp"
 #include "core/string/string_util.hpp"
 #include "core/memory/fixed_buffer.hpp"
-#include "core/threading/dummy_mutex.hpp"
+#include "core/threading/dummy_read_write_lock.hpp"
 #include "core/string/auto_astring.hpp"
 #include "core/memory/dynamic_buffer.hpp"
 #include "core/fs/fs_util.hpp"
@@ -15,12 +15,12 @@ namespace pilo
     {
         namespace fs
         {   
-            template<   
-                size_t _PathCapacity,
+            template<                
                 size_t _ReadBufferSize,
                 size_t _WriteBufferSize,
-                bool _UseDynamicBuffer = false,                        
-                typename _LOCK_TYPE = ::pilo::core::threading::dummy_mutex>
+                bool _UseDynamicBuffer = false, 
+                typename _PATH_T = ::pilo::core::string::fixed_astring<MC_PATH_MAX>,                    
+                typename _LOCK_TYPE = ::pilo::core::threading::dummy_read_write_lock>
             class file : public ::pilo::core::fs::io_device
             {
             public:
@@ -36,8 +36,21 @@ namespace pilo
                                                 dynamic_write_buffer_type,
                                                 fixed_write_buffer_type >       write_buffer_type;
 
+            public:
+                file()
+                {
+
+                }
+                virtual ~file()
+                {
+                    if (m_state_flag & MC_IO_DEV_STATE_FLAG_INITIALIZED)
+                    {
+                        this->finalize();
+                    }
+                }
+
             public: //inherit from base
-                virtual ::pilo::i32_t initialize(const char* path, ::pilo::u32_t flag, void* context)
+                virtual ::pilo::error_number_t initialize(const char* path, ::pilo::u32_t flag, void* context)
                 {
                     if (path == nullptr)
                     {
@@ -46,9 +59,11 @@ namespace pilo
 
                     m_init_flags = flag;
                     m_context = context;
+                    ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
 
                     char path_buffer[MC_PATH_MAX];
-                    if (!::pilo::core::fs::fs_util::get_absolute_path(path_buffer, path, sizeof(path_buffer)))
+                    
+                    if ( ::pilo::EC_OK != ::pilo::core::fs::fs_util::get_absolute_path(path_buffer, path, sizeof(path_buffer)) )
                     {
                         return ::pilo::EC_INVALID_PATH; 
                     }
@@ -78,44 +93,68 @@ namespace pilo
                         {
                             if (flag & MC_IO_DEV_FLAG_FORCE_DELETE_DIR_ON_INITIALIZE)
                             {
-
+                                err = ::pilo::core::fs::fs_util::delete_directory(path, true);
+                                if (err != ::pilo::EC_OK)
+                                {
+                                    return err;
+                                }
                             }
                         }
+                        else if (enode_type == ::pilo::core::fs::fs_util::eFSNT_RegularFile)
+                        {
+                            if (flag & MC_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ)
+                            {
+                                err = ::pilo::core::fs::fs_util::delete_regular_file(path);
+                                if (err != ::pilo::EC_OK)
+                                {
+                                    return err;
+                                }
+                            }
+                        }
+                        err = ::pilo::core::fs::fs_util::create_regular_file(path, true);
+                        if (err != ::pilo::EC_OK)
+                        {
+                            return err;
+                        }
                     }
-                     
 
-
+                    m_state_flag |= (MC_IO_DEV_STATE_FLAG_INITIALIZED);
+                    
                     return ::pilo::EC_OK;
                 }
-                virtual ::pilo::i32_t finalize()
+                virtual ::pilo::error_number_t finalize()
                 {
+                    if (m_init_flags & MC_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
+                    {
+                        return ::pilo::core::fs::fs_util::delete_regular_file(_m_path.c_str());
+                    }
                     return ::pilo::EC_OK;
                 }
-                virtual ::pilo::i32_t open(DeviceAccessModeEnumeration rw_mode, ::pilo::u32_t op_flag)
+            virtual ::pilo::error_number_t open(DeviceAccessModeEnumeration rw_mode, ::pilo::u32_t op_flag)
                 {
                     M_UNUSED(rw_mode);
                     M_UNUSED(op_flag);
                     return ::pilo::EC_OK;
                 }
-                virtual ::pilo::i32_t close()
+            virtual ::pilo::error_number_t close()
                 {
                     return ::pilo::EC_OK;
                 }
-                virtual ::pilo::i32_t read(void* buffer, size_t len, size_t* read_len)
+            virtual ::pilo::error_number_t read(void* buffer, size_t len, size_t* read_len)
                 {
                     M_UNUSED(buffer);
                     M_UNUSED(len);
                     M_UNUSED(read_len);
                     return ::pilo::EC_OK;
                 }
-                virtual ::pilo::i32_t write(const void* buffer, size_t len, size_t* written_len)
+            virtual ::pilo::error_number_t write(const void* buffer, size_t len, size_t* written_len)
                 {
                     M_UNUSED(buffer);
                     M_UNUSED(len);
                     M_UNUSED(written_len);
                     return ::pilo::EC_OK;
                 }
-                virtual ::pilo::i32_t flush(::pilo::i32_t mode)
+            virtual ::pilo::error_number_t flush(::pilo::i32_t mode)
                 {
                     M_UNUSED(mode);
                     return ::pilo::EC_OK;
@@ -123,7 +162,7 @@ namespace pilo
 
             protected:
                 os_file_descriptor_t                                _m_os_file_descriptor; //internal file data structure handle
-                ::pilo::core::string::auto_astring<_PathCapacity>   _m_path;
+                _PATH_T                                             _m_path;
                 lock_type                                           _m_lock;
                 read_buffer_type                                    _m_read_buffer;
                 write_buffer_type                                   _m_write_buffer;

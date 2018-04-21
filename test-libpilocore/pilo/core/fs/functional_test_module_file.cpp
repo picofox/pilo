@@ -24,9 +24,12 @@ namespace pilo
         {
             M_UNUSED(param);
 
-            ::pilo::core::fs::file<0, 8192, 8192,false> f0;
+            ::pilo::core::fs::file<8192, 8192,false> f0;
 
-            f0.initialize(nullptr, 0, nullptr);
+            f0.initialize("L:\\lv0\\lv1\\testfile", MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE | 
+                                                    MC_IO_DEV_FLAG_FORCE_DELETE_DIR_ON_INITIALIZE |
+                                                    MC_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ |
+                                                    MC_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE, nullptr);
 
            
             return 0;

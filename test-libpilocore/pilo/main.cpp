@@ -407,9 +407,15 @@ int main(int argc, char *argv[])
     bool break_on_error = true;
     pilo::i32_t id = 1;
 
+    pilo::test::functional_test_module_file  file_cases(id++, "functional_test_module_file", pilo::test::g_functional_cases_file);
+    file_cases.run_cases(break_on_error);
+    file_cases.console_output();
+
     ::pilo::test::functional_test_module_class_datetime datetime_cases(id++, "functional_test_module_class_datetime", pilo::test::g_functional_cases_datetime);
     datetime_cases.run_cases(break_on_error);
     datetime_cases.console_output();
+
+
 
 //     ::pilo::test::presure_test_portable_object_pool presure_obj_pool;
 //     presure_obj_pool.test(nullptr, 0, nullptr);
