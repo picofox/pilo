@@ -40,49 +40,49 @@ namespace pilo
                 }
             }
 
-            ::pilo::error_number_t fs_util::concatenate_path(char* buf, size_t dstBufferCount, const char* src, size_t srclen)
+            ::pilo::i32_t fs_util::concatenate_path(char* path1, size_t path1_buffer_size, const char* path2, size_t path2_len)
             {
-                if (buf == nullptr || src == nullptr)
+                if (path1 == nullptr || path2 == nullptr)
                 {
                     return ::pilo::EC_NULL_PARAM;
                 }
 
-                if (srclen == MC_INVALID_SIZE)
+                if (path2_len == MC_INVALID_SIZE)
                 {
-                    srclen = ::pilo::core::string::string_util::length(src);
+                    path2_len = ::pilo::core::string::string_util::length(path2);
                 }
 
-                if (*buf == 0)
+                if (*path1 == 0)
                 {
-                    ::pilo::core::string::string_util::copy(buf, dstBufferCount, src, srclen);
+                    ::pilo::core::string::string_util::copy(path1, path1_buffer_size, path2, path2_len);
                     return ::pilo::EC_OK;
                 }
 
-                ::pilo::core::fs::fs_util::EnumPathSeparator e1 = ::pilo::core::fs::fs_util::calculate_path_separator(buf);
-                ::pilo::core::fs::fs_util::EnumPathSeparator e2 = ::pilo::core::fs::fs_util::calculate_path_separator(src);
-                size_t len = ::pilo::core::string::string_util::length(buf);
+                ::pilo::core::fs::fs_util::EnumPathSeparator e1 = ::pilo::core::fs::fs_util::calculate_path_separator(path1);
+                ::pilo::core::fs::fs_util::EnumPathSeparator e2 = ::pilo::core::fs::fs_util::calculate_path_separator(path2);
+                size_t len = ::pilo::core::string::string_util::length(path1);
 
 #ifdef WINDOWS
                 M_ASSERT(e1 == ::pilo::core::fs::fs_util::ePS_BackwardSlash || e1 == ::pilo::core::fs::fs_util::ePS_ForwardSlash || e1 == ::pilo::core::fs::fs_util::ePS_None);
                 M_ASSERT(e2 == ::pilo::core::fs::fs_util::ePS_BackwardSlash || e2 == ::pilo::core::fs::fs_util::ePS_ForwardSlash || e2 == ::pilo::core::fs::fs_util::ePS_None);
                 
-                if (buf[len-1] != '\\' && buf[len-1] != '/')
+                if (path1[len-1] != '\\' && path1[len-1] != '/')
                 {
-                    ::pilo::core::string::string_util::concatenate_string(buf, dstBufferCount, "\\", 1);
+                    ::pilo::core::string::string_util::concatenate_string(path1, path1_buffer_size, "\\", 1);
                 }
               
-                ::pilo::core::string::string_util::concatenate_string(buf, dstBufferCount, src, srclen);
-                ::pilo::core::string::string_util::rescanable_replace<char>(buf, MC_INVALID_SIZE, "/", "\\", 0);
+                ::pilo::core::string::string_util::concatenate_string(path1, path1_buffer_size, path2, path2_len);
+                ::pilo::core::string::string_util::rescanable_replace<char>(path1, MC_INVALID_SIZE, "/", "\\", 0);
 
 #else
                 M_ASSERT(e1 == ::pilo::core::fs::fs_util::ePS_ForwardSlash || e1 == ::pilo::core::fs::fs_util::ePS_None);
                 M_ASSERT(e2 == ::pilo::core::fs::fs_util::ePS_ForwardSlash || e2 == ::pilo::core::fs::fs_util::ePS_None);
                 
-                if (buf[len - 1] != '/')
+                if (path1[len - 1] != '/')
                 {
-                    ::pilo::core::string::string_util::concatenate_string(buf, dstBufferCount, "/", 1);
+                    ::pilo::core::string::string_util::concatenate_string(path1, path1_buffer_size, "/", 1);
                 }
-                ::pilo::core::string::string_util::concatenate_string(buf, dstBufferCount, src, srclen);
+                ::pilo::core::string::string_util::concatenate_string(path1, path1_buffer_size, path2, path2_len);
 #endif
 
                 return ::pilo::EC_OK;
@@ -226,7 +226,7 @@ namespace pilo
                 return strRet;
             }
 
-            ::pilo::error_number_t fs_util::check_path(const char* path)
+            ::pilo::i32_t fs_util::check_path(const char* path)
             {
                 if (path == 0) 
                 {
@@ -383,7 +383,7 @@ namespace pilo
                 return (eFSNT_Directory == ::pilo::core::fs::fs_util::calculate_type(path));
             }
 #ifdef WINDOWS
-            ::pilo::error_number_t fs_util::travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir)
+            ::pilo::i32_t fs_util::travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir)
             {
                 if (root == nullptr || *root == '\0')
                 {
@@ -512,7 +512,7 @@ namespace pilo
             }
 
 #else
-            ::pilo::error_number_t fs_util::travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir)
+::pilo::i32_t fs_util::travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir)
             {
                 if (root == nullptr || *root == '\0')
                 {
@@ -707,7 +707,7 @@ namespace pilo
             }
 
             size_t lv = 0;
-            ::pilo::error_number_t fs_util::get_path_depth(size_t& dep, const char* path)
+            ::pilo::i32_t fs_util::get_path_depth(size_t& dep, const char* path)
             {
                 if (path == nullptr)
                 {
@@ -802,7 +802,7 @@ namespace pilo
 
             }
 
-            ::pilo::error_number_t fs_util::lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock)
+            pilo::error_number_t fs_util::lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock)
             {
 #           ifdef  WINDOWS
                 DWORD flag = 0;
@@ -812,7 +812,7 @@ namespace pilo
                 }
 
                 OVERLAPPED overlapvar = { 0 };
-                LARGE_INTEGER li_size;
+                ULARGE_INTEGER li_size;
                 li_size.QuadPart = (size_to_lock == MC_INVALID_SIZE) ? UINT64_MAX : size_to_lock;
                 LARGE_INTEGER li_start_pos;
                 li_start_pos.QuadPart = start_pos;
@@ -844,7 +844,7 @@ namespace pilo
                 return ::pilo::EC_OK;
             }
 
-            ::pilo::error_number_t fs_util::try_lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock)
+            pilo::error_number_t fs_util::try_lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock)
             {
 #           ifdef  WINDOWS
                 DWORD flag = 0;
@@ -886,11 +886,11 @@ namespace pilo
                 return ::pilo::EC_OK;
             }
 
-            ::pilo::error_number_t fs_util::unlock_file(os_file_descriptor_t fildes, size_t start_pos, size_t size_to_lock)
+            pilo::error_number_t fs_util::unlock_file(os_file_descriptor_t fildes, size_t start_pos, size_t size_to_lock)
             {
 #           ifdef  WINDOWS
                 OVERLAPPED overlapvar = { 0 };
-                LARGE_INTEGER li_size;
+                ULARGE_INTEGER li_size;
                 li_size.QuadPart = (size_to_lock == MC_INVALID_SIZE) ? UINT64_MAX : size_to_lock;
                 LARGE_INTEGER li_start_pos;
                 li_start_pos.QuadPart = start_pos;
@@ -922,7 +922,7 @@ namespace pilo
                 return ::pilo::EC_OK;
             }
             
-            ::pilo::error_number_t fs_util::get_absolute_path(char* abs_path, const char* path, size_t d_len /*= MC_INVALID_SIZE*/)
+            ::pilo::i32_t fs_util::get_absolute_path(char* abs_path, const char* path, size_t d_len /*= MC_INVALID_SIZE*/)
             {
                 if (abs_path == nullptr)
                 {
@@ -1079,7 +1079,7 @@ namespace pilo
                 return ::pilo::EC_INVALID_PATH;
             }
 
-            ::pilo::error_number_t fs_util::split_path_to_dir_and_filename(char* dirpath, size_t dirpath_size, char* filename, size_t filename_size, const char* path)
+            ::pilo::i32_t fs_util::split_path_to_dir_and_filename(char* dirpath, size_t dirpath_size, char* filename, size_t filename_size, const char* path)
             {
                 if (path == nullptr || *path == 0) return ::pilo::EC_NULL_PARAM;
 
@@ -1137,19 +1137,19 @@ namespace pilo
             }
 
 
-            ::pilo::error_number_t fs_util::create_directory_recursively(const char* cpath, bool force)
+            ::pilo::i32_t fs_util::create_directory_recursively(const char* dir_path, bool force)
 			{
-				if (cpath == nullptr) return ::pilo::EC_NULL_PARAM;
+				if (dir_path == nullptr) return ::pilo::EC_NULL_PARAM;
 
 				char path[MC_PATH_MAX];
                 memset(path, 0x00, MC_PATH_MAX);
-				const char* saved_pos = cpath;
+				const char* saved_pos = dir_path;
                 const char* pos = nullptr;
                 ::pilo::i32_t ret = ::pilo::EC_OK;
 
 				while ((pos = ::pilo::core::string::string_util::find(saved_pos, M_PATH_SEP_S)) != nullptr)
 				{
-					::memcpy(path, cpath, pos - cpath + 1);
+					::memcpy(path, dir_path, pos - dir_path + 1);
 					pos++;
                     EnumFSNodeType fs_node_type = ::pilo::core::fs::fs_util::calculate_type(path);
                     if (fs_node_type == eFSNT_Directory)
@@ -1201,8 +1201,8 @@ namespace pilo
 
                 if (*saved_pos != 0)
                 {
-                    size_t len = ::pilo::core::string::string_util::length(path);
-                    ::memcpy(path, path, len);
+                    size_t len = ::pilo::core::string::string_util::length(dir_path);
+                    ::memcpy(path, dir_path, len);
                     EnumFSNodeType fs_node_type = ::pilo::core::fs::fs_util::calculate_type(path);
                     if (fs_node_type == eFSNT_Directory)
                     {
@@ -1251,7 +1251,7 @@ namespace pilo
 				return ::pilo::EC_OK;
 			}
 
-            ::pilo::error_number_t fs_util::delete_fs_node(const char* path, bool force)
+			::pilo::i32_t fs_util::delete_fs_node(const char* path, bool force)
 			{
 				if (path == nullptr) return ::pilo::EC_NULL_PARAM;
 
@@ -1274,7 +1274,7 @@ namespace pilo
 				return ::pilo::EC_UNDEFINED_FILE_TYPE;
 			}
 
-            ::pilo::error_number_t fs_util::delete_regular_file(const char* path)
+			::pilo::i32_t fs_util::delete_regular_file(const char* path)
             {
 				if (path == nullptr)
 				{
@@ -1308,7 +1308,7 @@ namespace pilo
 
             
 
-            ::pilo::error_number_t fs_util::delete_directory(const char* path, bool content_only)
+			::pilo::i32_t fs_util::delete_directory(const char* path, bool content_only)
 			{
 				if (path == nullptr) return ::pilo::EC_NULL_PARAM;
 
@@ -1317,7 +1317,7 @@ namespace pilo
                 return ::pilo::core::fs::fs_util::travel_path_preorder(path, &fnd, false, content_only);
 			}
 
-            ::pilo::error_number_t fs_util::delete_empty_directory(const char* path)
+			::pilo::i32_t fs_util::delete_empty_directory(const char* path)
             {
 #               ifdef WINDOWS
                 if (::RemoveDirectory(path) != TRUE) //2=ne 145=nem
@@ -1357,7 +1357,7 @@ namespace pilo
 
 			
 
-            ::pilo::error_number_t fs_util::create_empty_directory(const char* path, ::pilo::u32_t mode)
+            ::pilo::i32_t fs_util::create_empty_directory(const char* path, ::pilo::u32_t mode)
             {
                 M_UNUSED(mode);
 #               ifdef  WINDOWS
@@ -1379,7 +1379,7 @@ namespace pilo
                 return ::pilo::EC_OK;
             }
 
-            ::pilo::error_number_t fs_util::create_regular_file(const char* path, bool always)
+            ::pilo::i32_t fs_util::create_regular_file(const char* path, bool always)
             {
                 OpenDeviceModeEnumeration eMode;
 
@@ -1443,10 +1443,10 @@ namespace pilo
 
             }
 
-            ::pilo::error_number_t fs_util::close_file(::pilo::os_file_descriptor_t fd, ::pilo::u32_t flags)
+            ::pilo::i32_t fs_util::close_file(::pilo::os_file_descriptor_t filedes, ::pilo::u32_t flags)
             {
                 M_UNUSED(flags);
-                if (fd == MC_INVALID_FILE_DESCRIPTOR)
+                if (filedes == MC_INVALID_FILE_DESCRIPTOR)
                 {
                     return ::pilo::EC_INVALID_PARAM;
                 }
@@ -1455,14 +1455,14 @@ namespace pilo
 
 #               ifdef  WINDOWS
 
-                if (::CloseHandle(fd) != TRUE)
+                if (::CloseHandle(filedes) != TRUE)
                 {
                     ret = ::pilo::EC_CLOSE_FILE_ERROR;
                 }
 
 #               else
 
-                if ((close(fd)) != 0)
+                if ((close(filedes)) != 0)
                 {
                     ret = ::pilo::EC_CLOSE_FILE_ERROR;
                 }
@@ -1530,7 +1530,7 @@ namespace pilo
                 return ::pilo::EC_OK;
             }
 
-            ::pilo::error_number_t fs_node_delete_visitor::visit(const char* path, const fs_find_data* data)
+            ::pilo::i32_t fs_node_delete_visitor::visit(const char* path, const fs_find_data* data)
             {
                 if (data == nullptr) return ::pilo::EC_NULL_PARAM;
 
@@ -1547,7 +1547,7 @@ namespace pilo
                 return  ::pilo::EC_OK;
             }
 
-            ::pilo::error_number_t fs_node_delete_visitor::post_dir_visit(const char* path)
+            ::pilo::i32_t fs_node_delete_visitor::post_dir_visit(const char* path)
             {
                 return ::pilo::core::fs::fs_util::delete_empty_directory(path);        
 
