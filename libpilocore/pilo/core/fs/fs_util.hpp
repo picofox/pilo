@@ -63,7 +63,7 @@ namespace pilo
             public:
 
                 static void trim_path_last_seperator(char* path, size_t len = MC_INVALID_SIZE);
-                static ::pilo::i32_t concatenate_path(char* buf, size_t dstBufferCount, const char* src, size_t srclen);
+                static ::pilo::error_number_t concatenate_path(char* buf, size_t dstBufferCount, const char* src, size_t srclen);
 
                 static ::pilo::core::fs::fs_util::EnumPathSeparator calculate_path_separator(const char* path);
                
@@ -137,24 +137,24 @@ namespace pilo
                 */
                 static bool dir_exist(const char* path);
 
-                static ::pilo::i32_t travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir);
+                static ::pilo::error_number_t travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir);
                 static bool is_root(const char* path);
-                static ::pilo::i32_t get_path_depth(size_t& dep, const char* path);
+                static ::pilo::error_number_t get_path_depth(size_t& dep, const char* path);
                 static ::pilo::error_number_t lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock);
                 static ::pilo::error_number_t try_lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock);
                 static ::pilo::error_number_t unlock_file(os_file_descriptor_t fildes, size_t start_pos, size_t size_to_lock);
-                static ::pilo::i32_t get_absolute_path(char* abs_path, const char* path, size_t d_len = MC_INVALID_SIZE);
+                static ::pilo::error_number_t get_absolute_path(char* abs_path, const char* path, size_t d_len = MC_INVALID_SIZE);
 
-                static ::pilo::i32_t split_path_to_dir_and_filename(char* dirpath, size_t dirpath_size, char* filename, size_t filename_size, const char* path);
-                static ::pilo::i32_t create_directory_recursively(const char* path, bool force);
-				static ::pilo::i32_t delete_fs_node(const char* path, bool force);
-                static ::pilo::i32_t delete_regular_file(const char* path);
-				static ::pilo::i32_t delete_directory(const char* path, bool content_only);
-                static ::pilo::i32_t delete_empty_directory(const char* path);
-                static ::pilo::i32_t create_empty_directory(const char* path, ::pilo::u32_t mode);
-                static ::pilo::i32_t create_regular_file(const char* path, bool always);
-                static ::pilo::os_file_descriptor_t open_file(const char* path, ::pilo::core::fs::OpenDeviceModeEnumeration, ::pilo::core::fs::DeviceAccessModeEnumeration, ::pilo::u32_t flags);
-                static ::pilo::i32_t close_file(::pilo::os_file_descriptor_t fd, ::pilo::u32_t flags);
+                static ::pilo::error_number_t split_path_to_dir_and_filename(char* dirpath, size_t dirpath_size, char* filename, size_t filename_size, const char* path);
+                static ::pilo::error_number_t create_directory_recursively(const char* path, bool force);
+                static ::pilo::error_number_t delete_fs_node(const char* path, bool force);
+                static ::pilo::error_number_t delete_regular_file(const char* path);
+                static ::pilo::error_number_t delete_directory(const char* path, bool content_only);
+                static ::pilo::error_number_t delete_empty_directory(const char* path);
+                static ::pilo::error_number_t create_empty_directory(const char* path, ::pilo::u32_t mode);
+                static ::pilo::error_number_t create_regular_file(const char* path, bool always);
+                static ::pilo::error_number_t open_file(::pilo::os_file_descriptor_t& fildes, const char* path, ::pilo::core::fs::OpenDeviceModeEnumeration, ::pilo::core::fs::DeviceAccessModeEnumeration, ::pilo::u32_t flags);
+                static ::pilo::error_number_t close_file(::pilo::os_file_descriptor_t fd, ::pilo::u32_t flags);
 
                 static ::pilo::error_number_t  get_file_modified_time(::pilo::core::datetime::datetime &dt, const char* filepath);
             };

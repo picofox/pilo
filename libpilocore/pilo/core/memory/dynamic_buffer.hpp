@@ -346,7 +346,7 @@ namespace pilo
                 }
 
 
-                void reset()
+                inline void reset()
                 {
                     pilo::core::threading::mutex_locker<lock_type>   locker(_m_lock);
                     

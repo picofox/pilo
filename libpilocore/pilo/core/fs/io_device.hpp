@@ -13,7 +13,6 @@
 #define MC_IO_DEV_FLAG_REQUIRE_FILELOCK                 (1<<4)
 #define MC_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ   (1<<5)
 
-#define MC_IO_DEV_STATE_FLAG_INITIALIZED                (1<<0)
 
 
 
@@ -77,14 +76,12 @@ namespace pilo
                     m_context = nullptr;
                     m_state = eIODS_Uninitialized;
                     m_init_flags = 0;
-                    m_state_flag = 0;
                 }
 
                 virtual ~io_device()
                 {
                     
                 }
-
 
                 virtual ::pilo::error_number_t initialize(const char* path, ::pilo::u32_t flag, void* context) = 0;
                 virtual ::pilo::error_number_t finalize() = 0;
@@ -102,7 +99,6 @@ namespace pilo
                 void* m_context;
                 volatile EnumIODeviceState m_state;
                 ::pilo::u32_t m_init_flags;
-                ::pilo::u32_t m_state_flag;
             };
         }
     }    

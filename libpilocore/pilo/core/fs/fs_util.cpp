@@ -8,6 +8,12 @@
 #include <stdio.h>  
 #include <errno.h>  
 
+
+#include <Shlwapi.h>
+#pragma comment(lib, "Shlwapi.lib ")
+
+
+
 namespace pilo
 {
     namespace core
@@ -40,7 +46,7 @@ namespace pilo
                 }
             }
 
-            ::pilo::i32_t fs_util::concatenate_path(char* path1, size_t path1_buffer_size, const char* path2, size_t path2_len)
+            ::pilo::error_number_t fs_util::concatenate_path(char* path1, size_t path1_buffer_size, const char* path2, size_t path2_len)
             {
                 if (path1 == nullptr || path2 == nullptr)
                 {
@@ -383,7 +389,7 @@ namespace pilo
                 return (eFSNT_Directory == ::pilo::core::fs::fs_util::calculate_type(path));
             }
 #ifdef WINDOWS
-            ::pilo::i32_t fs_util::travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir)
+            ::pilo::error_number_t fs_util::travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir)
             {
                 if (root == nullptr || *root == '\0')
                 {
@@ -401,7 +407,8 @@ namespace pilo
                     ::pilo::core::string::string_util::copy(szBuff, sizeof(szBuff), root, len);
 					if (szBuff[len - 1] != M_PATH_SEP_C)
                     {
-						::pilo::core::string::string_util::concatenate_string(szBuff, sizeof(szBuff), M_PATH_SEP_S, 1);
+                        szBuff[len] = M_PATH_SEP_C;
+                        szBuff[len + 1] = 0;
                     }                    
                     ::pilo::core::string::string_util::concatenate_string(szBuff, sizeof(szBuff), "*.*", MC_INVALID_SIZE);
                     
@@ -427,9 +434,13 @@ namespace pilo
 						}
 
                         ::pilo::core::string::string_util::copy(szBuff, root);
-						::pilo::core::string::string_util::concatenate_string(szBuff, sizeof(szBuff), M_PATH_SEP_S, 1);
+                        size_t len = ::pilo::core::string::string_util::length(szBuff);
+                        if (szBuff[len - 1] != M_PATH_SEP_C)
+                        {
+                            szBuff[len] = M_PATH_SEP_C;
+                            szBuff[len + 1] = 0;
+                        }
                         ::pilo::core::string::string_util::concatenate_string(szBuff, sizeof(szBuff), findData.name, MC_INVALID_SIZE);
-                       // ::pilo::core::string::string_util::concatenate_string(szBuff, sizeof(szBuff), M_PATH_SEP_S, 1);
 
                         if (findData.attrib & _A_SUBDIR)
                         {
@@ -707,7 +718,7 @@ namespace pilo
             }
 
             size_t lv = 0;
-            ::pilo::i32_t fs_util::get_path_depth(size_t& dep, const char* path)
+            ::pilo::error_number_t fs_util::get_path_depth(size_t& dep, const char* path)
             {
                 if (path == nullptr)
                 {
@@ -922,7 +933,7 @@ namespace pilo
                 return ::pilo::EC_OK;
             }
             
-            ::pilo::i32_t fs_util::get_absolute_path(char* abs_path, const char* path, size_t d_len /*= MC_INVALID_SIZE*/)
+            ::pilo::error_number_t fs_util::get_absolute_path(char* abs_path, const char* path, size_t d_len /*= MC_INVALID_SIZE*/)
             {
                 if (abs_path == nullptr)
                 {
@@ -1079,7 +1090,7 @@ namespace pilo
                 return ::pilo::EC_INVALID_PATH;
             }
 
-            ::pilo::i32_t fs_util::split_path_to_dir_and_filename(char* dirpath, size_t dirpath_size, char* filename, size_t filename_size, const char* path)
+            ::pilo::error_number_t fs_util::split_path_to_dir_and_filename(char* dirpath, size_t dirpath_size, char* filename, size_t filename_size, const char* path)
             {
                 if (path == nullptr || *path == 0) return ::pilo::EC_NULL_PARAM;
 
@@ -1137,7 +1148,7 @@ namespace pilo
             }
 
 
-            ::pilo::i32_t fs_util::create_directory_recursively(const char* dir_path, bool force)
+            ::pilo::error_number_t fs_util::create_directory_recursively(const char* dir_path, bool force)
 			{
 				if (dir_path == nullptr) return ::pilo::EC_NULL_PARAM;
 
@@ -1251,7 +1262,7 @@ namespace pilo
 				return ::pilo::EC_OK;
 			}
 
-			::pilo::i32_t fs_util::delete_fs_node(const char* path, bool force)
+            ::pilo::error_number_t fs_util::delete_fs_node(const char* path, bool force)
 			{
 				if (path == nullptr) return ::pilo::EC_NULL_PARAM;
 
@@ -1274,7 +1285,7 @@ namespace pilo
 				return ::pilo::EC_UNDEFINED_FILE_TYPE;
 			}
 
-			::pilo::i32_t fs_util::delete_regular_file(const char* path)
+            ::pilo::error_number_t fs_util::delete_regular_file(const char* path)
             {
 				if (path == nullptr)
 				{
@@ -1308,28 +1319,32 @@ namespace pilo
 
             
 
-			::pilo::i32_t fs_util::delete_directory(const char* path, bool content_only)
+            ::pilo::error_number_t fs_util::delete_directory(const char* path, bool inc_dir)
 			{
 				if (path == nullptr) return ::pilo::EC_NULL_PARAM;
 
 				::pilo::core::fs::fs_node_delete_visitor fnd;
 				
-                return ::pilo::core::fs::fs_util::travel_path_preorder(path, &fnd, false, content_only);
+                return ::pilo::core::fs::fs_util::travel_path_preorder(path, &fnd, false, inc_dir);
 			}
 
-			::pilo::i32_t fs_util::delete_empty_directory(const char* path)
+            ::pilo::error_number_t fs_util::delete_empty_directory(const char* path)
             {
 #               ifdef WINDOWS
-                if (::RemoveDirectory(path) != TRUE) //2=ne 145=nem
-                {
-                    DWORD ret = ::GetLastError();
-                    
+                if (path == nullptr) return ::pilo::EC_NULL_PARAM;        
+
+                BOOL bRet = ::RemoveDirectory(path);
+                if ( bRet != TRUE) //2=ne 145=nem
+                {                    
+                    DWORD ret = ::GetLastError();                    
                     if (ret == ERROR_FILE_NOT_FOUND)
                     {
                         return ::pilo::EC_DIR_NOT_EXIST;
                     }
                     else if (ret == ERROR_DIR_NOT_EMPTY)
                     {
+                        bRet = ::RemoveDirectory(path);
+                        if (bRet) return ::pilo::EC_OK;
                         return ::pilo::EC_DIR_NOT_EMPTY;
                     }
                     return MAKE_SYSERR(::pilo::EC_DELETE_DIR_ERROR);
@@ -1357,7 +1372,7 @@ namespace pilo
 
 			
 
-            ::pilo::i32_t fs_util::create_empty_directory(const char* path, ::pilo::u32_t mode)
+            ::pilo::error_number_t fs_util::create_empty_directory(const char* path, ::pilo::u32_t mode)
             {
                 M_UNUSED(mode);
 #               ifdef  WINDOWS
@@ -1379,7 +1394,7 @@ namespace pilo
                 return ::pilo::EC_OK;
             }
 
-            ::pilo::i32_t fs_util::create_regular_file(const char* path, bool always)
+            ::pilo::error_number_t fs_util::create_regular_file(const char* path, bool always)
             {
                 OpenDeviceModeEnumeration eMode;
 
@@ -1403,7 +1418,8 @@ namespace pilo
                     return ::pilo::EC_CREATE_DIR_ERROR;
                 }               
 
-                ::pilo::os_file_descriptor_t fd = ::pilo::core::fs::fs_util::open_file(path, eMode, ::pilo::core::fs::eDAM_ReadWrite, 0);
+                ::pilo::os_file_descriptor_t fd = MC_INVALID_FILE_DESCRIPTOR;
+                ::pilo::core::fs::fs_util::open_file(fd, path, eMode, ::pilo::core::fs::eDAM_ReadWrite, 0);
                 if (fd == MC_INVALID_FILE_DESCRIPTOR)
                 {
                     return ::pilo::EC_OPEN_FILE_FAILED;
@@ -1417,33 +1433,34 @@ namespace pilo
                 return ::pilo::EC_OK;
             }
 
-            ::pilo::os_file_descriptor_t fs_util::open_file(const char* path, ::pilo::core::fs::OpenDeviceModeEnumeration op, ::pilo::core::fs::DeviceAccessModeEnumeration access, ::pilo::u32_t flags)
+            ::pilo::error_number_t fs_util::open_file(::pilo::os_file_descriptor_t& fildes, const char* path, ::pilo::core::fs::OpenDeviceModeEnumeration op, ::pilo::core::fs::DeviceAccessModeEnumeration access, ::pilo::u32_t flags)
             {
                 M_UNUSED(flags);
-
+                fildes = MC_INVALID_FILE_DESCRIPTOR;
+                
                 if (path == nullptr)
                 {
-                    return MC_INVALID_FILE_DESCRIPTOR;
+                    return ::pilo::EC_NULL_PARAM;
                 }
 
-                ::pilo::os_file_descriptor_t fildes = MC_INVALID_FILE_DESCRIPTOR;
-
-#               ifdef  WINDOWS
-               
+#               ifdef  WINDOWS               
                 fildes = ::CreateFile(path, access, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, op, 0, 0);
 
-
 #               else
-
                 fildes = open(path, access | op);
 
 #               endif
 
-                return fildes;
+                if (fildes == MC_INVALID_FILE_DESCRIPTOR)
+                {
+                    return ::pilo::EC_OPEN_FILE_FAILED;
+                }
+
+                return ::pilo::EC_OK;
 
             }
 
-            ::pilo::i32_t fs_util::close_file(::pilo::os_file_descriptor_t filedes, ::pilo::u32_t flags)
+            ::pilo::error_number_t fs_util::close_file(::pilo::os_file_descriptor_t filedes, ::pilo::u32_t flags)
             {
                 M_UNUSED(flags);
                 if (filedes == MC_INVALID_FILE_DESCRIPTOR)
