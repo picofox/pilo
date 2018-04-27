@@ -85,7 +85,7 @@ namespace pilo
 
                 virtual ::pilo::error_number_t initialize(const char* path, ::pilo::u32_t flag, void* context) = 0;
                 virtual ::pilo::error_number_t finalize() = 0;
-                virtual ::pilo::error_number_t open(DeviceAccessModeEnumeration rw_mode, ::pilo::u32_t op_flag) = 0;
+                virtual ::pilo::error_number_t open(DeviceAccessModeEnumeration dev_acc_mode, ::pilo::u32_t op_flag) = 0;
                 virtual ::pilo::error_number_t close() = 0;
                 virtual ::pilo::error_number_t read(void* buffer, size_t len, size_t* read_len) = 0;
                 virtual ::pilo::error_number_t write(const void* buffer, size_t len, size_t* written_len) = 0;

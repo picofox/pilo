@@ -30,6 +30,7 @@
     <ClInclude Include="pilo\core\dll\dynamic_link_library.hpp" />
     <ClInclude Include="pilo\core\fs\async_directory_changer_handler.hpp" />
     <ClInclude Include="pilo\core\fs\directory_change_monitor.hpp" />
+    <ClInclude Include="pilo\core\fs\buffered_file.hpp" />
     <ClInclude Include="pilo\core\fs\file.hpp" />
     <ClInclude Include="pilo\core\fs\fs_util.hpp" />
     <ClInclude Include="pilo\core\fs\io_device.hpp" />
@@ -94,6 +95,8 @@
     <ClInclude Include="pilo\core\threading\read_write_lock.hpp" />
     <ClInclude Include="pilo\core\threading\recursive_mutex.hpp" />
     <ClInclude Include="pilo\core\threading\recursive_timed_mutex.hpp" />
+    <ClInclude Include="pilo\core\threading\rw_mutex_r_locker.hpp" />
+    <ClInclude Include="pilo\core\threading\rw_mutex_w_locker.hpp" />
     <ClInclude Include="pilo\core\threading\sync_condition_variable_any.hpp" />
     <ClInclude Include="pilo\core\threading\win_interlocked.hpp" />
     <ClInclude Include="pilo\error.hpp" />
@@ -352,10 +355,7 @@ copy /Y pilo\core\memory\io_buffer.hpp $(ProjectDir)..\output\include\core\memor
 copy /Y pilo\core\memory\fixed_buffer.hpp $(ProjectDir)..\output\include\core\memory\fixed_buffer.hpp
 copy /Y pilo\core\memory\dynamic_buffer.hpp $(ProjectDir)..\output\include\core\memory\dynamic_buffer.hpp
 copy /Y pilo\core\memory\dynamic_object_ring_buffer.hpp $(ProjectDir)..\output\include\core\memory\dynamic_object_ring_buffer.hpp
-copy /Y pilo\core\fs\fs_util.hpp $(ProjectDir)..\output\include\core\fs\fs_util.hpp
-copy /Y pilo\core\fs\file.hpp $(ProjectDir)..\output\include\core\fs\file.hpp
-copy /Y pilo\core\fs\io_device.hpp $(ProjectDir)..\output\include\core\fs\io_device.hpp
-copy /Y pilo\core\fs\directory_change_monitor.hpp $(ProjectDir)..\output\include\core\fs\directory_change_monitor.hpp
+copy /Y pilo\core\fs\* $(ProjectDir)..\output\include\core\fs
 copy /Y pilo\core\process\*.hpp $(ProjectDir)..\output\include\core\process
 copy /Y pilo\core\dll\*.hpp $(ProjectDir)..\output\include\core\dll
 copy /Y pilo\core\debug\debug_new.hpp $(ProjectDir)..\output\include\core\debug\debug_new.hpp

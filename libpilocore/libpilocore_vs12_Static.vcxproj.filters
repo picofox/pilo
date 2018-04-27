@@ -315,8 +315,17 @@
     <ClInclude Include="pilo\core\fs\io_device.hpp">
       <Filter>pilo\core\fs</Filter>
     </ClInclude>
+    <ClInclude Include="pilo\core\fs\buffered_file.hpp">
+      <Filter>pilo\core\fs</Filter>
+    </ClInclude>
     <ClInclude Include="pilo\core\fs\file.hpp">
       <Filter>pilo\core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\threading\rw_mutex_r_locker.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\threading\rw_mutex_w_locker.hpp">
+      <Filter>pilo\core\threading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

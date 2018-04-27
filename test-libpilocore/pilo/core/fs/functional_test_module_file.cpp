@@ -1,4 +1,4 @@
-#include "core/fs/file.hpp"
+#include "core/fs/buffered_file.hpp"
 #include "core/io/format_output.hpp"
 #include "./functional_test_module_file.hpp"
 
@@ -30,7 +30,7 @@ namespace pilo
         {
             M_UNUSED(param);
 
-            ::pilo::core::fs::file<1024, 1024,false> f0;
+            ::pilo::core::fs::buffered_file<1024, 1024,false> f0;
 
             ::pilo::core::fs::fs_util::delete_directory(__st_c_test_file_paths[0], false);
 
