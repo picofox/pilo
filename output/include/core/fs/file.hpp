@@ -91,10 +91,32 @@ namespace pilo
                     return _close_nolock();
                 }
 
-            
+                virtual ::pilo::error_number_t read(void* buffer, size_t len, size_t* read_len)
+                {
+                    ::pilo::core::threading::rw_mutex_r_locker<lock_type> locker(_m_lock);
+                    return _read_nolock(buffer, len, read_len);
+                }
+
+                ::pilo::error_number_t write(const void* buffer, size_t len, size_t* written_len)
+                {
+                    ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
+                    return _write_nolock(buffer, len, written_len);
+                }
+
+                virtual ::pilo::error_number_t flush(::pilo::i32_t mode)
+                {
+                    ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
+                    return _flush_nolock();
+                }
+
+                virtual ::pilo::error_number_t seek(::pilo::i64_t offset, DeviceSeekWhenceEnumeration eWhence, ::pilo::i64_t* r_offset)
+                {
+                    ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
+                    return _close_nolock(offset, eWhence, r_offset);
+                }
 
             protected:
-                virtual ::pilo::error_number_t _initialize_nolock(const char* path, ::pilo::u32_t flag, void* context)
+                ::pilo::error_number_t _initialize_nolock(const char* path, ::pilo::u32_t flag, void* context)
                 {
                     if (path == nullptr)
                     {
@@ -173,7 +195,7 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
-                virtual ::pilo::error_number_t _finalize_nolock()
+                ::pilo::error_number_t _finalize_nolock()
                 {
                     if (m_init_flags & MC_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
                     {
@@ -221,6 +243,108 @@ namespace pilo
                     ::close(_m_os_file_descriptor);
 #endif
 
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _read_nolock(void* buffer, size_t len, size_t* read_len)
+                {
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_INVALID_FILE_DESCRIPTOR;
+                    }
+#ifdef          WINDOWS
+                    if (! ReadFile(_m_os_file_descriptor,
+                        buffer,
+                        (DWORD)len,
+                        (DWORD*)read_len,
+                        NULL))
+                    {
+                        return ::pilo::EC_READ_FILE_ERROR;
+                    }
+#else
+                    ssize_t nRet = read(_m_os_file_descriptor, buffer, len);
+                    if (read_len != nullptr) 
+                    {
+                        *read_len = (size_t) nRet;
+                    }
+                    if ( -1 == nRet)
+                    {
+                        return ::pilo::EC_READ_FILE_ERROR;
+                    }                                        
+
+#endif
+                    return ::pilo::EC_OK;
+                    
+                }
+
+                ::pilo::error_number_t _write_nolock(const void* buffer, size_t len, size_t* written_len)
+                {
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_INVALID_FILE_DESCRIPTOR;
+                    }
+#ifdef          WINDOWS
+                    if (!WriteFile(_m_os_file_descriptor,
+                        buffer,
+                        (DWORD) len,
+                        (DWORD)written_len,
+                        NULL))
+                    {
+                        return ::pilo::EC_WRITE_FILE_ERROR;
+                    }
+#else
+                    ssize_t nRet = write(_m_os_file_descriptor, buffer, len);
+                    if (written_len != nullptr)
+                    {
+                        *written_len = (size_t)nRet;
+                    }
+                    if (-1 == nRet)
+                    {
+                        return ::pilo::EC_WRITE_FILE_ERROR;
+                    }
+#endif
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _flush_nolock(::pilo::i32_t mode)
+                {
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_INVALID_FILE_DESCRIPTOR;
+                    }
+#ifdef          WINDOWS
+                    if (! ::FlushFileBuffers(_m_os_file_descriptor))
+                    {
+                        return ::pilo::EC_SYNC_FILE_FAILED;
+                    }
+#else
+                    if (::close(_m_os_file_descriptor) != 0)
+                    {
+                        return ::pilo::EC_SYNC_FILE_FAILED;
+                    }
+#endif
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _seek_nolock(::pilo::i64_t offset, DeviceSeekWhenceEnumeration eWhence, ::pilo::i64_t* r_offset)
+                {
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_INVALID_FILE_DESCRIPTOR;
+                    }
+#ifdef          WINDOWS
+                    if (! ::SetFilePointer(_m_os_file_descriptor, offset, r_offset, eWhence))
+                    {
+                        return ::pilo::EC_SEEK_FILE_ERROR;
+                    }
+#else
+                    off64_t nRet = lseek64(_m_os_file_descriptor, offset, eWhence);
+                    if (r_offset != nullptr) *r_offset = nRet;
+                    if (nRet == -1)
+                    {
+                        return ::pilo::EC_SEEK_FILE_ERROR;
+                    }
+#endif               
                     return ::pilo::EC_OK;
                 }
                 

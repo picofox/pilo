@@ -107,6 +107,12 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+            virtual ::pilo::error_number_t seek(::pilo::i64_t offset, DeviceSeekWhenceEnumeration eWhence, ::pilo::i64_t* r_offset)
+            {
+                M_UNUSED(offset); M_UNUSED(eWhence); M_UNUSED(r_offset);
+                return ::pilo::EC_OK;
+            }
+
             protected:
                 os_file_descriptor_t                                _m_os_file_descriptor; //internal file data structure handle
                 _PATH_T                                             _m_path;

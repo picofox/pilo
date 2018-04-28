@@ -61,6 +61,22 @@ namespace pilo
                 eDFM_Async = 0,
             };
 
+            typedef enum 
+            {
+#               ifdef  WINDOWS
+                eDSW_Begin = FILE_BEGIN,
+                eDSW_Current = FILE_CURRENT,
+                eDSW_END = FILE_CURRENT,
+
+#               else
+                eDSW_Begin = SEEK_SET,
+                eDSW_Current = SEEK_CUR,
+                eDSW_END = SEEK_END,
+
+#               endif
+
+            } DeviceSeekWhenceEnumeration;
+
             class io_device
             {
             public:           
@@ -90,6 +106,7 @@ namespace pilo
                 virtual ::pilo::error_number_t read(void* buffer, size_t len, size_t* read_len) = 0;
                 virtual ::pilo::error_number_t write(const void* buffer, size_t len, size_t* written_len) = 0;
                 virtual ::pilo::error_number_t flush(::pilo::i32_t mode) = 0;
+                virtual ::pilo::error_number_t seek(::pilo::i64_t offset, DeviceSeekWhenceEnumeration eWhence, ::pilo::i64_t* r_offset) = 0;
 
                 inline void set_context(void* context)
                 {

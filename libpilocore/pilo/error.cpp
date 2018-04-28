@@ -76,6 +76,11 @@ const char* __glb_pilo_error_code_to_string_list[pilo::EC_PILO_ERROR_CODE_COUNT]
     "EC_WAIT_MONITOR_DIR_TASK_STOP_ERROR",    
     "EC_USER_ABORTED",
     "EC_GET_FILE_TIME_ERROR",
+    "EC_INVALID_FILE_DESCRIPTOR",    
+    "EC_SYNC_FILE_FAILED"
+    "EC_READ_FILE_ERROR",
+    "EC_WRITE_FILE_ERROR",
+    "EC_SEEK_FILE_ERROR"
 };
 
 
