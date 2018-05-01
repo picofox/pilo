@@ -77,12 +77,13 @@ namespace pilo
                     return this->_finalize_nolock();
 
                 }
-            virtual ::pilo::error_number_t open(DeviceAccessModeEnumeration rw_mode, ::pilo::u32_t op_flag)
+
+                virtual ::pilo::error_number_t open(DeviceRWModeEnumeration dev_acc_mode, DeviceRWModeEnumeration rw_mode, ::pilo::u32_t flag)
                 {
-                    M_UNUSED(rw_mode);
-                    M_UNUSED(op_flag);
-                    return ::pilo::EC_OK;
+                    M_UNUSED(dev_acc_mode); M_UNUSED(rw_mode); M_UNUSED(flag);
+                    return 0;
                 }
+
             virtual ::pilo::error_number_t close()
                 {
                     return ::pilo::EC_OK;

@@ -13,13 +13,13 @@ namespace pilo
                 public:
                 typedef _Mutex mutex_type;
 
-                explicit mutex_locker(_Mutex& _Mtx)
+                explicit rw_mutex_w_locker(_Mutex& _Mtx)
                     : _MyMutex(_Mtx)
                 {	// construct and lock
                     _MyMutex.lock_write();
                 }
 
-                ~mutex_locker() M_NOEXCEPT
+                ~rw_mutex_w_locker() M_NOEXCEPT
                 {	// unlock
                     _MyMutex.unlock_write();
                 }

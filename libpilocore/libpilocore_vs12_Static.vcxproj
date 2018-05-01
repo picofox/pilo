@@ -288,7 +288,7 @@ copy /Y pilo\core\pattern\lazy_singletion_mts.hpp $(ProjectDir)..\output\include
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)pilo</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)pilo;D:\work\lib_dev_3rd\boost\boost_1_66_0;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>_PILO_DEBUG_HEAP;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>

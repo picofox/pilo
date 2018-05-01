@@ -81,6 +81,9 @@ namespace pilo
         EC_READ_FILE_ERROR,
         EC_WRITE_FILE_ERROR,
         EC_SEEK_FILE_ERROR,
+        EC_UNINITIALIZED,
+        EC_DEV_ALREADY_OPENED, 
+        EC_DEV_NOT_OPENED,
         EC_PILO_ERROR_CODE_COUNT,        
 	};
 

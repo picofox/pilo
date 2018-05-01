@@ -12,6 +12,12 @@
 #   include <sys/stat.h>
 #endif
 
+#if defined(WIN32) || defined(WINDOWS)
+#   define PILO_CREATE_DIRECTORY(P)(::CreateDirectoryW(P, 0)!= 0)
+#else
+#   define PILO_CREATE_DIRECTORY(P)(::mkdir(P, S_IRWXU | S_IRWXG | S_IRWXO) == 0)
+#endif
+
 namespace pilo
 {
     namespace core
@@ -150,13 +156,75 @@ namespace pilo
                 static ::pilo::error_number_t delete_fs_node(const char* path, bool force);
                 static ::pilo::error_number_t delete_regular_file(const char* path);
                 static ::pilo::error_number_t delete_directory(const char* path, bool content_only);
-                static ::pilo::error_number_t delete_empty_directory(const char* path);
-                static ::pilo::error_number_t create_empty_directory(const char* path, ::pilo::u32_t mode);
+                static ::pilo::error_number_t delete_empty_directory(const char* path);              
+
+                
                 static ::pilo::error_number_t create_regular_file(const char* path, bool always);
-                static ::pilo::error_number_t open_file(::pilo::os_file_descriptor_t& fildes, const char* path, ::pilo::core::fs::OpenDeviceModeEnumeration, ::pilo::core::fs::DeviceAccessModeEnumeration, ::pilo::u32_t flags);
+                static ::pilo::error_number_t open_file(::pilo::os_file_descriptor_t& fildes, const char* path, ::pilo::core::fs::DeviceAccessModeEnumeration, ::pilo::core::fs::DeviceRWModeEnumeration, ::pilo::u32_t flags);
                 static ::pilo::error_number_t close_file(::pilo::os_file_descriptor_t fd, ::pilo::u32_t flags);
 
                 static ::pilo::error_number_t  get_file_modified_time(::pilo::core::datetime::datetime &dt, const char* filepath);
+                
+#if defined(WIN32)               
+
+                static const wchar_t* convert_str_to_wstr(wchar_t* wBuffer, size_t wBufferLen, const char* c, ::pilo::u32_t m_encode = CP_ACP)
+                {
+                    wchar_t* wDynBuffer = nullptr;
+                    wchar_t* pBuffer = nullptr;
+
+                    int len = MultiByteToWideChar(m_encode, 0, c, (int) strlen(c), NULL, 0);
+                    if (len < wBufferLen)
+                    {
+                        pBuffer = wBuffer;
+                    }
+                    else
+                    {
+                        wDynBuffer = new wchar_t[len + 1];
+                        pBuffer = wDynBuffer;
+                    }
+                    
+                    MultiByteToWideChar(m_encode, 0, c, (int) strlen(c), pBuffer, len);
+                    pBuffer[len] = '\0';
+
+                    return pBuffer;
+                }
+// 
+//                 std::string WcharToChar(const wchar_t* wp, size_t m_encode = CP_ACP)
+//                 {
+//                     std::string str;
+//                     int len = WideCharToMultiByte(m_encode, 0, wp, wcslen(wp), NULL, 0, NULL, NULL);
+//                     char	*m_char = new char[len + 1];
+//                     WideCharToMultiByte(m_encode, 0, wp, wcslen(wp), m_char, len, NULL, NULL);
+//                     m_char[len] = '\0';
+//                     str = m_char;
+//                     delete m_char;
+//                     return str;
+//                 }
+#else
+
+#endif
+
+                static ::pilo::error_number_t fs_util::create_directory(const char* path, ::pilo::u32_t mode)
+                {
+                    M_UNUSED(mode);
+#if defined(WIN32)    
+                    wchar_t wszPathBuffer[MC_PATH_MAX] = { 0 };
+                    const wchar_t* pRetPth = convert_str_to_wstr(wszPathBuffer, MC_PATH_MAX, path, CP_ACP);
+                    bool bOk = PILO_CREATE_DIRECTORY(wszPathBuffer);
+                    if (pRetPth != nullptr && pRetPth != wszPathBuffer)
+                    {
+                        delete pRetPth;
+                    }                    
+#else
+                    bool bOk = PILO_CREATE_DIRECTORY(path);
+#endif
+                    if (!bOk)
+                    {
+                        return ::pilo::EC_CREATE_DIR_ERROR;
+                    }
+                    return ::pilo::EC_OK;
+                }
+               
             };
 
             class fs_find_data

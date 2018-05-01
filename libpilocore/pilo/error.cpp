@@ -80,7 +80,10 @@ const char* __glb_pilo_error_code_to_string_list[pilo::EC_PILO_ERROR_CODE_COUNT]
     "EC_SYNC_FILE_FAILED"
     "EC_READ_FILE_ERROR",
     "EC_WRITE_FILE_ERROR",
-    "EC_SEEK_FILE_ERROR"
+    "EC_SEEK_FILE_ERROR",    
+    "EC_UNINITIALIZED",
+    "EC_DEV_ALREADY_OPENED",
+    "EC_DEV_NOT_OPENED",
 };
 
 

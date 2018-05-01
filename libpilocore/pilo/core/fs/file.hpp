@@ -26,14 +26,14 @@ namespace pilo
                 typedef _LOCK_TYPE lock_type;
 
             public:
-                file
+                file()
                 {
                     _m_os_file_descriptor = MC_INVALID_FILE_DESCRIPTOR;
                     m_state = eIODS_Uninitialized;
                     m_context = nullptr;
                     m_init_flags = 0;
                 }
-                ~file
+                ~file()
                 {
                     if (!_m_path.empty())
                     {
@@ -67,21 +67,35 @@ namespace pilo
                     return this->_finalize_nolock();
                 }
 
-                virtual ::pilo::error_number_t open(DeviceAccessModeEnumeration dev_acc_mode, ::pilo::u32_t op_flag)
+                virtual ::pilo::error_number_t open(DeviceAccessModeEnumeration dev_acc_mode, DeviceRWModeEnumeration rw_mode, ::pilo::u32_t flag)
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
 
+                    if (_m_path.empty())
+                    {
+                        return ::pilo::EC_UNINITIALIZED;
+                    }                    
+
                     if (_m_os_file_descriptor != MC_INVALID_FILE_DESCRIPTOR)
                     {
+                        if (!(flag & MC_IO_DEV_OP_REOPEN))
+                        {
+                            return ::pilo::EC_DEV_ALREADY_OPENED;
+                        }
                         _close_nolock();
                     }
 
-                    return _open_nolock(dev_acc_mode, op_flag);
+                    return _open_nolock(dev_acc_mode, rw_mode, flag);
                 }
 
                 virtual ::pilo::error_number_t close()
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
+
+                    if (_m_path.empty())
+                    {
+                        return ::pilo::EC_UNINITIALIZED;
+                    }
 
                     if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
                     {
@@ -94,25 +108,67 @@ namespace pilo
                 virtual ::pilo::error_number_t read(void* buffer, size_t len, size_t* read_len)
                 {
                     ::pilo::core::threading::rw_mutex_r_locker<lock_type> locker(_m_lock);
+
+                    if (_m_path.empty())
+                    {
+                        return ::pilo::EC_UNINITIALIZED;
+                    }
+
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_DEV_NOT_OPENED;
+                    }
+
                     return _read_nolock(buffer, len, read_len);
                 }
 
                 ::pilo::error_number_t write(const void* buffer, size_t len, size_t* written_len)
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
+
+                    if (_m_path.empty())
+                    {
+                        return ::pilo::EC_UNINITIALIZED;
+                    }
+
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_DEV_NOT_OPENED;
+                    }
+
                     return _write_nolock(buffer, len, written_len);
                 }
 
                 virtual ::pilo::error_number_t flush(::pilo::i32_t mode)
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
-                    return _flush_nolock();
+                    if (_m_path.empty())
+                    {
+                        return ::pilo::EC_UNINITIALIZED;
+                    }
+
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_DEV_NOT_OPENED;
+                    }
+                    return _flush_nolock(mode);
                 }
 
                 virtual ::pilo::error_number_t seek(::pilo::i64_t offset, DeviceSeekWhenceEnumeration eWhence, ::pilo::i64_t* r_offset)
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
-                    return _close_nolock(offset, eWhence, r_offset);
+
+                    if (_m_path.empty())
+                    {
+                        return ::pilo::EC_UNINITIALIZED;
+                    }
+
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_DEV_NOT_OPENED;
+                    }
+
+                    return _seek_nolock(offset, eWhence, r_offset);
                 }
 
             protected:
@@ -197,6 +253,11 @@ namespace pilo
 
                 ::pilo::error_number_t _finalize_nolock()
                 {
+                    if (_m_os_file_descriptor != MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        _close_nolock();
+                    }
+
                     if (m_init_flags & MC_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
                     {
                         return ::pilo::core::fs::fs_util::delete_regular_file(_m_path.c_str());
@@ -210,38 +271,37 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
-                ::pilo::error_number_t _open_nolock(DeviceAccessModeEnumeration dev_acc_mode, ::pilo::u32_t op_flag)
+                ::pilo::error_number_t _open_nolock(DeviceAccessModeEnumeration dev_acc_mode, DeviceRWModeEnumeration rw_mode, ::pilo::u32_t flag)
                 {
-#ifdef          WINDOWS
-                    _m_os_file_descriptor = ::CreateFile(_m_path.c_str(),
-                                                         op_flag, //dwDesiredAccess [in]
-                                                         (FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE), // dwShareMode,
-                                                         NULL, //lpSecurityAttributes [in, optional]
-                                                         dev_acc_mode, //dwCreationDisposition [in]
-                                                         0, //dwFlagsAndAttributes [in]
-                                                         NULL //hTemplateFile [in, optional]
-                                                         );
-#else
-                    _m_os_file_descriptor = open(_m_path.c_str(),
-                                                 (int)(dev_acc_mode | op_flag)
-                                                 );
-#endif
-
-                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    ::pilo::error_number_t ret =  ::pilo::core::fs::fs_util::open_file(_m_os_file_descriptor, 
+                                                                _m_path.c_str(),
+                                                                dev_acc_mode,
+                                                                rw_mode,
+                                                                flag);
+                    if (ret == ::pilo::EC_OK)
                     {
-                        return ::pilo::EC_OPEN_FILE_FAILED;
+                        m_access_mode = dev_acc_mode;
+                        m_rw_mode = rw_mode;
+                        m_open_flag = false;
                     }
 
-                    return ::pilo::EC_OK;
+                    return ret;
                 }
 
                 ::pilo::error_number_t _close_nolock()
                 {
+                    _flush_nolock(0);
+                    
 #ifdef          WINDOWS
                     ::CloseHandle(_m_os_file_descriptor);
 #else
                     ::close(_m_os_file_descriptor);
 #endif
+
+                    m_open_flag = 0;
+                    m_rw_mode = ::pilo::core::fs::eDRWM_None;
+                    m_access_mode = ::pilo::core::fs::eDAM_OpenExisting;
+                    _m_os_file_descriptor = MC_INVALID_FILE_DESCRIPTOR;
 
                     return ::pilo::EC_OK;
                 }
@@ -287,7 +347,7 @@ namespace pilo
                     if (!WriteFile(_m_os_file_descriptor,
                         buffer,
                         (DWORD) len,
-                        (DWORD)written_len,
+                        (DWORD*)written_len,
                         NULL))
                     {
                         return ::pilo::EC_WRITE_FILE_ERROR;
@@ -308,6 +368,8 @@ namespace pilo
 
                 ::pilo::error_number_t _flush_nolock(::pilo::i32_t mode)
                 {
+                    M_UNUSED(mode);
+
                     if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
                     {
                         return ::pilo::EC_INVALID_FILE_DESCRIPTOR;
@@ -318,7 +380,7 @@ namespace pilo
                         return ::pilo::EC_SYNC_FILE_FAILED;
                     }
 #else
-                    if (::close(_m_os_file_descriptor) != 0)
+                    if (::fsync(_m_os_file_descriptor) != 0)
                     {
                         return ::pilo::EC_SYNC_FILE_FAILED;
                     }
@@ -333,10 +395,17 @@ namespace pilo
                         return ::pilo::EC_INVALID_FILE_DESCRIPTOR;
                     }
 #ifdef          WINDOWS
-                    if (! ::SetFilePointer(_m_os_file_descriptor, offset, r_offset, eWhence))
+                    LARGE_INTEGER liOff;
+                    liOff.QuadPart = offset;
+                    LARGE_INTEGER liRet;
+                    if (!::SetFilePointerEx(_m_os_file_descriptor, liOff, &liRet, eWhence))
                     {
                         return ::pilo::EC_SEEK_FILE_ERROR;
                     }
+                    if (r_offset)
+                    {
+                        *r_offset = liRet.QuadPart;
+                    }                
 #else
                     off64_t nRet = lseek64(_m_os_file_descriptor, offset, eWhence);
                     if (r_offset != nullptr) *r_offset = nRet;

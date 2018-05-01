@@ -11,7 +11,7 @@
 
 #include <Shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib ")
-
+#include <boost/filesystem.hpp>      //boost          
 
 
 namespace pilo
@@ -328,41 +328,29 @@ namespace pilo
             {                
                 size_t len = ::pilo::core::string::string_util::length(path);
                 if (len == MC_INVALID_SIZE || len == 0) return eFSNT_InvalidPath;
-                
-                char buffer[MC_PATH_MAX];
-                ::pilo::core::string::string_util::copy(buffer, sizeof(buffer), path, len);
-                if (!::pilo::core::fs::fs_util::is_root(path))
-                {
-                    if (buffer[len - 1] == M_PATH_SEP_C)
-                    {
-                        buffer[len - 1] = 0;
-                    }
-                }
-                
+   
 
 #           ifdef  WINDOWS
-                struct _stat stBuff;
-               
-
-                if (::_stat(buffer, &stBuff) != 0) {
-                    if (errno == ENOENT) {
-                        return eFSNT_NonExist;
-                    }
-                    return eFSNT_Error;
+                wchar_t wszPathBuffer[MC_PATH_MAX] = { 0 };
+                const wchar_t* pRetPth = convert_str_to_wstr(wszPathBuffer, MC_PATH_MAX, path, CP_ACP);
+                DWORD attr(::GetFileAttributesW(pRetPth));
+                if (pRetPth != nullptr && pRetPth != wszPathBuffer)
+                {
+                    delete pRetPth;
+                }
+                if (attr == INVALID_FILE_ATTRIBUTES)
+                {
+                    return eFSNT_NonExist;
                 }
 
-                if ((stBuff.st_mode & S_IFDIR) == S_IFDIR) {
-                    return eFSNT_Directory;
-                }
-                else if ((stBuff.st_mode & S_IFREG) == S_IFREG) {
-                    return eFSNT_RegularFile;
-                }
-                return eFSNT_TypeUndefined;
+                return ((attr & FILE_ATTRIBUTE_DIRECTORY)
+                        ? eFSNT_Directory
+                        : eFSNT_RegularFile);
 
 
 #           else
                 struct stat stBuff;
-                if (stat(buffer, &stBuff) != 0) {
+                if (stat(path, &stBuff) != 0) {
                     if (errno == ENOENT) {
                         return eFSNT_NonExist;
                     }
@@ -397,8 +385,8 @@ namespace pilo
                 }      
 
                 bool has_error = false;
-                intptr_t handle;
-                _finddata_t findData;
+                HANDLE  handle;
+                WIN32_FIND_DATA  findData;
                 char szBuff[MC_PATH_MAX] = { 0 };
 
                 try
@@ -412,15 +400,15 @@ namespace pilo
                     }                    
                     ::pilo::core::string::string_util::concatenate_string(szBuff, sizeof(szBuff), "*.*", MC_INVALID_SIZE);
                     
-                    handle = _findfirst(szBuff, &findData);    // 查找目录中的第一个文件
-                    if (handle == -1)
+                    handle = FindFirstFile(szBuff, &findData);    // 查找目录中的第一个文件
+                    if (handle == INVALID_HANDLE_VALUE)
                     {
                         return MAKE_SYSERR(::pilo::EC_OPEN_DIR_ERROR);
                     }
 
                     do
                     {
-                        if (strcmp(findData.name, ".") == 0 || strcmp(findData.name, "..") == 0)
+                        if (strcmp(findData.cFileName, ".") == 0 || strcmp(findData.cFileName, "..") == 0)
                             continue;
 
 						int pre_ret = fsnvi->pre_dir_visit(root);
@@ -428,7 +416,7 @@ namespace pilo
 						{
 							if (stop_on_error)
 							{
-								_findclose(handle);
+                                FindClose(handle);
 								return pre_ret;
 							}
 						}
@@ -440,16 +428,16 @@ namespace pilo
                             szBuff[len] = M_PATH_SEP_C;
                             szBuff[len + 1] = 0;
                         }
-                        ::pilo::core::string::string_util::concatenate_string(szBuff, sizeof(szBuff), findData.name, MC_INVALID_SIZE);
+                        ::pilo::core::string::string_util::concatenate_string(szBuff, sizeof(szBuff), findData.cFileName, MC_INVALID_SIZE);
 
-                        if (findData.attrib & _A_SUBDIR)
+                        if (findData.dwFileAttributes  & FILE_ATTRIBUTE_DIRECTORY)
                         {
                            ::pilo::i32_t ret = travel_path_preorder(szBuff, fsnvi, stop_on_error, true);
                             if (ret != ::pilo::EC_OK)
                             {
                                 if (stop_on_error)
                                 {
-                                    _findclose(handle);
+                                    FindClose(handle);
                                     return ret;
                                 }
                                 else
@@ -463,23 +451,14 @@ namespace pilo
                             if (fsnvi != nullptr)
                             {
                                 fs_find_data fd;
-                                if (findData.attrib & _A_SUBDIR)
-                                {
-                                    fd.set_type(eFSNT_Directory);
-                                }
-                                else
-                                {
-                                    fd.set_type(eFSNT_RegularFile);
-                                }
-
-                                fd.set_full_pathname(root, findData.name);
-
+                                fd.set_type(eFSNT_RegularFile);
+                                fd.set_full_pathname(root, findData.cFileName);
                                 ::pilo::i32_t ret = fsnvi->visit(szBuff, &fd);
                                 if (ret != ::pilo::EC_OK)
                                 {
                                     if (stop_on_error)
                                     {
-                                        _findclose(handle);
+                                        FindClose(handle);
                                         return ret;
                                     }
                                     else
@@ -490,7 +469,7 @@ namespace pilo
                             }
                         }
 
-                    } while (_findnext(handle, &findData) == 0);    // 查找目录中的下一个文件
+                    } while (FindNextFile(handle, &findData) != FALSE);    // 查找目录中的下一个文件
                 } //end of try
                 catch (...)
                 {
@@ -503,13 +482,13 @@ namespace pilo
                     {
                         if (stop_on_error)
                         {
-                            _findclose(handle);
+                            FindClose(handle);
                             return post_ret;
                         }
                     }
                 }				
 
-                if (_findclose(handle) == -1)
+                if (FindClose(handle) == -1)
                 {
 					return  MAKE_SYSERR(::pilo::EC_CLOSE_DIR_ERROR);
                 }
@@ -1162,9 +1141,11 @@ namespace pilo
 				{
 					::memcpy(path, dir_path, pos - dir_path + 1);
 					pos++;
+                   // printf("---> Checking (%s)\n",path);
                     EnumFSNodeType fs_node_type = ::pilo::core::fs::fs_util::calculate_type(path);
                     if (fs_node_type == eFSNT_Directory)
 					{
+                       // printf("\t---> Checing (%s), is DIR Cont\n", path);
                         saved_pos = pos;
 						continue;
 					}
@@ -1174,12 +1155,14 @@ namespace pilo
                         {
                             if (force)
                             {
+                               // printf("\t---> Checing (%s), is REGF del\n", path);
+
                                 ret = ::pilo::core::fs::fs_util::delete_regular_file(path);
                                 if (ret != ::pilo::EC_OK)
                                 {
                                     return MAKE_SYSERR(::pilo::EC_DELETE_FILE_ERROR);
                                 }
-                                ret = ::pilo::core::fs::fs_util::create_empty_directory(path, 0);
+                                ret = ::pilo::core::fs::fs_util::create_directory(path, 0);
                                 if (ret != ::pilo::EC_OK)
                                 {
                                     return MAKE_SYSERR(::pilo::EC_OPEN_DIR_ERROR);
@@ -1187,16 +1170,21 @@ namespace pilo
                             }
                             else
                             {
+                               // printf("\t---> Checing (%s), is REGF errret\n", path);
                                 return ::pilo::EC_FILE_ALREAY_EXIST;
                             }
                             
                         }
                         else if (fs_node_type == eFSNT_NonExist)
                         {
-                            ret = ::pilo::core::fs::fs_util::create_empty_directory(path, 0);
+                            ret = ::pilo::core::fs::fs_util::create_directory(path, 0);
                             if (ret != ::pilo::EC_OK)
                             {
-                                return MAKE_SYSERR(::pilo::EC_OPEN_DIR_ERROR);
+                                ret = ::pilo::core::fs::fs_util::create_directory(path, 0);
+                                if (ret != ::pilo::EC_OK)
+                                {
+                                    return MAKE_SYSERR(::pilo::EC_OPEN_DIR_ERROR);
+                                }
                             }
                         }
                         else
@@ -1230,7 +1218,7 @@ namespace pilo
                                 {
                                     return MAKE_SYSERR(::pilo::EC_DELETE_FILE_ERROR);
                                 }
-                                ret = ::pilo::core::fs::fs_util::create_empty_directory(path, 0);
+                                ret = ::pilo::core::fs::fs_util::create_directory(path, 0);
                                 if (ret != ::pilo::EC_OK)
                                 {
                                     return MAKE_SYSERR(::pilo::EC_OPEN_DIR_ERROR);
@@ -1244,10 +1232,15 @@ namespace pilo
                         }
                         else if (fs_node_type == eFSNT_NonExist)
                         {
-                            ret = ::pilo::core::fs::fs_util::create_empty_directory(path, 0);
+                       ////     printf("\twill creating last dir (%s)\n", path);
+                            ret = ::pilo::core::fs::fs_util::create_directory(path, 0);
                             if (ret != ::pilo::EC_OK)
                             {
-                                return MAKE_SYSERR(::pilo::EC_OPEN_DIR_ERROR);
+                                ret = ::pilo::core::fs::fs_util::create_directory(path, 0);
+                                if (ret != ::pilo::EC_OK)
+                                {
+                                    return MAKE_SYSERR(::pilo::EC_OPEN_DIR_ERROR);
+                                }                                
                             }
                         }
                         else
@@ -1370,41 +1363,17 @@ namespace pilo
                 return ::pilo::EC_OK;
             }
 
-			
-
-            ::pilo::error_number_t fs_util::create_empty_directory(const char* path, ::pilo::u32_t mode)
-            {
-                M_UNUSED(mode);
-#               ifdef  WINDOWS
-
-                if (!::CreateDirectory(path, NULL))
-                {
-                    return MAKE_SYSERR(::pilo::EC_CREATE_DIR_ERROR);
-                }
-
-#               else
-
-                if (0 != mkdir(path, 0755))
-                {
-                    return MAKE_SYSERR(::pilo::EC_CREATE_DIR_ERROR);
-                }
-
-#               endif
-
-                return ::pilo::EC_OK;
-            }
-
             ::pilo::error_number_t fs_util::create_regular_file(const char* path, bool always)
             {
-                OpenDeviceModeEnumeration eMode;
+                DeviceAccessModeEnumeration eMode;
 
                 if (always)
                 {
-                    eMode = ::pilo::core::fs::eODM_CreateAlways;
+                    eMode = ::pilo::core::fs::eDAM_CreateAlways;
                 }
                 else
                 {
-                    eMode = ::pilo::core::fs::eODM_CreateNew;
+                    eMode = ::pilo::core::fs::eDAM_CreateNew;
                 }
 
                 char dir_path_buffer[MC_PATH_MAX];
@@ -1416,12 +1385,48 @@ namespace pilo
                 if (::pilo::EC_OK != ::pilo::core::fs::fs_util::create_directory_recursively(dir_path_buffer, always))
                 {
                     return ::pilo::EC_CREATE_DIR_ERROR;
-                }               
+                }
+
+                if (::pilo::core::fs::fs_util::eFSNT_Directory != ::pilo::core::fs::fs_util::calculate_type(dir_path_buffer))
+                {
+                    printf("XXXXX  dir (%s) not exist\n", dir_path_buffer);
+                }
+                WIN32_FIND_DATA wfd;
+                HANDLE hFind = FindFirstFile(dir_path_buffer, &wfd);
+                if (INVALID_HANDLE_VALUE != hFind && (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+                {
+                    ;
+                }
+                else
+                {
+                    printf("XXXXX   dir (%s) not exist\n", dir_path_buffer);
+                }
 
                 ::pilo::os_file_descriptor_t fd = MC_INVALID_FILE_DESCRIPTOR;
-                ::pilo::core::fs::fs_util::open_file(fd, path, eMode, ::pilo::core::fs::eDAM_ReadWrite, 0);
+                ::pilo::core::fs::fs_util::open_file(fd, path, eMode, ::pilo::core::fs::eDRWM_ReadWrite, 0);
                 if (fd == MC_INVALID_FILE_DESCRIPTOR)
                 {
+                    if (::pilo::core::fs::fs_util::eFSNT_Directory != ::pilo::core::fs::fs_util::calculate_type(dir_path_buffer))
+                    {
+                        printf("XXXXX creating  dir (%s) Failed\n", dir_path_buffer);
+                    }
+                    else
+                    {
+                        printf("XXXXX creating  dir (%s) OK\n", dir_path_buffer);
+                    }
+
+                    WIN32_FIND_DATA wfd;
+                    HANDLE hFind = FindFirstFile(dir_path_buffer, &wfd);
+                    if (INVALID_HANDLE_VALUE != hFind && (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+                    {
+                        printf("XXXXX creating  dir (%s) OK\n", dir_path_buffer);
+                    }
+                    else
+                    {
+                        printf("XXXXX creating  dir (%s) Failed\n", dir_path_buffer);
+                    }
+
+    
                     return ::pilo::EC_OPEN_FILE_FAILED;
                 }
 
@@ -1433,7 +1438,11 @@ namespace pilo
                 return ::pilo::EC_OK;
             }
 
-            ::pilo::error_number_t fs_util::open_file(::pilo::os_file_descriptor_t& fildes, const char* path, ::pilo::core::fs::OpenDeviceModeEnumeration op, ::pilo::core::fs::DeviceAccessModeEnumeration access, ::pilo::u32_t flags)
+            ::pilo::error_number_t fs_util::open_file(  ::pilo::os_file_descriptor_t& fildes, 
+                                                        const char* path, 
+                                                        ::pilo::core::fs::DeviceAccessModeEnumeration dam, 
+                                                        ::pilo::core::fs::DeviceRWModeEnumeration drwm, 
+                                                        ::pilo::u32_t flags)
             {
                 M_UNUSED(flags);
                 fildes = MC_INVALID_FILE_DESCRIPTOR;
@@ -1443,11 +1452,16 @@ namespace pilo
                     return ::pilo::EC_NULL_PARAM;
                 }
 
-#               ifdef  WINDOWS               
-                fildes = ::CreateFile(path, access, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, op, 0, 0);
+#               ifdef  WINDOWS
+                DWORD dwAccesss = (DWORD) drwm;
+                if (flags & MC_IO_DEV_OP_FLAG_APPEND)
+                {
+                    dwAccesss = FILE_APPEND_DATA;
+                }
+                fildes = ::CreateFile(path, dwAccesss, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, dam, 0, 0);
 
 #               else
-                fildes = open(path, access | op);
+                fildes = open(path, (int) drwm | dam | flags);
 
 #               endif
 
