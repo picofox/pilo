@@ -111,6 +111,9 @@
     <ClCompile Include="pilo\core\fs\functional_test_module_file.cpp">
       <Filter>pilo\core\fs</Filter>
     </ClCompile>
+    <ClCompile Include="pilo\core\fs\functional_test_module_path.cpp">
+      <Filter>pilo\core\fs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pilo\pilo_test.hpp">
@@ -201,6 +204,9 @@
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
     <ClInclude Include="pilo\core\fs\functional_test_module_file.hpp">
+      <Filter>pilo\core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\fs\functional_test_module_path.hpp">
       <Filter>pilo\core\fs</Filter>
     </ClInclude>
   </ItemGroup>

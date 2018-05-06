@@ -114,22 +114,22 @@ namespace pilo
                 }
             }
 
-            char* fs_util::get_current_working_directory(char* buffer, size_t bufferSize, bool* bUseHeap, size_t* outSize)
+            char* fs_util::get_current_working_directory(char* buffer, size_t bufferSize, bool* bUseHeap, size_t* outSize, bool bAppendSep)
             {
                 char* strRet = 0;
                 size_t szMesured = 0;
+                size_t ret_size = 0;
 
                 if (bUseHeap != 0)
                 {
                     *bUseHeap = false;
-                }
-                
+                }                
 
 #           ifdef  WINDOWS
                 szMesured = (DWORD)::GetCurrentDirectory(0, 0);
-                if ((buffer == 0) || (bufferSize == MC_INVALID_SIZE) || (bufferSize == 0) || (szMesured > bufferSize))
+                if ((buffer == 0) || (bufferSize == MC_INVALID_SIZE) || (bufferSize == 0) || (szMesured >= bufferSize))
                 {                    
-                    strRet = (char*) malloc (szMesured);
+                    strRet = (char*) malloc (szMesured + 1);
                     if (strRet == nullptr) 
                     {
                         return 0;
@@ -148,11 +148,7 @@ namespace pilo
                     }
 
                     size_t szFinal = (size_t) ::GetCurrentDirectory((DWORD)szMesured, strRet);
-                    if (outSize != 0) 
-                    {
-                        *outSize = szFinal;
-                    }
-
+                    ret_size = szFinal;
                 }
                 else 
                 {  //use user buffer case
@@ -168,67 +164,53 @@ namespace pilo
                     }
                     
                     strRet = buffer;
-                    
-
-                    if (outSize != 0) {
-                        *outSize = szFinal;
-                    }
+                    ret_size = szFinal;
                 }
 
 #           else
                 char tmpPathBuffer[MC_PATH_MAX];
                 char* retTmpFinal;
 
-                retTmpFinal = ::getcwd(tmpPathBuffer, sizeof(tmpPathBuffer));
-                if (retTmpFinal == 0) {
-                    return 0;
+                retTmpFinal = ::getcwd(buffer, bufferSize-1);
+                if (retTmpFinal == nullptr && errno != ERANGE)
+                {
+                    return ::pilo::EC_UNDEFINED;
                 }
 
-                szMesured = ::pilo::core::string::string_util::length(retTmpFinal);
-                if ((buffer != 0) && (bufferSize != 0) && (bufferSize != MC_INVALID_SIZE) && (szMesured >= bufferSize) && (bUseHeap == 0)) {
-                    //no fall back without a valid use heap indicator
-                    return 0;
-                }
-
-                if ((buffer == 0) || (bufferSize == 0) || (bufferSize == MC_INVALID_SIZE) || (szMesured >= bufferSize)) {
-
-                    strRet = ::pilo::core::string::string_util::alloc_copy(retTmpFinal, szMesured);
-                    if (strRet == 0) 
+                if (retTmpFinal != nullptr)
+                {
+                    if (bUseHeap != 0) 
                     {
-                        return 0;
+                        *bUseHeap = false;
                     }
+                }
+                else
+                {
+                    retTmpFinal = ::getcwd(nullptr, 0);
                     if (bUseHeap != 0) 
                     {
                         *bUseHeap = true;
                     }
-                    else
-                    {
-                        if (buffer != nullptr)
-                        {
-                            return nullptr;
-                        }
-                    }
-
-                    if (outSize != 0) 
-                    {
-                        *outSize = szMesured;
-                    }
-
-                }
-                else {
-                    if (bUseHeap != 0) {
-                        *bUseHeap = false;
-                    }
-
-                    ::pilo::core::string::string_util::copy(buffer, bufferSize, tmpPathBuffer, szMesured);
-                    strRet = buffer;
-                    if (outSize != 0) 
-                    {
-                        *outSize = szMesured;
-                    }
                 }
 
+                ret_size = ::pilo::core::string::string_util::length(retTmpFinal);                
 #           endif
+
+                if (bAppendSep)
+                {
+                    if (strRet[ret_size-1] != M_PATH_SEP_C)
+                    {
+                        strRet[ret_size] = M_PATH_SEP_C;
+                        ret_size ++;
+                        strRet[ret_size] = 0;
+                    }
+                }
+
+                if (outSize != nullptr)
+                {  
+                    *outSize = ret_size;
+                }
+            
                 return strRet;
             }
 
@@ -266,9 +248,14 @@ namespace pilo
 
 #endif
 
-                if (::pilo::core::string::string_util::is_invalid_filename_char(path[tmpLen-1]))
+                //tocheck ... or .... sort of
+                const char* pFind = ::pilo::core::string::string_util::find(path, "..");
+                if (pFind != nullptr)
                 {
-                    return ::pilo::EC_INVALID_PATH;
+                    if ((*(pFind + 2)) == '.')
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
                 }
 
                 const char* pch = path;
@@ -304,14 +291,7 @@ namespace pilo
                 }
                 if (isalpha(path[0]) && path[1] == ':')
                 {
-                    if (sz > 2 && (path[2] == '\\'))
-                    {
-                        return true;
-                    }
-                    if (sz > 2 && (path[2] == '/'))
-                    {
-                        return true;
-                    }
+                    return true;                    
                 }               
  
 #           else
@@ -1190,9 +1170,7 @@ namespace pilo
                         else
                         {
                             return ::pilo::EC_UNDEFINED_FILE_TYPE;
-                        }
-                        
-						
+                        }		
 					}
 
                     saved_pos = pos;
@@ -1559,7 +1537,7 @@ namespace pilo
 
 
                 return ::pilo::EC_OK;
-            }
+            }            
 
             ::pilo::i32_t fs_node_delete_visitor::visit(const char* path, const fs_find_data* data)
             {

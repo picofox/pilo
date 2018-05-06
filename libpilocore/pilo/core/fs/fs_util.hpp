@@ -91,7 +91,7 @@ namespace pilo
                @see PILO::Core::Memory::MM::CHeapAllocator::Free()
                @see MC_PATH_MAX
                */
-               static char* get_current_working_directory(char* buffer, size_t bufferSize, bool* bUseHeap, size_t* outSize);
+               static char* get_current_working_directory(char* buffer, size_t bufferSize, bool* bUseHeap, size_t* outSize, bool bAppendSep = false);
                 
 
                 //! To judge if a path has valid format.
@@ -164,6 +164,124 @@ namespace pilo
                 static ::pilo::error_number_t close_file(::pilo::os_file_descriptor_t fd, ::pilo::u32_t flags);
 
                 static ::pilo::error_number_t  get_file_modified_time(::pilo::core::datetime::datetime &dt, const char* filepath);
+                template<size_t PATH_SZ>
+                static ::pilo::error_number_t create_directory(const char* dir_path, bool force)
+                {
+                    return ::pilo::EC_OK;
+                }
+
+                static ::pilo::error_number_t dir_str_append_last_sep_nocheck(char* buffer, size_t* rlen)
+                {
+                    if (buffer == nullptr) return ::pilo::EC_NULL_PARAM;
+                    size_t len = strlen(buffer);
+
+                    if (buffer[len-1] != M_PATH_SEP_C)
+                    {
+                        buffer[len] = M_PATH_SEP_C;
+                        len++;
+                        buffer[len] = 0;
+                    }
+
+                    if (rlen != nullptr)
+                    {
+                        *rlen = len;
+                    }                    
+                    
+                    return ::pilo::EC_OK;
+                }
+
+                static ::pilo::error_number_t validate_and_parse_path_string(char * buffer, size_t buffer_sz, const char* path_str)
+                {
+                    if (buffer == nullptr) return ::pilo::EC_NULL_PARAM;
+                    if (path_str == nullptr || *path_str == 0)
+                    {
+                        return ::pilo::EC_INVALID_PARAM;
+                    }
+                    size_t len = ::pilo::core::string::string_util::length(path_str);
+                    if (buffer_sz < len + 1)
+                    {
+                        return ::pilo::EC_BUFFER_TOO_SMALL;
+                    }
+                    ::memset(buffer, 0x00, buffer_sz);
+                    ::pilo::core::string::string_util::copy(buffer, buffer_sz, path_str, len);
+                    ::pilo::core::string::string_util::trim(buffer);
+                    if (::pilo::EC_OK != fs_util::check_path(buffer))
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+#if             defined(WIN32)
+                    if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "/", "\\", nullptr))
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+
+                    if (buffer[1] == ':' && buffer[2] != '\\')
+                    {
+                        size_t tmplen = ::strlen(buffer + 2);
+                        if (tmplen + 3 >= buffer_sz)
+                        {
+                            return ::pilo::EC_BUFFER_TOO_SMALL;
+                        }
+                        ::memmove(buffer + 3, buffer + 2, tmplen);
+                    }
+
+#               else
+#               endif
+
+                    trim_path_last_seperator(buffer, MC_INVALID_SIZE);
+
+                    return ::pilo::EC_OK;
+                }
+                template <size_t BUFFSZ>
+                static ::pilo::error_number_t validate_and_parse_path_string(char(&buffer)[BUFFSZ], const char* path_str)
+                {
+                    if (buffer == nullptr) return ::pilo::EC_NULL_PARAM;
+
+                    if (path_str == nullptr || *path_str == 0)
+                    {
+                        return ::pilo::EC_INVALID_PARAM;
+                    }
+
+                    size_t len = ::pilo::core::string::string_util::length(path_str);
+                    if (BUFFSZ < len + 1)
+                    {
+                        return ::pilo::EC_BUFFER_TOO_SMALL;
+                    }
+
+                    ::memset(buffer, 0x00, BUFFSZ);
+
+                    ::pilo::core::string::string_util::copy(buffer, BUFFSZ, path_str, len);
+
+                    ::pilo::core::string::string_util::trim(buffer);
+
+                    if (::pilo::EC_OK != fs_util::check_path(buffer))
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+
+#if             defined(WIN32)
+                    if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "/", "\\", nullptr))
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+
+                    if (buffer[1] == ':' && buffer[2] != '\\')
+                    {
+                        size_t tmplen = ::strlen(buffer + 2);
+                        if (tmplen + 3 >= BUFFSZ)
+                        {
+                            return ::pilo::EC_BUFFER_TOO_SMALL;
+                        }
+                        ::memmove(buffer + 3, buffer + 2, tmplen);
+                    }
+
+#               else 
+
+#               endif
+                    trim_path_last_seperator(buffer, MC_INVALID_SIZE);
+
+                    return ::pilo::EC_OK;
+                }
                 
 #if defined(WIN32)               
 

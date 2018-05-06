@@ -42,11 +42,11 @@ namespace pilo
 
             ::pilo::core::fs::file<> f0;
 
-            err = ::pilo::core::fs::fs_util::delete_directory(__st_c_test_file_paths[0], false);
-            if (err != ::pilo::EC_OK)
-            {                
-                return -1;
-            }
+//             err = ::pilo::core::fs::fs_util::delete_directory(__st_c_test_file_paths[0], false);
+//             if (err != ::pilo::EC_OK)
+//             {                
+//                 return -1;
+//             }
 
             err = f0.initialize(__st_c_test_file_paths[1], MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE, nullptr);
             if (err != ::pilo::EC_OK)

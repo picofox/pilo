@@ -24,6 +24,7 @@
     <ClCompile Include="pilo\core\container\functional_test_module_class_singly_linked_selflist.cpp" />
     <ClCompile Include="pilo\core\datetime\functional_test_module_class_datetime.cpp" />
     <ClCompile Include="pilo\core\fs\functional_test_module_fs_util.cpp" />
+    <ClCompile Include="pilo\core\fs\functional_test_module_path.cpp" />
     <ClCompile Include="pilo\core\io\functional_test_module_class_fixed_memory_stream.cpp" />
     <ClCompile Include="pilo\core\fs\functional_test_module_file.cpp" />
     <ClCompile Include="pilo\core\memory\functional_test_module_class_compactable_memory_pool.cpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="pilo\core\container\functional_test_module_class_singly_linked_selflist.hpp" />
     <ClInclude Include="pilo\core\datetime\functional_test_module_class_datetime.hpp" />
     <ClInclude Include="pilo\core\fs\functional_test_module_fs_util.hpp" />
+    <ClInclude Include="pilo\core\fs\functional_test_module_path.hpp" />
     <ClInclude Include="pilo\core\io\functional_test_module_class_fixed_memory_stream.hpp" />
     <ClInclude Include="pilo\core\fs\functional_test_module_file.hpp" />
     <ClInclude Include="pilo\core\memory\functional_test_module_class_compactable_memory_pool.hpp" />

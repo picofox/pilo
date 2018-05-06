@@ -50,9 +50,7 @@ namespace pilo
                 {
                     return true;
                 }
-                if (x == ':') {
-                    return true;
-                }
+
 #endif
                 return false;
             }

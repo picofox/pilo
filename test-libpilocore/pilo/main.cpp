@@ -1,6 +1,7 @@
 #include "pilo_test.hpp"
 #include <cstring>
 #include "core/io/format_output.hpp"
+#include "core/fs/functional_test_module_path.hpp"
 #include "core/string/functional_test_module_class_string_util.hpp"
 #include "core/string/functional_test_module_class_fixed_astring.hpp"
 #include "core/string/functional_test_module_class_fixed_wstring.hpp"
@@ -24,6 +25,7 @@
 #include "core/string/functional_test_module_class_dynamic_astring.hpp"
 #include "core/string/functional_test_module_class_auto_astring.hpp"
 #include "core/memory/functional_test_module_class_dynamic_buffer.hpp"
+#include "core/fs/path.hpp"
 #include "core/fs/functional_test_module_file.hpp"
 #include "core/fs/fs_util.hpp"
 #include "core/process/process_util.hpp"
@@ -32,6 +34,7 @@
 #include "core/pattern/lazy_singletion_mts.hpp"
 #include <iostream>
 #include <limits>
+#include "core/fs/path.hpp"
 
 
 #include "core/memory/presure_test_portable_object_pool.hpp"
@@ -406,6 +409,10 @@ int main(int argc, char *argv[])
 
     bool break_on_error = true;
     pilo::i32_t id = 1;
+
+    pilo::test::functional_test_module_path path_cases(id++, "functional_test_module_file", pilo::test::g_functional_cases_path);
+    path_cases.run_cases(break_on_error);
+    path_cases.console_output();
 
     pilo::test::functional_test_module_file  file_cases(id++, "functional_test_module_file", pilo::test::g_functional_cases_file);
     file_cases.run_cases(break_on_error);

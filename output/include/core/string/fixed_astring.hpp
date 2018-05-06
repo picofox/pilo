@@ -298,6 +298,35 @@ namespace pilo
                     return *this;
                 }
 
+                bool insert(size_t pos, const char* str, size_t len)
+                {
+                    if (str == 0 || *str == 0)
+                    {
+                        return false;
+                    }
+                    
+                    if (pos >= size())
+                    {
+                        return false;
+                    }
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = strlen(str);
+                    }
+
+                    if (capacity() <= len + size())
+                    {
+                        return false;
+                    }
+
+                    ::memmove(_m_data+pos+len, _m_data+pos, size() - pos);
+                    ::memmove(_m_data+pos    , str,          len);
+                    _m_size += len;
+                    _m_data[_m_size] = 0;
+
+                    return true;
+                }
 
                 //debug
 

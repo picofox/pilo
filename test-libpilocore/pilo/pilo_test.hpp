@@ -23,7 +23,7 @@ namespace pilo
             pilo::u32_t         m_ms_exhausted;
         } testing_case_t;
 
-
+        extern pilo::test::testing_case g_functional_cases_path[];
         extern pilo::test::testing_case g_functional_cases_string_util[];
         extern pilo::test::testing_case g_functional_cases_fixed_astring[];
         extern pilo::test::testing_case g_functional_cases_fixed_wstring[];
@@ -48,5 +48,6 @@ namespace pilo
         extern pilo::test::testing_case g_functional_cases_dynamic_buffer[];
         extern pilo::test::testing_case g_functional_cases_file[];
         extern pilo::test::testing_case g_functional_cases_portable_object_pool[];
+        
     }
 }

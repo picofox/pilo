@@ -327,6 +327,9 @@
     <ClInclude Include="pilo\core\threading\rw_mutex_w_locker.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
+    <ClInclude Include="pilo\core\fs\path.hpp">
+      <Filter>pilo\core\fs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pilo\error.cpp">

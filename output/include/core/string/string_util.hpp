@@ -364,7 +364,7 @@ namespace pilo
                     static bool ipv4_address_cstr_to_int(pilo::u32_t& ip, pilo::u16_t& port, const char* cstr, size_t length = MC_INVALID_SIZE);
                     
                     template <typename T>
-                    static ::pilo::i32_t rescanable_replace(T* strSource, size_t cTotalSizeOfSource, const T* strNeedle, const T* strReplacement, size_t* refCount)
+                    static ::pilo::error_number_t rescanable_replace(T* strSource, size_t cTotalSizeOfSource, const T* strNeedle, const T* strReplacement, size_t* refCount)
                     {
                         if (strSource == nullptr) 
                         {

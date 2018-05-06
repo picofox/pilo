@@ -34,6 +34,7 @@
     <ClInclude Include="pilo\core\fs\file.hpp" />
     <ClInclude Include="pilo\core\fs\fs_util.hpp" />
     <ClInclude Include="pilo\core\fs\io_device.hpp" />
+    <ClInclude Include="pilo\core\fs\path.hpp" />
     <ClInclude Include="pilo\core\info\cpu.hpp" />
     <ClInclude Include="pilo\core\io\fixed_memory_istream.hpp" />
     <ClInclude Include="pilo\core\io\fixed_memory_ostream.hpp" />
@@ -355,7 +356,7 @@ copy /Y pilo\core\memory\io_buffer.hpp $(ProjectDir)..\output\include\core\memor
 copy /Y pilo\core\memory\fixed_buffer.hpp $(ProjectDir)..\output\include\core\memory\fixed_buffer.hpp
 copy /Y pilo\core\memory\dynamic_buffer.hpp $(ProjectDir)..\output\include\core\memory\dynamic_buffer.hpp
 copy /Y pilo\core\memory\dynamic_object_ring_buffer.hpp $(ProjectDir)..\output\include\core\memory\dynamic_object_ring_buffer.hpp
-copy /Y pilo\core\fs\* $(ProjectDir)..\output\include\core\fs
+copy /Y pilo\core\fs\*.hpp $(ProjectDir)..\output\include\core\fs
 copy /Y pilo\core\process\*.hpp $(ProjectDir)..\output\include\core\process
 copy /Y pilo\core\dll\*.hpp $(ProjectDir)..\output\include\core\dll
 copy /Y pilo\core\debug\debug_new.hpp $(ProjectDir)..\output\include\core\debug\debug_new.hpp
