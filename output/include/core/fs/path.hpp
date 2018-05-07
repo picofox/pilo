@@ -57,7 +57,7 @@ namespace pilo
                     return true;
                 }
 
-                ::pilo::error_number_t to_absolute()
+                ::pilo::error_number_t to_absolute(bool bAppendSep)
                 {
                     if (!valid())
                     {
@@ -66,6 +66,17 @@ namespace pilo
 
                     if (is_absolute())
                     {
+                        if (bAppendSep)
+                        {
+                            if (_m_str_path.back() != M_PATH_SEP_C)
+                            {
+                                if (_m_str_path.available_capacity() <= 0)
+                                {
+                                    return ::pilo::EC_BUFFER_TOO_SMALL;
+                                }
+                                _m_str_path.push_back(M_PATH_SEP_C);
+                            }
+                        }
                         return ::pilo::EC_NONSENSE_OPERATION;
                     }
 
@@ -83,9 +94,26 @@ namespace pilo
                         return ::pilo::EC_BUFFER_TOO_SMALL;
                     }
 
-                    if (!_m_str_path.insert(0, p, cwd_len))
+                    bool bInsertRet = _m_str_path.insert(0, p, cwd_len);
+                    if (bUseHeap)
+                    {
+                        free(p);
+                    }
+                    if (! bInsertRet)
                     {
                         return ::pilo::EC_COPY_STRING_FAILED;
+                    }                   
+
+                    if (bAppendSep)
+                    {
+                        if (_m_str_path.back() != M_PATH_SEP_C)
+                        {
+                            if (_m_str_path.available_capacity() <= 0)
+                            {
+                                return ::pilo::EC_BUFFER_TOO_SMALL;
+                            }
+                            _m_str_path.push_back(M_PATH_SEP_C);
+                        }
                     }
 
                     return ::pilo::EC_OK;
@@ -160,7 +188,7 @@ namespace pilo
                     return true;
                 }
 
-                ::pilo::error_number_t to_absolute()
+                ::pilo::error_number_t to_absolute(bool bAppendSep)
                 {
                     if (!valid())
                     {
@@ -169,6 +197,13 @@ namespace pilo
 
                     if (is_absolute())
                     {
+                        if (bAppendSep)
+                        {
+                            if (_m_str_path.back() != M_PATH_SEP_C)
+                            {
+                                _m_str_path.push_back(M_PATH_SEP_C);
+                            }
+                        }
                         return ::pilo::EC_NONSENSE_OPERATION;
                     }
 
@@ -185,6 +220,14 @@ namespace pilo
                     if (bUseHeap)
                     {
                         free(p);
+                    }
+
+                    if (bAppendSep)
+                    {
+                        if (_m_str_path.back() != M_PATH_SEP_C)
+                        {
+                            _m_str_path.push_back(M_PATH_SEP_C);
+                        }
                     }
 
                     return ::pilo::EC_OK;

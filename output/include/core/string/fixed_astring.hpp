@@ -73,6 +73,12 @@ namespace pilo
                     return *this;
                 }
 
+                void push_back(char ch)
+                {
+                    _m_data[_m_size++] = ch;
+                    _m_data[_m_size] = 0;
+                }
+
                 fixed_astring<max_capacity>& operator=(const fixed_astring<max_capacity>& str)
                 {
                     if (this != &str)

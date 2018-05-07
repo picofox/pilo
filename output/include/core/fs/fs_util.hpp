@@ -18,6 +18,7 @@
 #   define PILO_CREATE_DIRECTORY(P)(::mkdir(P, S_IRWXU | S_IRWXG | S_IRWXO) == 0)
 #endif
 
+
 namespace pilo
 {
     namespace core
@@ -190,6 +191,8 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+                static ::pilo::error_number_t validate_and_parse_cwd_and_path(char* cwd, char* path);
+
                 static ::pilo::error_number_t validate_and_parse_path_string(char * buffer, size_t buffer_sz, const char* path_str)
                 {
                     if (buffer == nullptr) return ::pilo::EC_NULL_PARAM;
@@ -205,12 +208,14 @@ namespace pilo
                     ::memset(buffer, 0x00, buffer_sz);
                     ::pilo::core::string::string_util::copy(buffer, buffer_sz, path_str, len);
                     ::pilo::core::string::string_util::trim(buffer);
-                    if (::pilo::EC_OK != fs_util::check_path(buffer))
+                    
+#if             defined(WIN32)
+                    if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "/", "\\", nullptr))
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }
-#if             defined(WIN32)
-                    if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "/", "\\", nullptr))
+
+                    if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "\\\\", "\\", nullptr))
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }
@@ -226,7 +231,16 @@ namespace pilo
                     }
 
 #               else
+                    if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "//", "/", nullptr))
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
 #               endif
+
+                    if (::pilo::EC_OK != fs_util::check_path(buffer))
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
 
                     trim_path_last_seperator(buffer, MC_INVALID_SIZE);
 
@@ -252,15 +266,15 @@ namespace pilo
 
                     ::pilo::core::string::string_util::copy(buffer, BUFFSZ, path_str, len);
 
-                    ::pilo::core::string::string_util::trim(buffer);
+                    ::pilo::core::string::string_util::trim(buffer);                    
 
-                    if (::pilo::EC_OK != fs_util::check_path(buffer))
+#if             defined(WIN32)
+                    if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "/", "\\", nullptr))
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }
 
-#if             defined(WIN32)
-                    if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "/", "\\", nullptr))
+                    if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "\\\\", "\\", nullptr))
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }
@@ -276,8 +290,17 @@ namespace pilo
                     }
 
 #               else 
+                    if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "//", "/", nullptr))
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
 
 #               endif
+
+                    if (::pilo::EC_OK != fs_util::check_path(buffer))
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
                     trim_path_last_seperator(buffer, MC_INVALID_SIZE);
 
                     return ::pilo::EC_OK;

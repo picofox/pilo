@@ -216,7 +216,12 @@ namespace pilo
 
             ::pilo::i32_t fs_util::check_path(const char* path)
             {
-                if (path == 0) 
+                if (path == nullptr) 
+                {
+                    return ::pilo::EC_NULL_PTR;
+                }
+
+                if (*path == 0)
                 {
                     return ::pilo::EC_NULL_PTR;
                 }
@@ -232,18 +237,28 @@ namespace pilo
                 {
                     return ::pilo::EC_OK;
                 }
-                if ((tmpLen) == 3 && isalpha(path[0]) && path[1] == ':' && path[2] == '\\')
+                if ((tmpLen) >= 3 && isalpha(path[0]) && path[1] == ':' && path[2] == '\\')
                 {
                     return ::pilo::EC_OK;
                 }
-                if ((tmpLen) == 3 && isalpha(path[0]) && path[1] == ':' && path[2] == '/')
+                if ((tmpLen) >= 3 && isalpha(path[0]) && path[1] == ':' && path[2] == '/')
                 {
-                    return ::pilo::EC_OK;
+                    return ::pilo::EC_INVALID_PATH;
                 }
+
+                if (strstr(path, "\\\\"))
+                {
+                    return ::pilo::EC_INVALID_PATH;
+                }           
 #else
                 if ((tmpLen) == 1 && path[0] == '/')
                 {
                     return ::pilo::EC_OK;
+                }
+
+                if (strstr(path, "//"))
+                {
+                    return ::pilo::EC_INVALID_PATH;
                 }
 
 #endif

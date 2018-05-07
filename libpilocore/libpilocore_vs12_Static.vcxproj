@@ -356,7 +356,7 @@ copy /Y pilo\core\memory\io_buffer.hpp $(ProjectDir)..\output\include\core\memor
 copy /Y pilo\core\memory\fixed_buffer.hpp $(ProjectDir)..\output\include\core\memory\fixed_buffer.hpp
 copy /Y pilo\core\memory\dynamic_buffer.hpp $(ProjectDir)..\output\include\core\memory\dynamic_buffer.hpp
 copy /Y pilo\core\memory\dynamic_object_ring_buffer.hpp $(ProjectDir)..\output\include\core\memory\dynamic_object_ring_buffer.hpp
-copy /Y pilo\core\fs\*.hpp $(ProjectDir)..\output\include\core\fs
+copy /Y pilo\core\fs\*.hpp $(ProjectDir)..\output\include\core\fs\
 copy /Y pilo\core\process\*.hpp $(ProjectDir)..\output\include\core\process
 copy /Y pilo\core\dll\*.hpp $(ProjectDir)..\output\include\core\dll
 copy /Y pilo\core\debug\debug_new.hpp $(ProjectDir)..\output\include\core\debug\debug_new.hpp
