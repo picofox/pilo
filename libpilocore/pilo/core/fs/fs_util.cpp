@@ -1554,6 +1554,75 @@ namespace pilo
                 return ::pilo::EC_OK;
             }            
 
+            ::pilo::error_number_t fs_util::_compact_path_once(char * pBuffer, size_t len)
+            {
+                if (pBuffer == nullptr || len <=0)
+                {
+                    return ::pilo::EC_NULL_PARAM;
+                }
+
+                char* pEnd = pBuffer + len;
+
+                char* dot2ptr = ::strstr(pBuffer, "..");
+                if (dot2ptr == nullptr)
+                {
+                    return ::pilo::EC_NONSENSE_OPERATION;
+                }
+
+                bool bLast = false;
+                if (pEnd - dot2ptr <= 2)
+                {
+                    bLast = true; //.. is last part of path
+                }
+
+#ifdef WINDOWS
+                if (dot2ptr - pBuffer < 5)
+#else
+                if (dot2ptr - pBuffer < 3)
+#endif
+                {
+                    return ::pilo::EC_INVALID_PATH;
+                }                
+
+                char* p = ::pilo::core::string::string_util::find_reversely(pBuffer, M_PATH_SEP_S, dot2ptr - pBuffer - 1);
+                if (p == nullptr)
+                {
+                    return ::pilo::EC_INVALID_PATH;
+                }
+
+                if (bLast)
+                {
+                    *p = 0;
+                }
+                else
+                {
+                    size_t tmplen = strlen(dot2ptr + 2);
+                    ::memmove(p, dot2ptr + 2, tmplen);
+                    *(p+tmplen) = 0;
+                }
+
+                
+                return ::pilo::EC_OK;
+                
+            }
+
+            ::pilo::error_number_t fs_util::compact_path(char * pBuffer, size_t len)
+            {
+                ::pilo::error_number_t ret = ::pilo::EC_OK;
+                do
+                {
+                    ret = _compact_path_once(pBuffer, len);
+                    if (ret == ::pilo::EC_NONSENSE_OPERATION)
+                    {
+                        return ::pilo::EC_OK;
+                    }
+          
+                    
+                } while (ret == ::pilo::EC_OK);
+
+                return ::pilo::EC_INVALID_PATH;
+            }
+
             ::pilo::i32_t fs_node_delete_visitor::visit(const char* path, const fs_find_data* data)
             {
                 if (data == nullptr) return ::pilo::EC_NULL_PARAM;

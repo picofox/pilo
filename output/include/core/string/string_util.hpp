@@ -639,6 +639,57 @@ namespace pilo
                         return nullptr;
                     }
 
+                    template<typename T>
+                    static T* find_reversely(T* strSource, const T* needle, size_t count = MC_INVALID_SIZE)
+                    {
+                        if (strSource == nullptr)
+                        {
+                            return nullptr;
+                        }
+
+                        //return source string is needle is zero length (or null)
+                        if (needle == nullptr)
+                        {
+                            return strSource;
+                        }
+                        size_t needleLength = ::pilo::core::string::string_util::length(needle);
+                        if (needleLength <= 0)
+                        {
+                            return strSource;
+                        }
+
+                        size_t strSourceLength;
+                        if (count == MC_INVALID_SIZE)
+                        {
+                            strSourceLength = ::pilo::core::string::string_util::length(strSource);
+                            if (strSourceLength == 0)
+                            {
+                                return nullptr;
+                            }
+                        }
+                        else
+                        {
+                            strSourceLength = count;
+                        }
+
+                        if (strSourceLength == 0)
+                        {
+                            return strSource;
+                        }
+
+                        for (int i = (int)strSourceLength - 1; i >= 0; i--)  {
+                            size_t charsRemains = strSourceLength - i;
+                            if (needleLength > charsRemains) {
+                                continue;
+                            }
+                            if (0 == ::pilo::core::string::string_util::binary_compare(strSource + i, needle, needleLength)) {
+                                return (strSource + i);
+                            }
+                        }
+
+                        return nullptr;
+                    }
+
 
 			private:
 				static size_t _element_count_mbcs(const unsigned char* str);

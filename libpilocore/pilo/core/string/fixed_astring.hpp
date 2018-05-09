@@ -79,6 +79,11 @@ namespace pilo
                     _m_data[_m_size] = 0;
                 }
 
+                void pop_back()
+                {               
+                    _m_data[--_m_size] = 0;
+                }
+
                 fixed_astring<max_capacity>& operator=(const fixed_astring<max_capacity>& str)
                 {
                     if (this != &str)
@@ -150,6 +155,12 @@ namespace pilo
                 const char& back() const;
                 char& front();
                 const char& front() const;
+                char* data() { return _m_data; }
+                void eval_str_size()
+                {
+                    _m_size = strlen(_m_data);
+                }
+
 
                 //operator
                 friend bool operator==(const fixed_astring& l, const fixed_astring& r)

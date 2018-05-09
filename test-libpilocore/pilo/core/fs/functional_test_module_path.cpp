@@ -20,12 +20,12 @@ namespace pilo
         static const char* __st_c_test_paths[] = { "..\\d0\\d1\\d2\\d3" };
         static const char* __st_c_test_inv_paths[] = { "\\...\\d0\\d1\\d2\\d3","\\d0\\d1\\d2\\d3\\...","\\d0\\d1\\d2\\d3\\|","\\d0\\d1\\d2\\>" };
         static const char* __st_c_test_abs_paths[] = { "d:123", "d:/123", "d:\\123" };
-        static const char* __st_c_test_to_abs_paths[] = { "d0\\\\\\\\\\d1/d2\\\\d3" };
+        static const char* __st_c_test_to_abs_paths[] = { "d0\\\\\\\\\\d1/d2\\\\d3","d0\\\\\\\\\\d1/d2\\\\d3/../", "d0\\\\\\\\\\d1/d2\\\\d3/../tf.txt", "d:\\1\\.." };
 #else
         static const char* __st_c_test_paths[] = { "../d0/d1/d2/d3" };
         static const char* __st_c_test_inv_paths[] = { "/.../d0/d1/d2/d3","/d0/d1/d2/d3/...", "/d0/d1/d2/d3/|", "/d0/d1/d2/</"};        
         static const char* __st_c_test_abs_paths[] = { "/123","/123","//123"};
-        static const char* __st_c_test_to_abs_paths[] = { "d0///////d1/d2///d3" };
+        static const char* __st_c_test_to_abs_paths[] = { "d0///////d1/d2///d3", "d0///////d1/d2///d3/../", "/1/.." };
 #endif
 
         static pilo::i32_t functional_test_fix(void* param);
@@ -86,7 +86,13 @@ namespace pilo
             for (int i = 0; i < sizeof(__st_c_test_to_abs_paths) / sizeof(char*); i++)
             {
                 path_abs_test.set(__st_c_test_to_abs_paths[i]);
-                ::pilo::error_number_t ret = path_abs_test.to_absolute(true);
+                ::pilo::error_number_t ret = path_abs_test.to_absolute(false);
+                if (ret != ::pilo::EC_OK)
+                {
+                    return -40;
+                }
+
+                ret = path_abs_test.to_absolute(true);
                 if (ret != ::pilo::EC_OK)
                 {
                     return -40;

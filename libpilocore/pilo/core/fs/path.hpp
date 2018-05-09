@@ -64,46 +64,48 @@ namespace pilo
                         return ::pilo::EC_INVALID_PATH;
                     }
 
-                    if (is_absolute())
+                    if (! is_absolute())
                     {
-                        if (bAppendSep)
+                        char buffer_max[MAX_PATH_SZ] = { 0 };
+                        bool bUseHeap = false;
+                        char* p = ::pilo::core::fs::fs_util::get_current_working_directory(buffer_max, sizeof(buffer_max), &bUseHeap, nullptr, true);
+                        if (p == nullptr)
                         {
-                            if (_m_str_path.back() != M_PATH_SEP_C)
-                            {
-                                if (_m_str_path.available_capacity() <= 0)
-                                {
-                                    return ::pilo::EC_BUFFER_TOO_SMALL;
-                                }
-                                _m_str_path.push_back(M_PATH_SEP_C);
-                            }
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }
-                        return ::pilo::EC_NONSENSE_OPERATION;
+                        size_t cwd_len = ::pilo::core::string::string_util::length(p);
+
+                        if (MAX_PATH_SZ <= cwd_len + _m_str_path.size())
+                        {
+                            return ::pilo::EC_BUFFER_TOO_SMALL;
+                        }
+
+                        bool bInsertRet = _m_str_path.insert(0, p, cwd_len);
+                        if (bUseHeap)
+                        {
+                            free(p);
+                        }
+                        if (!bInsertRet)
+                        {
+                            return ::pilo::EC_COPY_STRING_FAILED;
+                        }                        
+                    } // end of is_absolute
+
+                    if (_m_str_path.back() == M_PATH_SEP_C)
+                    {
+                        _m_str_path.pop_back();
                     }
 
-                    char buffer_max[MC_PATH_MAX] = { 0 };
-                    bool bUseHeap = false;
-                    char* p = ::pilo::core::fs::fs_util::get_current_working_directory(buffer_max, sizeof(buffer_max), &bUseHeap, nullptr, true);
-                    if (p == nullptr)
+                    char buffer_max_tmp[MAX_PATH_SZ] = { 0 }; 
+                    ::pilo::core::string::string_util::copy(buffer_max_tmp, sizeof(buffer_max_tmp), _m_str_path.c_str(), _m_str_path.size());
+                    ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::compact_path(buffer_max_tmp,_m_str_path.size());
+                    if (ret != ::pilo::EC_OK)
                     {
-                        return ::pilo::EC_INSUFFICIENT_MEMORY;
-                    }
-                    size_t cwd_len = ::pilo::core::string::string_util::length(p);
-
-                    if (MAX_PATH_SZ <= cwd_len + _m_str_path.size())
-                    {
-                        return ::pilo::EC_BUFFER_TOO_SMALL;
+                        return ::pilo::EC_INVALID_PATH;
                     }
 
-                    bool bInsertRet = _m_str_path.insert(0, p, cwd_len);
-                    if (bUseHeap)
-                    {
-                        free(p);
-                    }
-                    if (! bInsertRet)
-                    {
-                        return ::pilo::EC_COPY_STRING_FAILED;
-                    }                   
-
+                    _m_str_path.assign(buffer_max_tmp);
+                    
                     if (bAppendSep)
                     {
                         if (_m_str_path.back() != M_PATH_SEP_C)

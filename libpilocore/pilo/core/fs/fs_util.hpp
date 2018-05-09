@@ -191,7 +191,9 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
-                static ::pilo::error_number_t validate_and_parse_cwd_and_path(char* cwd, char* path);
+                static ::pilo::error_number_t _compact_path_once(char * pBuffer, size_t len);
+
+                static ::pilo::error_number_t compact_path(char * pBuffer, size_t len);
 
                 static ::pilo::error_number_t validate_and_parse_path_string(char * buffer, size_t buffer_sz, const char* path_str)
                 {
@@ -246,6 +248,8 @@ namespace pilo
 
                     return ::pilo::EC_OK;
                 }
+
+
                 template <size_t BUFFSZ>
                 static ::pilo::error_number_t validate_and_parse_path_string(char(&buffer)[BUFFSZ], const char* path_str)
                 {
