@@ -20,26 +20,80 @@ namespace pilo
         static const char* __st_c_test_paths[] = { "..\\d0\\d1\\d2\\d3" };
         static const char* __st_c_test_inv_paths[] = { "\\...\\d0\\d1\\d2\\d3","\\d0\\d1\\d2\\d3\\...","\\d0\\d1\\d2\\d3\\|","\\d0\\d1\\d2\\>" };
         static const char* __st_c_test_abs_paths[] = { "d:123", "d:/123", "d:\\123" };
-        static const char* __st_c_test_to_abs_paths[] = { "d0\\\\\\\\\\d1/d2\\\\d3","d0\\\\\\\\\\d1/d2\\\\d3/../", "d0\\\\\\\\\\d1/d2\\\\d3/../tf.txt", "d:\\1\\.." };
+        static const char* __st_c_test_to_abs_paths[] = { 
+            "d0\\\\\\\\\\d1/d2\\\\d3","d0\\\\\\\\\\d1/d2\\\\d3/../", 
+            "d0\\\\\\\\\\d1/d2\\\\d3/../tf.txt", "d:\\1\\..",
+            "d0\\\\\\\\\\d1/d2\\\\d3/../..\\..\\a.txt" };
 #else
         static const char* __st_c_test_paths[] = { "../d0/d1/d2/d3" };
         static const char* __st_c_test_inv_paths[] = { "/.../d0/d1/d2/d3","/d0/d1/d2/d3/...", "/d0/d1/d2/d3/|", "/d0/d1/d2/</"};        
         static const char* __st_c_test_abs_paths[] = { "/123","/123","//123"};
-        static const char* __st_c_test_to_abs_paths[] = { "d0///////d1/d2///d3", "d0///////d1/d2///d3/../", "/1/.." };
+        static const char* __st_c_test_to_abs_paths[] = { 
+            "d0///////d1/d2///d3", "d0///////d1/d2///d3/../","d0///////d1/d2///d3/../tf.txt" ,"/1/..",  "d0///////d1/d2///d3/../../../tf.txt};
 #endif
 
         static pilo::i32_t functional_test_fix(void* param);
+        static pilo::i32_t functional_test_dyn(void* param);
 
 
         pilo::test::testing_case g_functional_cases_path[] =
         {
             /*---"---------------------------------------------"*/
-            { 1, "initilized()                                 ", nullptr, functional_test_fix, 0, -1, (pilo::u32_t) - 1 },
-
+            { 1, "test path<FIX_SIZE>                          ", nullptr, functional_test_fix, 0, -1, (pilo::u32_t) - 1 },
+            { 2, "test path<0>                                 ", nullptr, functional_test_dyn, 0, -1, (pilo::u32_t) - 1 },
 
             { -1, "end", nullptr, nullptr, 0, -1, 0 },
         };
 
+        pilo::i32_t functional_test_dyn(void* param)
+        {
+            M_UNUSED(param);
+
+            //check fatal invalid paths
+            ::pilo::core::fs::path<0> path_fatal_test;
+            for (int i = 0; i < sizeof(__st_c_test_inv_paths) / sizeof(char*); i++)
+            {
+                path_fatal_test.reset();
+                path_fatal_test.set(__st_c_test_inv_paths[i]);
+                if (path_fatal_test.valid())
+                {
+                    return -20;
+                }
+            }
+
+
+            ::pilo::core::fs::path<0> path_abs_test;
+            for (int i = 0; i < sizeof(__st_c_test_abs_paths) / sizeof(char*); i++)
+            {
+                path_abs_test.reset();
+                path_abs_test.set(__st_c_test_abs_paths[i]);
+                bool b = path_abs_test.is_absolute();
+
+                if (!b)
+                {
+                    return -30;
+                }
+            }
+
+            for (int i = 0; i < sizeof(__st_c_test_to_abs_paths) / sizeof(char*); i++)
+            {
+                path_abs_test.set(__st_c_test_to_abs_paths[i]);
+                ::pilo::error_number_t ret = path_abs_test.to_absolute(false, true);
+                if (ret != ::pilo::EC_OK)
+                {
+                    return -40;
+                }
+
+                ret = path_abs_test.to_absolute(true, true);
+                if (ret != ::pilo::EC_OK)
+                {
+                    return -40;
+                }
+            }
+
+
+            return 0;
+        }
 
         pilo::i32_t functional_test_fix(void* param)
         {
@@ -86,13 +140,13 @@ namespace pilo
             for (int i = 0; i < sizeof(__st_c_test_to_abs_paths) / sizeof(char*); i++)
             {
                 path_abs_test.set(__st_c_test_to_abs_paths[i]);
-                ::pilo::error_number_t ret = path_abs_test.to_absolute(false);
+                ::pilo::error_number_t ret = path_abs_test.to_absolute(false, true);
                 if (ret != ::pilo::EC_OK)
                 {
                     return -40;
                 }
 
-                ret = path_abs_test.to_absolute(true);
+                ret = path_abs_test.to_absolute(true, true);
                 if (ret != ::pilo::EC_OK)
                 {
                     return -40;

@@ -57,7 +57,7 @@ namespace pilo
                     return true;
                 }
 
-                ::pilo::error_number_t to_absolute(bool bAppendSep)
+                ::pilo::error_number_t to_absolute(bool bAppendSep, bool bCompact)
                 {
                     if (!valid())
                     {
@@ -96,32 +96,31 @@ namespace pilo
                         _m_str_path.pop_back();
                     }
 
-                    char buffer_max_tmp[MAX_PATH_SZ] = { 0 }; 
-                    ::pilo::core::string::string_util::copy(buffer_max_tmp, sizeof(buffer_max_tmp), _m_str_path.c_str(), _m_str_path.size());
-                    ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::compact_path(buffer_max_tmp,_m_str_path.size());
-                    if (ret != ::pilo::EC_OK)
+                    if (bCompact)
                     {
-                        return ::pilo::EC_INVALID_PATH;
+                        char buffer_max_tmp[MAX_PATH_SZ] = { 0 };
+                        ::pilo::core::string::string_util::copy(buffer_max_tmp, sizeof(buffer_max_tmp), _m_str_path.c_str(), _m_str_path.size());
+                        ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::compact_path(buffer_max_tmp, _m_str_path.size());
+                        if (ret != ::pilo::EC_OK)
+                        {
+                            return ::pilo::EC_INVALID_PATH;
+                        }
+                        _m_str_path.assign(buffer_max_tmp);
                     }
 
-                    _m_str_path.assign(buffer_max_tmp);
-                    
                     if (bAppendSep)
                     {
-                        if (_m_str_path.back() != M_PATH_SEP_C)
+                        int apd_ret = append_directory_seperator();
+                        if ( apd_ret != ::pilo::EC_OK)
                         {
-                            if (_m_str_path.available_capacity() <= 0)
-                            {
-                                return ::pilo::EC_BUFFER_TOO_SMALL;
-                            }
-                            _m_str_path.push_back(M_PATH_SEP_C);
+                            return apd_ret;
                         }
                     }
 
                     return ::pilo::EC_OK;
                 }
 
-                ::pilo::error_number_t append_dirsep()
+                ::pilo::error_number_t append_directory_seperator()
                 {
                     if (!valid())
                     {
@@ -130,8 +129,14 @@ namespace pilo
                     
                     if (_m_str_path.back() != M_PATH_SEP_C)
                     {
+                        if (_m_str_path.available_capacity() <= 0)
+                        {
+                            return ::pilo::EC_BUFFER_TOO_SMALL;
+                        }
                         _m_str_path.push_back(M_PATH_SEP_C);
                     }
+
+                    return ::pilo::EC_OK;
                 }
 
             protected:
@@ -183,59 +188,77 @@ namespace pilo
                     if (cstr_path == nullptr) return false;
                     if (*cstr_path == 0) return false;
 
-                    _m_str_path = cstr_path;
-
-                    validate();
+                    if (::pilo::EC_OK != validate(cstr_path))
+                    {
+                        return false;
+                    }
 
                     return true;
                 }
 
-                ::pilo::error_number_t to_absolute(bool bAppendSep)
+                ::pilo::error_number_t to_absolute(bool bAppendSep, bool bCompact)
                 {
                     if (!valid())
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }
 
-                    if (is_absolute())
+                    if (!is_absolute())
                     {
-                        if (bAppendSep)
+                        char buffer_max[MC_PATH_MAX] = { 0 };
+                        bool bUseHeap = false;
+                        char* p = ::pilo::core::fs::fs_util::get_current_working_directory(buffer_max, sizeof(buffer_max), &bUseHeap, nullptr, true);
+                        if (p == nullptr)
                         {
-                            if (_m_str_path.back() != M_PATH_SEP_C)
-                            {
-                                _m_str_path.push_back(M_PATH_SEP_C);
-                            }
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }
-                        return ::pilo::EC_NONSENSE_OPERATION;
+                        size_t cwd_len = ::pilo::core::string::string_util::length(p);
+
+                        _m_str_path.insert(0, p, cwd_len);
+                        if (bUseHeap)
+                        {
+                            free(p);
+                        }
+                    } // end of is_absolute
+
+                    if (_m_str_path.back() == M_PATH_SEP_C)
+                    {
+                        _m_str_path.pop_back();
                     }
 
-                    char buffer_max[MC_PATH_MAX] = { 0 };
-                    bool bUseHeap = false;
-                    char* p = ::pilo::core::fs::fs_util::get_current_working_directory(buffer_max, sizeof(buffer_max), &bUseHeap, nullptr, true);
-                    if (p == nullptr)
+                    if (bCompact)
                     {
-                        return ::pilo::EC_INSUFFICIENT_MEMORY;
-                    }
-                    size_t cwd_len = ::pilo::core::string::string_util::length(p);
+                        char* path_ptr = (char*) malloc(_m_str_path.size() + 1);
+                        if (path_ptr == nullptr)
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                        ::pilo::core::string::string_util::copy(path_ptr, _m_str_path.size()+1, _m_str_path.c_str(), _m_str_path.size());
+                        ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::compact_path(path_ptr, _m_str_path.size());
+                        if (ret != ::pilo::EC_OK)
+                        {
+                            free(path_ptr);
+                            return ::pilo::EC_INVALID_PATH;
+                        }
 
-                    _m_str_path.insert(0, p, cwd_len);
-                    if (bUseHeap)
-                    {
-                        free(p);
+                        _m_str_path.assign(path_ptr);
+                        free(path_ptr);
+                        
                     }
 
                     if (bAppendSep)
                     {
-                        if (_m_str_path.back() != M_PATH_SEP_C)
+                        int apd_ret = append_directory_seperator();
+                        if (apd_ret != ::pilo::EC_OK)
                         {
-                            _m_str_path.push_back(M_PATH_SEP_C);
+                            return apd_ret;
                         }
                     }
 
                     return ::pilo::EC_OK;
                 }
 
-                ::pilo::error_number_t append_dirsep()
+                ::pilo::error_number_t append_directory_seperator()
                 {
                     if (!valid())
                     {
@@ -244,22 +267,24 @@ namespace pilo
 
                     if (_m_str_path.back() != M_PATH_SEP_C)
                     {
-                        _m_str_path.push_back(M_PATH_SEP_C);
+                        _m_str_path += M_PATH_SEP_S;
                     }
+
+                    return ::pilo::EC_OK;
                 }
 
             protected:
-                ::pilo::error_number_t validate()
+                ::pilo::error_number_t validate(const char* cstr_path)
                 {
                     char * pDynBuffer = nullptr;
-                    size_t dstlen = _m_str_path.size() + 4;
+                    size_t dstlen = ::strlen(cstr_path) + 4;
                     pDynBuffer = (char*)malloc(dstlen);
                     if (pDynBuffer == nullptr)
                     {
                         return ::pilo::EC_INSUFFICIENT_MEMORY;
                     }
 
-                    ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::validate_and_parse_path_string(pDynBuffer, dstlen, _m_str_path.c_str());
+                    ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::validate_and_parse_path_string(pDynBuffer, dstlen, cstr_path);
                     if (ret != ::pilo::EC_OK)
                     {
                         return ret;
