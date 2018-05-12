@@ -312,13 +312,18 @@ namespace pilo
                 
 #if defined(WIN32)               
 
-                static const wchar_t* convert_str_to_wstr(wchar_t* wBuffer, size_t wBufferLen, const char* c, ::pilo::u32_t m_encode = CP_ACP)
+                static const wchar_t* convert_str_to_wstr(wchar_t* wBuffer, size_t wBufferLen, const char* src_str, size_t src_len = MC_INVALID_SIZE, ::pilo::u32_t m_encode = CP_ACP)
                 {
                     wchar_t* wDynBuffer = nullptr;
                     wchar_t* pBuffer = nullptr;
 
-                    int len = MultiByteToWideChar(m_encode, 0, c, (int) strlen(c), NULL, 0);
-                    if (len < wBufferLen)
+                    if (src_len == MC_INVALID_SIZE)
+                    {
+                        src_len = strlen(src_str);
+                    }
+
+                    int len = MultiByteToWideChar(m_encode, 0, src_str, (int) src_len, NULL, 0);
+                    if (wBuffer == nullptr || wBufferLen <= 0 || len < wBufferLen)
                     {
                         pBuffer = wBuffer;
                     }
@@ -328,7 +333,7 @@ namespace pilo
                         pBuffer = wDynBuffer;
                     }
                     
-                    MultiByteToWideChar(m_encode, 0, c, (int) strlen(c), pBuffer, len);
+                    MultiByteToWideChar(m_encode, 0, src_str, (int) strlen(src_str), pBuffer, len);
                     pBuffer[len] = '\0';
 
                     return pBuffer;
@@ -354,7 +359,7 @@ namespace pilo
                     M_UNUSED(mode);
 #if defined(WIN32)    
                     wchar_t wszPathBuffer[MC_PATH_MAX] = { 0 };
-                    const wchar_t* pRetPth = convert_str_to_wstr(wszPathBuffer, MC_PATH_MAX, path, CP_ACP);
+                    const wchar_t* pRetPth = convert_str_to_wstr(wszPathBuffer, MC_PATH_MAX, path, MC_INVALID_SIZE, CP_ACP);
                     bool bOk = PILO_CREATE_DIRECTORY(wszPathBuffer);
                     if (pRetPth != nullptr && pRetPth != wszPathBuffer)
                     {

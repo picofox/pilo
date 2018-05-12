@@ -233,7 +233,7 @@ namespace pilo
                         {
                             return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }
-                        ::pilo::core::string::string_util::copy(path_ptr, _m_str_path.size()+1, _m_str_path.c_str(), _m_str_path.size());
+                        ::pilo::core::string::string_util::copy(path_ptr, _m_str_path.size(), _m_str_path.c_str(), _m_str_path.size());
                         ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::compact_path(path_ptr, _m_str_path.size());
                         if (ret != ::pilo::EC_OK)
                         {

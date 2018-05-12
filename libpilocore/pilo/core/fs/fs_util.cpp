@@ -327,7 +327,7 @@ namespace pilo
 
 #           ifdef  WINDOWS
                 wchar_t wszPathBuffer[MC_PATH_MAX] = { 0 };
-                const wchar_t* pRetPth = convert_str_to_wstr(wszPathBuffer, MC_PATH_MAX, path, CP_ACP);
+                const wchar_t* pRetPth = convert_str_to_wstr(wszPathBuffer, MC_PATH_MAX, path, MC_INVALID_SIZE, CP_ACP);
                 DWORD attr(::GetFileAttributesW(pRetPth));
                 if (pRetPth != nullptr && pRetPth != wszPathBuffer)
                 {
