@@ -66,12 +66,6 @@ namespace pilo
                     _assign(str);
                     return *this;
                 }
-                template<typename NUMBER_T>
-                fixed_wstring<max_capacity>& assign(NUMBER_T num)
-                {
-                    _assign(num);
-                    return *this;
-                }
 
                 fixed_wstring<max_capacity>& operator=(const fixed_wstring<max_capacity>& str)
                 {

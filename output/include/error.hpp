@@ -46,7 +46,7 @@ namespace pilo
         EC_INVALID_PATH,
         EC_UNDEFINED_FILE_TYPE,
         EC_DIR_ALREAD_EXIST,
-        EC_FILE_ALREAY_EXIST,
+        EC_FILE_ALREADY_EXIST,
         EC_INFINITE_LOOP,
         EC_INVALID_PARAM,
         EC_NULL_PARAM,

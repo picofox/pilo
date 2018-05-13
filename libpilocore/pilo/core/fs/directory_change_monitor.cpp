@@ -5,6 +5,7 @@
 #include "core/string/string_util.hpp"
 #include "core/process/process_util.hpp"
 #include "core/io/format_output.hpp"
+#include "core/fs/path.hpp"
 
 namespace pilo
 {
@@ -309,18 +310,19 @@ namespace pilo
                 MP_CHECK_EMPTY_CSTR_RET(dirname, ::pilo::EC_NULL_PARAM);
                 MP_CHECK_EQUAL_VALUE_RET(filter_flags, 0, ::pilo::EC_OUT_OF_RANGE);
 
-                char path_buffer[MC_PATH_MAX] = { 0 };
-                pilo::error_number_t error = ::pilo::core::fs::fs_util::get_absolute_path(
-                    path_buffer,
-                    dirname,
-                    sizeof(path_buffer));
-                if (error != ::pilo::EC_OK)
+                ::pilo::core::fs::path<0> dirpath;
+                if (!dirpath.assign(dirname))
+                {
+                    return ::pilo::EC_INVALID_PATH;
+                }
+
+                if (dirpath.to_absolute(false, true) != ::pilo::EC_OK)
                 {
                     return ::pilo::EC_INVALID_PATH;
                 }
 
                 //ensure this is valid dir
-                if (::pilo::core::fs::fs_util::calculate_type(path_buffer) != ::pilo::core::fs::fs_util::eFSNT_Directory)
+                if (::pilo::core::fs::fs_util::calculate_type(dirpath.c_str()) != ::pilo::core::fs::fs_util::eFSNT_Directory)
                 { 
                     return ::pilo::EC_DIR_NOT_EXIST;
                 }                
@@ -329,7 +331,7 @@ namespace pilo
                 task_ptr->m_monitor_sub_dir = monitor_sub_dir;
                 task_ptr->m_filter_flags = filter_flags;
                 task_ptr->m_state = directory_monitor_task::eTS_NotSet;
-                ::pilo::core::string::string_util::copy(task_ptr->m_path, MC_PATH_MAX, path_buffer, MC_INVALID_SIZE); 
+                ::pilo::core::string::string_util::copy(task_ptr->m_path, MC_PATH_MAX, dirpath.c_str(), MC_INVALID_SIZE);
 
                 //create dir handle to monitor on
                 task_ptr->m_dir_handle = CreateFile(task_ptr->m_path,
@@ -414,22 +416,22 @@ namespace pilo
                 MP_CHECK_EMPTY_CSTR_RET(dirname, ::pilo::EC_NULL_PARAM);
                 if (m_completion_port == NULL) return ::pilo::EC_NONSENSE_OPERATION;
 
-                directory_monitor_task* task_ptr = nullptr;                
-                
+                directory_monitor_task* task_ptr = nullptr;
 
-                char path_buffer[MC_PATH_MAX] = { 0 };
-                pilo::error_number_t error = ::pilo::core::fs::fs_util::get_absolute_path(
-                    path_buffer,
-                    dirname,
-                    sizeof(path_buffer));
-                if (error != ::pilo::EC_OK)
+                ::pilo::core::fs::path<0> dirpath;
+                if (!dirpath.assign(dirname))
                 {
                     return ::pilo::EC_INVALID_PATH;
                 }
-                
+
+                if (dirpath.to_absolute(false, true) != ::pilo::EC_OK)
+                {
+                    return ::pilo::EC_INVALID_PATH;
+                }
+
                 {
                     ::pilo::core::threading::mutex_locker<::pilo::core::threading::recursive_mutex> locker(_m_tasks_mutex);
-                    task_ptr = _find_task_no_mts(path_buffer);
+                    task_ptr = _find_task_no_mts(dirpath.c_str());
                     if (task_ptr == nullptr)
                     {
                         return ::pilo::EC_DIR_NOT_EXIST;

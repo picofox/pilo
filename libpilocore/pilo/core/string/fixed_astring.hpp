@@ -64,14 +64,8 @@ namespace pilo
                 {
                     _assign(str);
                     return *this;
-                }                
+                }               
 
-                template<typename NUMBER_T>
-                fixed_astring<max_capacity>& assign(NUMBER_T num)
-                {
-                    _assign(num);
-                    return *this;
-                }
 
                 void push_back(char ch)
                 {

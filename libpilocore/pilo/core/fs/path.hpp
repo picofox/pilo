@@ -4,6 +4,8 @@
 #include "core/string/fixed_astring.hpp"
 #include "core/fs/fs_util.hpp"
 
+#define MC_PILO_PATH_FLAG_VALID (1)
+
 namespace pilo
 {
     namespace core
@@ -21,24 +23,35 @@ namespace pilo
                 path(const char* str)
                 {
                     reset();
-                    set(str);
+                    assign(str);
                 }
 
-                bool valid() const { return !_m_str_path.empty(); }
+                const char* c_str() const 
+                {
+                    if (! valid()) return nullptr;
 
-                const char* c_str() const { return _m_str_path.c_str(); }
-                size_t length() const { return _m_str_path.size(); }
+                    return _m_str_path.c_str(); 
+                }
+
+                size_t length() const 
+                { 
+                    if (!valid()) return MC_INVALID_SIZE;
+                    return _m_str_path.size(); 
+                }
+
                 bool is_absolute() const
                 {
+                    if (!valid()) return false;
                     return ::pilo::core::fs::fs_util::is_absolute_path(_m_str_path.c_str());
                 }
 
                 void reset()
                 {
                     _m_str_path.clear();
+                    _m_flags = 0;
                 }                
 
-                bool set(const char* cstr_path)
+                bool assign(const char* cstr_path)
                 {
                     if (cstr_path == nullptr) return false;
                     if (*cstr_path == 0) return false;
@@ -47,7 +60,7 @@ namespace pilo
                     if (_m_str_path.capacity() <= len)
                     {
                         return false;
-                    }
+                    }                   
 
                     if (::pilo::EC_OK != validate(cstr_path))
                     {
@@ -91,10 +104,13 @@ namespace pilo
                         }                        
                     } // end of is_absolute
 
-                    if (_m_str_path.back() == M_PATH_SEP_C)
+                    if ((!_m_str_path.empty()) && _m_str_path.back() == M_PATH_SEP_C)
                     {
                         _m_str_path.pop_back();
                     }
+
+
+                    printf("path int is (%s)\n",_m_str_path.c_str());
 
                     if (bCompact)
                     {
@@ -103,6 +119,7 @@ namespace pilo
                         ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::compact_path(buffer_max_tmp, _m_str_path.size());
                         if (ret != ::pilo::EC_OK)
                         {
+                            printf("ret is  %d\n", ret);
                             return ::pilo::EC_INVALID_PATH;
                         }
                         _m_str_path.assign(buffer_max_tmp);
@@ -126,8 +143,11 @@ namespace pilo
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }
-                    
+#ifdef WINDOWS
                     if (_m_str_path.back() != M_PATH_SEP_C)
+#else
+                    if (_m_str_path.empty() ||  _m_str_path.back() != M_PATH_SEP_C)
+#endif
                     {
                         if (_m_str_path.available_capacity() <= 0)
                         {
@@ -139,6 +159,14 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+                bool valid() const
+                {
+#ifdef WINDOWS
+                    if (_m_str_path.empty()) return false;
+#endif // WINDOWS
+                    return ((_m_flags & MC_PILO_PATH_FLAG_VALID) != 0);
+                }                
+
             protected:
                 ::pilo::error_number_t validate(const char* cstr_path)
                 {
@@ -146,14 +174,29 @@ namespace pilo
                     ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::validate_and_parse_path_string(buffer, cstr_path);
                     if (ret != ::pilo::EC_OK)
                     {
+                        _set_validity(false);
                         return ret;
                     }
+                    _set_validity(true);
                     _m_str_path = buffer;
                     return ::pilo::EC_OK;
                 }
 
+                void _set_validity(bool is_valid)
+                {
+                    if (is_valid)
+                    {
+                        _m_flags |= MC_PILO_PATH_FLAG_VALID;
+                    }
+                    else
+                    {
+                        _m_flags &= (~MC_PILO_PATH_FLAG_VALID);
+                    }                    
+                }
+
             protected:
                 ::pilo::core::string::fixed_astring<MAX_PATH_SZ> _m_str_path;
+                ::pilo::u32_t                                    _m_flags;
             };
 
             template<>
@@ -167,23 +210,35 @@ namespace pilo
                 path(const char* str)
                 {
                     reset();
-                    set(str);
+                    assign(str);
                 }
 
-                bool valid() const { return !_m_str_path.empty(); }
-                const char* c_str() const { return _m_str_path.c_str(); }
-                size_t length() const { return _m_str_path.size(); }
+                const char* c_str() const
+                {
+                    if (!valid()) return nullptr;
+
+                    return _m_str_path.c_str();
+                }
+
+                size_t length() const
+                {
+                    if (!valid()) return MC_INVALID_SIZE;
+                    return _m_str_path.size();
+                }
+
                 bool is_absolute() const
                 {
+                    if (!valid()) return false;
                     return ::pilo::core::fs::fs_util::is_absolute_path(_m_str_path.c_str());
                 }
 
                 void reset()
                 {
                     _m_str_path.clear();
+                    _m_flags = 0;
                 }                
 
-                bool set(const char* cstr_path)
+                bool assign(const char* cstr_path)
                 {
                     if (cstr_path == nullptr) return false;
                     if (*cstr_path == 0) return false;
@@ -221,7 +276,7 @@ namespace pilo
                         }
                     } // end of is_absolute
 
-                    if (_m_str_path.back() == M_PATH_SEP_C)
+                    if ((!_m_str_path.empty()) && _m_str_path.back() == M_PATH_SEP_C)
                     {
                         _m_str_path.pop_back();
                     }
@@ -233,7 +288,7 @@ namespace pilo
                         {
                             return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }
-                        ::pilo::core::string::string_util::copy(path_ptr, _m_str_path.size(), _m_str_path.c_str(), _m_str_path.size());
+                        ::pilo::core::string::string_util::copy(path_ptr, _m_str_path.size()+1, _m_str_path.c_str(), _m_str_path.size());
                         ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::compact_path(path_ptr, _m_str_path.size());
                         if (ret != ::pilo::EC_OK)
                         {
@@ -265,12 +320,25 @@ namespace pilo
                         return ::pilo::EC_INVALID_PATH;
                     }
 
+#ifdef WINDOWS
                     if (_m_str_path.back() != M_PATH_SEP_C)
+#else
+                    if (_m_str_path.empty() || _m_str_path.back() != M_PATH_SEP_C)
+#endif
+
                     {
                         _m_str_path += M_PATH_SEP_S;
                     }
 
                     return ::pilo::EC_OK;
+                }
+
+                bool valid() const
+                {
+#ifdef WINDOWS
+                    if (_m_str_path.empty()) return false;
+#endif // WINDOWS
+                    return ((_m_flags & MC_PILO_PATH_FLAG_VALID) != 0);
                 }
 
             protected:
@@ -281,23 +349,39 @@ namespace pilo
                     pDynBuffer = (char*)malloc(dstlen);
                     if (pDynBuffer == nullptr)
                     {
+                        _set_validity(false);
                         return ::pilo::EC_INSUFFICIENT_MEMORY;
                     }
 
                     ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::validate_and_parse_path_string(pDynBuffer, dstlen, cstr_path);
                     if (ret != ::pilo::EC_OK)
                     {
+                        _set_validity(false);
                         return ret;
                     }
 
                     _m_str_path = pDynBuffer;
                     free(pDynBuffer);
 
+                    _set_validity(true);
                     return ::pilo::EC_OK;
+                }
+
+                void _set_validity(bool is_valid)
+                {
+                    if (is_valid)
+                    {
+                        _m_flags |= MC_PILO_PATH_FLAG_VALID;
+                    }
+                    else
+                    {
+                        _m_flags &= (~MC_PILO_PATH_FLAG_VALID);
+                    }
                 }
 
             protected:
                 std::string     _m_str_path;
+                ::pilo::u32_t   _m_flags;
             };
         }
     }

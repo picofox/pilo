@@ -150,7 +150,7 @@ namespace pilo
                 static ::pilo::error_number_t lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock);
                 static ::pilo::error_number_t try_lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock);
                 static ::pilo::error_number_t unlock_file(os_file_descriptor_t fildes, size_t start_pos, size_t size_to_lock);
-                static ::pilo::error_number_t get_absolute_path(char* abs_path, const char* path, size_t d_len = MC_INVALID_SIZE);
+
 
                 static ::pilo::error_number_t split_path_to_dir_and_filename(char* dirpath, size_t dirpath_size, char* filename, size_t filename_size, const char* path);
                 static ::pilo::error_number_t create_directory_recursively(const char* path, bool force);
@@ -165,11 +165,6 @@ namespace pilo
                 static ::pilo::error_number_t close_file(::pilo::os_file_descriptor_t fd, ::pilo::u32_t flags);
 
                 static ::pilo::error_number_t  get_file_modified_time(::pilo::core::datetime::datetime &dt, const char* filepath);
-                template<size_t PATH_SZ>
-                static ::pilo::error_number_t create_directory(const char* dir_path, bool force)
-                {
-                    return ::pilo::EC_OK;
-                }
 
                 static ::pilo::error_number_t dir_str_append_last_sep_nocheck(char* buffer, size_t* rlen)
                 {
@@ -225,11 +220,14 @@ namespace pilo
                     if (buffer[1] == ':' && buffer[2] != '\\')
                     {
                         size_t tmplen = ::strlen(buffer + 2);
-                        if (tmplen + 3 >= buffer_sz)
+                        if (tmplen + 4 >= buffer_sz)
                         {
                             return ::pilo::EC_BUFFER_TOO_SMALL;
                         }
+                        
                         ::memmove(buffer + 3, buffer + 2, tmplen);
+                        buffer[2] = M_PATH_SEP_C;
+                        buffer[3 + tmplen] = 0;
                     }
 
 #               else
@@ -281,16 +279,19 @@ namespace pilo
                     if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "\\\\", "\\", nullptr))
                     {
                         return ::pilo::EC_INVALID_PATH;
-                    }
+                    }          
 
                     if (buffer[1] == ':' && buffer[2] != '\\')
                     {
                         size_t tmplen = ::strlen(buffer + 2);
-                        if (tmplen + 3 >= BUFFSZ)
+                        if (tmplen + 4 >= BUFFSZ)
                         {
                             return ::pilo::EC_BUFFER_TOO_SMALL;
                         }
+
                         ::memmove(buffer + 3, buffer + 2, tmplen);
+                        buffer[2] = M_PATH_SEP_C;
+                        buffer[3 + tmplen] = 0;
                     }
 
 #               else 
@@ -300,6 +301,8 @@ namespace pilo
                     }
 
 #               endif
+
+
 
                     if (::pilo::EC_OK != fs_util::check_path(buffer))
                     {
@@ -354,7 +357,7 @@ namespace pilo
 
 #endif
 
-                static ::pilo::error_number_t fs_util::create_directory(const char* path, ::pilo::u32_t mode)
+                static ::pilo::error_number_t create_directory(const char* path, ::pilo::u32_t mode)
                 {
                     M_UNUSED(mode);
 #if defined(WIN32)    

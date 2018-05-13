@@ -6,13 +6,7 @@
 #include <sys/types.h>  
 #include <sys/stat.h>  
 #include <stdio.h>  
-#include <errno.h>  
-
-
-#include <Shlwapi.h>
-#pragma comment(lib, "Shlwapi.lib ")
-#include <boost/filesystem.hpp>      //boost          
-
+#include <errno.h> 
 
 namespace pilo
 {
@@ -116,8 +110,7 @@ namespace pilo
 
             char* fs_util::get_current_working_directory(char* buffer, size_t bufferSize, bool* bUseHeap, size_t* outSize, bool bAppendSep)
             {
-                char* strRet = 0;
-                size_t szMesured = 0;
+                char* strRet = 0;                
                 size_t ret_size = 0;
 
                 if (bUseHeap != 0)
@@ -126,10 +119,11 @@ namespace pilo
                 }                
 
 #           ifdef  WINDOWS
+                size_t szMesured = 0;
                 szMesured = (DWORD)::GetCurrentDirectory(0, 0);
                 if ((buffer == 0) || (bufferSize == MC_INVALID_SIZE) || (bufferSize == 0) || (szMesured >= bufferSize))
                 {                    
-                    strRet = (char*) malloc (szMesured + 1);
+                    strRet = (char*) malloc (szMesured + 2);
                     if (strRet == nullptr) 
                     {
                         return 0;
@@ -168,16 +162,14 @@ namespace pilo
                 }
 
 #           else
-                char tmpPathBuffer[MC_PATH_MAX];
-                char* retTmpFinal;
 
-                retTmpFinal = ::getcwd(buffer, bufferSize-1);
-                if (retTmpFinal == nullptr && errno != ERANGE)
+                strRet = ::getcwd(buffer, bufferSize-1);
+                if (strRet == nullptr && errno != ERANGE)
                 {
-                    return ::pilo::EC_UNDEFINED;
+                    return nullptr;
                 }
 
-                if (retTmpFinal != nullptr)
+                if (strRet != nullptr)
                 {
                     if (bUseHeap != 0) 
                     {
@@ -186,14 +178,14 @@ namespace pilo
                 }
                 else
                 {
-                    retTmpFinal = ::getcwd(nullptr, 0);
+                    strRet = ::getcwd(nullptr, 0);
                     if (bUseHeap != 0) 
                     {
                         *bUseHeap = true;
                     }
                 }
 
-                ret_size = ::pilo::core::string::string_util::length(retTmpFinal);                
+                ret_size = ::pilo::core::string::string_util::length(strRet);                
 #           endif
 
                 if (bAppendSep)
@@ -293,13 +285,17 @@ namespace pilo
 
             bool fs_util::is_absolute_path(const char* path)
             {
-                if (path == nullptr || *path == 0)
+                if (path == nullptr)
                 {
                     return false;
                 }
 
                 size_t sz = ::pilo::core::string::string_util::length(path);
 #           ifdef  WINDOWS
+                if (*path == 0)
+                {
+                    return false;
+                }
                 if (sz < 2)
                 {
                     return false;
@@ -310,6 +306,10 @@ namespace pilo
                 }               
  
 #           else
+                if (sz == 0 && path[0] == 0)
+                {
+                    return true;
+                }
                 if ((sz > 0) && (path[0] == '/')) 
                 {
                     return true;
@@ -374,6 +374,7 @@ namespace pilo
 #ifdef WINDOWS
             ::pilo::error_number_t fs_util::travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir)
             {
+                printf("tarval (%s)\n", root);
                 if (root == nullptr || *root == '\0')
                 {
                     return ::pilo::EC_NULL_PARAM;
@@ -393,11 +394,16 @@ namespace pilo
                         szBuff[len] = M_PATH_SEP_C;
                         szBuff[len + 1] = 0;
                     }                    
-                    ::pilo::core::string::string_util::concatenate_string(szBuff, sizeof(szBuff), "*.*", MC_INVALID_SIZE);
+                    ::pilo::core::string::string_util::concatenate_string(szBuff, sizeof(szBuff), "*", MC_INVALID_SIZE);
+ char cwdBuffer[4000];
+ ::pilo::core::fs::fs_util::get_current_working_directory(cwdBuffer, 4000 ,0 ,0 ,false);
+ printf("find (%s) cwd=(%s)\n", szBuff, cwdBuffer);
                     
                     handle = FindFirstFile(szBuff, &findData);    // 查找目录中的第一个文件
                     if (handle == INVALID_HANDLE_VALUE)
                     {
+                        char bf[256];
+                        printf("find failed %s\n", get_last_os_error_string(bf, 255));
                         return MAKE_SYSERR(::pilo::EC_OPEN_DIR_ERROR);
                     }
 
@@ -448,6 +454,7 @@ namespace pilo
                                 fs_find_data fd;
                                 fd.set_type(eFSNT_RegularFile);
                                 fd.set_full_pathname(root, findData.cFileName);
+   printf("visit file (%s)\n", root);
                                 ::pilo::i32_t ret = fsnvi->visit(szBuff, &fd);
                                 if (ret != ::pilo::EC_OK)
                                 {
@@ -472,6 +479,7 @@ namespace pilo
 
                 if (visit_last_dir)
                 {
+     printf("visitlast  (%s)\n", root);
                     ::pilo::i32_t post_ret = fsnvi->post_dir_visit(root);
                     if (post_ret != ::pilo::EC_OK)
                     {
@@ -905,164 +913,7 @@ namespace pilo
 #           endif
 
                 return ::pilo::EC_OK;
-            }
-            
-            ::pilo::error_number_t fs_util::get_absolute_path(char* abs_path, const char* path, size_t d_len /*= MC_INVALID_SIZE*/)
-            {
-                if (abs_path == nullptr)
-                {
-                    return ::pilo::EC_NULL_PARAM;
-                }
-                
-                if (path == nullptr)
-                {
-                    return ::pilo::EC_NULL_PARAM;
-                }
-
-                if (*path == 0)
-                {
-                    return ::pilo::EC_OK;
-                }
-
-                if (::pilo::core::fs::fs_util::is_absolute_path(path))
-                {
-                    size_t ret_len = ::pilo::core::string::string_util::copy(abs_path, d_len, path, MC_INVALID_SIZE);
-                    if (MC_INVALID_SIZE == ret_len)
-                    {
-                        return ::pilo::EC_COPY_STRING_FAILED;
-                    }
-
-                    trim_path_last_seperator(abs_path, ret_len);
-                    
-
-#               ifdef  WINDOWS
-                    if (::pilo::core::string::string_util::rescanable_replace<char>(abs_path, MC_INVALID_SIZE, "/", "\\", nullptr) != ::pilo::EC_OK)
-                    {
-                        return ::pilo::EC_COPY_STRING_FAILED;
-                    }
-#               endif
-
-
-                    return ::pilo::EC_OK;
-                }
-
-                ::pilo::core::fs::fs_util::EnumPathSeparator psep = ::pilo::core::fs::fs_util::calculate_path_separator(path);
-                if (psep == ::pilo::core::fs::fs_util::ePS_Both)
-                {
-                    return ::pilo::EC_INVALID_PATH;
-                }
-#               ifdef  WINDOWS
-
-#               else
-
-                if (psep == ::pilo::core::fs::fs_util::ePS_BackwardSlash)
-                {
-                    return ::pilo::EC_INVALID_PATH;
-                }                
-
-#               endif
-
-                char buffer_max[MC_PATH_MAX] = { 0 };
-                bool bUseHeap = false;
-                char* p = ::pilo::core::fs::fs_util::get_current_working_directory(buffer_max, sizeof(buffer_max), &bUseHeap, nullptr);
-                if (p == nullptr)
-                {
-                    return ::pilo::EC_INSUFFICIENT_MEMORY;
-                }
-                size_t cwd_len = ::pilo::core::string::string_util::length(p);
-
-                if (d_len != MC_INVALID_SIZE)
-                {
-                    if (cwd_len >= (d_len+3))
-                    {
-                        if (bUseHeap)
-                        {
-                            MP_SAFE_FREE(p);
-                        }
-                        return ::pilo::EC_BUFFER_TOO_SMALL;
-                    }
-                }  
-
-                bool is_root_only = ::pilo::core::fs::fs_util::is_root(p);
-                size_t sz_ret = ::pilo::core::string::string_util::copy(abs_path, d_len, p, cwd_len);
-                if (bUseHeap)
-                {
-                    MP_SAFE_FREE(p);
-                }
-                if (sz_ret != cwd_len)
-                {
-                    return ::pilo::EC_COPY_STRING_FAILED;
-                }
-
-                if (abs_path[cwd_len - 1] != M_PATH_SEP_C)
-                {
-                    abs_path[cwd_len] = M_PATH_SEP_C;
-                    abs_path[cwd_len+1] = 0;
-                    cwd_len ++;
-                }
-
-                size_t flen = ::pilo::core::string::string_util::length(path);
-                if (::pilo::core::string::string_util::concatenate_string(abs_path, d_len, path, flen) == nullptr)
-                {
-                    return ::pilo::EC_COPY_STRING_FAILED;
-                }
-
-#               ifdef  WINDOWS
-                if (::pilo::core::string::string_util::rescanable_replace<char>(abs_path, MC_INVALID_SIZE, "/", "\\", nullptr) != ::pilo::EC_OK)
-                {
-                    return ::pilo::EC_COPY_STRING_FAILED;
-                }
-#               endif
-
-                size_t start_scan_pos = cwd_len;;
-
-                int fp_level = 0;
-                while (flen > 2)
-                {
-                    size_t cur_pos = start_scan_pos + 3*fp_level;
-                    if (abs_path[cur_pos] == '.' && abs_path[cur_pos + 1] == '.' && abs_path[cur_pos + 2] == M_PATH_SEP_C)
-                    {
-                        fp_level ++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                if (fp_level == 0)
-                {
-                    trim_path_last_seperator(abs_path, MC_INVALID_SIZE);
-                    return ::pilo::EC_OK;
-                }
-
-                if (is_root_only)
-                {
-                    return ::pilo::EC_INVALID_PATH;
-                }
-                
-                char* ptr_move = &(abs_path[start_scan_pos + 3 * fp_level]);
-                flen -= fp_level*3;
-
-
-                for (int i = (int) start_scan_pos - 2; i >= 0; i--)
-                {
-
-                    if (abs_path[i] == M_PATH_SEP_C)
-                    {
-                        fp_level --;
-                        if (fp_level == 0)
-                        {
-                            ::pilo::core::string::string_util::s_move(abs_path + i + 1, d_len-i - 1, ptr_move, flen);
-                            trim_path_last_seperator(abs_path, MC_INVALID_SIZE);
-                            return ::pilo::EC_OK;
-                        }
-                    }
-                }   
-                                
-
-                return ::pilo::EC_INVALID_PATH;
-            }
+            }            
 
             ::pilo::error_number_t fs_util::split_path_to_dir_and_filename(char* dirpath, size_t dirpath_size, char* filename, size_t filename_size, const char* path)
             {
@@ -1166,7 +1017,7 @@ namespace pilo
                             else
                             {
                                // printf("\t---> Checing (%s), is REGF errret\n", path);
-                                return ::pilo::EC_FILE_ALREAY_EXIST;
+                                return ::pilo::EC_FILE_ALREADY_EXIST;
                             }
                             
                         }
@@ -1219,7 +1070,7 @@ namespace pilo
                             }
                             else
                             {
-                                return ::pilo::EC_FILE_ALREAY_EXIST;
+                                return ::pilo::EC_FILE_ALREADY_EXIST;
                             }
 
                         }
@@ -1380,46 +1231,10 @@ namespace pilo
                     return ::pilo::EC_CREATE_DIR_ERROR;
                 }
 
-                if (::pilo::core::fs::fs_util::eFSNT_Directory != ::pilo::core::fs::fs_util::calculate_type(dir_path_buffer))
-                {
-                    printf("XXXXX  dir (%s) not exist\n", dir_path_buffer);
-                }
-                WIN32_FIND_DATA wfd;
-                HANDLE hFind = FindFirstFile(dir_path_buffer, &wfd);
-                if (INVALID_HANDLE_VALUE != hFind && (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-                {
-                    ;
-                }
-                else
-                {
-                    printf("XXXXX   dir (%s) not exist\n", dir_path_buffer);
-                }
-
                 ::pilo::os_file_descriptor_t fd = MC_INVALID_FILE_DESCRIPTOR;
                 ::pilo::core::fs::fs_util::open_file(fd, path, eMode, ::pilo::core::fs::eDRWM_ReadWrite, 0);
                 if (fd == MC_INVALID_FILE_DESCRIPTOR)
                 {
-                    if (::pilo::core::fs::fs_util::eFSNT_Directory != ::pilo::core::fs::fs_util::calculate_type(dir_path_buffer))
-                    {
-                        printf("XXXXX creating  dir (%s) Failed\n", dir_path_buffer);
-                    }
-                    else
-                    {
-                        printf("XXXXX creating  dir (%s) OK\n", dir_path_buffer);
-                    }
-
-                    WIN32_FIND_DATA wfd;
-                    HANDLE hFind = FindFirstFile(dir_path_buffer, &wfd);
-                    if (INVALID_HANDLE_VALUE != hFind && (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-                    {
-                        printf("XXXXX creating  dir (%s) OK\n", dir_path_buffer);
-                    }
-                    else
-                    {
-                        printf("XXXXX creating  dir (%s) Failed\n", dir_path_buffer);
-                    }
-
-    
                     return ::pilo::EC_OPEN_FILE_FAILED;
                 }
 
@@ -1556,10 +1371,23 @@ namespace pilo
 
             ::pilo::error_number_t fs_util::_compact_path_once(char * pBuffer, size_t len)
             {
-                if (pBuffer == nullptr || len <=0)
+#ifdef WINDOWS
+                if (pBuffer == nullptr || len <= 0)
                 {
                     return ::pilo::EC_NULL_PARAM;
                 }
+#else
+                if (pBuffer == nullptr)         
+                {
+                    return ::pilo::EC_NULL_PARAM;
+                }
+                else if (*pBuffer==0 && len == 0)
+                {                    
+                    return ::pilo::EC_NONSENSE_OPERATION;
+                }              
+                
+#endif
+                
 
                 char* pEnd = pBuffer + len;
 

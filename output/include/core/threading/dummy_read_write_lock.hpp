@@ -11,12 +11,12 @@ namespace pilo
             class dummy_read_write_lock
             {
                 public:
-                inline void lock_read() {};
-                inline void lock_write() {};
-                inline bool try_lock_read() {};
-                inline bool try_lock_write() {};
-                inline void unlock_read() {};
-                inline void unlock_write() {};
+                inline void lock_read() {}
+                inline void lock_write() {}
+                inline bool try_lock_read() { return true; }
+                inline bool try_lock_write() { return true; }
+                inline void unlock_read() {}
+                inline void unlock_write() {}
             };
         }
     }

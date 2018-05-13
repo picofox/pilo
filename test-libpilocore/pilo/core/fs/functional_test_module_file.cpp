@@ -1,12 +1,54 @@
 #include "core/fs/file.hpp"
 #include "core/io/format_output.hpp"
 #include "./functional_test_module_file.hpp"
+#include "core/threading/basic_thread.hpp"
 
 
 namespace pilo
 {
     namespace test
     {
+    
+        class TestFlockThr : public ::pilo::core::threading::basic_thread
+        {
+            public:
+            TestFlockThr()
+            {
+                pfile = nullptr;
+                m_index = 0;
+            }
+
+            void set(::pilo::core::fs::file<>* p, int n)
+            {
+                pfile = p;
+                m_index = n;
+            }
+
+            virtual i32_t on_run()
+            {
+                int times = 100;
+                ::pilo::error_number_t err = 0;
+                while (times-- > 0)
+                {
+
+                    printf("%d Would lock t=%u\n",m_index, PiloGetTickCount32());
+                    err = pfile->flock_exclusive(0, MC_INVALID_SIZE);
+                    printf("%d aquired lock ret = %d t=%d\n", m_index, err, PiloGetTickCount32());
+
+                    ::pilo::core::threading::basic_thread::sleep(5);
+
+
+                    err = printf("%d release lock ret = %d t=%d\n", m_index, err, PiloGetTickCount32());
+                    pfile->funlock(0, MC_INVALID_SIZE);
+                }
+                
+
+                return 0;
+            }
+
+            int     m_index;
+            ::pilo::core::fs::file<>* pfile;
+        };
 
         struct TestFileRecord
         {
@@ -16,51 +58,90 @@ namespace pilo
         };
 
 #ifdef WINDOWS
-        static const char* __st_c_test_file_paths[] = {"..\\output\\tmp\\", "..\\output\\tmp\\d0\\d1\\testfile"};
+        static const char* __st_c_test_file_paths[] = {"..\\..\\output\\tmp\\", "..\\..\\output\\tmp\\d0\\d1\\testfile"};
 #else
-        static const char* __st_c_test_file_paths[] = {"./testfile"};
+        static const char* __st_c_test_file_paths[] = {"../../output/tmp/", "../../output/tmp/d0/d1/testfile"};
 #endif
 
         static pilo::i32_t functional_test_init(void* param);
+        static pilo::i32_t functional_test_flock(void* param);
+
 
 
         pilo::test::testing_case g_functional_cases_file[] =
         {
             /*---"---------------------------------------------"*/
             { 1, "initilized()                                 ", nullptr, functional_test_init, 0, -1, (pilo::u32_t) - 1 },
-
+            { 2, "test flock()                                 ", nullptr, functional_test_flock, 0, -1, (pilo::u32_t) - 1 },
 
             { -1, "end", nullptr, nullptr, 0, -1, 0 },
         };
+
+        pilo::i32_t functional_test_flock(void* param)
+        {
+            M_UNUSED(param);
+
+            TestFlockThr thr[4];
+            ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
+            ::pilo::core::fs::file<> f0;
+            err = f0.initialize(__st_c_test_file_paths[1], MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE, nullptr);
+
+            err = f0.open(::pilo::core::fs::eDAM_CreateAlways, ::pilo::core::fs::eDRWM_Write, 0);
+            if (err != ::pilo::EC_OK)
+            {
+                return -5;
+            }
+           
+            for (int i = 0; i < 1; i++)
+            {
+                thr->set(&f0, i);
+
+                thr->execute(MC_INVALID_SIZE);
+            }
+
+
+            for(int i = 0; i < 1; i++)
+            {
+
+                thr->wait(MC_INVALID_SIZE);
+            }
+    
+            f0.finalize();
+
+            return 0;
+        }
 
 
         pilo::i32_t functional_test_init(void* param)
         {
             M_UNUSED(param);
 
-            ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
+            return 0;
+
+       /*     ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
 
             ::pilo::core::fs::file<> f0;
+            
 
-//             err = ::pilo::core::fs::fs_util::delete_directory(__st_c_test_file_paths[0], false);
-//             if (err != ::pilo::EC_OK)
-//             {                
-//                 return -1;
-//             }
-
+            err = ::pilo::core::fs::fs_util::delete_directory(__st_c_test_file_paths[0], false);
+            if (err != ::pilo::EC_OK)
+            {                
+                return -1;
+            }
             err = f0.initialize(__st_c_test_file_paths[1], MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE, nullptr);
             if (err != ::pilo::EC_OK)
-            {
+            {                
                 return -5;
             }
             f0.finalize();
-
             err = f0.initialize(__st_c_test_file_paths[1], MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE, nullptr);
-            if (err != ::pilo::EC_FILE_ALREAY_EXIST)
+            if (err != ::pilo::EC_FILE_ALREADY_EXIST)
             {
                 return -10;
             }
             f0.finalize();
+
+
 
             err = f0.initialize(__st_c_test_file_paths[1], MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE | 
                                 MC_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ, nullptr);
@@ -68,7 +149,8 @@ namespace pilo
             {
                 return -20;
             }
-            f0.finalize();
+            f0.finalize();      
+
 
             err = f0.initialize(__st_c_test_file_paths[1], MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE | 
                                                     MC_IO_DEV_FLAG_FORCE_DELETE_DIR_ON_INITIALIZE |
@@ -101,7 +183,7 @@ namespace pilo
                 {
                     return -70;
                 }
-            }
+            }            
 
             err = f0.open(::pilo::core::fs::eDAM_OpenExisting, ::pilo::core::fs::eDRWM_Write, MC_IO_DEV_OP_FLAG_APPEND | MC_IO_DEV_OP_REOPEN);
             if (err != ::pilo::EC_OK)
@@ -179,7 +261,7 @@ namespace pilo
                 return -170;
             }
            
-            return 0;
+            return 0;*/
         }
 
 

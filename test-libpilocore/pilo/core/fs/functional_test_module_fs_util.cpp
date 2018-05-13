@@ -15,7 +15,6 @@ namespace pilo
     {
         static pilo::i32_t functional_is_absolute_path(void* param);   
         static pilo::i32_t functional_getcwd(void* param);
-        static pilo::i32_t functional_get_absolute_path(void* param);
        
 
         pilo::test::testing_case g_functional_cases_fs_util[] =
@@ -23,26 +22,13 @@ namespace pilo
             /*---"--------------------------------------------"*/
             { 1, "is_absolute_path                             ", nullptr, functional_is_absolute_path, 0, -1, (pilo::u32_t) - 1 },
             { 2, "get_current_working_directory                ", nullptr, functional_getcwd          , 0, -1, (pilo::u32_t) - 1 },
-            { 2, "get_absolute_path                            ", nullptr, functional_get_absolute_path, 0, -1, (pilo::u32_t) - 1 },
+
 
 
             { -1, "end", nullptr, nullptr, 0, -1, 0 },
         };
 
-        pilo::i32_t functional_get_absolute_path(void* param)
-        {
-            M_UNUSED(param);
 
-            char abs_path[MC_PATH_MAX];
-
-            ::pilo::i32_t ret = ::pilo::core::fs::fs_util::get_absolute_path(abs_path, "../../testdir2/testfile.txt");
-            if (ret != ::pilo::EC_OK)
-            {
-                return -1;
-            }
-    
-            return ::pilo::EC_OK;
-        }
 
         pilo::i32_t functional_is_absolute_path(void* param)
         {

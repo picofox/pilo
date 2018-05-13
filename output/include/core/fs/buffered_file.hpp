@@ -42,9 +42,9 @@ namespace pilo
                     _m_os_file_descriptor = MC_INVALID_FILE_DESCRIPTOR;
                     _m_read_buffer.reset();
                     _m_write_buffer.reset();
-                    m_state = eIODS_Uninitialized;
-                    m_context = nullptr;
-                    m_init_flags = 0;
+                    _m_state = eIODS_Uninitialized;
+                    _m_context = nullptr;
+                    _m_init_flags = 0;
 
                 }
                 virtual ~buffered_file()
@@ -132,8 +132,8 @@ namespace pilo
                         return ::pilo::EC_INVALID_PATH;
                     }
 
-                    m_init_flags = flag;
-                    m_context = context;
+                    _m_init_flags = flag;
+                    _m_context = context;
                     ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
 
                     char path_buffer[MC_PATH_MAX];
@@ -191,7 +191,7 @@ namespace pilo
                             }
                             else
                             {
-                                return ::pilo::EC_FILE_ALREAY_EXIST;
+                                return ::pilo::EC_FILE_ALREADY_EXIST;
                             }
                         }
                         err = ::pilo::core::fs::fs_util::create_regular_file(path, true);
@@ -206,16 +206,16 @@ namespace pilo
 
                 virtual ::pilo::error_number_t _finalize_nolock()
                 {
-                    if (m_init_flags & MC_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
+                    if (_m_init_flags & MC_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
                     {
                         return ::pilo::core::fs::fs_util::delete_regular_file(_m_path.c_str());
                     }
 
                     _m_read_buffer.reset();
                     _m_write_buffer.reset();
-                    m_state = eIODS_Uninitialized;
-                    m_context = nullptr;
-                    m_init_flags = 0;
+                    _m_state = eIODS_Uninitialized;
+                    _m_context = nullptr;
+                    _m_init_flags = 0;
                     _m_os_file_descriptor = MC_INVALID_FILE_DESCRIPTOR;
                     
                     return ::pilo::EC_OK;

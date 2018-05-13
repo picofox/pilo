@@ -80,12 +80,12 @@ namespace pilo
 
                 io_device()
                 {
-                    m_context = nullptr;
-                    m_state = eIODS_Uninitialized;
-                    m_init_flags = 0;
-                    m_access_mode = eDAM_OpenExisting;
-                    m_rw_mode = eDRWM_None;
-                    m_open_flag = 0;
+                    _m_context = nullptr;
+                    _m_state = eIODS_Uninitialized;
+                    _m_init_flags = 0;
+                    _m_access_mode = eDAM_OpenExisting;
+                    _m_rw_mode = eDRWM_None;
+                    _m_open_flag = 0;
                 }
 
                 virtual ~io_device()
@@ -104,15 +104,15 @@ namespace pilo
 
                 inline void set_context(void* context)
                 {
-                    m_context = context;
+                    _m_context = context;
                 }
             protected:
-                void* m_context;
-                volatile EnumIODeviceState m_state;
-                ::pilo::u32_t m_init_flags;
-                DeviceAccessModeEnumeration m_access_mode;
-                DeviceRWModeEnumeration m_rw_mode;
-                ::pilo::u32_t m_open_flag;
+                void*                       _m_context;
+                volatile EnumIODeviceState  _m_state;
+                ::pilo::u32_t               _m_init_flags;
+                DeviceAccessModeEnumeration _m_access_mode;
+                DeviceRWModeEnumeration     _m_rw_mode;
+                ::pilo::u32_t               _m_open_flag;
             };
         }
     }    

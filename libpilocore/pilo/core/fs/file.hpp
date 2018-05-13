@@ -10,6 +10,7 @@
 #include "core/fs/fs_util.hpp"
 #include "core/threading/rw_mutex_r_locker.hpp"
 #include "core/threading/rw_mutex_w_locker.hpp"
+#include "core/fs/path.hpp"
 
 namespace pilo
 {
@@ -18,7 +19,7 @@ namespace pilo
         namespace fs
         {
             template<
-                typename _PATH_T = ::pilo::core::string::fixed_astring<MC_PATH_MAX>,
+                size_t  PATH_BUFFER_SZ = 0,
                 typename _LOCK_TYPE = ::pilo::core::threading::dummy_read_write_lock>
             class file : public ::pilo::core::fs::io_device
             {
@@ -29,13 +30,14 @@ namespace pilo
                 file()
                 {
                     _m_os_file_descriptor = MC_INVALID_FILE_DESCRIPTOR;
-                    m_state = eIODS_Uninitialized;
-                    m_context = nullptr;
-                    m_init_flags = 0;
+                    _m_state = eIODS_Uninitialized;
+                    _m_context = nullptr;
+                    _m_init_flags = 0;
+                    _m_path.reset();
                 }
                 ~file()
                 {
-                    if (!_m_path.empty())
+                    if (_m_path.valid())
                     {
                         this->_finalize_nolock();
                     }
@@ -46,7 +48,7 @@ namespace pilo
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
 
-                    if (!_m_path.empty()) //has been initialized
+                    if (_m_path.valid()) //has been initialized
                     {
                         if (this->_finalize_nolock() != ::pilo::EC_OK) //finalize it first
                         {
@@ -59,7 +61,7 @@ namespace pilo
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
 
-                    if (_m_path.empty()) //has NOT been initialized
+                    if (!_m_path.valid()) //has NOT been initialized
                     {
                         return ::pilo::EC_NONSENSE_OPERATION;
                     }
@@ -71,7 +73,7 @@ namespace pilo
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
 
-                    if (_m_path.empty())
+                    if (! _m_path.valid())
                     {
                         return ::pilo::EC_UNINITIALIZED;
                     }                    
@@ -92,7 +94,7 @@ namespace pilo
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
 
-                    if (_m_path.empty())
+                    if (!_m_path.valid())
                     {
                         return ::pilo::EC_UNINITIALIZED;
                     }
@@ -109,7 +111,7 @@ namespace pilo
                 {
                     ::pilo::core::threading::rw_mutex_r_locker<lock_type> locker(_m_lock);
 
-                    if (_m_path.empty())
+                    if (! _m_path.valid())
                     {
                         return ::pilo::EC_UNINITIALIZED;
                     }
@@ -126,7 +128,7 @@ namespace pilo
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
 
-                    if (_m_path.empty())
+                    if (! _m_path.valid())
                     {
                         return ::pilo::EC_UNINITIALIZED;
                     }
@@ -142,7 +144,7 @@ namespace pilo
                 virtual ::pilo::error_number_t flush(::pilo::i32_t mode)
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
-                    if (_m_path.empty())
+                    if (!_m_path.valid())
                     {
                         return ::pilo::EC_UNINITIALIZED;
                     }
@@ -158,7 +160,7 @@ namespace pilo
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
 
-                    if (_m_path.empty())
+                    if (!_m_path.valid())
                     {
                         return ::pilo::EC_UNINITIALIZED;
                     }
@@ -171,6 +173,76 @@ namespace pilo
                     return _seek_nolock(offset, eWhence, r_offset);
                 }
 
+                ::pilo::error_number_t flock_shared(size_t start_pos, size_t partial_size)
+                {
+                    if (!_m_path.valid())
+                    {
+                        return ::pilo::EC_UNINITIALIZED;
+                    }
+
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_DEV_NOT_OPENED;
+                    }
+                    return ::pilo::core::fs::fs_util::lock_file(_m_os_file_descriptor, false, start_pos,  partial_size);
+                }               
+
+                ::pilo::error_number_t flock_exclusive(size_t start_pos, size_t partial_size)
+                {
+                    if (!_m_path.valid())
+                    {
+                        return ::pilo::EC_UNINITIALIZED;
+                    }
+
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_DEV_NOT_OPENED;
+                    }
+                    return ::pilo::core::fs::fs_util::lock_file(_m_os_file_descriptor, true, start_pos,  partial_size);
+                }
+
+                ::pilo::error_number_t try_flock_shared(size_t start_pos, size_t partial_size) //MC_INVALID_SIZE means hole fiel
+                {
+                    if (!_m_path.valid())
+                    {
+                        return ::pilo::EC_UNINITIALIZED;
+                    }
+
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_DEV_NOT_OPENED;
+                    }
+                    return ::pilo::core::fs::fs_util::try_lock_file(_m_os_file_descriptor, false, start_pos,  partial_size);
+                }
+
+                ::pilo::error_number_t try_flock_exclusive(size_t start_pos, size_t partial_size)
+                {
+                    if (!_m_path.valid())
+                    {
+                        return ::pilo::EC_UNINITIALIZED;
+                    }
+
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_DEV_NOT_OPENED;
+                    }
+                    return ::pilo::core::fs::fs_util::try_lock_file(_m_os_file_descriptor, true, start_pos,  partial_size);
+                }
+
+                ::pilo::error_number_t funlock(size_t start_pos, size_t partial_size)
+                {
+                    if (!_m_path.valid())
+                    {
+                        return ::pilo::EC_UNINITIALIZED;
+                    }
+
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_DEV_NOT_OPENED;
+                    }
+                    return ::pilo::core::fs::fs_util::unlock_file(_m_os_file_descriptor,  start_pos,  partial_size);
+                }
+
             protected:
                 ::pilo::error_number_t _initialize_nolock(const char* path, ::pilo::u32_t flag, void* context)
                 {
@@ -179,18 +251,18 @@ namespace pilo
                         return ::pilo::EC_INVALID_PATH;
                     }
 
-                    m_init_flags = flag;
-                    m_context = context;
+                    _m_init_flags = flag;
+                    _m_context = context;
                     ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
 
-                    char path_buffer[MC_PATH_MAX] = {0};
-
-                    if (::pilo::EC_OK != ::pilo::core::fs::fs_util::get_absolute_path(path_buffer, path, sizeof(path_buffer)))
+                    if (! _m_path.assign(path))
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }
-
-                    _m_path = path_buffer;
+                    if (::pilo::EC_OK != _m_path.to_absolute(false, true))
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
 
                     if (flag & MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE)
                     {
@@ -238,7 +310,7 @@ namespace pilo
                             }
                             else
                             {
-                                return ::pilo::EC_FILE_ALREAY_EXIST;
+                                return ::pilo::EC_FILE_ALREADY_EXIST;
                             }
                         }
                         err = ::pilo::core::fs::fs_util::create_regular_file(path, true);
@@ -258,14 +330,14 @@ namespace pilo
                         _close_nolock();
                     }
 
-                    if (m_init_flags & MC_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
+                    if (_m_init_flags & MC_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
                     {
                         return ::pilo::core::fs::fs_util::delete_regular_file(_m_path.c_str());
                     }
 
-                    m_state = eIODS_Uninitialized;
-                    m_context = nullptr;
-                    m_init_flags = 0;
+                    _m_state = eIODS_Uninitialized;
+                    _m_context = nullptr;
+                    _m_init_flags = 0;
                     _m_os_file_descriptor = MC_INVALID_FILE_DESCRIPTOR;
 
                     return ::pilo::EC_OK;
@@ -280,9 +352,9 @@ namespace pilo
                                                                 flag);
                     if (ret == ::pilo::EC_OK)
                     {
-                        m_access_mode = dev_acc_mode;
-                        m_rw_mode = rw_mode;
-                        m_open_flag = false;
+                        _m_access_mode = dev_acc_mode;
+                        _m_rw_mode = rw_mode;
+                        _m_open_flag = false;
                     }
 
                     return ret;
@@ -298,9 +370,9 @@ namespace pilo
                     ::close(_m_os_file_descriptor);
 #endif
 
-                    m_open_flag = 0;
-                    m_rw_mode = ::pilo::core::fs::eDRWM_None;
-                    m_access_mode = ::pilo::core::fs::eDAM_OpenExisting;
+                    _m_open_flag = 0;
+                    _m_rw_mode = ::pilo::core::fs::eDRWM_None;
+                    _m_access_mode = ::pilo::core::fs::eDAM_OpenExisting;
                     _m_os_file_descriptor = MC_INVALID_FILE_DESCRIPTOR;
 
                     return ::pilo::EC_OK;
@@ -322,7 +394,7 @@ namespace pilo
                         return ::pilo::EC_READ_FILE_ERROR;
                     }
 #else
-                    ssize_t nRet = read(_m_os_file_descriptor, buffer, len);
+                    ssize_t nRet = ::read(_m_os_file_descriptor, buffer, len);
                     if (read_len != nullptr) 
                     {
                         *read_len = (size_t) nRet;
@@ -353,7 +425,7 @@ namespace pilo
                         return ::pilo::EC_WRITE_FILE_ERROR;
                     }
 #else
-                    ssize_t nRet = write(_m_os_file_descriptor, buffer, len);
+                    ssize_t nRet = ::write(_m_os_file_descriptor, buffer, len);
                     if (written_len != nullptr)
                     {
                         *written_len = (size_t)nRet;
@@ -419,9 +491,9 @@ namespace pilo
                 
 
             protected:
-                os_file_descriptor_t    _m_os_file_descriptor; //internal file data structure handle
-                _PATH_T                 _m_path;
-                lock_type               _m_lock;
+                os_file_descriptor_t                        _m_os_file_descriptor; //internal file data structure handle
+                ::pilo::core::fs::path<PATH_BUFFER_SZ>      _m_path;
+                lock_type                                   _m_lock;
 
             };
         }

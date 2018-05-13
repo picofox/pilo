@@ -330,6 +330,9 @@
     <ClInclude Include="pilo\core\fs\path.hpp">
       <Filter>pilo\core\fs</Filter>
     </ClInclude>
+    <ClInclude Include="pilo\core\datetime\tickcount_simu_thread.hpp">
+      <Filter>pilo\core\datetime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pilo\error.cpp">
@@ -415,6 +418,9 @@
     </ClCompile>
     <ClCompile Include="pilo\core\debug\debug_new.cpp">
       <Filter>pilo\core\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\datetime\tickcount_simu_thread.cpp">
+      <Filter>pilo\core\datetime</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
