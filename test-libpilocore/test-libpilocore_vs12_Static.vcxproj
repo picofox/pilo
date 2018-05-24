@@ -35,7 +35,7 @@
     <ClCompile Include="pilo\core\memory\functional_test_module_class_overlapped_memory_pool.cpp" />
     <ClCompile Include="pilo\core\memory\functional_test_module_class_portable_object_pool.cpp" />
     <ClCompile Include="pilo\core\memory\presure_test_portable_object_pool.cpp" />
-    <ClCompile Include="pilo\core\string\functional_test_module_class_auto_astring.cpp" />
+    <ClCompile Include="pilo\core\string\functional_test_module_class_astring.cpp" />
     <ClCompile Include="pilo\core\string\functional_test_module_class_dynamic_astring..cpp" />
     <ClCompile Include="pilo\core\string\functional_test_module_class_fixed_astring.cpp" />
     <ClCompile Include="pilo\core\string\functional_test_module_class_fixed_wstring.cpp" />
@@ -66,7 +66,7 @@
     <ClInclude Include="pilo\core\memory\functional_test_module_class_portable_object_pool.hpp" />
     <ClInclude Include="pilo\core\memory\presure_test.hpp" />
     <ClInclude Include="pilo\core\memory\presure_test_portable_object_pool.hpp" />
-    <ClInclude Include="pilo\core\string\functional_test_module_class_auto_astring.hpp" />
+    <ClInclude Include="pilo\core\string\functional_test_module_class_astring.hpp" />
     <ClInclude Include="pilo\core\string\functional_test_module_class_dynamic_astring.hpp" />
     <ClInclude Include="pilo\core\string\functional_test_module_class_fixed_astring.hpp" />
     <ClInclude Include="pilo\core\string\functional_test_module_class_fixed_wstring.hpp" />

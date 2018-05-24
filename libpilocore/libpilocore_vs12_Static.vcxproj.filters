@@ -282,9 +282,6 @@
     <ClInclude Include="pilo\core\threading\win_interlocked.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
-    <ClInclude Include="pilo\core\string\auto_astring.hpp">
-      <Filter>pilo\core\string</Filter>
-    </ClInclude>
     <ClInclude Include="pilo\core\string\dynamic_astring.hpp">
       <Filter>pilo\core\string</Filter>
     </ClInclude>
@@ -332,6 +329,12 @@
     </ClInclude>
     <ClInclude Include="pilo\core\datetime\tickcount_simu_thread.hpp">
       <Filter>pilo\core\datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\memory\buffer.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\string\astring.hpp">
+      <Filter>pilo\core\string</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -23,7 +23,7 @@
 #include "core/datetime/functional_test_module_class_datetime.hpp"
 #include "core/fs/functional_test_module_fs_util.hpp"
 #include "core/string/functional_test_module_class_dynamic_astring.hpp"
-#include "core/string/functional_test_module_class_auto_astring.hpp"
+#include "core/string/functional_test_module_class_astring.hpp"
 #include "core/memory/functional_test_module_class_dynamic_buffer.hpp"
 #include "core/fs/path.hpp"
 #include "core/fs/functional_test_module_file.hpp"
@@ -399,7 +399,7 @@ class test_mtx : public ::pilo::core::threading::basic_thread
 int main(int argc, char *argv[])
 {
     M_UNUSED(argc);
-    M_UNUSED(argv);	  
+    M_UNUSED(argv);	 
 
 #ifdef _PILO_DEBUG_HEAP
     pilo_debug_heap_leak_set_verbose(false);
@@ -410,7 +410,20 @@ int main(int argc, char *argv[])
     bool break_on_error = true;
     pilo::i32_t id = 1;
 
-    pilo::test::functional_test_module_path path_cases(id++, "functional_test_module_file", pilo::test::g_functional_cases_path);
+    pilo::test::functional_test_module_class_fixed_astring  fixed_astring_cases(id++, "functional_test_module_class_fixed_astring", pilo::test::g_functional_cases_fixed_astring);
+    fixed_astring_cases.run_cases(break_on_error);
+    fixed_astring_cases.console_output();
+
+    pilo::test::functional_test_module_class_dynamic_astring  dynamic_astring_cases(id++, "functional_test_module_class_dynamic_astring", pilo::test::g_functional_cases_dynamic_astring);
+    dynamic_astring_cases.run_cases(break_on_error);
+    dynamic_astring_cases.console_output();
+
+    pilo::test::functional_test_module_class_astring  astring_cases(id++, "functional_test_module_class_astring", pilo::test::g_functional_cases_auto_astring);
+    astring_cases.run_cases(break_on_error);
+    astring_cases.console_output();
+    
+
+    pilo::test::functional_test_module_path path_cases(id++, "functional_test_module_path", pilo::test::g_functional_cases_path);
     path_cases.run_cases(break_on_error);
     path_cases.console_output();
 
@@ -440,9 +453,7 @@ int main(int argc, char *argv[])
 //     string_util_cases.run_cases(break_on_error);
 //     string_util_cases.console_output();
 
-//     pilo::test::functional_test_module_class_fixed_astring  fixed_astring_cases(id++, "functional_test_module_class_fixed_astring", pilo::test::g_functional_cases_fixed_astring);
-//     fixed_astring_cases.run_cases(break_on_error);
-//     fixed_astring_cases.console_output();
+
 // 
 //     pilo::test::functional_test_module_class_fixed_wstring  fixed_wstring_cases(id++, "functional_test_module_class_fixed_wstring", pilo::test::g_functional_cases_fixed_wstring);
 //     fixed_wstring_cases.run_cases(break_on_error);
@@ -519,14 +530,9 @@ int main(int argc, char *argv[])
 //     fs_util_cases.run_cases(break_on_error);
 //     fs_util_cases.console_output();
 // 
-//     pilo::test::functional_test_module_class_dynamic_astring  dynamic_astring_cases(id++, "functional_test_module_class_dynamic_astring", pilo::test::g_functional_cases_dynamic_astring);
-//     dynamic_astring_cases.run_cases(break_on_error);
-//     dynamic_astring_cases.console_output();
+
 // 
-//     pilo::test::functional_test_module_class_auto_astring  auto_astring_cases(id++, "functional_test_module_class_auto_astring", pilo::test::g_functional_cases_auto_astring);
-//     auto_astring_cases.run_cases(break_on_error);
-//     auto_astring_cases.console_output();
-// 
+
 //     pilo::test::functional_test_module_class_dynamic_buffer  dynamic_buffer_cases(id++, "functional_test_module_class_dynamic_buffer", pilo::test::g_functional_cases_dynamic_buffer);
 //     dynamic_buffer_cases.run_cases(break_on_error);
 //     dynamic_buffer_cases.console_output();

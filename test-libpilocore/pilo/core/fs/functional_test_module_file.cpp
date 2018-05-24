@@ -81,7 +81,6 @@ namespace pilo
         {
             M_UNUSED(param);
 
-            TestFlockThr thr[4];
             ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
             ::pilo::core::fs::file<> f0;
             err = f0.initialize(__st_c_test_file_paths[1], MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE, nullptr);
@@ -92,19 +91,35 @@ namespace pilo
                 return -5;
             }
            
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 10000; i++)
             {
-                thr->set(&f0, i);
+                if (i % 2 == 0)
+                {
+                    err = f0.flock_exclusive(0, MC_INVALID_SIZE);
+                    if (err != ::pilo::EC_OK)
+                    {
+                        return -10;
+                    }
+                }
+                else
+                {
+                    err = f0.flock_shared(0, MC_INVALID_SIZE);
+                    if (err != ::pilo::EC_OK)
+                    {
+                        return -20;
+                    }
+                }
 
-                thr->execute(MC_INVALID_SIZE);
+
+                err = f0.funlock(0, MC_INVALID_SIZE);
+                if (err != ::pilo::EC_OK)
+                {
+                    return -30;
+                }
             }
 
 
-            for(int i = 0; i < 1; i++)
-            {
-
-                thr->wait(MC_INVALID_SIZE);
-            }
+            f0.close();
     
             f0.finalize();
 
@@ -116,9 +131,7 @@ namespace pilo
         {
             M_UNUSED(param);
 
-            return 0;
-
-       /*     ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
+            ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
 
             ::pilo::core::fs::file<> f0;
             
@@ -261,7 +274,7 @@ namespace pilo
                 return -170;
             }
            
-            return 0;*/
+            return 0;
         }
 
 

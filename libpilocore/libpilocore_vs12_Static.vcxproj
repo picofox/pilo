@@ -46,6 +46,7 @@
     <ClInclude Include="pilo\core\io\ostream_interface.hpp" />
     <ClInclude Include="pilo\core\log\syncronizedlocaltextlog.h" />
     <ClInclude Include="pilo\core\memory\autoreset_object_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\buffer.hpp" />
     <ClInclude Include="pilo\core\memory\compactable_autoreset_object_pool.hpp" />
     <ClInclude Include="pilo\core\memory\compactable_memory_pool.hpp" />
     <ClInclude Include="pilo\core\memory\compactable_object_pool.hpp" />
@@ -81,7 +82,7 @@
     <ClInclude Include="pilo\core\process\process.hpp" />
     <ClInclude Include="pilo\core\process\process_util.hpp" />
     <ClInclude Include="pilo\core\random\simple_random.hpp" />
-    <ClInclude Include="pilo\core\string\auto_astring.hpp" />
+    <ClInclude Include="pilo\core\string\astring.hpp" />
     <ClInclude Include="pilo\core\string\dynamic_astring.hpp" />
     <ClInclude Include="pilo\core\string\fixed_astring.hpp" />
     <ClInclude Include="pilo\core\string\fixed_wstring.hpp" />
@@ -323,11 +324,7 @@ copy /Y pilo\lang_feature.hpp $(ProjectDir)..\output\include\lang_feature.hpp
 copy /Y pilo\compat.hpp $(ProjectDir)..\output\include\compat.hpp
 copy /Y pilo\core\coredefs.hpp $(ProjectDir)..\output\include\core\coredefs.hpp
 copy /Y pilo\core\parameter.hpp $(ProjectDir)..\output\include\core\parameter.hpp
-copy /Y pilo\core\string\string_util.hpp $(ProjectDir)..\output\include\core\string\string_util.hpp
-copy /Y pilo\core\string\fixed_astring.hpp $(ProjectDir)..\output\include\core\string\fixed_astring.hpp
-copy /Y pilo\core\string\fixed_wstring.hpp $(ProjectDir)..\output\include\core\string\fixed_wstring.hpp
-copy /Y pilo\core\string\dynamic_astring.hpp $(ProjectDir)..\output\include\core\string\dynamic_astring.hpp
-copy /Y pilo\core\string\auto_astring.hpp $(ProjectDir)..\output\include\core\string\auto_astring.hpp
+copy /Y pilo\core\string\*.hpp $(ProjectDir)..\output\include\core\string\
 copy /Y pilo\core\io\format_output.hpp $(ProjectDir)..\output\include\core\io\format_output.hpp
 copy /Y pilo\core\io\istream_interface.hpp $(ProjectDir)..\output\include\core\io\istream_interface.hpp
 copy /Y pilo\core\io\ostream_interface.hpp $(ProjectDir)..\output\include\core\io\ostream_interface.hpp

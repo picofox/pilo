@@ -1,6 +1,7 @@
 #include "./fs_util.hpp"
 #include "core/string/string_util.hpp"
 #include "core/io/format_output.hpp"
+#include "core/fs/path.hpp"
 #include <cctype>
 #include <time.h>  
 #include <sys/types.h>  
@@ -375,6 +376,13 @@ namespace pilo
             ::pilo::error_number_t fs_util::travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir)
             {
                 printf("tarval (%s)\n", root);
+
+                ::pilo::core::fs::path<0> abspath(root);
+                if (abspath.to_absolute(false, true) != ::pilo::EC_OK)
+                {
+                    return ::pilo::EC_INVALID_PATH;
+                }
+
                 if (root == nullptr || *root == '\0')
                 {
                     return ::pilo::EC_NULL_PARAM;

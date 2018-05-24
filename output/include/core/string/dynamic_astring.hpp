@@ -82,8 +82,9 @@ namespace pilo
                 
 
             protected:
-                pilo::i32_t _assign(const char* str);
-                pilo::i32_t _assign(const char* str, size_t len);
+                ::pilo::error_number_t _assign(const char* str);
+                ::pilo::error_number_t _assign(const char* str, size_t len);
+                ::pilo::error_number_t _resize(size_t sz);
 
             };
            

@@ -9,20 +9,20 @@ namespace pilo
 {
     namespace test
     {
-        static pilo::i32_t functional_test_constructor_0_s(void* param);
+        static pilo::i32_t functional_test_auto_astring(void* param);
 
 
         pilo::test::testing_case g_functional_cases_dynamic_astring[] =
         {
             /*---"---------------------------------------------"*/
-            { 1, "dynamic_astring<char>()                         ", nullptr, functional_test_constructor_0_s, 0, -1, (pilo::u32_t) - 1 },
+            { 1, "dynamic_astring<char>()                         ", nullptr, functional_test_auto_astring, 0, -1, (pilo::u32_t) - 1 },
 
 
             { -1, "end", nullptr, nullptr, 0, -1, 0 },
         };
 
 
-        pilo::i32_t functional_test_constructor_0_s(void* param)
+        pilo::i32_t functional_test_auto_astring(void* param)
         {
             M_UNUSED(param);
             pilo::core::string::dynamic_astring  str0;

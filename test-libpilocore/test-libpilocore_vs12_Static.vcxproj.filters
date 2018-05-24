@@ -78,9 +78,6 @@
     <ClCompile Include="pilo\core\memory\presure_test_portable_object_pool.cpp">
       <Filter>pilo\core\memory</Filter>
     </ClCompile>
-    <ClCompile Include="pilo\core\string\functional_test_module_class_auto_astring.cpp">
-      <Filter>pilo\core\string</Filter>
-    </ClCompile>
     <ClCompile Include="pilo\core\string\functional_test_module_class_dynamic_astring..cpp">
       <Filter>pilo\core\string</Filter>
     </ClCompile>
@@ -113,6 +110,9 @@
     </ClCompile>
     <ClCompile Include="pilo\core\fs\functional_test_module_path.cpp">
       <Filter>pilo\core\fs</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\string\functional_test_module_class_astring.cpp">
+      <Filter>pilo\core\string</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,9 +170,6 @@
     <ClInclude Include="pilo\core\memory\presure_test_portable_object_pool.hpp">
       <Filter>pilo\core\memory</Filter>
     </ClInclude>
-    <ClInclude Include="pilo\core\string\functional_test_module_class_auto_astring.hpp">
-      <Filter>pilo\core\string</Filter>
-    </ClInclude>
     <ClInclude Include="pilo\core\string\functional_test_module_class_dynamic_astring.hpp">
       <Filter>pilo\core\string</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="pilo\core\fs\functional_test_module_path.hpp">
       <Filter>pilo\core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\string\functional_test_module_class_astring.hpp">
+      <Filter>pilo\core\string</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
