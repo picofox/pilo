@@ -365,7 +365,7 @@ namespace pilo
                             return pilo::EC_UNDEFINED;
                         }
 
-                        _m_dyn_capacity = tmpcapa;
+                        _m_dyn_capacity = sz;
                         MP_SAFE_FREE(_m_dyn_data);
                         _m_dyn_data = tmpbuff;
                     }
@@ -373,7 +373,7 @@ namespace pilo
                     {
                         if (sz <= max_capacity)
                         {
-                            return ::pilo::EC_OK;
+                            return ::pilo::EC_NONSENSE_OPERATION;
                         }
 
                         size_t tmpcapa = M_ALIGN_SIZE((sz+1), sizeof(void*));
@@ -388,7 +388,7 @@ namespace pilo
                             MP_SAFE_FREE(_m_dyn_data);
                             return pilo::EC_UNDEFINED;
                         }
-                        _m_dyn_capacity = tmpcapa;
+                        _m_dyn_capacity = sz;
                     }                    
 
                     return pilo::EC_OK;
@@ -424,15 +424,15 @@ namespace pilo
                             return ::pilo::EC_OK;
                         }
                     }
-
+                    
                     size_t neo_capa = 0;
                     size_t neo_size = 0;
                     char * neo_buffer = nullptr;
-                    
+
                     if (nullptr == _m_dyn_data) //dyn buffer is not in using , 2 cases, one is still user fixed buffer, the other is switch to dyn buffer
                     {
                         if (len > max_capacity)
-                        {
+                        {                            
                             neo_capa = M_ALIGN_SIZE((len + 1), sizeof(void*));
                             neo_buffer = (char*) malloc (neo_capa);
                             if (neo_buffer == nullptr)
@@ -440,7 +440,7 @@ namespace pilo
                                 return ::pilo::EC_INSUFFICIENT_MEMORY;
                             }
 
-                            neo_size = string_util::copy(neo_buffer, len, cstr, len);
+                            neo_size = string_util::copy(neo_buffer, neo_capa, cstr, len);
                             if (neo_size == MC_INVALID_SIZE)
                             {
                                 return ::pilo::EC_COPY_STRING_FAILED;
@@ -448,7 +448,7 @@ namespace pilo
 
                             _m_dyn_data = neo_buffer;
                             _m_size = neo_size;
-                            _m_dyn_capacity = neo_capa;
+                            _m_dyn_capacity = len;
 
                         }
                         else
@@ -456,20 +456,33 @@ namespace pilo
                             _m_size = string_util::copy(_m_fix_data, max_capacity + 1, cstr, len);
                         }
                     }
-                    else
+                    else //using dyn buffer
                     {
-                        if (len >= _m_dyn_capacity)
+                        if (len > _m_dyn_capacity)
                         {
-                            ::pilo::error_number_t ret = _resize(len + 1);
-                            if (ret != ::pilo::EC_OK)
+                            neo_capa = M_ALIGN_SIZE((len + 1), sizeof(void*));
+                            neo_buffer = (char*)malloc(neo_capa);
+                            if (neo_buffer == nullptr)
                             {
-                                return ret;
+                                return ::pilo::EC_INSUFFICIENT_MEMORY;
+                            } 
+
+                            if (string_util::copy(neo_buffer, neo_capa, cstr, len) != len)
+                            {
+                                return ::pilo::EC_COPY_STRING_FAILED;
                             }
-                            _m_size = string_util::copy(_m_dyn_data, len + 1, cstr, len);
+
+                            _m_size = len;
+                            _m_dyn_capacity = len;
+                            _m_dyn_data = neo_buffer;
                         }
                         else
                         {
                             _m_size = string_util::copy(_m_dyn_data, _m_dyn_capacity+1, cstr, len);
+                            if (_m_size != len)
+                            {
+                                return ::pilo::EC_COPY_STRING_FAILED;
+                            }
                         }
                     }                   
 

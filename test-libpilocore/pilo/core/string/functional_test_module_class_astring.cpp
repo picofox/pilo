@@ -65,7 +65,24 @@ namespace pilo
             {
                 return -90;
             }
-            
+
+            astr0 = "012345678901234567890123456789012";
+            if (!astr0.is_dynamic())
+            {
+                return -100;
+            }
+            if (astr0.length() != 33)
+            {
+                return -110;
+            }
+            if (astr0.available_capacity() != 0)
+            {
+                return -120;
+            }
+            if (astr0.c_str()[32] != '2' || astr0.c_str()[33] != '\0')
+            {
+                return -130;
+            }
             
             return 0;
         }
