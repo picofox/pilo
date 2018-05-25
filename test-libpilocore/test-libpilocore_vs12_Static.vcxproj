@@ -164,7 +164,7 @@
       <PreprocessorDefinitions>_DEBUG_MEM_OBJ_POOL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libpilocore_vs12_$(PlatformName)_$(Configuration)_Static.lib;libboost_filesystem-vc120-mt-sgd-x64-1_66.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libpilocore_vs12_$(PlatformName)_$(Configuration)_Static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\output\lib\;D:\work\lib_dev_3rd\boost\boost_1_66_0\bin\lib</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>

@@ -396,7 +396,7 @@ namespace pilo
 
                 ::pilo::error_number_t _assign(const char* cstr, size_t len)
                 {
-                    if (cstr == nullptr)
+                    if (cstr == nullptr) // null str mean clear data, restore to fixxed buffer
                     {
                         _m_dyn_capacity = 0;
                         MP_SAFE_FREE(_m_dyn_data);
@@ -405,12 +405,12 @@ namespace pilo
                         return ::pilo::EC_OK;
                     }
 
-                    if (len == MC_INVALID_SIZE)
+                    if (len == MC_INVALID_SIZE) //auto calculate src str length
                     {
                         len = ::pilo::core::string::string_util::length(cstr);
                     }
 
-                    if (0 == *cstr || len == 0)
+                    if (0 == *cstr || len == 0) //clear data
                     {
                         _m_size = 0;
                         if (nullptr != _m_dyn_data)
@@ -424,17 +424,32 @@ namespace pilo
                             return ::pilo::EC_OK;
                         }
                     }
-                   
-                    if (nullptr == _m_dyn_data)
+
+                    size_t neo_capa = 0;
+                    size_t neo_size = 0;
+                    char * neo_buffer = nullptr;
+                    
+                    if (nullptr == _m_dyn_data) //dyn buffer is not in using , 2 cases, one is still user fixed buffer, the other is switch to dyn buffer
                     {
-                        if (len >= max_capacity)
+                        if (len > max_capacity)
                         {
-                            ::pilo::error_number_t ret = _resize(len + 1);
-                            if (ret != ::pilo::EC_OK)
+                            neo_capa = M_ALIGN_SIZE((len + 1), sizeof(void*));
+                            neo_buffer = (char*) malloc (neo_capa);
+                            if (neo_buffer == nullptr)
                             {
-                                return ret;
+                                return ::pilo::EC_INSUFFICIENT_MEMORY;
                             }
-                            _m_size = string_util::copy(_m_dyn_data, len + 1, cstr, len);
+
+                            neo_size = string_util::copy(neo_buffer, len, cstr, len);
+                            if (neo_size == MC_INVALID_SIZE)
+                            {
+                                return ::pilo::EC_COPY_STRING_FAILED;
+                            }
+
+                            _m_dyn_data = neo_buffer;
+                            _m_size = neo_size;
+                            _m_dyn_capacity = neo_capa;
+
                         }
                         else
                         {
@@ -474,10 +489,15 @@ namespace pilo
             class astring<0> : public dynamic_astring
             {
             public:
-            astring(const char* cstr) : dynamic_astring(cstr)
-            {
+                astring(const char* cstr) : dynamic_astring(cstr)
+                {
 
-            }
+                }
+
+                astring(const char* cstr, size_t len) : dynamic_astring(cstr, len)
+                {
+                    
+                }
     
                 bool is_dynamic() const
                 {

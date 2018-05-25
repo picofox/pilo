@@ -705,13 +705,14 @@ namespace pilo
             {
                 if (nullptr == dst_str || nullptr == src_str)
                 {
-                    return 0;
+                    return MC_INVALID_SIZE;
                 }                
 
                 if (dst_pos >= (dst_capacity - 1))
                 {
-                    return 0;
+                    return MC_INVALID_SIZE;
                 }
+
                 size_t dest_left = dst_capacity - dst_pos - 1;
 
                 size_t numCopy = 0;
@@ -763,12 +764,12 @@ namespace pilo
             {
                 if (nullptr == dst_str || nullptr == src_str)
                 {
-                    return 0;
+                    return MC_INVALID_SIZE;
                 }
 
                 if (dst_pos >= dst_capacity)
                 {
-                    return 0;
+                    return MC_INVALID_SIZE;
                 }
                 size_t dest_left = dst_capacity - dst_pos;
 
@@ -813,12 +814,12 @@ namespace pilo
             {
                 if (nullptr == dst_str || nullptr == src_str)
                 {
-                    return 0;
+                    return MC_INVALID_SIZE;
                 }
 
                 if (dst_pos >= dst_capacity)
                 {
-                    return 0;
+                    return MC_INVALID_SIZE;
                 }
                 size_t dest_left = dst_capacity - dst_pos;
 
@@ -863,12 +864,12 @@ namespace pilo
             {
                 if (nullptr == dst_str || nullptr == src_str)
                 {
-                    return 0;
+                    return MC_INVALID_SIZE;
                 }
 
                 if (dst_pos >= dst_capacity)
                 {
-                    return 0;
+                    return MC_INVALID_SIZE;
                 }
                 size_t dest_left = dst_capacity - dst_pos;
 
@@ -908,11 +909,7 @@ namespace pilo
                 dst_write_ptr[ maxCopyCount * sizeof(T) ] = 0;
 
                 return maxCopyCount;
-            }
-
-
-            
-            
+            }            
         }
     }
 }

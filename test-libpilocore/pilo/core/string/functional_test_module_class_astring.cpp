@@ -30,7 +30,41 @@ namespace pilo
             {
                 return -1;
             }
-            
+            if (astr0.length() != 15)
+            {
+                return -20;
+            }
+            if (astr0.available_capacity() != 17)
+            {
+                return -30;
+            }
+            astr0.clear();
+            if (astr0.length() != 0)
+            {
+                return -40;
+            }
+            if (astr0.c_str()[0] != 0)
+            {
+                return -50;
+            }
+
+            astr0 = "01234567890123456789012345678901";
+            if (astr0.is_dynamic())
+            {
+                return -60;
+            }
+            if (astr0.length() != 32)
+            {
+                return -70;
+            }
+            if (astr0.available_capacity() != 0)
+            {
+                return -80;
+            }
+            if (astr0.c_str()[31] != '1' || astr0.c_str()[32] != '\0')
+            {
+                return -90;
+            }
             
             
             return 0;

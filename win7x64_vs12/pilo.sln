@@ -22,8 +22,8 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5EF7AC64-347A-4A6B-B749-36E5ABD45F8D}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{5EF7AC64-347A-4A6B-B749-36E5ABD45F8D}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{5EF7AC64-347A-4A6B-B749-36E5ABD45F8D}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{5EF7AC64-347A-4A6B-B749-36E5ABD45F8D}.Debug|Mixed Platforms.Build.0 = Debug|x64
 		{5EF7AC64-347A-4A6B-B749-36E5ABD45F8D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{5EF7AC64-347A-4A6B-B749-36E5ABD45F8D}.Debug|Win32.Build.0 = Debug|Win32
 		{5EF7AC64-347A-4A6B-B749-36E5ABD45F8D}.Debug|x64.ActiveCfg = Debug|x64
@@ -34,8 +34,8 @@ Global
 		{5EF7AC64-347A-4A6B-B749-36E5ABD45F8D}.Release|Win32.Build.0 = Release|Win32
 		{5EF7AC64-347A-4A6B-B749-36E5ABD45F8D}.Release|x64.ActiveCfg = Release|x64
 		{5EF7AC64-347A-4A6B-B749-36E5ABD45F8D}.Release|x64.Build.0 = Release|x64
-		{B55B5D33-F90F-4A9D-83BC-04035DF4BDE6}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{B55B5D33-F90F-4A9D-83BC-04035DF4BDE6}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{B55B5D33-F90F-4A9D-83BC-04035DF4BDE6}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{B55B5D33-F90F-4A9D-83BC-04035DF4BDE6}.Debug|Mixed Platforms.Build.0 = Debug|x64
 		{B55B5D33-F90F-4A9D-83BC-04035DF4BDE6}.Debug|Win32.ActiveCfg = Debug|Win32
 		{B55B5D33-F90F-4A9D-83BC-04035DF4BDE6}.Debug|Win32.Build.0 = Debug|Win32
 		{B55B5D33-F90F-4A9D-83BC-04035DF4BDE6}.Debug|x64.ActiveCfg = Debug|x64
@@ -46,8 +46,8 @@ Global
 		{B55B5D33-F90F-4A9D-83BC-04035DF4BDE6}.Release|Win32.Build.0 = Release|Win32
 		{B55B5D33-F90F-4A9D-83BC-04035DF4BDE6}.Release|x64.ActiveCfg = Release|x64
 		{B55B5D33-F90F-4A9D-83BC-04035DF4BDE6}.Release|x64.Build.0 = Release|x64
-		{DBD18C98-77B7-4293-B230-28DBA1FD420C}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{DBD18C98-77B7-4293-B230-28DBA1FD420C}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{DBD18C98-77B7-4293-B230-28DBA1FD420C}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{DBD18C98-77B7-4293-B230-28DBA1FD420C}.Debug|Mixed Platforms.Build.0 = Debug|x64
 		{DBD18C98-77B7-4293-B230-28DBA1FD420C}.Debug|Win32.ActiveCfg = Debug|Win32
 		{DBD18C98-77B7-4293-B230-28DBA1FD420C}.Debug|Win32.Build.0 = Debug|Win32
 		{DBD18C98-77B7-4293-B230-28DBA1FD420C}.Debug|x64.ActiveCfg = Debug|x64
