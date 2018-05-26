@@ -105,6 +105,17 @@ namespace pilo
                     }
                 }
 
+                char* data()                 {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        return _m_dyn_data;
+                    }
+                    else
+                    {
+                        return _m_fix_data;
+                    }
+                }
+
                 size_t size() const
                 {
                     return _m_size;
@@ -113,6 +124,30 @@ namespace pilo
                 size_t length() const
                 {
                     return _m_size;
+                }
+
+                astring& append(const char* suffix_str, size_t pos, size_t len)
+                {
+                    _append(suffix_str, pos, len);
+                    return *this;
+                }
+
+                astring& append(const std::string& stdstr )
+                {
+                    _append(stdstr.c_str(), 0, stdstr.size());
+                    return *this;
+                }
+
+                astring& append(const char* cstr)
+                {
+                    _append(cstr, 0, MC_INVALID_SIZE);
+                    return *this;
+                }
+
+                astring& append(const astring& astr)
+                {
+                    _append(astr.c_str(), 0, astr.size());
+                    return *this;
                 }
 
                 char& at(size_t pos)
@@ -253,6 +288,8 @@ namespace pilo
                             _m_fix_data[_m_size] = 0;
                         }
                     }
+
+                    return ::pilo::EC_OK;
                     
                 }
 
@@ -266,69 +303,27 @@ namespace pilo
                     {
                         _m_fix_data[--_m_size] = 0;
                     }                    
+                }                
+
+
+                ::pilo::i32_t compare(const char* str, size_t len_to_compare = MC_INVALID_SIZE) const
+                {
+                    return pilo::core::string::string_util::binary_compare(this->c_str(), str, len_to_compare);
                 }
 
-                astring<max_capacity> insert(size_t pos, const char* str, size_t len)
+                ::pilo::i32_t compare(const std::string& str) const
                 {
-                    if (insert_or_append(pos, str, len) != ::pilo::EC_OK)
-                    {
-                        throw ::pilo::EC_INSUFFICIENT_MEMORY;
-                    }
+                    return pilo::core::string::string_util::binary_compare(this->c_str(), str.c_str(), MC_INVALID_SIZE);
+                }
+
+                astring insert(size_t pos, const char* str, size_t len)
+                {
+                    _insert(pos, str, len );
                     return *this;
                 }
 
-                ::pilo::error_number_t insert_or_append(size_t pos, const char* str, size_t len)
-                {
-                    if (str == 0 || *str == 0)
-                    {
-                        return ::pilo::EC_NULL_PARAM;
-                    }
-
-                    if (len == MC_INVALID_SIZE)
-                    {
-                        len = strlen(str);
-                    }
-
-                    if (available_capacity() < len)
-                    {
-                        ::pilo::error_number_t resz_ret = _resize(_m_size + len);
-                        if (resz_ret != ::pilo::EC_OK)
-                        {
-                            return resz_ret;
-                        }
-                    }
-
-                    if (capacity() <= len + size())
-                    {
-                        return false;
-                    }
-
-                    char * p = nullptr;
-                    if (nullptr != _m_dyn_data) //use dynamic buffer
-                    {
-                        p = _m_dyn_capacity;
-                    }
-                    else
-                    {
-                        p = max_capacity;
-                    }
-
-                    if (pos >= _m_size)
-                    {
-                        string_util::copy(p + _m_size, MC_INVALID_SIZE, str, len);
-                    }
-                    else
-                    {
-                        ::memmove(p + pos + len, p + pos, _m_size - pos);
-                        ::memmove(p + pos, str, len);
-                        _m_size += len;
-                        p[_m_size] = 0;
-                    }
-
-                    return ::pilo::EC_OK;
-                }
-
             protected:
+   
                 char& _at(size_t pos)
                 {
                     if (nullptr != _m_dyn_data) //use dynamic buffer
@@ -341,6 +336,17 @@ namespace pilo
                     }
                 }
 
+                char* _data() 
+                {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        return _m_dyn_data;
+                    }
+                    else
+                    {
+                        return _m_fix_data;
+                    }
+                }
                 
 
                 ::pilo::error_number_t _resize(size_t sz)
@@ -373,7 +379,7 @@ namespace pilo
                     {
                         if (sz <= max_capacity)
                         {
-                            return ::pilo::EC_NONSENSE_OPERATION;
+                            return ::pilo::EC_OK;
                         }
 
                         size_t tmpcapa = M_ALIGN_SIZE((sz+1), sizeof(void*));
@@ -489,6 +495,76 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+                ::pilo::i32_t _append(const char* suffix_str, size_t pos, size_t len)
+                {
+                    if (suffix_str == nullptr)
+                    {
+                        return ::pilo::EC_NULL_PARAM;
+                    }
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = ::strlen(suffix_str);
+                    }
+
+                    if (len == 0)
+                    {
+                        return ::pilo::EC_OK;
+                    }
+
+                    if (pos >= len)
+                    {
+                        return ::pilo::EC_INVALID_PARAM;
+                    }
+
+                    if (capacity() < len + length())
+                    {
+                        if (::pilo::EC_OK != _resize(length() + len))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }                    
+
+                    if (nullptr == ::pilo::core::string::string_util::concatenate_string(_data() + _m_size, available_capacity()+1, suffix_str + pos, len))
+                    {
+                        return ::pilo::EC_COPY_STRING_FAILED;
+                    }
+
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::i32_t _insert(size_t pos, const char* str, size_t len)
+                {
+                    if (str == 0 || *str == 0)
+                    {
+                        return ::pilo::EC_NULL_PARAM;
+                    }
+
+                    if (pos >= size())
+                    {
+                        return _append(str, 0,  len);
+                    }
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = strlen(str);
+                    }
+
+                    if (capacity() < len + length())
+                    {
+                        if (::pilo::EC_OK != _resize(length() + len))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }
+
+                    ::memmove(data() + pos + len, data() + pos, size() - pos);
+                    ::memmove(data() + pos, str, len);
+                    _m_size += len;
+                    data()[_m_size] = 0;
+
+                    return ::pilo::EC_OK;
+                }
 
             protected:
                 size_t          _m_dyn_capacity;
@@ -502,6 +578,11 @@ namespace pilo
             class astring<0> : public dynamic_astring
             {
             public:
+                astring() : dynamic_astring()
+                {
+
+                }
+
                 astring(const char* cstr) : dynamic_astring(cstr)
                 {
 
@@ -510,6 +591,16 @@ namespace pilo
                 astring(const char* cstr, size_t len) : dynamic_astring(cstr, len)
                 {
                     
+                }
+
+                astring(const std::string& stdstr) : dynamic_astring(stdstr)
+                {
+
+                }
+
+                astring(const astring<0>& astr) : dynamic_astring(astr.c_str(), astr.length())
+                {
+
                 }
     
                 bool is_dynamic() const

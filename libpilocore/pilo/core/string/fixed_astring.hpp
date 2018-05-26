@@ -524,8 +524,6 @@ namespace pilo
             }
 
 
-
-
             //implementation
             //constructors
             template<size_t max_capacity>
