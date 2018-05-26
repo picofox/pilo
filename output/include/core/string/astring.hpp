@@ -71,6 +71,9 @@ namespace pilo
                     _assign(cstr, MC_INVALID_SIZE);
                     return *this;
                 }
+
+                inline void push_back(char ch) { _push_back(ch); }
+                inline void pop_back() { _pop_back(); }
                 
 
                 ::pilo::error_number_t assign(const char* cstr, size_t len)
@@ -251,59 +254,7 @@ namespace pilo
                     {
                         return max_capacity;
                     }
-                }
-
-                ::pilo::error_number_t push_back(char ch)
-                {
-                    ::pilo::error_number_t ret = ::pilo::EC_OK;
-                    if (nullptr != _m_dyn_data) //use dynamic buffer
-                    {
-                        if (available_capacity() <= 0)
-                        {
-                            ret = _resize(_m_dyn_capacity + 1);
-                            if (ret != ::pilo::EC_OK)
-                            {
-                                return ret;
-                            }                            
-                        }
-
-                        _m_dyn_data[_m_size++] = ch;
-                        _m_dyn_data[_m_size] = 0;
-                    }
-                    else
-                    {
-                        if (available_capacity() <= 0)
-                        {
-                            ret = _resize(max_capacity + 1);
-                            if (ret != ::pilo::EC_OK)
-                            {
-                                return ret;
-                            }
-                            _m_dyn_data[_m_size++] = ch;
-                            _m_dyn_data[_m_size] = 0;
-                        }
-                        else
-                        {
-                            _m_fix_data[_m_size++] = ch;
-                            _m_fix_data[_m_size] = 0;
-                        }
-                    }
-
-                    return ::pilo::EC_OK;
-                    
-                }
-
-                void pop_back()
-                {
-                    if (nullptr != _m_dyn_data) //use dynamic buffer
-                    {
-                        _m_dyn_data[--_m_size] = 0;
-                    }
-                    else
-                    {
-                        _m_fix_data[--_m_size] = 0;
-                    }                    
-                }                
+                }      
 
 
                 ::pilo::i32_t compare(const char* str, size_t len_to_compare = MC_INVALID_SIZE) const
@@ -491,6 +442,64 @@ namespace pilo
                             }
                         }
                     }                   
+
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _push_back(char ch)
+                {
+                    ::pilo::error_number_t ret = ::pilo::EC_OK;
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        if (available_capacity() <= 0)
+                        {
+                            ret = _resize(_m_dyn_capacity + 1);
+                            if (ret != ::pilo::EC_OK)
+                            {
+                                return ret;
+                            }
+                        }
+
+                        _m_dyn_data[_m_size++] = ch;
+                        _m_dyn_data[_m_size] = 0;
+                    }
+                    else
+                    {
+                        if (available_capacity() <= 0)
+                        {
+                            ret = _resize(max_capacity + 1);
+                            if (ret != ::pilo::EC_OK)
+                            {
+                                return ret;
+                            }
+                            _m_dyn_data[_m_size++] = ch;
+                            _m_dyn_data[_m_size] = 0;
+                        }
+                        else
+                        {
+                            _m_fix_data[_m_size++] = ch;
+                            _m_fix_data[_m_size] = 0;
+                        }
+                    }
+
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _pop_back()
+                {
+                    if (_m_size <= 0)
+                    {
+                        return ::pilo::EC_REACH_LOWER_LIMIT;
+                    }
+
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        _m_dyn_data[--_m_size] = 0;
+                    }
+                    else
+                    {
+                        _m_fix_data[--_m_size] = 0;
+                    }
 
                     return ::pilo::EC_OK;
                 }
