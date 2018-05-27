@@ -336,6 +336,9 @@
     <ClInclude Include="pilo\core\string\astring.hpp">
       <Filter>pilo\core\string</Filter>
     </ClInclude>
+    <ClInclude Include="pilo\core\string\auto_string.hpp">
+      <Filter>pilo\core\string</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pilo\error.cpp">

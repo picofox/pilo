@@ -48,7 +48,7 @@ namespace pilo
             M_UNUSED(param);
 
             //check fatal invalid paths
-            ::pilo::core::fs::path<0> path_fatal_test;
+            ::pilo::core::fs::strpath<0> path_fatal_test;
             for (int i = 0; i < (int) (sizeof(__st_c_test_inv_paths) / sizeof(char*)); i++)
             {
                 path_fatal_test.reset();
@@ -60,7 +60,7 @@ namespace pilo
             }
 
 
-            ::pilo::core::fs::path<0> path_abs_test;
+            ::pilo::core::fs::strpath<0> path_abs_test;
             for (int i = 0; i < (int) (sizeof(__st_c_test_abs_paths) / sizeof(char*)); i++)
             {
                 path_abs_test.reset();
@@ -103,7 +103,7 @@ namespace pilo
 
             const char* str_toolong = "0123456789012345678901234567890123456789012345678901234567891234";
             //test too long string
-            ::pilo::core::fs::path<64> path_toolong(str_toolong);
+            ::pilo::core::fs::strpath<64> path_toolong(str_toolong);
             if (path_toolong.valid())
             {
                 return -1;
@@ -114,7 +114,7 @@ namespace pilo
             }            
 
             //check fatal invalid paths
-            ::pilo::core::fs::path<128> path_fatal_test;
+            ::pilo::core::fs::strpath<128> path_fatal_test;
             for (int i = 0; i < (int) (sizeof(__st_c_test_inv_paths) / sizeof(char*)); i++)
             {
                 path_fatal_test.reset();
@@ -126,7 +126,7 @@ namespace pilo
             }
 
 
-            ::pilo::core::fs::path<128> path_abs_test;
+            ::pilo::core::fs::strpath<128> path_abs_test;
             for (int i = 0; i < (int) (sizeof(__st_c_test_abs_paths) / sizeof(char*)); i++)
             {
                 path_abs_test.reset();

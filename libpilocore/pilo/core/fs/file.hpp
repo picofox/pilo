@@ -492,7 +492,7 @@ namespace pilo
 
             protected:
                 os_file_descriptor_t                        _m_os_file_descriptor; //internal file data structure handle
-                ::pilo::core::fs::path<PATH_BUFFER_SZ>      _m_path;
+                ::pilo::core::fs::strpath<PATH_BUFFER_SZ>      _m_path;
                 lock_type                                   _m_lock;
 
             };

@@ -12,20 +12,26 @@ namespace pilo
     {
         namespace fs
         {
+//             template<typename T, size_t BUFFSZ_DEFALT>
+//             class path : private ::pilo::core::string
+//             {
+// 
+//             };
+
             template<size_t MAX_PATH_SZ>
-            class path
+            class strpath
             {
                 public:
-                path()
+                strpath()
                 {
                     reset();
                 }
-                path(const char* str)
+                strpath(const char* str)
                 {
                     reset();
                     assign(str);
                 }
-                path(const char* str, size_t len)
+                strpath(const char* str, size_t len)
                 {
                     reset();
                     assign(str, len);
