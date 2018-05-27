@@ -170,7 +170,7 @@ namespace pilo
             {
                 return -91;
             }
-            if (str6.capacity() != 2048)
+            if (str6.capacity() != 2047)
             {
                 return -92;
             }

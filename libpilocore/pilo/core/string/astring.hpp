@@ -96,6 +96,8 @@ namespace pilo
                     return (_m_dyn_data != nullptr);
                 }
 
+                inline bool empty() const { return (_m_size == 0); } 
+
                 const char* c_str() const
                 {
                     if (nullptr != _m_dyn_data) //use dynamic buffer
@@ -273,6 +275,21 @@ namespace pilo
                     return *this;
                 }
 
+                inline pilo::error_number_t reserve(size_t sz) { return _reserve(sz); }
+                inline pilo::error_number_t grow(size_t sz) { return _reserve(capacity() + sz); }
+
+                void recalculate_size()
+                {
+                    if (_m_dyn_data == nullptr)
+                    {
+                        _m_size = strlen(_m_fix_data);
+                    }
+                    else
+                    {
+                        _m_size = strlen(_m_dyn_data);
+                    }
+                }
+
             protected:
    
                 char& _at(size_t pos)
@@ -300,7 +317,7 @@ namespace pilo
                 }
                 
 
-                ::pilo::error_number_t _resize(size_t sz)
+                ::pilo::error_number_t _reserve(size_t sz)
                 {
                     if (nullptr != _m_dyn_data) //use dynamic buffer
                     {
@@ -453,7 +470,7 @@ namespace pilo
                     {
                         if (available_capacity() <= 0)
                         {
-                            ret = _resize(_m_dyn_capacity + 1);
+                            ret = _reserve(_m_dyn_capacity + 1);
                             if (ret != ::pilo::EC_OK)
                             {
                                 return ret;
@@ -467,7 +484,7 @@ namespace pilo
                     {
                         if (available_capacity() <= 0)
                         {
-                            ret = _resize(max_capacity + 1);
+                            ret = _reserve(max_capacity + 1);
                             if (ret != ::pilo::EC_OK)
                             {
                                 return ret;
@@ -528,7 +545,7 @@ namespace pilo
 
                     if (capacity() < len + length())
                     {
-                        if (::pilo::EC_OK != _resize(length() + len))
+                        if (::pilo::EC_OK != _reserve(length() + len))
                         {
                             return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }
@@ -561,7 +578,7 @@ namespace pilo
 
                     if (capacity() < len + length())
                     {
-                        if (::pilo::EC_OK != _resize(length() + len))
+                        if (::pilo::EC_OK != _reserve(length() + len))
                         {
                             return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }
@@ -575,6 +592,8 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+                
+
             protected:
                 size_t          _m_dyn_capacity;
                 char*           _m_dyn_data;
@@ -582,6 +601,7 @@ namespace pilo
                 char            _m_fix_data[max_capacity + 1];
                 
             };
+
 
             template<>
             class astring<0> : public dynamic_astring

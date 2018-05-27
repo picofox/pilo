@@ -29,7 +29,7 @@ namespace pilo
                 //constructors
                 dynamic_astring(): _m_pdata(nullptr), _m_size(0), _m_capacity(0)
                 {
-                    _resize(0);
+                    _reserve(0);
                     *_m_pdata = 0;
                 }
                 dynamic_astring(const char* str);
@@ -74,7 +74,9 @@ namespace pilo
                 bool empty() const { return (_m_size == 0); } 
 
                 bool format(const char * fmt, ...);
-                pilo::i32_t reserve(size_t sz);
+                inline pilo::error_number_t reserve(size_t sz) { return _reserve(sz); }
+                inline pilo::error_number_t grow(size_t sz) { return _reserve(capacity() + sz); }
+                void recalculate_size();
 
                 dynamic_astring& assign(const char* str, size_t len);
                 dynamic_astring& assign(const char* str);
@@ -125,7 +127,7 @@ namespace pilo
             protected:
                 ::pilo::error_number_t _assign(const char* str);
                 ::pilo::error_number_t _assign(const char* str, size_t len);
-                ::pilo::error_number_t _resize(size_t sz);
+                ::pilo::error_number_t _reserve(size_t sz);
                 ::pilo::i32_t _push_back(char ch);
                 ::pilo::i32_t _pop_back();
                 ::pilo::i32_t _append(const char* suffix_str, size_t pos, size_t len);
