@@ -4,6 +4,7 @@
 #include "functional_test_module_class_astring.hpp"
 #include "core/string/fixed_astring.hpp"
 #include "core/string/dynamic_astring.hpp"
+#include "core/string/auto_string.hpp"
 #include <string>
 
 
@@ -14,6 +15,7 @@ namespace pilo
         static pilo::i32_t functional_test_auto_astring(void* param);
         static pilo::i32_t functional_test_pure_dyn_astring(void* param);
         static pilo::i32_t functional_test_common(void* param);
+        static pilo::i32_t functional_test_auto_string(void* param);
 
         pilo::test::testing_case g_functional_cases_auto_astring[] =
         {
@@ -21,7 +23,7 @@ namespace pilo
             { 1, "astring<SZ>()                                ", nullptr, functional_test_auto_astring, 0, -1, (pilo::u32_t) - 1 },
             { 2, "astring<0>()                                 ", nullptr, functional_test_pure_dyn_astring, 0, -1, (pilo::u32_t) - 1 },
             { 3, "common                                       ", nullptr, functional_test_common, 0, -1, (pilo::u32_t) - 1 },
-
+            { 4, "auto_string                                  ", nullptr, functional_test_auto_string, 0, -1, (pilo::u32_t) - 1 },
             { -1, "end", nullptr, nullptr, 0, -1, 0 },
         };
 
@@ -114,6 +116,102 @@ namespace pilo
                 return -110;
             }
             
+
+            return 0;
+        }
+
+        template <typename T>
+        ::pilo::i32_t __check_test_auto_string(T& astr, const typename T::value_type* content, size_t len, size_t capa, bool bDyn, ::pilo::i32_t ret)
+        {
+            if (0 != ::pilo::core::string::string_util::binary_compare(astr.c_str(), content))
+            {
+                return -ret - 10;
+            }
+
+            if (astr.length() != len)
+            {
+                return -ret - 20;
+            }
+
+            if (astr.capacity() != capa)
+            {
+                return -ret - 30;
+            }
+
+            if (astr.is_dynamic() != bDyn)
+            {
+                return -ret - 40;
+            }
+
+            return 0;
+        }
+
+
+        template <typename T>
+        ::pilo::i32_t __test_auto_string()
+        {
+            ::pilo::core::string::auto_string<char, 0> str0;
+            ::pilo::core::string::auto_string<char, 32> str1;
+
+            ::pilo::i32_t ret = -1;
+
+            ret = __check_test_auto_string(str1, "", 0, 32, false, -1000);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+
+            ret = __check_test_auto_string(str0, "", 0, 0, true, -2000);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            return 0;
+        }
+
+        template  <>
+        ::pilo::i32_t __test_auto_string<wchar_t>()
+        {
+            ::pilo::core::string::auto_string<wchar_t, 0> str0;
+            ::pilo::core::string::auto_string<wchar_t, 32> str1;
+
+            ::pilo::i32_t ret = -1;
+
+            ret = __check_test_auto_string(str1, L"", 0, 32, false, -100000);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ret = __check_test_auto_string(str0, L"", 0, 0, true, -200000);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            return 0;
+        }
+
+        pilo::i32_t functional_test_auto_string(void* param)
+        {
+            M_UNUSED(param);
+    
+            ::pilo::i32_t ret = __test_auto_string<char>();
+            if (ret != 0)
+            {
+                return -1;
+            }
+
+
+            ret = __test_auto_string<wchar_t>();
+            if (ret != 0)
+            {
+                return -100;
+            }
+
+
 
             return 0;
         }
