@@ -146,27 +146,56 @@ namespace pilo
             return 0;
         }
 
+        template <typename T>
+        ::pilo::i32_t __check_test_std_string(T& stdstr, const typename T::value_type * content, size_t len, size_t capa, ::pilo::i32_t ret)
+        {
+            
+            if (::pilo::core::string::string_util::binary_compare(stdstr.c_str(), content) != 0)
+            {
+                return -ret - 10;
+            }
+
+            if (stdstr.length() != len)
+            {
+                return -ret - 20;
+            }
+
+            if (stdstr.capacity() < capa)
+            {
+                return -ret - 30;
+            }
+
+            return 0;
+        }
+
 
         template <typename T>
         ::pilo::i32_t __test_auto_string()
         {
             ::pilo::core::string::auto_string<char, 0> str0;
             ::pilo::core::string::auto_string<char, 32> str1;
+            std::string stdstr0;
 
             ::pilo::i32_t ret = -1;
 
-            ret = __check_test_auto_string(str1, "", 0, 32, false, -1000);
+            ret = __check_test_auto_string(str1, "", 0, 32, false, -100000);
             if (ret != 0)
             {
                 return ret;
             }
 
 
-            ret = __check_test_auto_string(str0, "", 0, 0, true, -2000);
+            ret = __check_test_auto_string(str0, "", 0, 0, true, -200000);
             if (ret != 0)
             {
                 return ret;
             }
+
+            ret = __check_test_std_string(stdstr0, "", 0, 0, -800000);
+            if (ret != 0)
+            {
+                return ret;
+            } 
 
             return 0;
         }
@@ -176,16 +205,23 @@ namespace pilo
         {
             ::pilo::core::string::auto_string<wchar_t, 0> str0;
             ::pilo::core::string::auto_string<wchar_t, 32> str1;
+            std::wstring stdwstr0;
 
             ::pilo::i32_t ret = -1;
 
-            ret = __check_test_auto_string(str1, L"", 0, 32, false, -100000);
+            ret = __check_test_auto_string(str1, L"", 0, 32, false, -300000);
             if (ret != 0)
             {
                 return ret;
             }
 
-            ret = __check_test_auto_string(str0, L"", 0, 0, true, -200000);
+            ret = __check_test_auto_string(str0, L"", 0, 0, true, -400000);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ret = __check_test_std_string(stdwstr0, L"", 0, 0, -800000);
             if (ret != 0)
             {
                 return ret;
