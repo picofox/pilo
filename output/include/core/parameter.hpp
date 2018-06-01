@@ -8,7 +8,7 @@
 
 
 #define MC_PATH_MAX                                 (260)
-#define MC_FIXEDSTRING_MAX_ELEMENTS                 (-1)
+#define MC_FIXEDSTRING_MAX_ELEMENTS                 (UINT_MAX-1)
 #define MC_FORMAT_OUTPUT_BUFFER_DEFAULT_SIZE        (40960)
 #define MC_THREAD_MAX_STACK_SIZE                    (10*1024*1024)
 #define MC_READ_DIR_CHANGE_BUFFER_SIZE              (4096)

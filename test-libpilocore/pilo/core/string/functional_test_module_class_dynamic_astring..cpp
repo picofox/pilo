@@ -34,7 +34,7 @@ namespace pilo
             {
                 return -2;
             }
-            if (str0.c_str() != nullptr)
+            if (str0.c_str()[0] != 0)
             {
                 return -3;
             }
@@ -47,8 +47,8 @@ namespace pilo
             {
                 return -11;
             }
-            int v = (str1.capacity() % sizeof(void*));
-            if (str1.capacity() <= len || v != 0)
+
+            if (str1.capacity() < len )
             {
                 return -12;
             }
@@ -66,7 +66,7 @@ namespace pilo
             {
                 return -22;
             }
-            if (nullptr != str2.c_str())
+            if (0 != str2.c_str()[0])
             {
                 return -23;
             }
@@ -77,8 +77,8 @@ namespace pilo
             {
                 return -31;
             }
-            v = (str3.capacity() % sizeof(void*));
-            if (str3.capacity() <= 0 || v != 0)
+
+            if (str3.capacity() < 0 )
             {
                 return -32;
             }
@@ -92,8 +92,8 @@ namespace pilo
             {
                 return -41;
             }
-            v = (str4.capacity() % sizeof(void*));
-            if (str4.capacity() <= 13 || v != 0)
+
+            if (str4.capacity() < 13 )
             {
                 return -42;
             }
@@ -107,8 +107,8 @@ namespace pilo
             {
                 return -51;
             }
-            v = (str5.capacity() % sizeof(void*));
-            if (str5.capacity() <= 13 || v != 0)
+
+            if (str5.capacity() < 13)
             {
                 return -52;
             }
@@ -123,8 +123,8 @@ namespace pilo
             {
                 return -61;
             }
-            v = (str6.capacity() % sizeof(void*));
-            if (str6.capacity() <= 13 || v != 0)
+
+            if (str6.capacity() < 13 )
             {
                 return -62;
             }
@@ -139,8 +139,8 @@ namespace pilo
             {
                 return -71;
             }
-            v = (str6.capacity() % sizeof(void*));
-            if (str6.capacity() <= 100 || v != 0)
+
+            if (str6.capacity() < 100 )
             {
                 return -72;
             }
@@ -155,8 +155,8 @@ namespace pilo
             {
                 return -81;
             }
-            v = (str1.capacity() % sizeof(void*));
-            if (str1.capacity() <= 100 || v != 0)
+
+            if (str1.capacity() < 100)
             {
                 return -82;
             }
@@ -170,7 +170,7 @@ namespace pilo
             {
                 return -91;
             }
-            if (str6.capacity() != 2048)
+            if (str6.capacity() != 2047)
             {
                 return -92;
             }

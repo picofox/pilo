@@ -1,4 +1,5 @@
 #include "dynamic_astring.hpp"
+#include "core/string/string_util.hpp"
 
 namespace pilo
 {
@@ -134,26 +135,16 @@ namespace pilo
                 return true;
             }
 
-            pilo::i32_t dynamic_astring::reserve(size_t sz)
+            void dynamic_astring::recalculate_size()
             {
-                if (_m_capacity <= sz)
+                if (_m_pdata == nullptr)
                 {
-                    size_t tmpcapa = M_ALIGN_SIZE(sz + 1, sizeof(void*));
-                    char * tmpbuff = (char*)malloc(tmpcapa);
-                    if (tmpbuff == nullptr)
-                    {
-                        return pilo::EC_INSUFFICIENT_MEMORY;
-                    }
-                    if (_m_size != string_util::copy(tmpbuff, tmpcapa, _m_pdata, _m_size))
-                    {
-                        return pilo::EC_UNDEFINED;
-                    }                    
-
-                    _m_capacity = tmpcapa;   
-                    MP_SAFE_FREE(_m_pdata);                   
-                    _m_pdata = tmpbuff;                   
+                    _m_size = 0;
                 }
-                return pilo::EC_OK;
+                else
+                {
+                    _m_size = strlen(_m_pdata);
+                }
             }
 
             pilo::core::string::dynamic_astring& dynamic_astring::assign(const char* str, size_t len)
@@ -173,6 +164,18 @@ namespace pilo
                 }
                 return *this;
             }
+
+            ::pilo::i32_t dynamic_astring::compare(const char* str, size_t len_to_compare /*= MC_INVALID_SIZE*/) const
+            {
+                return pilo::core::string::string_util::binary_compare(this->_m_pdata, str, len_to_compare);
+            }            
+
+            ::pilo::i32_t dynamic_astring::compare(const std::string& str) const
+            {
+                return pilo::core::string::string_util::binary_compare(this->_m_pdata, str.c_str(), MC_INVALID_SIZE);
+            }
+
+            
 
             pilo::core::string::dynamic_astring& dynamic_astring::operator=(const std::string& str)
             {
@@ -197,17 +200,21 @@ namespace pilo
             }
 
             pilo::i32_t dynamic_astring::_assign(const char* str)
-            {
-                return _assign(str, ::pilo::core::string::string_util::length(str));
+            {                
+                return _assign(str, MC_INVALID_SIZE);
             }
 
             pilo::i32_t dynamic_astring::_assign(const char* str, size_t len)
             {
                 if (str == nullptr)
                 {
+                    if (_m_pdata == nullptr)
+                    {
+                        _reserve(0);
+                    }
+
+                    *_m_pdata = 0;
                     _m_size = 0;
-                    MP_SAFE_FREE(_m_pdata);
-                    _m_capacity = 0;
                     return pilo::EC_OK;
                 }
 
@@ -232,55 +239,158 @@ namespace pilo
 
                 tmp_capa = M_ALIGN_SIZE((tmp_size + 1), sizeof(void*));
 
-                if (nullptr == _m_pdata)
+                if (nullptr != _m_pdata)
                 {
-                    tmp_pdata = (char*)malloc(tmp_capa);
-                    if (tmp_pdata == nullptr)
+                    if (len <= _m_capacity) //use existing buffer;
                     {
-                        return pilo::EC_INSUFFICIENT_MEMORY;
-                    }
-                }
-                else
-                {
-                    if (len >= _m_capacity)
-                    {
-                        tmp_pdata = (char*)malloc(tmp_capa);
-                        if (tmp_pdata == nullptr)
+                        if (tmp_size == 0) //set with empty string
                         {
-                            return pilo::EC_INSUFFICIENT_MEMORY;
+                            *_m_pdata = 0;
+                            _m_size = 0;
                         }
+                        else
+                        {
+                            if (tmp_size != string_util::copy(_m_pdata, tmp_capa, str, tmp_size))
+                            {
+                                return pilo::EC_UNDEFINED;
+                            }
+
+                            _m_size = len;
+                        }
+
+                        return ::pilo::EC_OK;
                     }
                 }
 
-                if (tmp_size == 0)
+                tmp_pdata = (char*)malloc(tmp_capa);
+                if (tmp_pdata == nullptr)
+                {
+                    return pilo::EC_INSUFFICIENT_MEMORY;
+                }
+
+                if (0 == tmp_size)
                 {
                     *tmp_pdata = 0;
                 }
                 else
                 {
-                    if (tmp_size != string_util::copy(tmp_pdata, tmp_capa, str, len))
+                    if (tmp_size != string_util::copy(tmp_pdata, tmp_capa, str, tmp_size))
                     {
                         MP_SAFE_FREE(tmp_pdata);
                         return pilo::EC_UNDEFINED;
                     }
                 }
-                
 
                 MP_SAFE_FREE(_m_pdata);
-                _m_capacity = tmp_capa;
+                _m_capacity = tmp_size;
                 _m_pdata = tmp_pdata;
                 _m_size = tmp_size;
 
-
-                return pilo::EC_OK;                
+                return ::pilo::EC_OK;
+               
             }
 
-            ::pilo::error_number_t dynamic_astring::_resize(size_t sz)
+            ::pilo::i32_t dynamic_astring::_push_back(char ch)
+            {
+                if (available_capacity() <= 0)
+                {
+                    if (::pilo::EC_OK != _reserve(_m_capacity + 1))
+                    {
+                        return ::pilo::EC_INSUFFICIENT_MEMORY;
+                    }
+                }
+
+                _m_pdata[_m_size++] = ch;
+                _m_pdata[_m_size] = 0;
+                return ::pilo::EC_OK;
+            }
+
+            ::pilo::i32_t dynamic_astring::_pop_back()
+            {
+                if (_m_size <= 0)
+                {
+                    return ::pilo::EC_REACH_LOWER_LIMIT;
+                }
+                _m_pdata[--_m_size] = 0;
+                return ::pilo::EC_OK;
+            }
+
+            ::pilo::i32_t dynamic_astring::_append(const char* suffix_str, size_t pos, size_t len)
+            {
+                if (suffix_str == nullptr)
+                {
+                    return ::pilo::EC_NULL_PARAM;
+                }
+
+                if (len == MC_INVALID_SIZE)
+                {
+                    len = ::strlen(suffix_str);
+                }
+
+                if (len == 0)
+                {
+                    return ::pilo::EC_OK;
+                }
+
+                if (pos >= len)
+                {
+                    return ::pilo::EC_INVALID_PARAM;
+                }
+
+                if (::pilo::EC_OK != _reserve(_m_capacity + len))
+                {
+                    return ::pilo::EC_INSUFFICIENT_MEMORY;
+                }
+
+                if (nullptr == ::pilo::core::string::string_util::concatenate_string(_m_pdata + _m_size, available_capacity()+1, suffix_str + pos, len))
+                {
+                    return ::pilo::EC_COPY_STRING_FAILED;
+                }
+
+                _m_size += len;
+
+                return ::pilo::EC_OK;
+            }
+
+            ::pilo::i32_t dynamic_astring::_insert(size_t pos, const char* str, size_t len)
+            {
+                if (str == 0 || *str == 0)
+                {
+                    return ::pilo::EC_NULL_PARAM;
+                }
+
+                if (pos >= size())
+                {
+                    return _append(str, 0, len);
+                }
+
+                if (len == MC_INVALID_SIZE)
+                {
+                    len = strlen(str);
+                }
+
+                if (capacity() < len + length())
+                {
+                    if (::pilo::EC_OK != _reserve(length() + len))
+                    {
+                        return ::pilo::EC_INSUFFICIENT_MEMORY;
+                    }
+                }
+
+                ::memmove(_m_pdata + pos + len, _m_pdata + pos, size() - pos);
+                ::memmove(_m_pdata + pos, str, len);
+                _m_size += len;
+                _m_pdata[_m_size] = 0;
+
+                return ::pilo::EC_OK;
+            }
+
+            ::pilo::error_number_t dynamic_astring::_reserve(size_t sz)
             {
                 char* tmp_pdata = nullptr;
                 size_t tmp_capa = M_ALIGN_SIZE((sz + 1), sizeof(void*));
 
-                if (nullptr != _m_pdata)
+                if (nullptr == _m_pdata)
                 {
                     tmp_pdata = (char*)malloc(tmp_capa);
                     if (tmp_pdata == nullptr)
@@ -289,7 +399,7 @@ namespace pilo
                     }
                     _m_pdata = tmp_pdata;
                     _m_size = 0;
-                    _m_capacity = tmp_capa;
+                    _m_capacity = sz;
 
                     return ::pilo::EC_OK;
                 }
@@ -318,7 +428,7 @@ namespace pilo
                     
 
                     MP_SAFE_FREE(_m_pdata);
-                    _m_capacity = tmp_capa;                    
+                    _m_capacity = sz;
                     _m_pdata = tmp_pdata;
                     
                 }

@@ -190,14 +190,19 @@ namespace pilo
 
                 static ::pilo::error_number_t compact_path(char * pBuffer, size_t len);
 
-                static ::pilo::error_number_t validate_and_parse_path_string(char * buffer, size_t buffer_sz, const char* path_str)
+                static ::pilo::error_number_t validate_and_parse_path_string(char * buffer, size_t buffer_sz, const char* path_str, size_t len)
                 {
                     if (buffer == nullptr) return ::pilo::EC_NULL_PARAM;
                     if (path_str == nullptr || *path_str == 0)
                     {
                         return ::pilo::EC_INVALID_PARAM;
                     }
-                    size_t len = ::pilo::core::string::string_util::length(path_str);
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = ::pilo::core::string::string_util::length(path_str);
+                    }
+
                     if (buffer_sz < len + 1)
                     {
                         return ::pilo::EC_BUFFER_TOO_SMALL;
@@ -205,6 +210,8 @@ namespace pilo
                     ::memset(buffer, 0x00, buffer_sz);
                     ::pilo::core::string::string_util::copy(buffer, buffer_sz, path_str, len);
                     ::pilo::core::string::string_util::trim(buffer);
+                    
+                    
                     
 #if             defined(WIN32)
                     if (::pilo::EC_OK != ::pilo::core::string::string_util::rescanable_replace(buffer, MC_INVALID_SIZE, "/", "\\", nullptr))
@@ -242,7 +249,7 @@ namespace pilo
                         return ::pilo::EC_INVALID_PATH;
                     }
 
-                    trim_path_last_seperator(buffer, MC_INVALID_SIZE);
+                    trim_path_last_seperator(buffer, MC_INVALID_SIZE);                    
 
                     return ::pilo::EC_OK;
                 }

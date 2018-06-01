@@ -867,11 +867,11 @@ namespace pilo
                     return MC_INVALID_SIZE;
                 }
 
-                if (dst_pos >= dst_capacity)
+                if (dst_pos >= (dst_capacity - 1) )
                 {
                     return MC_INVALID_SIZE;
                 }
-                size_t dest_left = dst_capacity - dst_pos;
+                size_t dest_left = dst_capacity - dst_pos - 1;
 
                 size_t maxCopyCount;
                 if ((dst_capacity == MC_INVALID_SIZE) && (src_count == MC_INVALID_SIZE))

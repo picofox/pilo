@@ -83,6 +83,7 @@
     <ClInclude Include="pilo\core\process\process_util.hpp" />
     <ClInclude Include="pilo\core\random\simple_random.hpp" />
     <ClInclude Include="pilo\core\string\astring.hpp" />
+    <ClInclude Include="pilo\core\string\auto_string.hpp" />
     <ClInclude Include="pilo\core\string\dynamic_astring.hpp" />
     <ClInclude Include="pilo\core\string\fixed_astring.hpp" />
     <ClInclude Include="pilo\core\string\fixed_wstring.hpp" />
