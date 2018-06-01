@@ -5,6 +5,10 @@
 #include "core/threading/mutex_locker.hpp"
 #include "core/memory/compactable_overlapped_memory_pool.hpp"
 
+#ifdef _DEBUG_MEM_OBJ_POOL
+#include "core/io/format_output.hpp"
+#endif
+
 namespace pilo
 {
     namespace core
@@ -46,7 +50,7 @@ namespace pilo
                     object_node* node = nullptr;
                     while (node = m_free_obj_list.pop_front(), node != nullptr)
                         ((object_type*)node)->~object_type();
-                    m_memory_pool.reset()
+                    m_memory_pool.reset();
                 }
 
                 void clear()
@@ -95,13 +99,13 @@ namespace pilo
                     object_node* node = (object_node*)obj;
                     if (node->m_next != (object_node*)MC_INVALID_PTR)
                     {
-                        ASSERT_I(!" !!!!!!!!!!! free the pointer more than once !!!!!!!!!!!");
+                        M_ASSERT(false);
                         return;
                     }
 
                     m_free_obj_list.push_back(node);
 
-                    if (_need_compact_nolock() && (! is_manual_compact()))
+                    if ((! m_memory_pool.is_manual_compact()) && _need_compact_nolock())
                     {
                         while (node = m_free_obj_list.pop_front(), node != nullptr)
                         {
@@ -120,6 +124,28 @@ namespace pilo
                         m_memory_pool.deallocate(node);
                     }
                 }
+
+#ifdef _DEBUG_MEM_OBJ_POOL
+            public:
+                template <size_t _BUFFSZ>
+                void make_summary_report(char (&buffer)[_BUFFSZ], const char* prefix = nullptr)
+                {
+                    pilo::core::threading::mutex_locker<lock_type>   locker(m_lock);
+
+                    if (prefix == nullptr)
+                    {
+                        prefix = "";
+                    }
+
+                    unsigned long long free_node_count = m_free_obj_list.size();
+                    unsigned long long in_used_full_piece_count = m_memory_pool.m_full_piece_list.size();
+                    unsigned long long in_used_aval_piece_count = m_memory_pool.m_available_piece_list.size();
+
+                    ::pilo::core::io::string_format_output(buffer,_BUFFSZ, "%sFree=%llu InUsed:(Full=%llu Av=%llu) ",
+                        prefix,free_node_count, in_used_full_piece_count,in_used_aval_piece_count);
+
+                }
+#endif
 
             protected:
                 bool _need_compact_nolock() const
@@ -143,17 +169,27 @@ namespace pilo
 
                 static T* allocate()
                 {
-                    object_pool_type* p = portable_object_pool::pool();
+                    object_pool_type* p = portable_compactable_object_pool::pool();
                     M_ASSERT(p != nullptr);
                     return p->allocate();
                 }
 
                 static void deallocate(T* object)
                 {
-                    object_pool_type* p = portable_object_pool::pool();
+                    object_pool_type* p = portable_compactable_object_pool::pool();
                     M_ASSERT(p != nullptr);
                     p->deallocate(object);
                 }
+
+#ifdef _DEBUG_MEM_OBJ_POOL
+                template <size_t _BUFFSZ>
+                static void make_summary_report(char (&buffer)[_BUFFSZ], const char* prefix = nullptr)
+                {
+                    object_pool_type* p = portable_compactable_object_pool::pool();
+                    M_ASSERT(p != nullptr);
+                    p->make_summary_report(buffer, prefix);
+                }
+#endif
             };
         }
     }
