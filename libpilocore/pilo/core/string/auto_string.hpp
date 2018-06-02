@@ -104,7 +104,105 @@ namespace pilo
                     _assign(astr.c_str(), astr.size());
                     return *this;
                 }
+
+                size_t available_capacity() const
+                {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        return _m_dyn_capacity - _m_size;
+                    }
+                    else
+                    {
+                        return BUFSZ_DFL - _m_size;
+                    }
+                }
                 
+                value_type& at(size_t pos)
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+                const value_type& at(size_t pos) const
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+
+                value_type& back()
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(_m_size - 1);
+                }
+                const value_type& back() const
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(_m_size - 1);
+                }
+
+                value_type& operator[] (size_t pos)
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+                const value_type& operator[] (size_t pos) const
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+
+                value_type& front()
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_LOWER_LIMIT;
+                    }
+
+                    return _at(0);
+                }
+
+                const value_type& front() const
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_LOWER_LIMIT;
+                    }
+
+                    return _at(0);
+                }
+                
+                inline bool empty() const { return (_m_size == 0); }
 
                 bool is_dynamic() const
                 {
@@ -151,7 +249,21 @@ namespace pilo
                 ::pilo::error_number_t assign(const value_type* cstr, size_t len) { return _assign(cstr, len); }
 
 
+                inline void push_back(value_type ch) { _push_back(ch); }
+                inline void pop_back() { _pop_back(); }
+
             protected:
+                value_type& _at(size_t pos)
+                {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        return _m_dyn_data[pos];
+                    }
+                    else
+                    {
+                        return _m_fix_data[pos];
+                    }
+                }
                 ::pilo::error_number_t _reserve(size_t sz)
                 {
                     if (nullptr != _m_dyn_data) //use dynamic buffer
@@ -306,6 +418,64 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+                ::pilo::error_number_t _push_back(value_type ch)
+                {
+                    ::pilo::error_number_t ret = ::pilo::EC_OK;
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        if (available_capacity() <= 0)
+                        {
+                            ret = _reserve(_m_dyn_capacity + 1);
+                            if (ret != ::pilo::EC_OK)
+                            {
+                                return ret;
+                            }
+                        }
+
+                        _m_dyn_data[_m_size++] = ch;
+                        _m_dyn_data[_m_size] = 0;
+                    }
+                    else
+                    {
+                        if (available_capacity() <= 0)
+                        {
+                            ret = _reserve(BUFSZ_DFL + 1);
+                            if (ret != ::pilo::EC_OK)
+                            {
+                                return ret;
+                            }
+                            _m_dyn_data[_m_size++] = ch;
+                            _m_dyn_data[_m_size] = 0;
+                        }
+                        else
+                        {
+                            _m_fix_data[_m_size++] = ch;
+                            _m_fix_data[_m_size] = 0;
+                        }
+                    }
+
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _pop_back()
+                {
+                    if (_m_size <= 0)
+                    {
+                        return ::pilo::EC_REACH_LOWER_LIMIT;
+                    }
+
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        _m_dyn_data[--_m_size] = 0;
+                    }
+                    else
+                    {
+                        _m_fix_data[--_m_size] = 0;
+                    }
+
+                    return ::pilo::EC_OK;
+                }
+
             protected:
                 size_t          _m_dyn_capacity;
                 value_type*     _m_dyn_data;
@@ -387,6 +557,97 @@ namespace pilo
                     return *this;
                 }
 
+                inline size_t available_capacity() const
+                {
+                    return _m_capacity - _m_size;
+                }
+
+                value_type& at(size_t pos)
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+                const value_type& at(size_t pos) const
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+                value_type& operator[] (size_t pos)
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+                const value_type& operator[] (size_t pos) const
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+
+                value_type& back()
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(_m_size - 1);
+                }
+                const value_type& back() const
+                {
+
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(_m_size - 1);
+                }
+
+                value_type& front()
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_LOWER_LIMIT;
+                    }
+
+                    return _at(0);
+                }
+
+                const value_type& front() const
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_LOWER_LIMIT;
+                    }
+
+                    return _at(0);
+                }
+
+                inline bool empty() const { return (_m_size == 0); }
                 bool is_dynamic() const { return true; }
                 const value_type* c_str() const { return _m_pdata; }
                 value_type* data() { return _m_pdata; }
@@ -394,8 +655,18 @@ namespace pilo
                 size_t length() const { return _m_size; }
                 size_t capacity() const { return _m_capacity; }
                 ::pilo::error_number_t assign(const value_type* cstr, size_t len) { return _assign(cstr, len); }
+                inline void push_back(value_type ch) { _push_back(ch); }
+                inline void pop_back() { _pop_back(); }
 
             protected:
+                value_type& _at(size_t pos)
+                {                    
+                    return _m_pdata[pos];
+                }
+                const value_type& _at(size_t pos) const
+                {
+                    return _m_pdata[pos];
+                }
                 ::pilo::error_number_t _reserve(size_t sz)
                 {
                     value_type* tmp_pdata = nullptr;
@@ -533,6 +804,31 @@ namespace pilo
 
                 }
 
+                ::pilo::error_number_t _push_back(value_type ch)
+                {
+                    if (available_capacity() <= 0)
+                    {
+                        if (::pilo::EC_OK != _reserve(_m_capacity + 1))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }
+
+                    _m_pdata[_m_size++] = ch;
+                    _m_pdata[_m_size] = 0;
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _pop_back()
+                {
+                    if (_m_size <= 0)
+                    {
+                        return ::pilo::EC_REACH_LOWER_LIMIT;
+                    }
+                    _m_pdata[--_m_size] = 0;
+                    return ::pilo::EC_OK;
+                }
+
             protected:
                 value_type* _m_pdata;
                 size_t      _m_size;
@@ -627,6 +923,104 @@ namespace pilo
                     return *this;
                 }
 
+                size_t available_capacity() const
+                {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        return _m_dyn_capacity - _m_size;
+                    }
+                    else
+                    {
+                        return BUFSZ_DFL - _m_size;
+                    }
+                }
+
+                value_type& at(size_t pos)
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+                const value_type& at(size_t pos) const
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+
+                value_type& operator[] (size_t pos)
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+                const value_type& operator[] (size_t pos) const
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+
+                value_type& back()
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(_m_size - 1);
+                }
+                const value_type& back() const
+                {
+
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(_m_size - 1);
+                }
+
+                value_type& front()
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_LOWER_LIMIT;
+                    }
+
+                    return _at(0);
+                }
+
+                const value_type& front() const
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_LOWER_LIMIT;
+                    }
+
+                    return _at(0);
+                }
+
                 const value_type* c_str() const
                 {
                     if (nullptr != _m_dyn_data) //use dynamic buffer
@@ -651,6 +1045,7 @@ namespace pilo
                     }
                 }
 
+                inline bool empty() const { return (_m_size == 0); }
                 bool is_dynamic() const
                 {
                     return (_m_dyn_data != nullptr);
@@ -670,9 +1065,21 @@ namespace pilo
                 }
 
                 ::pilo::error_number_t assign(const value_type* cstr, size_t len) { return _assign(cstr, len); }
-
+                inline void push_back(value_type ch) { _push_back(ch); }
+                inline void pop_back() { _pop_back(); }
 
             protected:
+                value_type& _at(size_t pos)
+                {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        return _m_dyn_data[pos];
+                    }
+                    else
+                    {
+                        return _m_fix_data[pos];
+                    }
+                }
                 ::pilo::error_number_t _reserve(size_t sz)
                 {
                     if (nullptr != _m_dyn_data) //use dynamic buffer
@@ -819,6 +1226,64 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+                ::pilo::error_number_t _push_back(value_type ch)
+                {
+                    ::pilo::error_number_t ret = ::pilo::EC_OK;
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        if (available_capacity() <= 0)
+                        {
+                            ret = _reserve(_m_dyn_capacity + 1);
+                            if (ret != ::pilo::EC_OK)
+                            {
+                                return ret;
+                            }
+                        }
+
+                        _m_dyn_data[_m_size++] = ch;
+                        _m_dyn_data[_m_size] = 0;
+                    }
+                    else
+                    {
+                        if (available_capacity() <= 0)
+                        {
+                            ret = _reserve(BUFSZ_DFL + 1);
+                            if (ret != ::pilo::EC_OK)
+                            {
+                                return ret;
+                            }
+                            _m_dyn_data[_m_size++] = ch;
+                            _m_dyn_data[_m_size] = 0;
+                        }
+                        else
+                        {
+                            _m_fix_data[_m_size++] = ch;
+                            _m_fix_data[_m_size] = 0;
+                        }
+                    }
+
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _pop_back()
+                {
+                    if (_m_size <= 0)
+                    {
+                        return ::pilo::EC_REACH_LOWER_LIMIT;
+                    }
+
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        _m_dyn_data[--_m_size] = 0;
+                    }
+                    else
+                    {
+                        _m_fix_data[--_m_size] = 0;
+                    }
+
+                    return ::pilo::EC_OK;
+                }
+
             protected:
                 size_t          _m_dyn_capacity;
                 value_type*     _m_dyn_data;
@@ -902,7 +1367,99 @@ namespace pilo
                     return *this;
                 }
 
+                inline size_t available_capacity() const
+                {
+                    return _m_capacity - _m_size;
+                }
 
+                value_type& at(size_t pos)
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+                const value_type& at(size_t pos) const
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+
+                value_type& operator[] (size_t pos)
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+                const value_type& operator[] (size_t pos) const
+                {
+                    if (pos > _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(pos);
+                }
+
+                value_type& back()
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(_m_size - 1);
+                }
+                const value_type& back() const
+                {
+
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _at(_m_size - 1);
+                }
+
+                value_type& front()
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_LOWER_LIMIT;
+                    }
+
+                    return _at(0);
+                }
+
+                const value_type& front() const
+                {
+                    if (0 == _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_LOWER_LIMIT;
+                    }
+
+                    return _at(0);
+                }
+
+
+                inline bool empty() const { return (_m_size == 0); }
                 bool is_dynamic() const { return true; }
                 const value_type* c_str() const { return _m_pdata; }
                 value_type* data() { return _m_pdata; }
@@ -910,9 +1467,18 @@ namespace pilo
                 size_t length() const { return _m_size; }
                 size_t capacity() const { return _m_capacity; }
                 ::pilo::error_number_t assign(const value_type* cstr, size_t len) { return _assign(cstr, len); }
-
+                inline void push_back(value_type ch) { _push_back(ch); }
+                inline void pop_back() { _pop_back(); }
 
             protected:
+                value_type& _at(size_t pos)
+                {
+                    return _m_pdata[pos];
+                }
+                const value_type& _at(size_t pos) const
+                {
+                    return _m_pdata[pos];
+                }
                 ::pilo::error_number_t _reserve(size_t sz)
                 {
                     value_type* tmp_pdata = nullptr;
@@ -1048,6 +1614,31 @@ namespace pilo
 
                     return ::pilo::EC_OK;
 
+                }
+
+                ::pilo::error_number_t _push_back(value_type ch)
+                {
+                    if (available_capacity() <= 0)
+                    {
+                        if (::pilo::EC_OK != _reserve(_m_capacity + 1))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }
+
+                    _m_pdata[_m_size++] = ch;
+                    _m_pdata[_m_size] = 0;
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _pop_back()
+                {
+                    if (_m_size <= 0)
+                    {
+                        return ::pilo::EC_REACH_LOWER_LIMIT;
+                    }
+                    _m_pdata[--_m_size] = 0;
+                    return ::pilo::EC_OK;
                 }
 
             protected:

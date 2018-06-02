@@ -125,22 +125,22 @@ namespace pilo
         {
             if (0 != ::pilo::core::string::string_util::binary_compare(astr.c_str(), content))
             {
-                return -ret - 10;
+                return ret - 10;
             }
 
             if (astr.length() != len)
             {
-                return -ret - 20;
+                return ret - 20;
             }
 
             if (astr.capacity() != capa)
             {
-                return -ret - 30;
+                return ret - 30;
             }
 
             if (astr.is_dynamic() != bDyn)
             {
-                return -ret - 40;
+                return ret - 40;
             }
 
             return 0;
@@ -152,17 +152,17 @@ namespace pilo
             
             if (::pilo::core::string::string_util::binary_compare(stdstr.c_str(), content) != 0)
             {
-                return -ret - 10;
+                return ret - 10;
             }
 
             if (stdstr.length() != len)
             {
-                return -ret - 20;
+                return ret - 20;
             }
 
             if (stdstr.capacity() < capa)
             {
-                return -ret - 30;
+                return ret - 30;
             }
 
             return 0;
@@ -199,8 +199,11 @@ namespace pilo
 
             const char* sample_str = "i am a fox";
             const char* sample_str2 = "i am a";
+            const char* sample_str3 = "I aM A";
+            const char* sample_str4 = "i am a fox man";
             size_t sample_str_len = ::pilo::core::string::string_util::length(sample_str);
             size_t sample_str2_len = ::pilo::core::string::string_util::length(sample_str2);
+            size_t sample_str4_len = ::pilo::core::string::string_util::length(sample_str4);
 
             pilo::core::string::auto_string<char, 0> str3(sample_str);
             ret = __check_test_auto_string(str3, sample_str, sample_str_len, 10, true, -10030);
@@ -243,6 +246,46 @@ namespace pilo
                 return ret;
             }
 
+            if (str4_4[3] == 'm')   str4_4[3] = 'M';
+            if (str4_4.front() == 'i') str4_4.front() = 'I';
+            if (str4_4.back() == 'a') str4_4.back() = 'A';
+            ret = __check_test_auto_string(str4_4, sample_str3, sample_str2_len, sample_str2_len, true, -10090);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            str5.push_back(' '); str5.push_back('m'); str5.push_back('a'); str5.push_back('n');
+            ret = __check_test_auto_string(str5, sample_str4, sample_str4_len, sample_str4_len, true, -10100);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            str4.push_back(' '); str4.push_back('f'); str4.push_back('o'); str4.push_back('x');
+            str4.push_back(' '); str4.push_back('m'); str4.push_back('a'); str4.push_back('n');
+            ret = __check_test_auto_string(str4, sample_str4, sample_str4_len, 32, false, -10100);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                str4.pop_back();
+                str5.pop_back();
+            }
+            ret = __check_test_auto_string(str4, sample_str, sample_str_len, 32, false, -10100);
+            if (ret != 0)
+            {
+                return ret;
+            }
+            ret = __check_test_auto_string(str5, sample_str, sample_str_len, sample_str4_len, true, -10100);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
 
             return 0;
         }
@@ -252,6 +295,7 @@ namespace pilo
         {
             ::pilo::core::string::auto_string<wchar_t, 0> str0;
             ::pilo::core::string::auto_string<wchar_t, 32> str1;
+
             std::wstring stdwstr0;
 
             ::pilo::i32_t ret = -1;
@@ -276,9 +320,11 @@ namespace pilo
 
             const wchar_t* sample_str = L"i am a fox";
             const wchar_t* sample_str2 = L"i am a";
+            const wchar_t* sample_str3 = L"I aM A";
+            const wchar_t* sample_str4 = L"i am a fox man";
             size_t sample_str_len = ::pilo::core::string::string_util::length(sample_str);
             size_t sample_str2_len = ::pilo::core::string::string_util::length(sample_str2);
-
+            size_t sample_str4_len = ::pilo::core::string::string_util::length(sample_str4);
             pilo::core::string::auto_string<wchar_t, 0> str3(sample_str);
             ret = __check_test_auto_string(str3, sample_str, sample_str_len, 10, true, -5000030);
             if (ret != 0)
@@ -320,7 +366,54 @@ namespace pilo
                 return ret;
             }
 
+            if (str4_4[3] == 'm')   str4_4[3] = 'M';
+            if (str4_4.front() == 'i') str4_4.front() = 'I';
+            if (str4_4.back() == 'a') str4_4.back() = 'A';
+            ret = __check_test_auto_string(str4_4, sample_str3, sample_str2_len, sample_str2_len, true, -5000090);
+            if (ret != 0)
+            {
+                return ret;
+            }
 
+            if (str4_4[3] == 'm')   str4_4[3] = 'M';
+            if (str4_4.front() == 'i') str4_4.front() = 'I';
+            if (str4_4.back() == 'a') str4_4.back() = 'A';
+            ret = __check_test_auto_string(str4_4, sample_str3, sample_str2_len, sample_str2_len, true, -10090);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            str5.push_back(' '); str5.push_back('m'); str5.push_back('a'); str5.push_back('n');
+            ret = __check_test_auto_string(str5, sample_str4, sample_str4_len, sample_str4_len, true, -10100);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            str4.push_back(' '); str4.push_back('f'); str4.push_back('o'); str4.push_back('x');
+            str4.push_back(' '); str4.push_back('m'); str4.push_back('a'); str4.push_back('n');
+            ret = __check_test_auto_string(str4, sample_str4, sample_str4_len, 32, false, -10100);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                str4.pop_back();
+                str5.pop_back();
+            }
+            ret = __check_test_auto_string(str4, sample_str, sample_str_len, 32, false, -10100);
+            if (ret != 0)
+            {
+                return ret;
+            }
+            ret = __check_test_auto_string(str5, sample_str, sample_str_len, sample_str4_len, true, -10100);
+            if (ret != 0)
+            {
+                return ret;
+            }
             
             return 0;
         }
