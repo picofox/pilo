@@ -5,7 +5,7 @@
 #include "core/string/string_util.hpp"
 #include "core/memory/fixed_buffer.hpp"
 #include "core/threading/dummy_read_write_lock.hpp"
-#include "core/string/auto_astring.hpp"
+#include "core/string/auto_string.hpp"
 #include "core/memory/dynamic_buffer.hpp"
 #include "core/fs/fs_util.hpp"
 #include "core/threading/rw_mutex_r_locker.hpp"

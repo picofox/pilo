@@ -178,24 +178,71 @@ namespace pilo
 
             ::pilo::i32_t ret = -1;
 
-            ret = __check_test_auto_string(str1, "", 0, 32, false, -100000);
+            ret = __check_test_auto_string(str1, "", 0, 32, false, -10000);
             if (ret != 0)
             {
                 return ret;
             }
 
 
-            ret = __check_test_auto_string(str0, "", 0, 0, true, -200000);
+            ret = __check_test_auto_string(str0, "", 0, 0, true, -10010);
             if (ret != 0)
             {
                 return ret;
             }
 
-            ret = __check_test_std_string(stdstr0, "", 0, 0, -800000);
+            ret = __check_test_std_string(stdstr0, "", 0, 0, -10020);
             if (ret != 0)
             {
                 return ret;
-            } 
+            }
+
+            const char* sample_str = "i am a fox";
+            const char* sample_str2 = "i am a";
+            size_t sample_str_len = ::pilo::core::string::string_util::length(sample_str);
+            size_t sample_str2_len = ::pilo::core::string::string_util::length(sample_str2);
+
+            pilo::core::string::auto_string<char, 0> str3(sample_str);
+            ret = __check_test_auto_string(str3, sample_str, sample_str_len, 10, true, -10030);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<char, 32> str4(sample_str, 6);
+            ret = __check_test_auto_string(str4, sample_str2, sample_str2_len, 32, false, -10040);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<char, 0> str5 = sample_str;
+            ret = __check_test_auto_string(str5, sample_str, sample_str_len, 10, true, -10050);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<char, 32> str4_2 = str4;
+            ret = __check_test_auto_string(str4_2, sample_str2, sample_str2_len, 32, false, -10060);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<char, 30> str4_3 = str4;
+            ret = __check_test_auto_string(str4_3, sample_str2, sample_str2_len, 30, false, -10070);
+            if (ret != 0)
+            {
+                return ret;
+            }
+            ::pilo::core::string::auto_string<char, 0> str4_4 = str4;
+            ret = __check_test_auto_string(str4_4, sample_str2, sample_str2_len, sample_str2_len, true, -10080);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
 
             return 0;
         }
@@ -209,24 +256,72 @@ namespace pilo
 
             ::pilo::i32_t ret = -1;
 
-            ret = __check_test_auto_string(str1, L"", 0, 32, false, -300000);
+            ret = __check_test_auto_string(str1, L"", 0, 32, false, -5000000);
             if (ret != 0)
             {
                 return ret;
             }
 
-            ret = __check_test_auto_string(str0, L"", 0, 0, true, -400000);
+            ret = __check_test_auto_string(str0, L"", 0, 0, true, -5000010);
             if (ret != 0)
             {
                 return ret;
             }
 
-            ret = __check_test_std_string(stdwstr0, L"", 0, 0, -800000);
+            ret = __check_test_std_string(stdwstr0, L"", 0, 0, -5000020);
             if (ret != 0)
             {
                 return ret;
             }
 
+            const wchar_t* sample_str = L"i am a fox";
+            const wchar_t* sample_str2 = L"i am a";
+            size_t sample_str_len = ::pilo::core::string::string_util::length(sample_str);
+            size_t sample_str2_len = ::pilo::core::string::string_util::length(sample_str2);
+
+            pilo::core::string::auto_string<wchar_t, 0> str3(sample_str);
+            ret = __check_test_auto_string(str3, sample_str, sample_str_len, 10, true, -5000030);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<wchar_t, 32> str4(sample_str, 6);
+            ret = __check_test_auto_string(str4, sample_str2, sample_str2_len, 32, false, -5000040);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<wchar_t, 0> str5 = sample_str;
+            ret = __check_test_auto_string(str5, sample_str, sample_str_len, 10, true, -5000050);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<wchar_t, 32> str4_2 = str4;
+            ret = __check_test_auto_string(str4_2, sample_str2, sample_str2_len, 32, false, -5000060);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<wchar_t, 30> str4_3 = str4;
+            ret = __check_test_auto_string(str4_3, sample_str2, sample_str2_len, 30, false, -5000070);
+            if (ret != 0)
+            {
+                return ret;
+            }
+            ::pilo::core::string::auto_string<wchar_t, 0> str4_4 = str4;
+            ret = __check_test_auto_string(str4_4, sample_str2, sample_str2_len, sample_str2_len, true, -5000080);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+
+            
             return 0;
         }
 

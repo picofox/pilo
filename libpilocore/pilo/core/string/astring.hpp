@@ -33,21 +33,37 @@ namespace pilo
 
                 astring(const char* cstr, size_t len)
                 {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
                     _assign(cstr, len);
                 }
 
                 astring(const char* cstr)
                 {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
                     _assign(cstr, MC_INVALID_SIZE);
                 }
 
                 astring(const std::string& stdstr)
                 {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
                     _assign(stdstr.c_str(), stdstr.size());
                 }
 
                 template<size_t capa> astring(const astring<capa>& str)
                 {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
                     _assign(str.c_str(), str.size());
                 }
 

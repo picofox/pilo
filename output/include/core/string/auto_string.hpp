@@ -47,6 +47,64 @@ namespace pilo
                     _m_dyn_data = nullptr;
                     _m_dyn_capacity = 0;
                 }
+                auto_string(const value_type* cstr, size_t len)
+                {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
+                    _assign(cstr, len);
+                }
+                auto_string(const value_type* cstr)
+                {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
+                    _assign(cstr, MC_INVALID_SIZE);
+                }
+                auto_string(const std::string& stdstr)
+                {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
+                    _assign(stdstr.c_str(), stdstr.size());
+                }
+                auto_string(const auto_string<value_type, BUFSZ_DFL>& astr)
+                {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
+                    _assign(astr.c_str(), astr.size());
+                }
+                template<size_t SZ>
+                auto_string(const auto_string<value_type, SZ>& astr)
+                {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
+                    _assign(astr.c_str(), astr.size());
+                }
+
+                auto_string& operator=(const value_type* str)
+                {
+                    _assign(str, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& operator=(const std::string& stdstr)
+                {
+                    _assign(stdstr.c_str(), stdstr.size());
+                    return *this;
+                }
+                auto_string& operator=(const auto_string<value_type, BUFSZ_DFL>& astr)
+                {
+                    _assign(astr.c_str(), astr.size());
+                    return *this;
+                }
+                
 
                 bool is_dynamic() const
                 {
@@ -261,7 +319,7 @@ namespace pilo
 
             //----------------------------------------------------------------------------------------------//
             //--------------------------------------------||------------------------------------------------//
-            //------------------------------[auto_string<char, BUFSZ_DFL>]----------------------------------//
+            //-----------------------------------[auto_string<char, 0>]-------------------------------------//
             //--------------------------------------------||------------------------------------------------//
             //--------------------------------------------||------------------------------------------------//
             //--------------------------------------------\/------------------------------------------------//
@@ -280,6 +338,53 @@ namespace pilo
                     _reserve(0);
                     _m_pdata[0] = 0;
                     _m_size = 0;                    
+                }
+                auto_string(const value_type* cstr, size_t len)
+                {
+                    _m_pdata = nullptr;
+                    _m_size = 0;
+                    _assign(cstr, len);
+                }
+                auto_string(const value_type* cstr)
+                {
+                    _m_pdata = nullptr;
+                    _m_size = 0;
+                    _assign(cstr, MC_INVALID_SIZE);
+                }
+                auto_string(const std::string& stdstr)
+                {
+                    _m_pdata = nullptr;
+                    _m_size = 0;
+                    _assign(stdstr.c_str(), stdstr.size());
+                }
+                auto_string(const auto_string<value_type, 0>& astr)
+                {
+                    _m_pdata = nullptr;
+                    _m_size = 0;
+                    _assign(astr.c_str(), astr.size());
+                }
+                template<size_t SZ>
+                auto_string(const auto_string<value_type, SZ>& astr)
+                {
+                    _m_pdata = nullptr;
+                    _m_size = 0;
+                    _assign(astr.c_str(), astr.size());
+                }
+
+                auto_string& operator=(const value_type* str)
+                {
+                    _assign(str, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& operator=(const std::string& stdstr)
+                {
+                    _assign(stdstr.c_str(), stdstr.size());
+                    return *this;
+                }
+                auto_string& operator=(const auto_string<value_type, 0>& astr)
+                {
+                    _assign(astr.c_str(), astr.size());
+                    return *this;
                 }
 
                 bool is_dynamic() const { return true; }
@@ -463,6 +568,63 @@ namespace pilo
                     *_m_fix_data = 0;
                     _m_dyn_data = nullptr;
                     _m_dyn_capacity = 0;
+                }
+                auto_string(const value_type* cstr, size_t len)
+                {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
+                    _assign(cstr, len);
+                }
+                auto_string(const value_type* cstr)
+                {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
+                    _assign(cstr, MC_INVALID_SIZE);
+                }
+                auto_string(const std::wstring& stdstr)
+                {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
+                    _assign(stdstr.c_str(), stdstr.size());
+                }
+                auto_string(const auto_string<value_type, BUFSZ_DFL>& astr)
+                {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
+                    _assign(astr.c_str(), astr.size());
+                }
+                template<size_t SZ>
+                auto_string(const auto_string<value_type, SZ>& astr)
+                {
+                    _m_size = 0;
+                    *_m_fix_data = 0;
+                    _m_dyn_data = nullptr;
+                    _m_dyn_capacity = 0;
+                    _assign(astr.c_str(), astr.size());
+                }
+
+                auto_string& operator=(const value_type* str)
+                {
+                    _assign(str, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& operator=(const std::wstring& stdstr)
+                {
+                    _assign(stdstr.c_str(), stdstr.size());
+                    return *this;
+                }
+                auto_string& operator=(const auto_string<value_type, BUFSZ_DFL>& astr)
+                {
+                    _assign(astr.c_str(), astr.size());
+                    return *this;
                 }
 
                 const value_type* c_str() const
@@ -692,6 +854,54 @@ namespace pilo
                     _m_pdata[0] = 0;
                     _m_size = 0;
                 }
+                auto_string(const value_type* cstr, size_t len)
+                {
+                    _m_pdata = nullptr;
+                    _m_size = 0;
+                    _assign(cstr, len);
+                }
+                auto_string(const value_type* cstr)
+                {
+                    _m_pdata = nullptr;
+                    _m_size = 0;
+                    _assign(cstr, MC_INVALID_SIZE);
+                }
+                auto_string(const std::wstring& stdstr)
+                {
+                    _m_pdata = nullptr;
+                    _m_size = 0;
+                    _assign(stdstr.c_str(), stdstr.size());
+                }
+                auto_string(const auto_string<value_type, 0>& astr)
+                {
+                    _m_pdata = nullptr;
+                    _m_size = 0;
+                    _assign(astr.c_str(), astr.size());
+                }
+                template<size_t SZ>
+                auto_string(const auto_string<value_type, SZ>& astr)
+                {
+                    _m_pdata = nullptr;
+                    _m_size = 0;
+                    _assign(astr.c_str(), astr.size());
+                }
+
+                auto_string& operator=(const value_type* str)
+                {
+                    _assign(str, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& operator=(const std::wstring& stdstr)
+                {
+                    _assign(stdstr.c_str(), stdstr.size());
+                    return *this;
+                }
+                auto_string& operator=(const auto_string<value_type, 0>& astr)
+                {
+                    _assign(astr.c_str(), astr.size());
+                    return *this;
+                }
+
 
                 bool is_dynamic() const { return true; }
                 const value_type* c_str() const { return _m_pdata; }
