@@ -382,7 +382,103 @@ namespace pilo
             if (ret != 0)
             {
                 return ret;
-            }            
+            }     
+
+            str6.clear();
+            str7.clear();
+            str6 = "0123456789";
+            str8 = "0123456789";
+            std::string stdtstr = str6.c_str();
+            std::string stdfstr = "sdfa";
+            if (str6 == str8)
+            {
+
+            }
+            else
+            {
+                return -90000010;
+            }
+
+            if (str6 == "0123456789")
+            {
+
+            }
+            else
+            {
+                return -90000020;
+            }
+
+            if ("0123456789" == str6)
+            {
+
+            }
+            else
+            {
+                return -90000020;
+            }
+
+            if (stdtstr == str6)
+            {
+
+            }
+            else
+            {
+                return -90000030;
+            }
+
+            if (str6 == stdtstr)
+            {
+
+            }
+            else
+            {
+                return -90000030;
+            }
+
+            if (stdfstr != str6)
+            {
+
+            }
+            else
+            {
+                return -90000030;
+            }
+
+            if (str6 != stdfstr)
+            {
+
+            }
+            else
+            {
+                return -90000030;
+            }
+
+            if (str6 != str7)
+            {
+
+            }
+            else
+            {
+                return -90000050;
+            }
+
+            if (str6 != "ghj")
+            {
+
+            }
+            else
+            {
+                return -90000020;
+            }
+
+            if ("gjh" != str6)
+            {
+
+            }
+            else
+            {
+                return -90000020;
+            }
 
             return 0;
         }
@@ -607,7 +703,103 @@ namespace pilo
             {
                 return ret;
             }
-            
+
+            str6.clear();
+            str7.clear();
+            str6 = L"0123456789";
+            str8 = L"0123456789";
+            std::wstring stdtstr = str6.c_str();
+            std::wstring stdfstr = L"sdfa";
+            if (str6 == str8)
+            {
+
+            }
+            else
+            {
+                return -90000010;
+            }
+
+            if (str6 == L"0123456789")
+            {
+
+            }
+            else
+            {
+                return -90000020;
+            }
+
+            if (L"0123456789" == str6)
+            {
+
+            }
+            else
+            {
+                return -90000020;
+            }
+
+            if (stdtstr == str6)
+            {
+
+            }
+            else
+            {
+                return -90000030;
+            }
+
+            if (str6 == stdtstr)
+            {
+
+            }
+            else
+            {
+                return -90000030;
+            }
+
+            if (stdfstr != str6)
+            {
+
+            }
+            else
+            {
+                return -90000030;
+            }
+
+            if (str6 != stdfstr)
+            {
+
+            }
+            else
+            {
+                return -90000030;
+            }
+
+            if (str6 != str7)
+            {
+
+            }
+            else
+            {
+                return -90000050;
+            }
+
+            if (str6 != L"ghj")
+            {
+
+            }
+            else
+            {
+                return -90000020;
+            }
+
+            if (L"gjh" != str6)
+            {
+
+            }
+            else
+            {
+                return -90000020;
+            }
+
             return 0;
         }
 

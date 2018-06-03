@@ -27,7 +27,84 @@ namespace pilo
             class auto_string
             {
 
-            };
+            public:
+//                 template<typename CHAR_T, size_t LSZ, size_t RSZ>
+//                 friend bool operator==(const auto_string<CHAR_T, LSZ>& left, const auto_string<CHAR_T, RSZ>& right);
+
+            };            
+
+            template<typename CHAR_T, size_t LSZ, size_t RSZ>
+            bool operator==(const auto_string<CHAR_T, LSZ>& left, const auto_string<CHAR_T, RSZ>& right)
+            {
+                return (left.compare(right) == 0);
+            }
+            template<typename CHAR_T, size_t LSZ>
+            bool operator==(const auto_string<CHAR_T, LSZ>& left, const CHAR_T* right)
+            {
+                return (left.compare(right, MC_INVALID_SIZE) == 0);
+            }
+            template<typename CHAR_T, size_t RSZ>
+            bool operator==(const CHAR_T* left, const auto_string<CHAR_T, RSZ>& right)
+            {
+                return (right.compare(left, MC_INVALID_SIZE) == 0);
+            }
+            template<size_t LSZ>
+            bool operator==(const auto_string<char, LSZ>& left, const std::string& right)
+            {
+                return (left.compare(right) == 0);
+            }
+            template<size_t RSZ>
+            bool operator==(const std::string& left, const auto_string<char, RSZ>& right)
+            {
+                return (right.compare(left) == 0);
+            }
+            template<size_t LSZ>
+            bool operator==(const auto_string<wchar_t, LSZ>& left, const std::wstring& right)
+            {
+                return (left.compare(right) == 0);
+            }
+            template<size_t RSZ>
+            bool operator==(const std::wstring& left, const auto_string<wchar_t, RSZ>& right)
+            {
+                return (right.compare(left) == 0);
+            }
+
+            template<typename CHAR_T, size_t LSZ, size_t RSZ>
+            bool operator!=(const auto_string<CHAR_T, LSZ>& left, const auto_string<CHAR_T, RSZ>& right)
+            {
+                return (left.compare(right) != 0);
+            }
+            template<typename CHAR_T, size_t LSZ>
+            bool operator!=(const auto_string<CHAR_T, LSZ>& left, const CHAR_T* right)
+            {
+                return (left.compare(right, MC_INVALID_SIZE) != 0);
+            }
+            template<typename CHAR_T, size_t RSZ>
+            bool operator!=(const CHAR_T* left, const auto_string<CHAR_T, RSZ>& right)
+            {
+                return (right.compare(left, MC_INVALID_SIZE) != 0);
+            }
+            template<size_t LSZ>
+            bool operator!=(const auto_string<char, LSZ>& left, const std::string& right)
+            {
+                return (left.compare(right) != 0);
+            }
+            template<size_t RSZ>
+            bool operator!=(const std::string& left, const auto_string<char, RSZ>& right)
+            {
+                return (right.compare(left) != 0);
+            }
+            template<size_t LSZ>
+            bool operator!=(const auto_string<wchar_t, LSZ>& left, const std::wstring& right)
+            {
+                return (left.compare(right) != 0);
+            }
+            template<size_t RSZ>
+            bool operator!=(const std::wstring& left, const auto_string<wchar_t, RSZ>& right)
+            {
+                return (right.compare(left) != 0);
+            }
+
 
             template<size_t BUFSZ_DFL>
             class auto_string<char, BUFSZ_DFL>
