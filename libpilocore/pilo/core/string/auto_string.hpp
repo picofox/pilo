@@ -167,7 +167,7 @@ namespace pilo
                 }
 
                 inline pilo::error_number_t reserve(size_t sz) { return _reserve(sz); }
-                inline pilo::error_number_t grow(size_t sz) { return _reserve(capacity() + sz); }
+                inline pilo::error_number_t grow_from_size(size_t sz) { return _reserve(_m_size + sz); }
 
                 size_t available_capacity() const
                 {
@@ -564,7 +564,7 @@ namespace pilo
 
                     if (available_capacity() < len)
                     {
-                        if (::pilo::EC_OK != grow(len))
+                        if (::pilo::EC_OK != grow_from_size(len))
                         {
                             return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }
@@ -599,7 +599,7 @@ namespace pilo
 
                     if (available_capacity() < len)
                     {
-                        if (::pilo::EC_OK != grow(len))
+                        if (::pilo::EC_OK != grow_from_size(len))
                         {
                             return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }
@@ -748,7 +748,7 @@ namespace pilo
                 }
 
                 inline pilo::error_number_t reserve(size_t sz) { return _reserve(sz); }
-                inline pilo::error_number_t grow(size_t sz) { return _reserve(capacity() + sz); }
+                inline pilo::error_number_t grow_from_size(size_t sz) { return _reserve(_m_size + sz); }
 
                 inline size_t available_capacity() const
                 {
@@ -1081,7 +1081,7 @@ namespace pilo
 
                     if (available_capacity() < len)
                     {
-                        if (::pilo::EC_OK != grow(len))
+                        if (::pilo::EC_OK != grow_from_size(len))
                         {
                             return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }
@@ -1248,7 +1248,7 @@ namespace pilo
                 }
 
                 inline pilo::error_number_t reserve(size_t sz) { return _reserve(sz); }
-                inline pilo::error_number_t grow(size_t sz) { return _reserve(capacity() + sz); }
+                inline pilo::error_number_t grow_from_size(size_t sz) { return _reserve(_m_size + sz); }
 
                 size_t available_capacity() const
                 {
@@ -1635,7 +1635,7 @@ namespace pilo
 
                     if (available_capacity() < len)
                     {
-                        if (::pilo::EC_OK != grow(len))
+                        if (::pilo::EC_OK != grow_from_size(len))
                         {
                             return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }
@@ -1668,9 +1668,9 @@ namespace pilo
                         len = ::pilo::core::string::string_util::length(str);
                     }
 
-                    if (available_capacity < len)
+                    if (available_capacity() < len)
                     {
-                        if (::pilo::EC_OK != grow(len))
+                        if (::pilo::EC_OK != grow_from_size(len))
                         {
                             return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }
@@ -1823,7 +1823,7 @@ namespace pilo
                 }
 
                 inline pilo::error_number_t reserve(size_t sz) { return _reserve(sz); }
-                inline pilo::error_number_t grow(size_t sz) { return _reserve(capacity() + sz); }
+                inline pilo::error_number_t grow_from_size(size_t sz) { return _reserve(_m_size + sz); }
 
                 inline size_t available_capacity() const
                 {
@@ -2158,7 +2158,7 @@ namespace pilo
 
                     if (available_capacity() < len)
                     {
-                        if (::pilo::EC_OK != grow(len))
+                        if (::pilo::EC_OK != grow_from_size(len))
                         {
                             return ::pilo::EC_INSUFFICIENT_MEMORY;
                         }

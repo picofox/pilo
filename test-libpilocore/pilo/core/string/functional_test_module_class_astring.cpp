@@ -335,6 +335,43 @@ namespace pilo
                 return ret;
             }
 
+            const char* sample_str7_2 = "hi, i am a fox0123456789012345678901ABCDEFGHIJ";
+            str7.insert(0, "hi, 123456789", 4);
+            ret = __check_test_auto_string(str7, sample_str7_2, sample_str71_len + 4, sample_str71_len + 4, true, -10200);
+            if (ret != 0)
+            {
+                return ret;
+            }
+            const char* sample_str7_3 = "hi, i am a little fox0123456789012345678901ABCDEFGHIJ";
+            str7.insert(10, " little", 7);
+            ret = __check_test_auto_string(str7, sample_str7_3, sample_str71_len + 11, sample_str71_len + 11, true, -10210);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<char, 32> str8 = "";
+            const char* sample_str8_1 = "i am a little fox";
+            str8 = sample_str;
+            str8.insert(6, " little", 7);
+            ret = __check_test_auto_string(str8, sample_str8_1, 17, 32, false, -10410);
+            if (ret != 0)
+            {
+                return ret;
+            }
+            
+            str8.insert(4, " 01234567890123456789012345678", 30);
+            const char* sample_str8_2 = "i am 01234567890123456789012345678 a little fox";
+            size_t  sample_str82_len = ::pilo::core::string::string_util::length(sample_str8_2);
+            ret = __check_test_auto_string(str8, sample_str8_2, sample_str82_len, sample_str82_len, true, -10420);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+
+            
+
             return 0;
         }
 
@@ -507,6 +544,40 @@ namespace pilo
             size_t  sample_str71_len = ::pilo::core::string::string_util::length(sample_str7_1);
             str7.append(L"ABCDEFGHIJ");
             ret = __check_test_auto_string(str7, sample_str7_1, sample_str71_len, sample_str71_len, true, -10160);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            const wchar_t* sample_str7_2 = L"hi, i am a fox0123456789012345678901ABCDEFGHIJ";
+            str7.insert(0, L"hi, 123456789", 4);
+            ret = __check_test_auto_string(str7, sample_str7_2, sample_str71_len + 4, sample_str71_len + 4, true, -10200);
+            if (ret != 0)
+            {
+                return ret;
+            }
+            const wchar_t* sample_str7_3 = L"hi, i am a little fox0123456789012345678901ABCDEFGHIJ";
+            str7.insert(10, L" little", 7);
+            ret = __check_test_auto_string(str7, sample_str7_3, sample_str71_len + 11, sample_str71_len + 11, true, -10210);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<wchar_t, 32> str8 = L"";
+            const wchar_t* sample_str8_1 = L"i am a little fox";
+            str8 = sample_str;
+            str8.insert(6, L" little", 7);
+            ret = __check_test_auto_string(str8, sample_str8_1, 17, 32, false, -10410);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            str8.insert(4, L" 01234567890123456789012345678", 30);
+            const wchar_t* sample_str8_2 = L"i am 01234567890123456789012345678 a little fox";
+            size_t  sample_str82_len = ::pilo::core::string::string_util::length(sample_str8_2);
+            ret = __check_test_auto_string(str8, sample_str8_2, sample_str82_len, sample_str82_len, true, -10420);
             if (ret != 0)
             {
                 return ret;
