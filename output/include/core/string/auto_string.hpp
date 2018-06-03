@@ -105,6 +105,23 @@ namespace pilo
                     return *this;
                 }
 
+                auto_string& operator+=(const value_type* cstr)
+                {
+                    _append(cstr, 0, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& operator+=(const std::string stdstr)
+                {
+                    _append(stdstr.c_str(), 0, stdstr.size());
+                    return *this;
+                }
+                template<size_t SZ>
+                auto_string& operator+=(const auto_string<value_type, SZ>& astr)
+                {
+                    _append(astr.c_str(), 0, astr.size());
+                    return *this;
+                }
+
                 inline void clear()
                 {
                     if (nullptr != _m_dyn_data) //use dynamic buffer
@@ -694,6 +711,23 @@ namespace pilo
                     return *this;
                 }
 
+                auto_string& operator+=(const value_type* cstr)
+                {
+                    _append(cstr, 0, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& operator+=(const std::string stdstr)
+                {
+                    _append(stdstr.c_str(), 0, stdstr.size());
+                    return *this;
+                }
+                template<size_t SZ>
+                auto_string& operator+=(const auto_string<value_type, SZ>& astr)
+                {
+                    _append(astr.c_str(), 0, astr.size());
+                    return *this;
+                }
+
                 void clear()
                 {
                     if (_m_pdata != nullptr)
@@ -1186,6 +1220,23 @@ namespace pilo
                 auto_string& operator=(const auto_string<value_type, BUFSZ_DFL>& astr)
                 {
                     _assign(astr.c_str(), astr.size());
+                    return *this;
+                }
+
+                auto_string& operator+=(const value_type* cstr)
+                {
+                    _append(cstr, 0, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& operator+=(const std::wstring stdstr)
+                {
+                    _append(stdstr.c_str(), 0, stdstr.size());
+                    return *this;
+                }
+                template<size_t SZ>
+                auto_string& operator+=(const auto_string<value_type, SZ>& astr)
+                {
+                    _append(astr.c_str(), 0, astr.size());
                     return *this;
                 }
 
@@ -1764,6 +1815,23 @@ namespace pilo
                 auto_string& operator=(const auto_string<value_type, 0>& astr)
                 {
                     _assign(astr.c_str(), astr.size());
+                    return *this;
+                }
+
+                auto_string& operator+=(const value_type* cstr)
+                {
+                    _append(cstr, 0, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& operator+=(const std::wstring stdstr)
+                {
+                    _append(stdstr.c_str(), 0, stdstr.size());
+                    return *this;
+                }
+                template<size_t SZ>
+                auto_string& operator+=(const auto_string<value_type, SZ>& astr)
+                {
+                    _append(astr.c_str(), 0, astr.size());
                     return *this;
                 }
 

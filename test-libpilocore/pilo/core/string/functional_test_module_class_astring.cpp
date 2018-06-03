@@ -335,6 +335,21 @@ namespace pilo
                 return ret;
             }
 
+            str6.clear();
+            for (int i = 0; i < 10; i++)
+            {
+                char tmpbuffer[32] = { 0 };
+                ::pilo::core::io::string_format_output(tmpbuffer, 32, "%d", i);
+                str6 += tmpbuffer;
+            }
+            ret = __check_test_auto_string(str6, "0123456789", 10, 14, true, -10170);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+
+
             const char* sample_str7_2 = "hi, i am a fox0123456789012345678901ABCDEFGHIJ";
             str7.insert(0, "hi, 123456789", 4);
             ret = __check_test_auto_string(str7, sample_str7_2, sample_str71_len + 4, sample_str71_len + 4, true, -10200);
@@ -367,10 +382,7 @@ namespace pilo
             if (ret != 0)
             {
                 return ret;
-            }
-
-
-            
+            }            
 
             return 0;
         }
@@ -544,6 +556,19 @@ namespace pilo
             size_t  sample_str71_len = ::pilo::core::string::string_util::length(sample_str7_1);
             str7.append(L"ABCDEFGHIJ");
             ret = __check_test_auto_string(str7, sample_str7_1, sample_str71_len, sample_str71_len, true, -10160);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            str6.clear();
+            for (int i = 0; i <10; i++)
+            {
+                wchar_t tmpbuffer[32] = {0};
+                ::pilo::core::io::string_format_output(tmpbuffer, 32, L"%d", i);
+                str6 += tmpbuffer;
+            }
+            ret = __check_test_auto_string(str6, L"0123456789", 10, 14, true, -10170);
             if (ret != 0)
             {
                 return ret;
