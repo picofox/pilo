@@ -125,22 +125,22 @@ namespace pilo
         {
             if (0 != ::pilo::core::string::string_util::binary_compare(astr.c_str(), content))
             {
-                return ret - 10;
+                return ret - 1;
             }
 
             if (astr.length() != len)
             {
-                return ret - 20;
+                return ret - 2;
             }
 
             if (astr.capacity() != capa)
             {
-                return ret - 30;
+                return ret - 3;
             }
 
             if (astr.is_dynamic() != bDyn)
             {
-                return ret - 40;
+                return ret - 4;
             }
 
             return 0;
@@ -152,17 +152,17 @@ namespace pilo
             
             if (::pilo::core::string::string_util::binary_compare(stdstr.c_str(), content) != 0)
             {
-                return ret - 10;
+                return ret - 7;
             }
 
             if (stdstr.length() != len)
             {
-                return ret - 20;
+                return ret - 8;
             }
 
             if (stdstr.capacity() < capa)
             {
-                return ret - 30;
+                return ret - 9;
             }
 
             return 0;
@@ -280,12 +280,60 @@ namespace pilo
             {
                 return ret;
             }
-            ret = __check_test_auto_string(str5, sample_str, sample_str_len, sample_str4_len, true, -10100);
+            ret = __check_test_auto_string(str5, sample_str, sample_str_len, 14, true, -10100);
             if (ret != 0)
             {
                 return ret;
             }
 
+            ::pilo::core::string::auto_string<char, 0> str6;
+            str6.append("you know, i am a fox",10,10);
+            ret = __check_test_auto_string(str6, sample_str, sample_str_len, sample_str_len, true, -10110);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            str6.append(" man");
+            ret = __check_test_auto_string(str6, sample_str4, sample_str4_len, sample_str4_len, true, -10120);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            str6.clear();
+            str6 = "i am a";
+            str6.append(std::string(" fox")); 
+            ret = __check_test_auto_string(str6, sample_str, sample_str_len, 14, true, -10130);
+            if (ret != 0)
+            {
+                return ret;
+            }
+            
+            ::pilo::core::string::auto_string<char, 32> str7;
+            str7.append("you know, i am a fox", 10, 10);
+            ret = __check_test_auto_string(str7, sample_str, sample_str_len, 32, false, -10140);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            const char* sample_str7 = "i am a fox0123456789012345678901";
+            size_t  sample_str7_len = ::pilo::core::string::string_util::length(sample_str7);
+            str7.append("0123456789012345678901");
+            ret = __check_test_auto_string(str7, sample_str7, sample_str7_len, 32, false, -10150);
+            if (ret != 0)
+            {
+                return ret;
+            }
+            const char* sample_str7_1 = "i am a fox0123456789012345678901ABCDEFGHIJ";
+            size_t  sample_str71_len = ::pilo::core::string::string_util::length(sample_str7_1);
+            str7.append("ABCDEFGHIJ");
+            ret = __check_test_auto_string(str7, sample_str7_1, sample_str71_len, sample_str71_len, true, -10160);
+            if (ret != 0)
+            {
+                return ret;
+            }
 
             return 0;
         }
@@ -410,6 +458,55 @@ namespace pilo
                 return ret;
             }
             ret = __check_test_auto_string(str5, sample_str, sample_str_len, sample_str4_len, true, -10100);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<wchar_t, 0> str6;
+            str6.append(L"you know, i am a fox", 10, 10);
+            ret = __check_test_auto_string(str6, sample_str, sample_str_len, sample_str_len, true, -10110);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            str6.append(L" man");
+            ret = __check_test_auto_string(str6, sample_str4, sample_str4_len, sample_str4_len, true, -10120);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            str6.clear();
+            str6 = L"i am a";
+            str6.append(std::wstring(L" fox"));
+            ret = __check_test_auto_string(str6, sample_str, sample_str_len, 14, true, -10130);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            ::pilo::core::string::auto_string<wchar_t, 32> str7;
+            str7.append(L"you know, i am a fox", 10, 10);
+            ret = __check_test_auto_string(str7, sample_str, sample_str_len, 32, false, -10140);
+            if (ret != 0)
+            {
+                return ret;
+            }
+
+            const wchar_t* sample_str7 = L"i am a fox0123456789012345678901";
+            size_t  sample_str7_len = ::pilo::core::string::string_util::length(sample_str7);
+            str7.append(L"0123456789012345678901");
+            ret = __check_test_auto_string(str7, sample_str7, sample_str7_len, 32, false, -10150);
+            if (ret != 0)
+            {
+                return ret;
+            }
+            const wchar_t* sample_str7_1 = L"i am a fox0123456789012345678901ABCDEFGHIJ";
+            size_t  sample_str71_len = ::pilo::core::string::string_util::length(sample_str7_1);
+            str7.append(L"ABCDEFGHIJ");
+            ret = __check_test_auto_string(str7, sample_str7_1, sample_str71_len, sample_str71_len, true, -10160);
             if (ret != 0)
             {
                 return ret;

@@ -105,6 +105,70 @@ namespace pilo
                     return *this;
                 }
 
+                inline void clear()
+                {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        *_m_dyn_data = 0;
+                    }
+                    else
+                    {
+                        *_m_fix_data = 0;
+                    }
+
+                    _m_size = 0;
+                }
+
+                auto_string& append(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    _append(suffix_str, pos, len);
+                    return *this;
+                }
+
+                auto_string& append(const std::string& stdstr)
+                {
+                    _append(stdstr.c_str(), 0, stdstr.size());
+                    return *this;
+                }
+
+                auto_string& append(const value_type* cstr)
+                {
+                    _append(cstr, 0, MC_INVALID_SIZE);
+                    return *this;
+                }
+
+                template<size_t SZ>
+                auto_string& append(const auto_string<value_type, SZ>& astr)
+                {
+                    _append(astr.c_str(), 0, astr.size());
+                    return *this;
+                }
+
+                auto_string& insert(size_t pos, const value_type* str, size_t len)
+                {
+                    _insert(pos, str, len);
+                    return *this;
+                }
+                auto_string& insert(size_t pos, const value_type* str)
+                {
+                    _insert(pos, str, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& insert(size_t pos, const std::string & str)
+                {
+                    _insert(pos, str.c_str(), str.size());
+                    return *this;
+                }
+                template<size_t SZ>
+                auto_string& insert(size_t pos, const auto_string<value_type, SZ>& astr)
+                {
+                    _insert(pos, astr.c_str(), astr.size());
+                    return *this;
+                }
+
+                inline pilo::error_number_t reserve(size_t sz) { return _reserve(sz); }
+                inline pilo::error_number_t grow(size_t sz) { return _reserve(capacity() + sz); }
+
                 size_t available_capacity() const
                 {
                     if (nullptr != _m_dyn_data) //use dynamic buffer
@@ -302,7 +366,7 @@ namespace pilo
                         }
 
                         size_t tmpcapa = M_ALIGN_SIZE((sz + 1), sizeof(void*));
-                        value_type * _m_dyn_data = (value_type*)malloc(tmpcapa);
+                        _m_dyn_data = (value_type*)malloc(tmpcapa);
                         if (_m_dyn_data == nullptr)
                         {
                             return pilo::EC_INSUFFICIENT_MEMORY;
@@ -476,6 +540,79 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+                ::pilo::error_number_t _append(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    if (suffix_str == nullptr)
+                    {
+                        return ::pilo::EC_NULL_PARAM;
+                    }
+
+                    if (pos == MC_INVALID_SIZE)
+                    {
+                        return ::pilo::EC_INVALID_PARAM;
+                    }
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = ::pilo::core::string::string_util::length(suffix_str + pos);
+                    }
+
+                    if (len == 0)
+                    {
+                        return ::pilo::EC_OK;
+                    }
+
+                    if (available_capacity() < len)
+                    {
+                        if (::pilo::EC_OK != grow(len))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }
+
+                    if (MC_INVALID_SIZE == ::pilo::core::string::string_util::copy(data() + _m_size, available_capacity() + 1, suffix_str + pos, len))
+                    {
+                        return ::pilo::EC_COPY_STRING_FAILED;
+                    }
+
+                    _m_size += len;
+
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _insert(size_t pos, const value_type* str, size_t len)
+                {
+                    if (str == 0 || *str == 0)
+                    {
+                        return ::pilo::EC_NULL_PARAM;
+                    }
+
+                    if (pos >= size())
+                    {
+                        return _append(str, 0, len);
+                    }
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = ::pilo::core::string::string_util::length(str);
+                    }
+
+                    if (available_capacity() < len)
+                    {
+                        if (::pilo::EC_OK != grow(len))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }
+
+                    ::memmove(data() + pos + len, data() + pos, size() - pos);
+                    ::memmove(data() + pos, str, len);
+                    _m_size += len;
+                    data()[_m_size] = 0;
+
+                    return ::pilo::EC_OK;
+                }
+
             protected:
                 size_t          _m_dyn_capacity;
                 value_type*     _m_dyn_data;
@@ -556,6 +693,62 @@ namespace pilo
                     _assign(astr.c_str(), astr.size());
                     return *this;
                 }
+
+                void clear()
+                {
+                    if (_m_pdata != nullptr)
+                    {
+                        *_m_pdata = 0;
+                    }
+                    _m_size = 0;
+                }
+
+                auto_string& append(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    _append(suffix_str, pos, len);
+                    return *this;
+                }
+                auto_string& append(const std::string& stdstr)
+                {
+                    _append(stdstr.c_str(), 0, stdstr.size());
+                    return *this;
+                }
+                auto_string& append(const value_type* cstr)
+                {
+                    _append(cstr, 0, MC_INVALID_SIZE);
+                    return *this;
+                }
+                template<size_t SZ>
+                auto_string& append(const auto_string<value_type, SZ>& astr)
+                {
+                    _append(astr.c_str(), 0, astr.size());
+                    return *this;
+                }
+
+                auto_string& insert(size_t pos, const value_type* str, size_t len)
+                {
+                    _insert(pos, str, len);
+                    return *this;
+                }
+                auto_string& insert(size_t pos, const value_type* str)
+                {
+                    _insert(pos, str, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& insert(size_t pos, const std::string & str)
+                {
+                    _insert(pos, str.c_str(), str.size());
+                    return *this;
+                }
+                template<size_t SZ>
+                auto_string& insert(size_t pos, const auto_string<value_type, SZ>& astr)
+                {
+                    _insert(pos, astr.c_str(), astr.size());
+                    return *this;
+                }
+
+                inline pilo::error_number_t reserve(size_t sz) { return _reserve(sz); }
+                inline pilo::error_number_t grow(size_t sz) { return _reserve(capacity() + sz); }
 
                 inline size_t available_capacity() const
                 {
@@ -829,6 +1022,79 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+                ::pilo::error_number_t _append(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    if (suffix_str == nullptr)
+                    {
+                        return ::pilo::EC_NULL_PARAM;
+                    }
+
+                    if (pos == MC_INVALID_SIZE)
+                    {
+                        return ::pilo::EC_INVALID_PARAM;
+                    }
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = ::pilo::core::string::string_util::length(suffix_str+pos);
+                    }
+
+                    if (len == 0)
+                    {
+                        return ::pilo::EC_OK;
+                    }
+
+                    if (available_capacity() < len)
+                    {
+                        if (::pilo::EC_OK != _reserve(_m_capacity + len))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }                    
+
+                    if (MC_INVALID_SIZE == ::pilo::core::string::string_util::copy(_m_pdata + _m_size, available_capacity() + 1, suffix_str + pos, len))
+                    {
+                        return ::pilo::EC_COPY_STRING_FAILED;
+                    }
+
+                    _m_size += len;
+
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::i32_t _insert(size_t pos, const value_type* str, size_t len)
+                {
+                    if (str == 0 || *str == 0)
+                    {
+                        return ::pilo::EC_NULL_PARAM;
+                    }
+
+                    if (pos >= size())
+                    {
+                        return _append(str, 0, len);
+                    }
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = ::pilo::core::string::string_util::length(str);
+                    }
+
+                    if (available_capacity() < len)
+                    {
+                        if (::pilo::EC_OK != grow(len))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }
+
+                    ::memmove(_m_pdata + pos + len, _m_pdata + pos, size() - pos);
+                    ::memmove(_m_pdata + pos, str, len);
+                    _m_size += len;
+                    _m_pdata[_m_size] = 0;
+
+                    return ::pilo::EC_OK;
+                }
+
             protected:
                 value_type* _m_pdata;
                 size_t      _m_size;
@@ -922,6 +1188,67 @@ namespace pilo
                     _assign(astr.c_str(), astr.size());
                     return *this;
                 }
+
+                void clear()
+                {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        *_m_dyn_data = 0;
+                    }
+                    else
+                    {
+                        *_m_fix_data = 0;
+                    }
+
+                    _m_size = 0;
+                }
+
+                auto_string& append(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    _append(suffix_str, pos, len);
+                    return *this;
+                }
+                auto_string& append(const std::string& stdstr)
+                {
+                    _append(stdstr.c_str(), 0, stdstr.size());
+                    return *this;
+                }
+                auto_string& append(const value_type* cstr)
+                {
+                    _append(cstr, 0, MC_INVALID_SIZE);
+                    return *this;
+                }
+                template<size_t SZ>
+                auto_string& append(const auto_string<value_type, SZ>& astr)
+                {
+                    _append(astr.c_str(), 0, astr.size());
+                    return *this;
+                }
+
+                auto_string& insert(size_t pos, const value_type* str, size_t len)
+                {
+                    _insert(pos, str, len);
+                    return *this;
+                }
+                auto_string& insert(size_t pos, const value_type* str)
+                {
+                    _insert(pos, str, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& insert(size_t pos, const std::wstring & str)
+                {
+                    _insert(pos, str.c_str(), str.size());
+                    return *this;
+                }
+                template<size_t SZ>
+                auto_string& insert(size_t pos, const auto_string<value_type, SZ>& astr)
+                {
+                    _insert(pos, astr.c_str(), astr.size());
+                    return *this;
+                }
+
+                inline pilo::error_number_t reserve(size_t sz) { return _reserve(sz); }
+                inline pilo::error_number_t grow(size_t sz) { return _reserve(capacity() + sz); }
 
                 size_t available_capacity() const
                 {
@@ -1114,7 +1441,7 @@ namespace pilo
                         }
 
                         size_t tmpcapa = M_ALIGN_SIZE((sz + 1), sizeof(void*));
-                        value_type * _m_dyn_data = (value_type*)malloc(tmpcapa*sizeof(value_type));
+                        _m_dyn_data = (value_type*)malloc(tmpcapa*sizeof(value_type));
                         if (_m_dyn_data == nullptr)
                         {
                             return pilo::EC_INSUFFICIENT_MEMORY;
@@ -1284,6 +1611,79 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+                ::pilo::error_number_t _append(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    if (suffix_str == nullptr)
+                    {
+                        return ::pilo::EC_NULL_PARAM;
+                    }
+
+                    if (pos == MC_INVALID_SIZE)
+                    {
+                        return ::pilo::EC_INVALID_PARAM;
+                    }
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = ::pilo::core::string::string_util::length(suffix_str + pos);
+                    }
+
+                    if (len == 0)
+                    {
+                        return ::pilo::EC_OK;
+                    }
+
+                    if (available_capacity() < len)
+                    {
+                        if (::pilo::EC_OK != grow(len))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }
+
+                    if (MC_INVALID_SIZE == ::pilo::core::string::string_util::copy(data() + _m_size, available_capacity() + 1, suffix_str + pos, len))
+                    {
+                        return ::pilo::EC_COPY_STRING_FAILED;
+                    }
+
+                    _m_size += len;
+
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _insert(size_t pos, const value_type* str, size_t len)
+                {
+                    if (str == 0 || *str == 0)
+                    {
+                        return ::pilo::EC_NULL_PARAM;
+                    }
+
+                    if (pos >= size())
+                    {
+                        return _append(str, 0, len);
+                    }
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = ::pilo::core::string::string_util::length(str);
+                    }
+
+                    if (available_capacity < len)
+                    {
+                        if (::pilo::EC_OK != grow(len))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }
+
+                    ::memmove(data() + pos + len, data() + pos, (size() - pos) * sizeof(value_type) );
+                    ::memmove(data() + pos, str, len * sizeof(value_type));
+                    _m_size += len;
+                    data()[_m_size] = 0;
+
+                    return ::pilo::EC_OK;
+                }
+
             protected:
                 size_t          _m_dyn_capacity;
                 value_type*     _m_dyn_data;
@@ -1366,6 +1766,64 @@ namespace pilo
                     _assign(astr.c_str(), astr.size());
                     return *this;
                 }
+
+                void clear()
+                {
+                    if (nullptr != _m_pdata) //use dynamic buffer
+                    {
+                        *_m_pdata = 0;
+                    }
+
+                    _m_size = 0;
+                }
+
+                auto_string& append(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    _append(suffix_str, pos, len);
+                    return *this;
+                }
+                auto_string& append(const std::wstring& stdstr)
+                {
+                    _append(stdstr.c_str(), 0, stdstr.size());
+                    return *this;
+                }
+
+                auto_string& append(const value_type* cstr)
+                {
+                    _append(cstr, 0, MC_INVALID_SIZE);
+                    return *this;
+                }
+                template<size_t SZ>
+                auto_string& append(const auto_string<value_type, SZ>& astr)
+                {
+                    _append(astr.c_str(), 0, astr.size());
+                    return *this;
+                }
+
+                auto_string& insert(size_t pos, const value_type* str, size_t len)
+                {
+                    _insert(pos, str, len);
+                    return *this;
+                }
+                auto_string& insert(size_t pos, const value_type* str)
+                {
+                    _insert(pos, str, MC_INVALID_SIZE);
+                    return *this;
+                }
+                auto_string& insert(size_t pos, const std::wstring & str)
+                {
+                    _insert(pos, str.c_str(), str.size());
+                    return *this;
+                }
+                template<size_t SZ>
+                auto_string& insert(size_t pos, const auto_string<value_type, SZ>& astr)
+                {
+                    _insert(pos, astr.c_str(), astr.size());
+                    return *this;
+                }
+
+                inline pilo::error_number_t reserve(size_t sz) { return _reserve(sz); }
+                inline pilo::error_number_t grow(size_t sz) { return _reserve(capacity() + sz); }
 
                 inline size_t available_capacity() const
                 {
@@ -1638,6 +2096,79 @@ namespace pilo
                         return ::pilo::EC_REACH_LOWER_LIMIT;
                     }
                     _m_pdata[--_m_size] = 0;
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t _append(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    if (suffix_str == nullptr)
+                    {
+                        return ::pilo::EC_NULL_PARAM;
+                    }
+
+                    if (pos == MC_INVALID_SIZE)
+                    {
+                        return ::pilo::EC_INVALID_PARAM;
+                    }
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = ::pilo::core::string::string_util::length(suffix_str + pos);
+                    }
+
+                    if (len == 0)
+                    {
+                        return ::pilo::EC_OK;
+                    }
+
+                    if (available_capacity() < len)
+                    {
+                        if (::pilo::EC_OK != _reserve(_m_capacity + len))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }
+
+                    if (MC_INVALID_SIZE == ::pilo::core::string::string_util::copy(_m_pdata + _m_size, available_capacity() + 1, suffix_str + pos, len))
+                    {
+                        return ::pilo::EC_COPY_STRING_FAILED;
+                    }
+
+                    _m_size += len;
+
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::i32_t _insert(size_t pos, const value_type* str, size_t len)
+                {
+                    if (str == 0 || *str == 0)
+                    {
+                        return ::pilo::EC_NULL_PARAM;
+                    }
+
+                    if (pos >= size())
+                    {
+                        return _append(str, 0, len);
+                    }
+
+                    if (len == MC_INVALID_SIZE)
+                    {
+                        len = ::pilo::core::string::string_util::length(str);
+                    }
+
+                    if (available_capacity() < len)
+                    {
+                        if (::pilo::EC_OK != grow(len))
+                        {
+                            return ::pilo::EC_INSUFFICIENT_MEMORY;
+                        }
+                    }
+
+                    ::memmove(_m_pdata + pos + len, _m_pdata + pos, (size() - pos) * sizeof(value_type));
+                    ::memmove(_m_pdata + pos, str, len* sizeof(value_type));
+                    _m_size += len;
+                    _m_pdata[_m_size] = 0;
+
                     return ::pilo::EC_OK;
                 }
 
