@@ -122,6 +122,21 @@ namespace pilo
                     return *this;
                 }
 
+                ::pilo::i32_t compare(const value_type* str, size_t len_to_compare = MC_INVALID_SIZE) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), str, len_to_compare);
+                }
+                ::pilo::i32_t compare(const std::string& str) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), str.c_str(), MC_INVALID_SIZE);
+                }
+                template <size_t SZ>
+                ::pilo::i32_t compare(const auto_string<value_type, SZ>& astr) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), astr.c_str(), MC_INVALID_SIZE);
+                }
+
+
                 inline void clear()
                 {
                     if (nullptr != _m_dyn_data) //use dynamic buffer
@@ -728,6 +743,20 @@ namespace pilo
                     return *this;
                 }
 
+                ::pilo::i32_t compare(const value_type* str, size_t len_to_compare = MC_INVALID_SIZE) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), str, len_to_compare);
+                }
+                ::pilo::i32_t compare(const std::string& str) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), str.c_str(), MC_INVALID_SIZE);
+                }
+                template <size_t SZ>
+                ::pilo::i32_t compare(const auto_string<value_type, SZ>& astr) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), astr.c_str(), MC_INVALID_SIZE);
+                }
+
                 void clear()
                 {
                     if (_m_pdata != nullptr)
@@ -1238,6 +1267,20 @@ namespace pilo
                 {
                     _append(astr.c_str(), 0, astr.size());
                     return *this;
+                }
+
+                ::pilo::i32_t compare(const value_type* str, size_t len_to_compare = MC_INVALID_SIZE) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), str, len_to_compare);
+                }
+                ::pilo::i32_t compare(const std::wstring& str) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), str.c_str(), MC_INVALID_SIZE);
+                }
+                template <size_t SZ>
+                ::pilo::i32_t compare(const auto_string<value_type, SZ>& astr) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), astr.c_str(), MC_INVALID_SIZE);
                 }
 
                 void clear()
@@ -1833,6 +1876,20 @@ namespace pilo
                 {
                     _append(astr.c_str(), 0, astr.size());
                     return *this;
+                }
+
+                ::pilo::i32_t compare(const value_type* str, size_t len_to_compare = MC_INVALID_SIZE) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), str, len_to_compare);
+                }
+                ::pilo::i32_t compare(const std::wstring& str) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), str.c_str(), MC_INVALID_SIZE);
+                }
+                template <size_t SZ>
+                ::pilo::i32_t compare(const auto_string<value_type, SZ>& astr) const
+                {
+                    return ::pilo::core::string::string_util::binary_compare(this->c_str(), astr.c_str(), MC_INVALID_SIZE);
                 }
 
                 void clear()
