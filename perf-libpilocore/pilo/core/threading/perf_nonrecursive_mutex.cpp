@@ -14,7 +14,7 @@ namespace pilo
         static const ::pilo::u64_t ThreadCount = 4;
         static const ::pilo::u64_t CalPerThread1M =   1000000;
         static const ::pilo::u64_t CalPerThread10M =  10000000;
-        static const ::pilo::u64_t CalPerThread100M = 100000000;
+        static const ::pilo::u64_t CalPerThread100M = 100000000000;
 
         template<typename LOCK, typename THREAD_T>
         bool _do_perf_mutex(LOCK* mx, ::pilo::u64_t calc_per_thread, THREAD_T* workers, ::pilo::u64_t& ref_diff, double& ref_fper)

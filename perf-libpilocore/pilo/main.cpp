@@ -21,8 +21,8 @@ main(int argc, char *argv[])
     M_UNUSED(argv);
 
     //Test now tick
-    ::pilo::test::perf_now_ticks();
-    ::pilo::test::perf_steady_now_ticks();
+  //  ::pilo::test::perf_now_ticks();
+   // ::pilo::test::perf_steady_now_ticks();
     
 
     //Test mutexes

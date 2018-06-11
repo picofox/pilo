@@ -255,7 +255,7 @@ namespace pilo
                     _m_context = context;
                     ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
 
-                    if (! _m_path.assign(path))
+                    if (!_m_path.assign_path_string(path))
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }
@@ -492,7 +492,7 @@ namespace pilo
 
             protected:
                 os_file_descriptor_t                        _m_os_file_descriptor; //internal file data structure handle
-                ::pilo::core::fs::strpath<PATH_BUFFER_SZ>      _m_path;
+                ::pilo::core::fs::path_string<PATH_BUFFER_SZ>      _m_path;
                 lock_type                                   _m_lock;
 
             };

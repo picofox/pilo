@@ -48,11 +48,11 @@ namespace pilo
             M_UNUSED(param);
 
             //check fatal invalid paths
-            ::pilo::core::fs::strpath<0> path_fatal_test;
+            ::pilo::core::fs::path_string<0> path_fatal_test;
             for (int i = 0; i < (int) (sizeof(__st_c_test_inv_paths) / sizeof(char*)); i++)
             {
                 path_fatal_test.reset();
-                path_fatal_test.assign(__st_c_test_inv_paths[i]);
+                path_fatal_test.assign_path_string(__st_c_test_inv_paths[i]);
                 if (path_fatal_test.valid())
                 {
                     return -20;
@@ -60,11 +60,11 @@ namespace pilo
             }
 
 
-            ::pilo::core::fs::strpath<0> path_abs_test;
+            ::pilo::core::fs::path_string<0> path_abs_test;
             for (int i = 0; i < (int) (sizeof(__st_c_test_abs_paths) / sizeof(char*)); i++)
             {
                 path_abs_test.reset();
-                path_abs_test.assign(__st_c_test_abs_paths[i]);
+                path_abs_test.assign_path_string(__st_c_test_abs_paths[i]);
                 bool b = path_abs_test.is_absolute();
 
                 if (!b)
@@ -75,7 +75,7 @@ namespace pilo
 
             for (int i = 0; i < (int) (sizeof(__st_c_test_to_abs_paths) / sizeof(char*)); i++)
             {
-                path_abs_test.assign(__st_c_test_to_abs_paths[i]);
+                path_abs_test.assign_path_string(__st_c_test_to_abs_paths[i]);
                 ::pilo::error_number_t ret = path_abs_test.to_absolute(false, true);
                 if (ret != ::pilo::EC_OK)
                 {
@@ -103,7 +103,7 @@ namespace pilo
 
             const char* str_toolong = "0123456789012345678901234567890123456789012345678901234567891234";
             //test too long string
-            ::pilo::core::fs::strpath<64> path_toolong(str_toolong);
+            ::pilo::core::fs::path_string<64> path_toolong(str_toolong);
             if (path_toolong.valid())
             {
                 return -1;
@@ -114,11 +114,11 @@ namespace pilo
             }            
 
             //check fatal invalid paths
-            ::pilo::core::fs::strpath<128> path_fatal_test;
+            ::pilo::core::fs::path_string<128> path_fatal_test;
             for (int i = 0; i < (int) (sizeof(__st_c_test_inv_paths) / sizeof(char*)); i++)
             {
                 path_fatal_test.reset();
-                path_fatal_test.assign(__st_c_test_inv_paths[i]);
+                path_fatal_test.assign_path_string(__st_c_test_inv_paths[i]);
                 if (path_fatal_test.valid())
                 {
                     return -20;
@@ -126,11 +126,11 @@ namespace pilo
             }
 
 
-            ::pilo::core::fs::strpath<128> path_abs_test;
+            ::pilo::core::fs::path_string<128> path_abs_test;
             for (int i = 0; i < (int) (sizeof(__st_c_test_abs_paths) / sizeof(char*)); i++)
             {
                 path_abs_test.reset();
-                path_abs_test.assign(__st_c_test_abs_paths[i]);
+                path_abs_test.assign_path_string(__st_c_test_abs_paths[i]);
                 bool b = path_abs_test.is_absolute();
 
                 if (!b)
@@ -142,7 +142,7 @@ namespace pilo
             for (int i = 0; i < (int) (sizeof(__st_c_test_to_abs_paths) / sizeof(char*)); i++)
             {
                 printf("(%s)\n", __st_c_test_to_abs_paths[i]);
-                path_abs_test.assign(__st_c_test_to_abs_paths[i]);
+                path_abs_test.assign_path_string(__st_c_test_to_abs_paths[i]);
                 ::pilo::error_number_t ret = path_abs_test.to_absolute(false, true);
                 if (ret != ::pilo::EC_OK)
                 {

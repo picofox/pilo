@@ -377,11 +377,6 @@ namespace pilo
             {
                 printf("tarval (%s)\n", root);
 
-                ::pilo::core::fs::strpath<0> abspath(root);
-                if (abspath.to_absolute(false, true) != ::pilo::EC_OK)
-                {
-                    return ::pilo::EC_INVALID_PATH;
-                }
 
                 if (root == nullptr || *root == '\0')
                 {

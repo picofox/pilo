@@ -78,7 +78,7 @@ namespace pilo
 
             virtual i32_t on_run()
             {
-                for (::pilo::u32_t i = 0; i < m_times; i++)
+                for (::pilo::u64_t i = 0; i < m_times; i++)
                 {
                     m_mutex->lock();
                     (*m_value_ptr)++;
@@ -86,8 +86,7 @@ namespace pilo
                 }
 
                 return 0;
-            }
-                
+            }                
             
             LOCK*            m_mutex;
             ::pilo::u64_t    m_times;

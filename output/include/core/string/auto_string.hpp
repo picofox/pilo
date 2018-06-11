@@ -213,6 +213,24 @@ namespace pilo
                     return ::pilo::core::string::string_util::binary_compare(this->c_str(), astr.c_str(), MC_INVALID_SIZE);
                 }
 
+                void recalculate_size()
+                {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        if (_m_dyn_data == nullptr)
+                        {
+                            _m_size = 0;
+                        }
+                        else
+                        {
+                            _m_size = ::strlen(_m_dyn_data);
+                        }
+                    }
+                    else
+                    {
+                        _m_size = ::strlen(_m_fix_data);
+                    }                    
+                }
 
                 inline void clear()
                 {
@@ -834,6 +852,18 @@ namespace pilo
                     return ::pilo::core::string::string_util::binary_compare(this->c_str(), astr.c_str(), MC_INVALID_SIZE);
                 }
 
+                void recalculate_size()
+                {
+                    if (_m_pdata == nullptr)
+                    {
+                        _m_size = 0;
+                    }
+                    else
+                    {
+                        _m_size = ::strlen(_m_pdata);
+                    }
+                }
+
                 void clear()
                 {
                     if (_m_pdata != nullptr)
@@ -1358,6 +1388,25 @@ namespace pilo
                 ::pilo::i32_t compare(const auto_string<value_type, SZ>& astr) const
                 {
                     return ::pilo::core::string::string_util::binary_compare(this->c_str(), astr.c_str(), MC_INVALID_SIZE);
+                }
+
+                void recalculate_size()
+                {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        if (_m_dyn_data == nullptr)
+                        {
+                            _m_size = 0;
+                        }
+                        else
+                        {
+                            _m_size = ::pilo::core::string::string_util::length(_m_dyn_data);
+                        }
+                    }
+                    else
+                    {
+                        _m_size = ::pilo::core::string::string_util::length(_m_fix_data);
+                    }
                 }
 
                 void clear()
@@ -1967,6 +2016,18 @@ namespace pilo
                 ::pilo::i32_t compare(const auto_string<value_type, SZ>& astr) const
                 {
                     return ::pilo::core::string::string_util::binary_compare(this->c_str(), astr.c_str(), MC_INVALID_SIZE);
+                }
+
+                void recalculate_size()
+                {
+                    if (_m_pdata == nullptr)
+                    {
+                        _m_size = 0;
+                    }
+                    else
+                    {
+                        _m_size = ::pilo::core::string::string_util::length(_m_pdata);
+                    }
                 }
 
                 void clear()

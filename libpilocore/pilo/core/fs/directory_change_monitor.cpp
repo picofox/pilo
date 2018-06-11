@@ -310,8 +310,8 @@ namespace pilo
                 MP_CHECK_EMPTY_CSTR_RET(dirname, ::pilo::EC_NULL_PARAM);
                 MP_CHECK_EQUAL_VALUE_RET(filter_flags, 0, ::pilo::EC_OUT_OF_RANGE);
 
-                ::pilo::core::fs::strpath<0> dirpath;
-                if (!dirpath.assign(dirname))
+                ::pilo::core::fs::path_string<0> dirpath;
+                if (!dirpath.assign_path_string(dirname))
                 {
                     return ::pilo::EC_INVALID_PATH;
                 }
@@ -418,8 +418,8 @@ namespace pilo
 
                 directory_monitor_task* task_ptr = nullptr;
 
-                ::pilo::core::fs::strpath<0> dirpath;
-                if (!dirpath.assign(dirname))
+                ::pilo::core::fs::path_string<0> dirpath;
+                if (!dirpath.assign_path_string(dirname))
                 {
                     return ::pilo::EC_INVALID_PATH;
                 }

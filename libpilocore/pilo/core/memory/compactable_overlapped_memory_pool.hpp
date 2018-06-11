@@ -103,7 +103,7 @@ namespace pilo
                     piece_list      tmp_list, empty_list;
                     size_type       piece_count = piece_count_nolock();
 
-                    // full list
+                    // full listempty_list
                     while (piece = base_type::m_full_piece_list.pop_front(), piece != nullptr)
                     {
                         if (this->_compact_piece_nolock(piece))

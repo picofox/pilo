@@ -333,9 +333,6 @@
     <ClInclude Include="pilo\core\memory\buffer.hpp">
       <Filter>pilo\core\memory</Filter>
     </ClInclude>
-    <ClInclude Include="pilo\core\string\astring.hpp">
-      <Filter>pilo\core\string</Filter>
-    </ClInclude>
     <ClInclude Include="pilo\core\string\auto_string.hpp">
       <Filter>pilo\core\string</Filter>
     </ClInclude>
