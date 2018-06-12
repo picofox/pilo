@@ -372,12 +372,11 @@ namespace pilo
             {
                 return (eFSNT_Directory == ::pilo::core::fs::fs_util::calculate_type(path));
             }
-#ifdef WINDOWS
+#ifdef WINDOWS           
+
+
             ::pilo::error_number_t fs_util::travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir)
             {
-                printf("tarval (%s)\n", root);
-
-
                 if (root == nullptr || *root == '\0')
                 {
                     return ::pilo::EC_NULL_PARAM;
@@ -1255,7 +1254,7 @@ namespace pilo
                                                         ::pilo::core::fs::DeviceRWModeEnumeration drwm, 
                                                         ::pilo::u32_t flags)
             {
-                M_UNUSED(flags);
+                
                 fildes = MC_INVALID_FILE_DESCRIPTOR;
                 
                 if (path == nullptr)
@@ -1269,9 +1268,21 @@ namespace pilo
                 {
                     dwAccesss = FILE_APPEND_DATA;
                 }
-                fildes = ::CreateFile(path, dwAccesss, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, dam, 0, 0);
+
+                DWORD internal_flags = FILE_ATTRIBUTE_NORMAL;
+                if (flags & MC_IO_DEV_OP_NO_OS_CACHE)
+                {
+                    internal_flags |= FILE_FLAG_NO_BUFFERING;
+                }
+
+                fildes = ::CreateFile(path, dwAccesss, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, dam, internal_flags, 0);
 
 #               else
+                if (flags & MC_IO_DEV_OP_NO_OS_CACHE)
+                {
+                    flags |= O_SYNC;
+                }
+
                 fildes = open(path, (int) drwm | dam | flags);
 
 #               endif

@@ -1,4 +1,4 @@
-#include "core/fs/path.hpp"
+#include "core/fs/path_string.hpp"
 #include "core/io/format_output.hpp"
 #include "./functional_test_module_file.hpp"
 #include "core/fs/fs_util.hpp"

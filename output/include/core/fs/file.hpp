@@ -10,7 +10,7 @@
 #include "core/fs/fs_util.hpp"
 #include "core/threading/rw_mutex_r_locker.hpp"
 #include "core/threading/rw_mutex_w_locker.hpp"
-#include "core/fs/path.hpp"
+#include "core/fs/path_string.hpp"
 
 namespace pilo
 {
@@ -18,9 +18,7 @@ namespace pilo
     {
         namespace fs
         {
-            template<
-                size_t  PATH_BUFFER_SZ = 0,
-                typename _LOCK_TYPE = ::pilo::core::threading::dummy_read_write_lock>
+            template<typename _LOCK_TYPE = ::pilo::core::threading::dummy_read_write_lock>
             class file : public ::pilo::core::fs::io_device
             {
             public:
@@ -30,11 +28,16 @@ namespace pilo
                 file()
                 {
                     _m_os_file_descriptor = MC_INVALID_FILE_DESCRIPTOR;
-                    _m_state = eIODS_Uninitialized;
+                    _m_state = ::pilo::core::fs::io_device::eIODS_Uninitialized;
                     _m_context = nullptr;
                     _m_init_flags = 0;
-                    _m_path.reset();
                 }
+
+                file(const char* path, ::pilo::u32_t flag, void* context)
+                {
+                    initialize(path, flag, context);
+                }
+
                 ~file()
                 {
                     if (_m_path.valid())
@@ -491,11 +494,11 @@ namespace pilo
                 
 
             protected:
-                os_file_descriptor_t                        _m_os_file_descriptor; //internal file data structure handle
-                ::pilo::core::fs::path_string<PATH_BUFFER_SZ>      _m_path;
-                lock_type                                   _m_lock;
-
+                os_file_descriptor_t                            _m_os_file_descriptor; //internal file data structure handle
+                ::pilo::core::fs::path_string<MC_PATH_MAX>      _m_path;
+                lock_type                                       _m_lock;
             };
+
         }
     }
 }

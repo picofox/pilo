@@ -26,7 +26,6 @@
     <ClInclude Include="pilo\core\container\singly_linked_selflist.hpp" />
     <ClInclude Include="pilo\core\coredefs.hpp" />
     <ClInclude Include="pilo\core\datetime\datetime.hpp" />
-    <ClInclude Include="pilo\core\datetime\tickcount_simu_thread.hpp" />
     <ClInclude Include="pilo\core\debug\debug_new.hpp" />
     <ClInclude Include="pilo\core\dll\dynamic_link_library.hpp" />
     <ClInclude Include="pilo\core\fs\async_directory_changer_handler.hpp" />
@@ -114,7 +113,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pilo\core\datetime\datetime.cpp" />
-    <ClCompile Include="pilo\core\datetime\tickcount_simu_thread.cpp" />
     <ClCompile Include="pilo\core\debug\debug_new.cpp" />
     <ClCompile Include="pilo\core\dll\dynamic_link_library.cpp" />
     <ClCompile Include="pilo\core\fs\directory_change_monitor.cpp" />

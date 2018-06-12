@@ -3,6 +3,7 @@
 #include "./io_device.hpp"
 #include "core/string/fixed_astring.hpp"
 #include "core/datetime/datetime.hpp"
+#include "core/fs/path_string.hpp"
 
 #if defined(WIN32) || defined(WINDOWS)
 #   include <io.h>
@@ -68,6 +69,22 @@ namespace pilo
                 
                 
             public:
+
+                template<size_t PATH_BUFSZ>
+                static ::pilo::error_number_t travel_path_preorder(
+                            ::pilo::core::fs::path_string<PATH_BUFSZ>& pathstr,
+                            fs_node_visitor_interface* fsnvi,
+                            bool stop_on_error, bool visit_last_dir)
+                {
+                    if (!pathstr.valid())
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+
+
+
+                    return ::pilo::EC_OK;
+                }
 
                 static void trim_path_last_seperator(char* path, size_t len = MC_INVALID_SIZE);
                 static ::pilo::error_number_t concatenate_path(char* buf, size_t dstBufferCount, const char* src, size_t srclen);

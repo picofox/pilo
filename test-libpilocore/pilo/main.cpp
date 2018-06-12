@@ -25,7 +25,6 @@
 #include "core/string/functional_test_module_class_dynamic_astring.hpp"
 #include "core/string/functional_test_module_class_astring.hpp"
 #include "core/memory/functional_test_module_class_dynamic_buffer.hpp"
-#include "core/fs/path.hpp"
 #include "core/fs/functional_test_module_file.hpp"
 #include "core/fs/fs_util.hpp"
 #include "core/process/process_util.hpp"
@@ -34,7 +33,6 @@
 #include "core/pattern/lazy_singletion_mts.hpp"
 #include <iostream>
 #include <limits>
-#include "core/fs/path.hpp"
 
 
 #include "core/memory/presure_test_portable_object_pool.hpp"
@@ -407,6 +405,7 @@ int main(int argc, char *argv[])
     pilo_debug_heap_leak_set_report_output_mode(M_DEBUG_NEW_REPORT_OUTPUT_FILE, "./memleak.log");   
 #endif
 
+
     bool break_on_error = true;
     pilo::i32_t id = 1;
 
@@ -426,6 +425,10 @@ int main(int argc, char *argv[])
     pilo::test::functional_test_module_path path_cases(id++, "functional_test_module_path", pilo::test::g_functional_cases_path);
     path_cases.run_cases(break_on_error);
     path_cases.console_output();
+
+    ::pilo::test::functional_test_module_fs_utils fs_util_cases(id++, "functional_test_module_fs_utils", pilo::test::g_functional_cases_fs_util);
+    fs_util_cases.run_cases(break_on_error);
+    fs_util_cases.console_output();
 
     pilo::test::functional_test_module_file  file_cases(id++, "functional_test_module_file", pilo::test::g_functional_cases_file);
     file_cases.run_cases(break_on_error);
@@ -459,9 +462,7 @@ int main(int argc, char *argv[])
 //     fixed_wstring_cases.run_cases(break_on_error);
 //     fixed_wstring_cases.console_output();
 // 
-//     pilo::test::functional_test_module_file  file_cases(id++, "functional_test_module_file", pilo::test::g_functional_cases_file);
-//     file_cases.run_cases(break_on_error);
-//     file_cases.console_output();
+
 
 //     pilo::test::functional_test_module_class_basic_thread  basic_thread_cases(id++, "functional_test_module_class_basic_thread", pilo::test::g_functional_cases_basic_thread);
 //     basic_thread_cases.run_cases(break_on_error);
@@ -526,9 +527,7 @@ int main(int argc, char *argv[])
 //     datetime_cases.run_cases(break_on_error);
 //     datetime_cases.console_output();
 // 
-//     ::pilo::test::functional_test_module_fs_utils fs_util_cases(id++, "functional_test_module_fs_utils", pilo::test::g_functional_cases_fs_util);
-//     fs_util_cases.run_cases(break_on_error);
-//     fs_util_cases.console_output();
+
 // 
 
 // 

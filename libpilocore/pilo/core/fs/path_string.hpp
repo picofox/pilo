@@ -1,7 +1,6 @@
 #pragma once
 #include "core/coredefs.hpp"
 #include "core/string/string_util.hpp"
-#include "core/fs/fs_util.hpp"
 #include "core/string/auto_string.hpp"
 
 #define MC_PILO_PATH_FLAG_VALID (1)

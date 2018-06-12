@@ -30,8 +30,6 @@ namespace pilo
                 ::pilo::error_number_t err = 0;
                 while (times-- > 0)
                 {
-
-                    printf("%d Would lock t=%u\n",m_index, PiloGetTickCount32());
                     err = pfile->flock_exclusive(0, MC_INVALID_SIZE);
                     printf("%d aquired lock ret = %d t=%d\n", m_index, err, PiloGetTickCount32());
 
