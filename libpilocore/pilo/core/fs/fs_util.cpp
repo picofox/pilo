@@ -1273,6 +1273,7 @@ namespace pilo
                 if (flags & MC_IO_DEV_OP_NO_OS_CACHE)
                 {
                     internal_flags |= FILE_FLAG_NO_BUFFERING;
+                    internal_flags |= FILE_FLAG_WRITE_THROUGH;
                 }
 
                 fildes = ::CreateFile(path, dwAccesss, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, dam, internal_flags, 0);

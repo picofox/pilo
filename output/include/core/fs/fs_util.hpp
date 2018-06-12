@@ -72,16 +72,14 @@ namespace pilo
 
                 template<size_t PATH_BUFSZ>
                 static ::pilo::error_number_t travel_path_preorder(
-                            ::pilo::core::fs::path_string<PATH_BUFSZ>& pathstr,
-                            fs_node_visitor_interface* fsnvi,
-                            bool stop_on_error, bool visit_last_dir)
+                    ::pilo::core::fs::path_string<PATH_BUFSZ>& pathstr,
+                    fs_node_visitor_interface* fsnvi,
+                    bool stop_on_error, bool visit_last_dir)
                 {
                     if (!pathstr.valid())
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }
-
-
 
                     return ::pilo::EC_OK;
                 }
