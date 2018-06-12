@@ -5,7 +5,7 @@
 #include "core/string/string_util.hpp"
 #include "core/process/process_util.hpp"
 #include "core/io/format_output.hpp"
-#include "core/fs/path.hpp"
+#include "core/fs/path_string.hpp"
 
 namespace pilo
 {
