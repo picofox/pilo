@@ -416,13 +416,21 @@ int main(int argc, char *argv[])
     }
 
     char*p = (char*)_aligned_malloc(100, 512);
+    memcpy(p, "0123456789", 10);
+    
     DWORD retsize = 0;
-    BOOL ok = ::WriteFile(fh, p, 100, &retsize, 0);
+    BOOL ok = ::WriteFile(fh, p, 512, &retsize, 0);
     if (!ok)
     {
         return -2;
     }
+    BOOL ok2 = ::SetFileValidData(fh, 512);
+    if (!ok2)
+    {
+        return -3;
+    }
 
+    ::CloseHandle(fh);
 
     bool break_on_error = true;
     pilo::i32_t id = 1;
