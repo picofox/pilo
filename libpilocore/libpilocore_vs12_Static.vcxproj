@@ -35,7 +35,7 @@
     <ClInclude Include="pilo\core\fs\file.hpp" />
     <ClInclude Include="pilo\core\fs\fs_util.hpp" />
     <ClInclude Include="pilo\core\fs\io_device.hpp" />
-    <ClInclude Include="pilo\core\fs\path.hpp" />
+    <ClInclude Include="pilo\core\fs\path_string.hpp" />
     <ClInclude Include="pilo\core\info\cpu.hpp" />
     <ClInclude Include="pilo\core\io\fixed_memory_istream.hpp" />
     <ClInclude Include="pilo\core\io\fixed_memory_ostream.hpp" />
