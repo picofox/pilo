@@ -311,7 +311,7 @@ namespace pilo
                 MP_CHECK_EQUAL_VALUE_RET(filter_flags, 0, ::pilo::EC_OUT_OF_RANGE);
 
                 ::pilo::core::fs::path_string<0> dirpath;
-                if (!dirpath.assign_path_string(dirname))
+                if (::pilo::EC_OK != dirpath.assign(dirname))
                 {
                     return ::pilo::EC_INVALID_PATH;
                 }
@@ -419,7 +419,7 @@ namespace pilo
                 directory_monitor_task* task_ptr = nullptr;
 
                 ::pilo::core::fs::path_string<0> dirpath;
-                if (!dirpath.assign_path_string(dirname))
+                if (::pilo::EC_OK != dirpath.assign(dirname))
                 {
                     return ::pilo::EC_INVALID_PATH;
                 }

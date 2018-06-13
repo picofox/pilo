@@ -12,7 +12,7 @@ namespace pilo
         namespace fs
         {
             template<size_t BUFFSZ_DEFALT>
-            class path_string : protected ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT>
+            class path_string 
             {
             public:
                 path_string() 
@@ -20,133 +20,116 @@ namespace pilo
                     _set_validity(false);
                 }
 
-                path_string(const char* str) : ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT>(str)
+                path_string(const char* str) : _m_string(str)
                 {
-                    if (__super::size() > 0)
+                    if (_assign(str, MC_INVALID_SIZE) == ::pilo::EC_OK)
                     {
                         _set_validity(true);
                     }
                     else
                     {
-#ifdef WINDOWS
                         _set_validity(false);
-#else
-                        if (str != nullptr && (*str) == 0)
-                        {
-                            _set_validity(true);
-                        }
-                        else
-                        {
-                            _set_validity(false);
-                        }
-#endif
                     }
                 }
 
-                path_string(const char* str, size_t len) : ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT>(str, len)
+                path_string(const char* str, size_t len) : _m_string(str, len)
                 {
-                    if (__super::size() > 0)
+                    if (_assign(str, len) == ::pilo::EC_OK)
                     {
                         _set_validity(true);
                     }
                     else
                     {
-#ifdef WINDOWS
                         _set_validity(false);
-#else
-                        if (str != nullptr && (*str) == 0)
-                        {
-                            _set_validity(true);
-                        }
-                        else
-                        {
-                            _set_validity(false);
-                        }
-#endif
                     }
                 }
 
-                path_string(const std::string& str) : ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT>(str)
+                path_string(const std::string& str) : _m_string(str)
                 {
-                    if (__super::size() > 0)
+                    if (_assign(str.c_str(), str.size()) == ::pilo::EC_OK)
                     {
                         _set_validity(true);
                     }
                     else
                     {
-#ifdef WINDOWS
                         _set_validity(false);
-#else
-                        if (str != nullptr && (*str) == 0)
-                        {
-                            _set_validity(true);
-                        }
-                        else
-                        {
-                            _set_validity(false);
-                        }
-#endif
                     }
                 }
 
                 template<size_t SZ>
-                path_string(const path_string<SZ>& astr) : ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT>(astr)
+                path_string(const path_string<SZ>& astr) : _m_string(astr)
                 {
-                    if (__super::size() > 0)
+                    if (_assign(str.c_str(), str.size()) == ::pilo::EC_OK)
                     {
                         _set_validity(true);
                     }
                     else
                     {
-#ifdef WINDOWS
                         _set_validity(false);
-#else
-                        if (str != nullptr && (*str) == 0)
-                        {
-                            _set_validity(true);
-                        }
-                        else
-                        {
-                            _set_validity(false);
-                        }
-#endif
                     }
                 }
 
-                bool assign_path_string(const char* cstr_path, size_t len = MC_INVALID_SIZE)
+                ::pilo::error_number_t assign(const char* cstr_path, size_t len = MC_INVALID_SIZE)
                 {
-                    return (_assign_path_string(cstr_path, len) == ::pilo::EC_OK);
+                    return _assign(cstr_path, len);
                 }
 
                 const char* c_str() const
                 {
                     if (!valid()) return nullptr;
-                    return __super::c_str();
+                    return _m_string.c_str();
+                }
+
+                const char* last_part() const
+                {
+                    if (!valid()) return nullptr;
+                    
+                    const char* ret = ::strrchr(_m_string.c_str(), M_PATH_SEP_C);
+                    if (ret == nullptr) return c_str();
+                    return ret;
+                }
+
+                size_t last_part_length() const
+                {
+                    if (!valid()) return MC_INVALID_SIZE;
+
+                    return ::strlen(last_part());
+                }
+
+                size_t base_length(bool inc_sep) const
+                {
+                    if (!valid()) return MC_INVALID_SIZE;
+
+                    if (inc_sep)
+                    {
+                        return length() - last_part_length();
+                    }
+                    else
+                    {
+                        return length() - last_part_length() - 1;
+                    }
                 }
 
                 size_t length() const
                 {
                     if (!valid()) return MC_INVALID_SIZE;
-                    return __super::size();
+                    return _m_string.size();
                 }
 
                 bool is_absolute() const
                 {
                     if (!valid()) return false;
-                    return ::pilo::core::fs::fs_util::is_absolute_path(__super::c_str());
+                    return ::pilo::core::fs::fs_util::is_absolute_path(_m_string.c_str());
                 }
 
                 void reset()
                 {
-                    __super::clear();
+                    _m_string.clear();
                     _m_flags = 0;
                 }
 
                 bool valid() const
                 {
-#ifndef WINDOWS
-                    if (_m_str_path.empty()) return true;
-#endif // WINDOWS
                     return ((_m_flags & MC_PILO_PATH_FLAG_VALID) != 0);
                 }
 
@@ -156,7 +139,7 @@ namespace pilo
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }
-                    const char* p = ::pilo::core::string::string_util::find_reversely(_m_str_path.c_str(), M_PATH_SEP_S, 1);
+                    const char* p = ::pilo::core::string::string_util::find_reversely(_m_string.c_str(), M_PATH_SEP_S, 1);
                     if (p == nullptr)
                     {
                         if (force_remove_root)
@@ -171,15 +154,15 @@ namespace pilo
                     size_t len = 0;
                     if (need_sep)
                     {
-                        len = p - _m_str_path.c_str() + 1;
+                        len = p - _m_string.c_str() + 1;
                     }
                     else
                     {
-                        len = p - _m_str_path.c_str();
+                        len = p - _m_string.c_str();
                     }
 
-                    _m_str_path[len] = 0;
-                    _m_str_path.recalculate_size();
+                    _m_string[len] = 0;
+                    _m_string.recalculate_size();
 
 
                     return ::pilo::EC_OK;
@@ -192,15 +175,27 @@ namespace pilo
                         return ::pilo::EC_INVALID_PATH;
                     }
 #ifdef WINDOWS
-                    if (__super::back() != M_PATH_SEP_C)
+                    if (_m_string.back() != M_PATH_SEP_C)
 #else
-                    if (__super::empty() || __super::back() != M_PATH_SEP_C)
+                    if (_m_string.empty() || _m_string.back() != M_PATH_SEP_C)
 #endif
                     {
-                        __super::push_back(M_PATH_SEP_C);
+                        _m_string.push_back(M_PATH_SEP_C);
                     }
 
                     return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t append_part(const char* str, size_t len, bool need_sep)
+                {
+
+                    if (::pilo::EC_OK != append_part_without_validation(str, len, need_sep))
+                    {
+                        return ::pilo::EC_COPY_CONCAT_FAILED;
+                    }
+
+                    _set_validity(true);
+
                 }
 
                 ::pilo::error_number_t append_part_without_validation(const char* str, size_t len, bool need_sep)
@@ -239,7 +234,7 @@ namespace pilo
                         }
                     }
 
-                    ::pilo::error_number_t ret = _m_str_path.append(str, 0, len);
+                    ::pilo::error_number_t ret = _m_string.append_string(str, 0, len);
                     if (ret != ::pilo::EC_OK)
                     {
                         return ret;
@@ -274,28 +269,27 @@ namespace pilo
                         }
                         size_t cwd_len = ::pilo::core::string::string_util::length(p);
 
-                        __super::insert(0, p, cwd_len);
+                        _m_string.insert(0, p, cwd_len);
                         if (bUseHeap)
                         {
                             free(p);
                         }
                     } // end of is_absolute
 
-                    if ((!__super::empty()) && (__super::back() == M_PATH_SEP_C))
+                    if ((!_m_string.empty()) && (_m_string.back() == M_PATH_SEP_C))
                     {
-                        __super::pop_back();
+                        _m_string.pop_back();
                     }
 
                     if (bCompact)
                     {
-                        ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT + 8> tmp_auto_string(c_str(), size());
+                        ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT + 8> tmp_auto_string(_m_string.c_str(), _m_string.size());
                         ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::compact_path(tmp_auto_string.data(), tmp_auto_string.capacity());
                         if (ret != ::pilo::EC_OK)
                         {
-                            printf("ret is  %d\n", ret);
                             return ::pilo::EC_INVALID_PATH;
                         }
-                        __super::assign(tmp_auto_string.c_str(), tmp_auto_string.size());
+                        _m_string.assign(tmp_auto_string.c_str(), tmp_auto_string.size());
                     }
 
                     if (bAppendSep)
@@ -345,12 +339,12 @@ namespace pilo
 
                     _set_validity(true);
 
-                    _assign(tmp_str_path.c_str(), tmp_str_path.size());
+                    _m_string.assign(tmp_str_path.c_str(), tmp_str_path.size());
 
                     return ::pilo::EC_OK;
                 }
 
-                ::pilo::error_number_t _assign_path_string(const char* cstr_path, size_t len)
+                ::pilo::error_number_t _assign(const char* cstr_path, size_t len)
                 {
                     if (cstr_path == nullptr)
                     {
@@ -376,11 +370,10 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
-            protected:
-                ::pilo::u32_t                                                   _m_flags;                     
-            };
-
-           
+            protected:           
+                ::pilo::u32_t                                                   _m_flags;
+                ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT>          _m_string;                
+            };           
         }
     }
 }

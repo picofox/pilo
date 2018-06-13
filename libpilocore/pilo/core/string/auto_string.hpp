@@ -246,6 +246,11 @@ namespace pilo
                     _m_size = 0;
                 }
 
+                ::pilo::error_number_t append_string(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    return _append(suffix_str, pos, len);
+                }
+
                 auto_string& append(const value_type* suffix_str, size_t pos, size_t len)
                 {
                     _append(suffix_str, pos, len);
@@ -667,6 +672,7 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+
                 ::pilo::error_number_t _append(const value_type* suffix_str, size_t pos, size_t len)
                 {
                     if (suffix_str == nullptr)
@@ -871,6 +877,11 @@ namespace pilo
                         *_m_pdata = 0;
                     }
                     _m_size = 0;
+                }
+
+                ::pilo::error_number_t append_string(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    return _append(suffix_str, pos, len);
                 }
 
                 auto_string& append(const value_type* suffix_str, size_t pos, size_t len)
@@ -1421,6 +1432,11 @@ namespace pilo
                     }
 
                     _m_size = 0;
+                }
+
+                ::pilo::error_number_t append_string(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    return _append(suffix_str, pos, len);
                 }
 
                 auto_string& append(const value_type* suffix_str, size_t pos, size_t len)
@@ -2038,6 +2054,11 @@ namespace pilo
                     }
 
                     _m_size = 0;
+                }
+
+                ::pilo::error_number_t append_string(const value_type* suffix_str, size_t pos, size_t len)
+                {
+                    return _append(suffix_str, pos, len);
                 }
 
                 auto_string& append(const value_type* suffix_str, size_t pos, size_t len)

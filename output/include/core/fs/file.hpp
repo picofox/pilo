@@ -258,7 +258,7 @@ namespace pilo
                     _m_context = context;
                     ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
 
-                    if (!_m_path.assign_path_string(path))
+                    if (::pilo::EC_OK != _m_path.assign(path))
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }

@@ -32,11 +32,7 @@ namespace pilo
         {
             M_UNUSED(param);
 
-            ::pilo::core::fs::path_string<24> strpath("tmp/d0");
-            if (strpath.to_absolute(true, true) != ::pilo::EC_OK)
-            {
-                return -1;
-            }
+            ::pilo::core::fs::path_string<24> strpath("..\\tmp/d0");
             ::pilo::core::fs::fs_util::travel_path_preorder(strpath, 0, true, true);
 
 

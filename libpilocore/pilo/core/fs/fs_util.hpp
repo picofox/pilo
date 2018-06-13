@@ -81,12 +81,119 @@ namespace pilo
                         return ::pilo::EC_INVALID_PATH;
                     }
 
+                    if (!pathstr.is_absolute())
+                    {
+                        if (pathstr.to_absolute(true, true) != ::pilo::EC_OK)
+                        {
+                            return ::pilo::EC_INVALID_PATH;
+                        }
+                    }
+
+                    ::pilo::error_number_t ret = pathstr.append_directory_seperator();
+                    if (ret != ::pilo::EC_OK)
+                    {
+                        return ::pilo::EC_COPY_STRING_FAILED;
+                    }
+
+                    ::pilo::core::fs::path_string<PATH_BUFSZ> tmp_pathstr;
+                    ret = tmp_pathstr.assign(pathstr.c_str(), pathstr.length());
+                    if (ret != ::pilo::EC_OK)
+                    {
+                        return ::pilo::EC_COPY_STRING_FAILED;
+                    }
+
+                    ret = tmp_pathstr.append_part_without_validation("*.*", 3, false);//keep orig string ,use tmp
+                    if (ret != ::pilo::EC_OK)
+                    {
+                        return ::pilo::EC_COPY_STRING_FAILED;
+                    }
+
+                    bool has_error = false;
+                    WIN32_FIND_DATA  findData;
+                    HANDLE  handle = FindFirstFile(tmp_pathstr.c_str(), &findData);    // 查找目录中的第一个文件
+                    if (handle == INVALID_HANDLE_VALUE)
+                    {
+                        return MAKE_SYSERR(::pilo::EC_OPEN_DIR_ERROR);
+                    }
+
+                    do
+                    {
+                        if (strcmp(findData.cFileName, ".") == 0 || strcmp(findData.cFileName, "..") == 0)
+                            continue;
+
+                        ::pilo::core::fs::path_string<PATH_BUFSZ> tmp_innerdir_pathstr;
+                        ::pilo::error_number_t ret = tmp_innerdir_pathstr.assign(pathstr.c_str(), pathstr.length());
+                        if (ret != ::pilo::EC_OK)
+                        {
+                            ::FindClose(handle);
+                            return ret;
+                        }
+                        ret = tmp_innerdir_pathstr.append_part_without_validation(findData.cFileName, MC_INVALID_SIZE, false);
+                        if (ret != ::pilo::EC_OK)
+                        {
+                            ::FindClose(handle);
+                            return ret;
+                        }
+
+                        if (findData.dwFileAttributes  & FILE_ATTRIBUTE_DIRECTORY)
+                        {
+                            ::pilo::i32_t ret = travel_path_preorder(tmp_innerdir_pathstr, fsnvi, stop_on_error, true);
+                            if (ret != ::pilo::EC_OK)
+                            {
+                                if (stop_on_error)
+                                {
+                                    ::FindClose(handle);
+                                    return ret;
+                                }
+                                else
+                                {
+                                    has_error = true;
+                                }
+                            }
+                        }
+                        else if (findData.dwFileAttributes  & FILE_ATTRIBUTE_NORMAL)
+                        {
+                            if (fsnvi != nullptr)
+                            {
+                                fs_find_data fd;
+                                fd.set_type(eFSNT_RegularFile);
+                                fd.set_full_pathname(tmp_innerdir_pathstr.c_str(), tmp_innerdir_pathstr.length());
+                                ::pilo::i32_t ret = fsnvi->visit(tmp_innerdir_pathstr.c_str(), &fd);
+                                if (ret != ::pilo::EC_OK)
+                                {
+                                    if (stop_on_error)
+                                    {
+                                        ::FindClose(handle);
+                                        return ret;
+                                    }
+                                    else
+                                    {
+                                        has_error = true;
+                                    }
+                                }
+                            }
+                        }
+
+
+                        int pre_ret = fsnvi->pre_dir_visit(pathstr.c_str());
+                        if (pre_ret != ::pilo::EC_OK)
+                        {
+                            if (stop_on_error)
+                            {
+                                ::FindClose(handle);
+                                return pre_ret;
+                            }
+                        }
+                    } while (FindNextFile(handle, &findData) != FALSE); //find next
+
                     M_UNUSED(fsnvi);
                     M_UNUSED(stop_on_error);
                     M_UNUSED(visit_last_dir);
 
                     return ::pilo::EC_OK;
                 }
+
+                
 
                 static void trim_path_last_seperator(char* path, size_t len = MC_INVALID_SIZE);
                 static ::pilo::error_number_t concatenate_path(char* buf, size_t dstBufferCount, const char* src, size_t srclen);
@@ -416,49 +523,37 @@ namespace pilo
 
             protected:
                 ::pilo::core::fs::fs_util::EnumFSNodeType _m_type;
-                ::pilo::core::string::fixed_astring<MC_PATH_MAX> _m_full_pathname;
-                const char*                                      _m_filename_ptr;
+                ::pilo::core::fs::path_string<MC_PATH_MAX> _m_full_pathname;
 
             public:
                 void reset() 
                 {
                     _m_type = ::pilo::core::fs::fs_util::eFSNT_NonExist;
-                    _m_full_pathname.clear();
-                    _m_filename_ptr = nullptr;
+                    _m_full_pathname.reset();
                 }
                 inline ::pilo::core::fs::fs_util::EnumFSNodeType type() const { return _m_type; }
-                inline const char* filename() const { return _m_filename_ptr; }
+                inline const char* filename() const { return _m_full_pathname.last_part(); }
                 inline const char* full_pathname() const { return _m_full_pathname.c_str(); }
                 inline size_t dir_length() const
                 {
-                    size_t dir_len = _m_filename_ptr - _m_full_pathname.c_str();
-                    if (dir_len <= 0)
+                    size_t dir_len = _m_full_pathname.base_length(false);
+                    if (dir_len < 0)
                         return MC_INVALID_SIZE;
-
-                    return --dir_len;
-                }
-                inline size_t get_dir_path(char* buffer, size_t sz) const
-                {
-                    if (buffer == nullptr) return MC_INVALID_SIZE;
-
-                    size_t dir_len = _m_filename_ptr - _m_full_pathname.c_str();
-                    if (dir_len > 0)
-                        dir_len--;
-
-                    if (dir_len > 0)
-                    {
-                        ::pilo::core::string::string_util::copy(buffer, 0, sz,
-                            _m_full_pathname.c_str(), 0, dir_len);
-                    }
-                    else
-                    {
-                        *buffer = 0;
-                    }
 
                     return dir_len;
                 }
 
                 inline void set_type(::pilo::core::fs::fs_util::EnumFSNodeType t) { _m_type = t; }
+                inline void set_full_pathname(const char* str, size_t len)
+                {
+#ifdef WINDOWS
+                    MP_CHECK_EMPTY_CSTR_RET_VOID(str);
+#else
+                    MP_CHECK_NULL_PTR_RET_VOID(str);
+#endif // WINDOWS
+
+                    _m_full_pathname.assign(str, len);
+                }
                 inline void set_full_pathname(const char* dir, const char* filename)
                 {
 #ifdef WINDOWS
@@ -478,12 +573,7 @@ namespace pilo
                     {
                         _m_full_pathname = dir;
                     }
-                    
-                    _m_full_pathname.concatenate(M_PATH_SEP_S);
-                    _m_full_pathname.concatenate(filename);
-
-                    size_t index = len + 1;
-                    _m_filename_ptr = _m_full_pathname.c_str() + index;                    
+               
                 }
 
             };
