@@ -5,7 +5,6 @@
 #include "core/string/string_util.hpp"
 #include "core/memory/fixed_buffer.hpp"
 #include "core/threading/dummy_read_write_lock.hpp"
-#include "core/string/auto_astring.hpp"
 #include "core/memory/dynamic_buffer.hpp"
 #include "core/fs/fs_util.hpp"
 
@@ -145,7 +144,7 @@ namespace pilo
 
                     _m_path = path_buffer;
 
-                    if (flag & MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE)
+                    if (flag & MB_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE)
                     {
                         ::pilo::core::fs::fs_util::EnumFSNodeType enode_type = ::pilo::core::fs::fs_util::calculate_type(_m_path.c_str());
                         if (enode_type == ::pilo::core::fs::fs_util::eFSNT_Error)
@@ -166,7 +165,7 @@ namespace pilo
                         }
                         else if (enode_type == ::pilo::core::fs::fs_util::eFSNT_Directory)
                         {
-                            if (flag & MC_IO_DEV_FLAG_FORCE_DELETE_DIR_ON_INITIALIZE)
+                            if (flag & MB_IO_DEV_FLAG_FORCE_DELETE_DIR_ON_INITIALIZE)
                             {
                                 err = ::pilo::core::fs::fs_util::delete_directory(path, true);
                                 if (err != ::pilo::EC_OK)
@@ -181,7 +180,7 @@ namespace pilo
                         }
                         else if (enode_type == ::pilo::core::fs::fs_util::eFSNT_RegularFile)
                         {
-                            if (flag & MC_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ)
+                            if (flag & MB_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ)
                             {
                                 err = ::pilo::core::fs::fs_util::delete_regular_file(path);
                                 if (err != ::pilo::EC_OK)
@@ -206,7 +205,7 @@ namespace pilo
 
                 virtual ::pilo::error_number_t _finalize_nolock()
                 {
-                    if (_m_init_flags & MC_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
+                    if (_m_init_flags & MB_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
                     {
                         return ::pilo::core::fs::fs_util::delete_regular_file(_m_path.c_str());
                     }

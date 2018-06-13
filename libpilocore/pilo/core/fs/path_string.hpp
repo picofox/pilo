@@ -17,28 +17,100 @@ namespace pilo
             public:
                 path_string() 
                 {
-                    _m_flags = 0;
+                    _set_validity(false);
                 }
 
                 path_string(const char* str) : ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT>(str)
                 {
-                    _m_flags = 0;
+                    if (__super::size() > 0)
+                    {
+                        _set_validity(true);
+                    }
+                    else
+                    {
+#ifdef WINDOWS
+                        _set_validity(false);
+#else
+                        if (str != nullptr && (*str) == 0)
+                        {
+                            _set_validity(true);
+                        }
+                        else
+                        {
+                            _set_validity(false);
+                        }
+#endif
+                    }
                 }
 
                 path_string(const char* str, size_t len) : ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT>(str, len)
                 {
-                    _m_flags = 0;
+                    if (__super::size() > 0)
+                    {
+                        _set_validity(true);
+                    }
+                    else
+                    {
+#ifdef WINDOWS
+                        _set_validity(false);
+#else
+                        if (str != nullptr && (*str) == 0)
+                        {
+                            _set_validity(true);
+                        }
+                        else
+                        {
+                            _set_validity(false);
+                        }
+#endif
+                    }
                 }
 
                 path_string(const std::string& str) : ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT>(str)
                 {
-                    _m_flags = 0;
+                    if (__super::size() > 0)
+                    {
+                        _set_validity(true);
+                    }
+                    else
+                    {
+#ifdef WINDOWS
+                        _set_validity(false);
+#else
+                        if (str != nullptr && (*str) == 0)
+                        {
+                            _set_validity(true);
+                        }
+                        else
+                        {
+                            _set_validity(false);
+                        }
+#endif
+                    }
                 }
 
                 template<size_t SZ>
                 path_string(const path_string<SZ>& astr) : ::pilo::core::string::auto_string<char, BUFFSZ_DEFALT>(astr)
                 {
-                    _m_flags = 0;
+                    if (__super::size() > 0)
+                    {
+                        _set_validity(true);
+                    }
+                    else
+                    {
+#ifdef WINDOWS
+                        _set_validity(false);
+#else
+                        if (str != nullptr && (*str) == 0)
+                        {
+                            _set_validity(true);
+                        }
+                        else
+                        {
+                            _set_validity(false);
+                        }
+#endif
+                    }
                 }
 
                 bool assign_path_string(const char* cstr_path, size_t len = MC_INVALID_SIZE)

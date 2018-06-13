@@ -15,18 +15,34 @@ namespace pilo
     {
         static pilo::i32_t functional_is_absolute_path(void* param);   
         static pilo::i32_t functional_getcwd(void* param);
-       
+        static pilo::i32_t functional_traval_path_preorder(void* param);
 
         pilo::test::testing_case g_functional_cases_fs_util[] =
         {
             /*---"--------------------------------------------"*/
             { 1, "is_absolute_path                             ", nullptr, functional_is_absolute_path, 0, -1, (pilo::u32_t) - 1 },
             { 2, "get_current_working_directory                ", nullptr, functional_getcwd          , 0, -1, (pilo::u32_t) - 1 },
-
+            { 3, "traval_path_preorder                         ", nullptr, functional_traval_path_preorder, 0, -1, (pilo::u32_t) - 1 },
 
 
             { -1, "end", nullptr, nullptr, 0, -1, 0 },
         };
+
+        pilo::i32_t functional_traval_path_preorder(void* param)
+        {
+            M_UNUSED(param);
+
+            ::pilo::core::fs::path_string<24> strpath("tmp/d0");
+            if (strpath.to_absolute(true, true) != ::pilo::EC_OK)
+            {
+                return -1;
+            }
+            ::pilo::core::fs::fs_util::travel_path_preorder(strpath, 0, true, true);
+
+
+
+            return 0;
+        }
 
 
 

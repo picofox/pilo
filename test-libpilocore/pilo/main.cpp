@@ -405,33 +405,6 @@ int main(int argc, char *argv[])
     pilo_debug_heap_leak_set_report_output_mode(M_DEBUG_NEW_REPORT_OUTPUT_FILE, "./memleak.log");   
 #endif
 
-    ::pilo::os_file_descriptor_t fh;
-    ::pilo::error_number_t err = ::pilo::core::fs::fs_util::open_file(fh, "c:\\test.txt",
-        ::pilo::core::fs::eDAM_OpenAlways,
-        ::pilo::core::fs::eDRWM_ReadWrite,
-        MC_IO_DEV_OP_NO_OS_CACHE);
-    if (err != ::pilo::EC_OK)
-    {
-        return -1;
-    }
-
-    char*p = (char*)_aligned_malloc(100, 512);
-    memcpy(p, "0123456789", 10);
-    
-    DWORD retsize = 0;
-    BOOL ok = ::WriteFile(fh, p, 512, &retsize, 0);
-    if (!ok)
-    {
-        return -2;
-    }
-    BOOL ok2 = ::SetFileValidData(fh, 512);
-    if (!ok2)
-    {
-        return -3;
-    }
-
-    ::CloseHandle(fh);
-
     bool break_on_error = true;
     pilo::i32_t id = 1;
 

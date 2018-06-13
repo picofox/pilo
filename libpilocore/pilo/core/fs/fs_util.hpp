@@ -81,6 +81,10 @@ namespace pilo
                         return ::pilo::EC_INVALID_PATH;
                     }
 
+                    M_UNUSED(fsnvi);
+                    M_UNUSED(stop_on_error);
+                    M_UNUSED(visit_last_dir);
+
                     return ::pilo::EC_OK;
                 }
 

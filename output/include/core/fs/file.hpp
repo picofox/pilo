@@ -83,7 +83,7 @@ namespace pilo
 
                     if (_m_os_file_descriptor != MC_INVALID_FILE_DESCRIPTOR)
                     {
-                        if (!(flag & MC_IO_DEV_OP_REOPEN))
+                        if (!(flag & MB_IO_DEV_OP_REOPEN))
                         {
                             return ::pilo::EC_DEV_ALREADY_OPENED;
                         }
@@ -267,7 +267,7 @@ namespace pilo
                         return ::pilo::EC_INVALID_PATH;
                     }
 
-                    if (flag & MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE)
+                    if (flag & MB_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE)
                     {
                         ::pilo::core::fs::fs_util::EnumFSNodeType enode_type = ::pilo::core::fs::fs_util::calculate_type(_m_path.c_str());
                         if (enode_type == ::pilo::core::fs::fs_util::eFSNT_Error)
@@ -288,7 +288,7 @@ namespace pilo
                         }
                         else if (enode_type == ::pilo::core::fs::fs_util::eFSNT_Directory)
                         {
-                            if (flag & MC_IO_DEV_FLAG_FORCE_DELETE_DIR_ON_INITIALIZE)
+                            if (flag & MB_IO_DEV_FLAG_FORCE_DELETE_DIR_ON_INITIALIZE)
                             {
                                 err = ::pilo::core::fs::fs_util::delete_directory(path, true);
                                 if (err != ::pilo::EC_OK)
@@ -303,7 +303,7 @@ namespace pilo
                         }
                         else if (enode_type == ::pilo::core::fs::fs_util::eFSNT_RegularFile)
                         {
-                            if (flag & MC_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ)
+                            if (flag & MB_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ)
                             {
                                 err = ::pilo::core::fs::fs_util::delete_regular_file(path);
                                 if (err != ::pilo::EC_OK)
@@ -333,7 +333,7 @@ namespace pilo
                         _close_nolock();
                     }
 
-                    if (_m_init_flags & MC_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
+                    if (_m_init_flags & MB_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
                     {
                         return ::pilo::core::fs::fs_util::delete_regular_file(_m_path.c_str());
                     }
@@ -357,7 +357,7 @@ namespace pilo
                     {
                         _m_access_mode = dev_acc_mode;
                         _m_rw_mode = rw_mode;
-                        _m_open_flag = false;
+                        _m_open_flag = flag;
                     }
 
                     return ret;

@@ -1,16 +1,18 @@
 #pragma once
 #include "core/coredefs.hpp"
 
-#define MC_IO_DEV_OP_FLAG_APPEND    (1<<0)
-#define MC_IO_DEV_OP_NO_OS_CACHE    (1<<1)
-#define MC_IO_DEV_OP_REOPEN         (1<<2)
+#define MB_IO_DEV_OP_FLAG_APPEND    (1<<0)
+#define MB_IO_DEV_OP_SYNC           (1<<1)
+#define MB_IO_DEV_OP_NO_OS_CACHE    (1<<2)
+#define MB_IO_DEV_OP_REOPEN         (1<<3)
 
 
-#define MC_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE        (1<<0)
-#define MC_IO_DEV_FLAG_FORCE_DELETE_DIR_ON_INITIALIZE   (1<<1)
-#define MC_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ   (1<<2)
-#define MC_IO_DEV_FLAG_AUTO_DELETE_ON_CLOSE             (1<<3)
-#define MC_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE          (1<<4)
+
+#define MB_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE        (1<<0)
+#define MB_IO_DEV_FLAG_FORCE_DELETE_DIR_ON_INITIALIZE   (1<<1)
+#define MB_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ   (1<<2)
+#define MB_IO_DEV_FLAG_AUTO_DELETE_ON_CLOSE             (1<<3)
+#define MB_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE          (1<<4)
 
 
 namespace pilo
