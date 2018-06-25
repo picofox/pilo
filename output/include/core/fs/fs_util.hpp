@@ -121,6 +121,16 @@ namespace pilo
                         if (strcmp(findData.cFileName, ".") == 0 || strcmp(findData.cFileName, "..") == 0)
                             continue;
 
+                        int pre_ret = fsnvi->pre_dir_visit(pathstr.c_str());
+                        if (pre_ret != ::pilo::EC_OK)
+                        {
+                            if (stop_on_error)
+                            {
+                                ::FindClose(handle);
+                                return pre_ret;
+                            }
+                        }
+
                         ::pilo::core::fs::path_string<PATH_BUFSZ> tmp_innerdir_pathstr;
                         ::pilo::error_number_t ret = tmp_innerdir_pathstr.assign(pathstr.c_str(), pathstr.length());
                         if (ret != ::pilo::EC_OK)
@@ -151,7 +161,7 @@ namespace pilo
                                 }
                             }
                         }
-                        else if (findData.dwFileAttributes  & FILE_ATTRIBUTE_NORMAL)
+                        else //if (findData.dwFileAttributes)
                         {
                             if (fsnvi != nullptr)
                             {
@@ -175,15 +185,7 @@ namespace pilo
                         }
 
 
-                        int pre_ret = fsnvi->pre_dir_visit(pathstr.c_str());
-                        if (pre_ret != ::pilo::EC_OK)
-                        {
-                            if (stop_on_error)
-                            {
-                                ::FindClose(handle);
-                                return pre_ret;
-                            }
-                        }
+                        
                     } while (FindNextFile(handle, &findData) != FALSE); //find next
 
                     M_UNUSED(fsnvi);

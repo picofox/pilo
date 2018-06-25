@@ -13,6 +13,28 @@ namespace pilo
 {
     namespace test
     {
+        class test_fs_node_visitor : public ::pilo::core::fs::fs_node_visitor_interface
+        {
+        public:
+            virtual ::pilo::i32_t visit(const char* path, const ::pilo::core::fs::fs_find_data* data)
+            {
+                ::pilo::core::io::console_format_output("Visit path (%s) filename=(%s) fp=(%s) t=%d\n",
+                    path, data->filename(), data->full_pathname(), data->type());
+                return 0;
+            }
+            virtual ::pilo::i32_t post_dir_visit(const char* path)
+            {
+                ::pilo::core::io::console_format_output("Post Visit %s path (%s)\n",  path);
+                return 0;
+            }
+
+            virtual ::pilo::i32_t pre_dir_visit(const char* path)
+            {
+                ::pilo::core::io::console_format_output("Pre Visit %s path (%s)\n", path);
+                return 0;
+            }
+        };
+
         static pilo::i32_t functional_is_absolute_path(void* param);   
         static pilo::i32_t functional_getcwd(void* param);
         static pilo::i32_t functional_traval_path_preorder(void* param);
@@ -33,7 +55,8 @@ namespace pilo
             M_UNUSED(param);
 
             ::pilo::core::fs::path_string<24> strpath("..\\tmp/d0");
-            ::pilo::core::fs::fs_util::travel_path_preorder(strpath, 0, true, true);
+            test_fs_node_visitor vistor;
+            ::pilo::core::fs::fs_util::travel_path_preorder(strpath, &vistor, true, true);
 
 
 
