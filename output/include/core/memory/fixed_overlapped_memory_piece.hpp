@@ -11,7 +11,7 @@ namespace pilo
     {
         namespace memory
         {
-            template <size_t _PieceSize, size_t _Capacity> 
+            template <size_t _UnitSize, size_t _Capacity> 
             struct fixed_overlapped_memory_piece
             {
                 typedef void*                                                       pointer;
@@ -19,7 +19,7 @@ namespace pilo
 
                 struct unit_type //every single piece
                 { 
-                    char m_data[M_MM_POOL_ALIGN_USIZE(_PieceSize,2)]; 
+                    char m_data[M_MM_POOL_ALIGN_USIZE(_UnitSize,2)]; 
                 };
                 struct unit_node 
                 { 
@@ -90,73 +90,11 @@ namespace pilo
 
 #ifdef _DEBUG_MEM_OBJ_POOL
             public:
-                std::string make_report(::pilo::u32_t flag = 0, size_t level = 0)
+                void make_summary_report(unsigned int ind, char* buffer, size_t sz)
                 {
-                    std::string str;
-                    str.clear();
-                    ::pilo::core::string::fixed_astring<128> tmp_str;
-                    std::string tab_str;
-                    tab_str.clear();
-                    for (int i = 0; i < level; i++)
-                    {
-                        tab_str += "    ";
-                    }
-
-                    tmp_str.format("%sFxOLMem Piece (US=%u CA=%u) @ 0x%p:\n", tab_str.c_str(),
-                        (unsigned int)_PieceSize, (unsigned int)_Capacity, this);
-                    str += tmp_str.c_str();
-                    tmp_str.format("%s    Free Unit Count:%u\n", tab_str.c_str(), (unsigned int) m_free_unit_num);
-                    str += tmp_str.c_str();
-                    size_t i = 0;
-                    if (flag & MB_DEBUG_POOL_SHOW_FREELIST_DETAIL)
-                    {
-                        unit_node* node = m_free_node_list;
-                        for (; node != nullptr; node = node->m_next)
-                        {
-                            tmp_str.format("%s        Free unit_%u\t: @ 0x%p\n", tab_str.c_str(), (unsigned int)i++, node);
-                            str += tmp_str.c_str();
-                        }
-                    }
-
-                    tmp_str.format("%s    Aval Unit Count:%u\n", tab_str.c_str(), (unsigned int) m_available);
-                    str += tmp_str.c_str();
-                    if (m_available > 0)
-                    {
-                        tmp_str.format("%s        Avail 0x%p - 0x%p\n", tab_str.c_str(), &(m_units[0]), &(m_units[m_available - 1]));                        
-                    }
-                    else
-                    {
-                        tmp_str.format("%s        No Available Unit\n", tab_str.c_str());
-                    }
-                    str += tmp_str.c_str();
-
-                    if (empty())
-                    {
-                        tmp_str.format("%s        No In Used Unit\n", tab_str.c_str());
-                    }
-                    else
-                    {
-                        tmp_str.format("%s        In Used 0x%p - 0x%p\n", tab_str.c_str(), &(m_units[m_available]), &(m_units[_Capacity - 1]));
-                    }
-                    str += tmp_str.c_str();
-
-                    if (flag & MB_DEBUG_POOL_SHOW_UNIT_IMAGE)
-                    {
-                        for (size_t ind = m_available; ind < _Capacity; ind++)
-                        {
-                            size_t  tmp_len = _PieceSize * 3 + 1;
-                            char* buffer = (char*)calloc(tmp_len, 1);
-                            tmp_str.format("%s        Unit Array_%u\t: @ 0x%p\n", tab_str.c_str(), (unsigned int)ind, &(m_units[ind]));
-                            str += tmp_str.c_str();
-                            ::pilo::core::string::string_util::binary_to_cstr(buffer, tmp_len, &m_units[ind], _PieceSize, 24);
-                            str += buffer;
-                            str += "\n";
-                        }
-                    }
-
-
-                    return str;
-
+                    ::pilo::core::io::string_format_output(buffer, sz, "    #%u FOMP@%p: FreeNode=%u AvailNode=%u\n", ind,
+                        this, (unsigned int) m_free_unit_num, (unsigned int) m_available );
+                    return;
                 }
 #endif
             };

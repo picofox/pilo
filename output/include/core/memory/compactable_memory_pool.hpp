@@ -30,10 +30,6 @@ namespace pilo
                 typedef size_t                                  size_type;
 
             protected:
-                bool m_manual_compact;
-
-
-            protected:
                 bool _need_compact_nolock() const
                 {
                     size_type piece_count = this->piece_count_nolock();
@@ -170,22 +166,10 @@ namespace pilo
                 }
 
             public:
-                compactable_memory_pool(bool manual_compact = false) : m_manual_compact(manual_compact)
+                compactable_memory_pool()
                 {
                     
-                }
-
-                void set_manual_compact(bool enable)
-                {
-                    pilo::core::threading::mutex_locker<lock_type>   locker(base_type::m_lock);
-                    m_manual_compact = enable;
-                }
-                
-                bool is_manual_compact() const
-                {
-                    pilo::core::threading::mutex_locker<lock_type>   locker(base_type::m_lock);
-                    return m_manual_compact;
-                }
+                }                
 
                 size_type piece_count_nolock() const
                 {
@@ -204,7 +188,7 @@ namespace pilo
                     unit_node* unode = (unit_node*)ptr;
                     base_type::m_free_unit_list.push_back(unode);
                     
-                    if (_need_compact_nolock() && (!m_manual_compact))
+                    if (_need_compact_nolock())
                     {
                         _compact_nolock();
                     }

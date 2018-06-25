@@ -372,8 +372,7 @@ namespace pilo
             {
                 return (eFSNT_Directory == ::pilo::core::fs::fs_util::calculate_type(path));
             }
-#ifdef WINDOWS           
-
+#ifdef WINDOWS
 
             ::pilo::error_number_t fs_util::travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir)
             {

@@ -35,7 +35,7 @@ namespace pilo
                 pool_type   m_memory_pool;
 
             public:
-                compactable_object_pool(bool manual_compact = false) : m_memory_pool(manual_compact)
+                compactable_object_pool()
                 {
                                         
                 };
@@ -60,18 +60,6 @@ namespace pilo
                     while (node = m_free_obj_list.pop_front(), node != nullptr)
                         ((object_type*)node)->~object_type();
                     m_memory_pool.clear();
-                }
-
-                void set_manual_compact(bool enable)
-                {
-                    pilo::core::threading::mutex_locker<lock_type>   locker(m_lock);
-                    m_memory_pool.set_manual_compact(enable);
-                }
-
-                bool is_manual_compact() const
-                {
-                    pilo::core::threading::mutex_locker<lock_type>   locker(m_lock);
-                    return m_memory_pool.is_manual_compact();
                 }
 
                 object_type* allocate()
@@ -105,7 +93,7 @@ namespace pilo
 
                     m_free_obj_list.push_back(node);
 
-                    if ((! m_memory_pool.is_manual_compact()) && _need_compact_nolock())
+                    if (_need_compact_nolock())
                     {
                         while (node = m_free_obj_list.pop_front(), node != nullptr)
                         {
@@ -118,33 +106,54 @@ namespace pilo
                 void compact()
                 {
                     pilo::core::threading::mutex_locker<lock_type>   locker(m_lock);
+                    object_node* node = nullptr;
                     while (node = m_free_obj_list.pop_front(), node != nullptr)
                     {
                         ((object_type*)node)->~object_type();
                         m_memory_pool.deallocate(node);
                     }
                 }
+                
 
 #ifdef _DEBUG_MEM_OBJ_POOL
-            public:
-                template <size_t _BUFFSZ>
-                void make_summary_report(char (&buffer)[_BUFFSZ], const char* prefix = nullptr)
+            protected:
+                ::pilo::i64_t _calculate_usage_nolock(size_t * total)
                 {
-                    pilo::core::threading::mutex_locker<lock_type>   locker(m_lock);
+                    ::pilo::i64_t free_obj_count = m_free_obj_list.size();
+                    ::pilo::i64_t full_piece_count = m_memory_pool.m_full_piece_list.size();
+                    ::pilo::i64_t avliad_piece_count = m_memory_pool.m_available_piece_list.size();
 
-                    if (prefix == nullptr)
+                    ::pilo::i64_t full_obj_count = (full_piece_count*_Step);
+                    ::pilo::i64_t diff = full_obj_count - free_obj_count;
+
+                    diff = diff + ((avliad_piece_count*_Step) - m_memory_pool.calculate_spare_available_units_nolock());
+
+                    if (total != nullptr)
                     {
-                        prefix = "";
+                        *total = m_memory_pool.piece_count_nolock() * _Step;
                     }
 
-                    unsigned long long free_node_count = m_free_obj_list.size();
-                    unsigned long long in_used_full_piece_count = m_memory_pool.m_full_piece_list.size();
-                    unsigned long long in_used_aval_piece_count = m_memory_pool.m_available_piece_list.size();
-
-                    ::pilo::core::io::string_format_output(buffer,_BUFFSZ, "%sFree=%llu InUsed:(Full=%llu Av=%llu) ",
-                        prefix,free_node_count, in_used_full_piece_count,in_used_aval_piece_count);
-
+                    return diff;
                 }
+
+            public:
+                ::pilo::i64_t calculate_usage(size_t * total)
+                {
+                    pilo::core::threading::mutex_locker<lock_type>   locker(m_lock);
+                    return _calculate_usage_nolock(total);
+                }
+
+                std::string& make_summary_report(std::string& str)
+                {
+                    pilo::core::threading::mutex_locker<lock_type>   locker(m_lock);
+                    char buffer[128];
+
+                    unsigned int free_node_count = m_free_obj_list.size();
+                    ::pilo::core::io::string_format_output(buffer,sizeof(buffer), "(COP@%p) FreeNode=%u\n",this,free_node_count);
+                    str += buffer;
+                    m_memory_pool.make_summary_report(str);
+                    return str;
+                } 
 #endif
 
             protected:
@@ -171,6 +180,10 @@ namespace pilo
                 {
                     object_pool_type* p = portable_compactable_object_pool::pool();
                     M_ASSERT(p != nullptr);
+                    if (p == nullptr)
+                    {
+                        return nullptr;
+                    }
                     return p->allocate();
                 }
 
@@ -178,16 +191,44 @@ namespace pilo
                 {
                     object_pool_type* p = portable_compactable_object_pool::pool();
                     M_ASSERT(p != nullptr);
+                    if (p == nullptr)
+                    {
+                        return;
+                    }
                     p->deallocate(object);
                 }
 
+                static void compact()
+                {
+                    object_pool_type* p = portable_compactable_object_pool::pool();
+                    if (p != nullptr)
+                    {
+                        p->compact();
+                    }
+                }
+
 #ifdef _DEBUG_MEM_OBJ_POOL
-                template <size_t _BUFFSZ>
-                static void make_summary_report(char (&buffer)[_BUFFSZ], const char* prefix = nullptr)
+
+                static ::pilo::i64_t calculate_usage(size_t * total)
                 {
                     object_pool_type* p = portable_compactable_object_pool::pool();
                     M_ASSERT(p != nullptr);
-                    p->make_summary_report(buffer, prefix);
+                    if (p == nullptr)
+                    {
+                        return -1;
+                    }
+                    return p->calculate_usage(total);
+                }
+
+                static std::string& make_summary_report(std::string& str)
+                {
+                    object_pool_type* p = portable_compactable_object_pool::pool();
+                    M_ASSERT(p != nullptr);
+                    if (p == nullptr)
+                    {
+                        return str;
+                    }
+                    return p->make_summary_report(str);
                 }
 #endif
             };

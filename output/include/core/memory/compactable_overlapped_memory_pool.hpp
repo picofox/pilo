@@ -28,9 +28,6 @@ namespace pilo
                 typedef const void*                             const_pointer;
                 typedef size_t                                  size_type;
 
-            public:
-                bool m_manual_compact;
-
             protected:
                 bool _need_compact_nolock() const
                 {
@@ -103,7 +100,7 @@ namespace pilo
                     piece_list      tmp_list, empty_list;
                     size_type       piece_count = piece_count_nolock();
 
-                    // full listempty_list
+                    // full list
                     while (piece = base_type::m_full_piece_list.pop_front(), piece != nullptr)
                     {
                         if (this->_compact_piece_nolock(piece))
@@ -168,22 +165,10 @@ namespace pilo
                 }
 
             public:                           
-                compactable_overlapped_memory_pool(bool manual_compact = false) : m_manual_compact(manual_compact)
+                compactable_overlapped_memory_pool()
                 {
-                }
-                
-                void set_manual_compact(bool enable)
-                {
-                    pilo::core::threading::mutex_locker<lock_type>   locker(base_type::m_lock);
-                    m_manual_compact = enable;
-                }
-
-                bool is_manual_compact() const
-                {
-                    pilo::core::threading::mutex_locker<lock_type>   locker(base_type::m_lock);
-                    return m_manual_compact;
-                }
-            
+                }                
+ 
                 size_type piece_count_nolock() const
                 {
                     return base_type::m_full_piece_list.size() + base_type::m_available_piece_list.size();
@@ -211,7 +196,6 @@ namespace pilo
                         _compact_nolock();
                     }
                 }
-
             };
         }
     }

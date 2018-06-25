@@ -32,23 +32,11 @@ namespace pilo
                 bool m_manual_compact;
 
             public:
-                compactable_autoreset_object_pool(bool manual_compact = false) : m_memory_pool(manual_compact)
+                compactable_autoreset_object_pool() : m_memory_pool()
                 {
                 }
                 ~compactable_autoreset_object_pool() 
                 {
-                }
-
-                void set_manual_compact(bool enable)
-                {
-                    pilo::core::threading::mutex_locker<lock_type>   locker(m_lock);
-                    m_memory_pool.set_manual_compact(enable);
-                }
-
-                bool is_manual_compact() const
-                {
-                    pilo::core::threading::mutex_locker<lock_type>   locker(m_lock);
-                    return m_memory_pool.is_manual_compact();
                 }
 
                 void reset()

@@ -119,60 +119,47 @@ namespace pilo
 
 #ifdef _DEBUG_MEM_OBJ_POOL
             public:
-                std::string make_report(::pilo::u32_t flag = 0, size_t level = 0)
+                ::pilo::i64_t calculate_spare_available_units_nolock()
+                {
+                    ::pilo::i64_t ret = 0;
+                    piece_type* piece = m_available_piece_list.begin();
+                    for (; piece != m_available_piece_list.end(); piece = m_available_piece_list.next(piece))
+                    {
+                        ret += piece->m_available;
+                    }
+                    return ret;
+                }
+
+                std::string& make_summary_report(std::string& str)
                 {
                     pilo::core::threading::mutex_locker<lock_type>   locker(m_lock);
-                    std::string str;
-                    str.clear();
-                    ::pilo::core::string::fixed_astring<128> tmp_str;
-                    std::string tab_str;
-                    tab_str.clear();
-                    for (int i = 0; i < level; i++)
+                    unsigned int ind = 0;
+                    char buffer[256];
+                    ::pilo::core::io::string_format_output(buffer, sizeof(buffer), 
+                        "(OMP@%p) FreeNode=%u FullList=%u AvalList=%u\n", this, 
+                        (unsigned int) m_free_unit_list.size(),
+                        (unsigned int) m_full_piece_list.size(),
+                        (unsigned int) m_available_piece_list.size());
+                    str += buffer;
+
+                    str += "  FullPieceList:\n";
+                    piece_type* piece = m_full_piece_list.begin();
+                    for (; piece != m_full_piece_list.end(); piece = m_full_piece_list.next(piece))
                     {
-                        tab_str += "    ";
+                        piece->make_summary_report(ind++, buffer, 256);
+                        str+=buffer;
                     }
 
-                    tmp_str.format("%sOverlapped_memory_pool @ 0x%p:\n", tab_str.c_str(), this);
-                    str += tmp_str.c_str();
-
-                    size_t fl_count = m_free_unit_list.size();
-                    tmp_str.format("%s    Total Free Count:%u\n", tab_str.c_str(), fl_count);
-                    str += tmp_str.c_str();
-
-                    size_t i = 0;
-                    if (flag & MB_DEBUG_POOL_SHOW_FREELIST_DETAIL)
+                    ind = 0;
+                    str += "  AvalPieceList:\n";
+                    piece = m_available_piece_list.begin();
+                    for (; piece != m_available_piece_list.end(); piece = m_available_piece_list.next(piece))
                     {
-                        unit_node* node = m_free_unit_list.begin();
-                        for (; node != m_free_unit_list.end(); node = m_free_unit_list.next(node))
-                        {
-                            tmp_str.format("%s        Free object_%u\t: @ 0x%p\n", tab_str.c_str(), i++, node);
-                            str += tmp_str.c_str();
-                        }
+                        piece->make_summary_report(ind++, buffer, 256);
+                        str+=buffer;
                     }
-
-                    size_t fu_count = m_full_piece_list.size();
-                    tmp_str.format("%s    Full list Count:%u\n", tab_str.c_str(), fu_count);
-                    str += tmp_str.c_str();
-                    i = 0;
-
-
-
-                    size_t av_count = m_available_piece_list.size();
-                    tmp_str.format("%s    Aval list Count:%u\n", tab_str.c_str(), av_count);
-                    str += tmp_str.c_str();
-
-                    if (flag & MB_DEBUG_POOL_SHOW_AVAILIST_DETAIL)
-                    {
-                        piece_type* piece = m_available_piece_list.begin();
-                        for (; piece != m_available_piece_list.end(); piece = m_available_piece_list.next(piece))
-                        {
-                            std::string stdstr2 = piece->make_report(flag, level + 2);
-                            str += stdstr2;
-                        }
-                    }  
 
                     return str;
-
                 }
 #endif
             };
