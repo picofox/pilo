@@ -86,7 +86,8 @@ namespace pilo
                     
                     const char* ret = ::strrchr(_m_string.c_str(), M_PATH_SEP_C);
                     if (ret == nullptr) return c_str();
-                    return ret;
+
+                    return ret+1;
                 }
 
                 size_t last_part_length() const

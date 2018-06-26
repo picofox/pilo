@@ -16,6 +16,18 @@ namespace pilo
         namespace fs
         {
 
+            ::pilo::error_number_t fs_util::travel_path_preorder(const char* str, fs_node_visitor_interface* fsnvi, bool pre_visit, bool post_visit, bool stop_on_error)
+            {
+                if (str == nullptr)
+                {
+                    return ::pilo::EC_NULL_PARAM;
+                }
+
+                ::pilo::core::fs::path_string<MC_PATH_MAX>pathstr(str);
+
+                return travel_path_preorder(pathstr, fsnvi, pre_visit, post_visit, stop_on_error);
+            }
+
             void fs_util::trim_path_last_seperator(char* path, size_t len /*= MC_INVALID_SIZE*/)
             {
                 MP_CHECK_EMPTY_CSTR_RET_VOID(path);

@@ -53,10 +53,13 @@ namespace pilo
         pilo::i32_t functional_traval_path_preorder(void* param)
         {
             M_UNUSED(param);
+            
 
-            ::pilo::core::fs::path_string<24> strpath("..\\tmp/d0");
             test_fs_node_visitor vistor;
-            ::pilo::core::fs::fs_util::travel_path_preorder(strpath, &vistor,true, true, true);
+            ::pilo::core::fs::fs_util::travel_path_preorder("..\\tmp/d0", &vistor, true, true, true);
+
+
+            ::pilo::core::fs::fs_util::travel_path_preorder("d:\\", &vistor, true, true, true);
 
 
 
