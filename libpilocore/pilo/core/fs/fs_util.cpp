@@ -16,7 +16,7 @@ namespace pilo
         namespace fs
         {
 
-            ::pilo::error_number_t fs_util::travel_path_preorder(const char* str, fs_node_visitor_interface* fsnvi, bool pre_visit, bool post_visit, bool stop_on_error)
+            ::pilo::error_number_t fs_util::travel_path_preorder(const char* str, fs_node_visitor_interface* fsnvi, ::pilo::u32_t flags, bool stop_on_error)
             {
                 if (str == nullptr)
                 {
@@ -25,7 +25,7 @@ namespace pilo
 
                 ::pilo::core::fs::path_string<MC_PATH_MAX>pathstr(str);
 
-                return travel_path_preorder(pathstr, fsnvi, pre_visit, post_visit, stop_on_error);
+                return travel_path_preorder(pathstr, fsnvi, flags, stop_on_error);
             }
 
             void fs_util::trim_path_last_seperator(char* path, size_t len /*= MC_INVALID_SIZE*/)
@@ -1211,7 +1211,7 @@ namespace pilo
                 return ::pilo::EC_INVALID_PATH;
             }
 
-            ::pilo::i32_t fs_node_delete_visitor::visit(const char* path, const fs_find_data* data)
+            ::pilo::i32_t fs_node_delete_visitor::visit(const fs_find_data* data)
             {
                 if (data == nullptr) return ::pilo::EC_NULL_PARAM;
 
@@ -1222,7 +1222,7 @@ namespace pilo
                 }
                 else
                 {
-                    ::pilo::core::fs::fs_util::delete_regular_file(path);
+                    ::pilo::core::fs::fs_util::delete_regular_file(data->full_pathname());
                 }
 
                 return  ::pilo::EC_OK;

@@ -16,10 +16,9 @@ namespace pilo
         class test_fs_node_visitor : public ::pilo::core::fs::fs_node_visitor_interface
         {
         public:
-            virtual ::pilo::i32_t visit(const char* path, const ::pilo::core::fs::fs_find_data* data)
+            virtual ::pilo::i32_t visit(const ::pilo::core::fs::fs_find_data* data)
             {
-                ::pilo::core::io::console_format_output("Visit path (%s) filename=(%s) fp=(%s) t=%d\n",
-                    path, data->filename(), data->full_pathname(), data->type());
+                ::pilo::core::io::console_format_output("Visit filename=(%s) fp=(%s) t=%d\n", data->filename(), data->full_pathname(), data->type());
                 return 0;
             }
             virtual ::pilo::i32_t post_dir_visit(const char* path)
@@ -56,10 +55,9 @@ namespace pilo
             
 
             test_fs_node_visitor vistor;
-            ::pilo::core::fs::fs_util::travel_path_preorder("..\\tmp/d0", &vistor, true, true, true);
+            ::pilo::core::fs::fs_util::travel_path_preorder("..\\tmp/d0", &vistor, MB_PRE_DIR_VIST | MB_VISIT_DIR | MB_POST_DIR_VIST, true);
 
 
-            ::pilo::core::fs::fs_util::travel_path_preorder("d:\\", &vistor, true, true, true);
 
 
 

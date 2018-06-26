@@ -19,6 +19,10 @@
 #   define PILO_CREATE_DIRECTORY(P)(::mkdir(P, S_IRWXU | S_IRWXG | S_IRWXO) == 0)
 #endif
 
+#define MB_PRE_DIR_VIST   (1 << 0)
+#define MB_POST_DIR_VIST  (1 << 1)
+#define MB_VISIT_DIR    (1 << 2)
+
 
 namespace pilo
 {
@@ -32,7 +36,7 @@ namespace pilo
             {
             public:
                 virtual ~fs_node_visitor_interface() { }
-                virtual ::pilo::i32_t visit(const char* dir, const fs_find_data* data) = 0;
+                virtual ::pilo::i32_t visit(const fs_find_data* data) = 0;
                 virtual ::pilo::i32_t pre_dir_visit(const char* path) { M_UNUSED(path); return ::pilo::EC_OK; }
                 virtual ::pilo::i32_t post_dir_visit(const char* path) { M_UNUSED(path); return ::pilo::EC_OK; }
             };
@@ -40,7 +44,7 @@ namespace pilo
             class fs_node_delete_visitor : public fs_node_visitor_interface
             {
             public:
-                virtual ::pilo::i32_t visit(const char* path, const fs_find_data* data);
+                virtual ::pilo::i32_t visit(const fs_find_data* data);
                 virtual ::pilo::i32_t post_dir_visit(const char* path);
             };
 
@@ -86,23 +90,27 @@ namespace pilo
                         }
                     }
 
+                    ::pilo::u32_t flag = 0;
+                    if (inc_dir)
+                    {
+                        flag |= MB_POST_DIR_VIST;
+                    }
+
                     ::pilo::core::fs::fs_node_delete_visitor fnd;
-                    return ::pilo::core::fs::fs_util::travel_path_preorder(pathstr, &fnd, false, inc_dir, true);
+                    return ::pilo::core::fs::fs_util::travel_path_preorder(pathstr, &fnd, flag, true);
                 }
 
                 static ::pilo::error_number_t travel_path_preorder(
                     const char* str,
                     fs_node_visitor_interface* fsnvi,
-                    bool pre_visit, bool post_visit,
+                    ::pilo::u32_t flags,
                     bool stop_on_error);
                 
-
+#if defined(WINDOWS)  
                 template<size_t PATH_BUFSZ>
                 static ::pilo::error_number_t travel_path_preorder(
                     ::pilo::core::fs::path_string<PATH_BUFSZ>& pathstr,
-                    fs_node_visitor_interface* fsnvi,
-                    bool pre_visit, bool post_visit, 
-                    bool stop_on_error)
+                    fs_node_visitor_interface* fsnvi, ::pilo::u32_t flags, bool stop_on_error)
                 {
                     if (!pathstr.valid())
                     {
@@ -138,7 +146,7 @@ namespace pilo
 
                     bool has_error = false;
 
-                    if (pre_visit)
+                    if (flags & MB_PRE_DIR_VIST)
                     {
                         int pre_ret = fsnvi->pre_dir_visit(pathstr.c_str());
                         if (pre_ret != ::pilo::EC_OK)
@@ -178,7 +186,27 @@ namespace pilo
 
                         if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
                         {
-                            ret = travel_path_preorder(tmp_innerdir_pathstr, fsnvi, pre_visit,post_visit, stop_on_error);
+                            if ((fsnvi != nullptr) && (MB_VISIT_DIR & flags))
+                            {
+                                fs_find_data fd;
+                                fd.set_type(eFSNT_Directory);
+                                fd.set_full_pathname(tmp_innerdir_pathstr.c_str(), tmp_innerdir_pathstr.length());
+                                ret = fsnvi->visit(&fd);
+                                if (ret != ::pilo::EC_OK)
+                                {
+                                    if (stop_on_error)
+                                    {
+                                        ::FindClose(handle);
+                                        return ret;
+                                    }
+                                    else
+                                    {
+                                        has_error = true;
+                                    }
+                                }
+                            }
+
+                            ret = travel_path_preorder(tmp_innerdir_pathstr, fsnvi, flags, stop_on_error);
                             if (ret != ::pilo::EC_OK)
                             {
                                 if (stop_on_error)
@@ -191,23 +219,6 @@ namespace pilo
                                     has_error = true;
                                 }
                             }
-// 
-//                             fs_find_data fd;
-//                             fd.set_type(eFSNT_Directory);
-//                             fd.set_full_pathname(tmp_innerdir_pathstr.c_str(), tmp_innerdir_pathstr.length());
-//                             ::pilo::i32_t ret = fsnvi->visit(tmp_innerdir_pathstr.c_str(), &fd);
-//                             if (ret != ::pilo::EC_OK)
-//                             {
-//                                 if (stop_on_error)
-//                                 {
-//                                     ::FindClose(handle);
-//                                     return ret;
-//                                 }
-//                                 else
-//                                 {
-//                                     has_error = true;
-//                                 }
-//                             }
                         }
                         else //if (findData.dwFileAttributes)
                         {
@@ -216,7 +227,7 @@ namespace pilo
                                 fs_find_data fd;
                                 fd.set_type(eFSNT_RegularFile);
                                 fd.set_full_pathname(tmp_innerdir_pathstr.c_str(), tmp_innerdir_pathstr.length());
-                                ret = fsnvi->visit(tmp_innerdir_pathstr.c_str(), &fd);
+                                ret = fsnvi->visit(&fd);
                                 if (ret != ::pilo::EC_OK)
                                 {
                                     if (stop_on_error)
@@ -231,8 +242,6 @@ namespace pilo
                                 }
                             }
                         }
-
-
                         
                     } while (FindNextFile(handle, &findData) != FALSE); //find next
 
@@ -241,14 +250,13 @@ namespace pilo
                         return  MAKE_SYSERR(::pilo::EC_CLOSE_DIR_ERROR);
                     }
 
-                    if (post_visit)
+                    if (flags & MB_POST_DIR_VIST)
                     {
                         ::pilo::i32_t post_ret = fsnvi->post_dir_visit(pathstr.c_str());
                         if (post_ret != ::pilo::EC_OK)
                         {
                             if (stop_on_error)
                             {
-                                FindClose(handle);
                                 return post_ret;
                             }
                             else
@@ -261,7 +269,173 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
-                
+#else
+                template<size_t PATH_BUFSZ>
+                static ::pilo::error_number_t travel_path_preorder(
+                    ::pilo::core::fs::path_string<PATH_BUFSZ>& pathstr,
+                    fs_node_visitor_interface* fsnvi,
+                    ::pilo::u32_t flags,
+                    bool stop_on_error)
+                {
+                    if (!pathstr.valid())
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+
+                    if (!pathstr.is_absolute())
+                    {
+                        if (pathstr.to_absolute(true, true) != ::pilo::EC_OK)
+                        {
+                            return ::pilo::EC_INVALID_PATH;
+                        }
+                    }
+
+                    ::pilo::error_number_t ret = pathstr.append_directory_seperator();
+                    if (ret != ::pilo::EC_OK)
+                    {
+                        return ::pilo::EC_COPY_STRING_FAILED;
+                    }
+
+                    ::pilo::core::fs::path_string<PATH_BUFSZ> tmp_pathstr;
+                    ret = tmp_pathstr.assign(pathstr.c_str(), pathstr.length());
+                    if (ret != ::pilo::EC_OK)
+                    {
+                        return ::pilo::EC_COPY_STRING_FAILED;
+                    }                 
+
+                    bool has_error = false;
+
+                    if (flags & MB_PRE_DIR_VIST)
+                    {
+                        int pre_ret = fsnvi->pre_dir_visit(pathstr.c_str());
+                        if (pre_ret != ::pilo::EC_OK)
+                        {
+                            if (stop_on_error)
+                            {
+                                return pre_ret;
+                            }
+                        }
+                    }
+
+                    struct stat statBuf;
+                    DIR *pDir = nullptr;
+                    struct dirent *dir_result_ptr = NULL;
+                    struct dirent dir_entry = {0};
+
+                    if ((pDir = ::opendir(pathstr.c_str())) == nullptr)
+                    {
+                        return MAKE_SYSERR(::pilo::EC_OPEN_DIR_ERROR);
+                    }
+
+                    while ((! ::readdir_r(pDir, &dir_entry, &dir_result_ptr)) && (dir_result_ptr != NULL))
+                    {
+                        if ( ::strcmp(dir_result_ptr->d_name, ".")  == 0 ||
+                            ::strcmp(dir_result_ptr->d_name, "..") == 0)
+                        {
+                            continue;
+                        }
+
+                        ::pilo::core::fs::path_string<PATH_BUFSZ> tmp_innerdir_pathstr;
+                        ::pilo::error_number_t ret = tmp_innerdir_pathstr.assign(pathstr.c_str(), pathstr.length());
+                        if (ret != ::pilo::EC_OK)
+                        {
+                            ::closedir(pDir);
+                            return ret;
+                        }
+                        ret = tmp_innerdir_pathstr.append_part_without_validation(dir_result_ptr->d_name, dir_result_ptr->d_reclen, false);
+                        if (ret != ::pilo::EC_OK)
+                        {
+                            ::closedir(pDir);
+                            return ret;
+                        }
+
+                        if (dir_result_ptr->d_type == DT_DIR)
+                        {
+                            if ((fsnvi != nullptr) && (MB_VISIT_DIR & flags))
+                            {
+                                fs_find_data fd;
+                                fd.set_type(eFSNT_Directory);
+                                fd.set_full_pathname(tmp_innerdir_pathstr.c_str(), tmp_innerdir_pathstr.length());
+                                ret = fsnvi->visit(&fd);
+                                if (ret != ::pilo::EC_OK)
+                                {
+                                    if (stop_on_error)
+                                    {
+                                        ::FindClose(handle);
+                                        return ret;
+                                    }
+                                    else
+                                    {
+                                        has_error = true;
+                                    }
+                                }
+                            }
+
+                            ret = travel_path_preorder(tmp_innerdir_pathstr, fsnvi, pre_visit,post_visit, stop_on_error);
+                            if (ret != ::pilo::EC_OK)
+                            {
+                                if (stop_on_error)
+                                {
+                                    ::closedir(pDir);
+                                    return ret;
+                                }
+                                else
+                                {
+                                    has_error = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (fsnvi != nullptr)
+                            {
+                                fs_find_data fd;
+                                fd.set_type(eFSNT_RegularFile);
+                                fd.set_full_pathname(tmp_innerdir_pathstr.c_str(), tmp_innerdir_pathstr.length());
+                                ret = fsnvi->visit(&fd);
+                                if (ret != ::pilo::EC_OK)
+                                {
+                                    if (stop_on_error)
+                                    {
+                                        ::closedir(pDir);
+                                        return ret;
+                                    }
+                                    else
+                                    {
+                                        has_error = true;
+                                    }
+                                }
+                            }
+                        }
+                        
+                    } //end of while
+
+                    if (::closedir(pDir) != 0)
+                    {
+                        return  MAKE_SYSERR(::pilo::EC_CLOSE_DIR_ERROR);
+                    }
+
+                    if (flags & MB_POST_DIR_VIST)
+                    {
+                        ::pilo::i32_t post_ret = fsnvi->post_dir_visit(pathstr.c_str());
+                        if (post_ret != ::pilo::EC_OK)
+                        {
+                            if (stop_on_error)
+                            {
+                                return post_ret;
+                            }
+                            else
+                            {
+                                has_error = true;
+                            }
+                        }
+                    }
+
+                    return ::pilo::EC_OK;
+                }
+
+
+#endif
 
                 static void trim_path_last_seperator(char* path, size_t len = MC_INVALID_SIZE);
                 static ::pilo::error_number_t concatenate_path(char* buf, size_t dstBufferCount, const char* src, size_t srclen);
