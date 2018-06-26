@@ -24,13 +24,13 @@ namespace pilo
             }
             virtual ::pilo::i32_t post_dir_visit(const char* path)
             {
-                ::pilo::core::io::console_format_output("Post Visit %s path (%s)\n",  path);
+                ::pilo::core::io::console_format_output("Post Visit path (%s)\n",  path);
                 return 0;
             }
 
             virtual ::pilo::i32_t pre_dir_visit(const char* path)
             {
-                ::pilo::core::io::console_format_output("Pre Visit %s path (%s)\n", path);
+                ::pilo::core::io::console_format_output("Pre Visit path (%s)\n", path);
                 return 0;
             }
         };
@@ -56,7 +56,7 @@ namespace pilo
 
             ::pilo::core::fs::path_string<24> strpath("..\\tmp/d0");
             test_fs_node_visitor vistor;
-            ::pilo::core::fs::fs_util::travel_path_preorder(strpath, &vistor, true, true);
+            ::pilo::core::fs::fs_util::travel_path_preorder(strpath, &vistor,true, true, true);
 
 
 

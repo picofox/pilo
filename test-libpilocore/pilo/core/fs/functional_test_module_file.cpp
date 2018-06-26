@@ -31,12 +31,11 @@ namespace pilo
                 while (times-- > 0)
                 {
                     err = pfile->flock_exclusive(0, MC_INVALID_SIZE);
-                    printf("%d aquired lock ret = %d t=%d\n", m_index, err, PiloGetTickCount32());
-
+                    if (err != ::pilo::EC_OK)
+                    {
+                        M_ASSERT(false);
+                    }
                     ::pilo::core::threading::basic_thread::sleep(5);
-
-
-                    err = printf("%d release lock ret = %d t=%d\n", m_index, err, PiloGetTickCount32());
                     pfile->funlock(0, MC_INVALID_SIZE);
                 }
                 
@@ -115,10 +114,7 @@ namespace pilo
                     return -30;
                 }
             }
-
-
-            f0.close();
-    
+            f0.close();    
             f0.finalize();
 
             return 0;

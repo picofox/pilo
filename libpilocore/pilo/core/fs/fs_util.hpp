@@ -71,10 +71,31 @@ namespace pilo
             public:
 
                 template<size_t PATH_BUFSZ>
+                static ::pilo::error_number_t delete_directory(::pilo::core::fs::path_string<PATH_BUFSZ>& pathstr, bool inc_dir)
+                {
+                    if (!pathstr.valid())
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+
+                    if (!pathstr.is_absolute())
+                    {
+                        if (pathstr.to_absolute(true, true) != ::pilo::EC_OK)
+                        {
+                            return ::pilo::EC_INVALID_PATH;
+                        }
+                    }
+
+                    ::pilo::core::fs::fs_node_delete_visitor fnd;
+                    return ::pilo::core::fs::fs_util::travel_path_preorder(pathstr, &fnd, false, inc_dir, true);
+                }
+
+                template<size_t PATH_BUFSZ>
                 static ::pilo::error_number_t travel_path_preorder(
                     ::pilo::core::fs::path_string<PATH_BUFSZ>& pathstr,
                     fs_node_visitor_interface* fsnvi,
-                    bool stop_on_error, bool visit_last_dir)
+                    bool pre_visit, bool post_visit, 
+                    bool stop_on_error)
                 {
                     if (!pathstr.valid())
                     {
@@ -121,15 +142,19 @@ namespace pilo
                         if (strcmp(findData.cFileName, ".") == 0 || strcmp(findData.cFileName, "..") == 0)
                             continue;
 
-                        int pre_ret = fsnvi->pre_dir_visit(pathstr.c_str());
-                        if (pre_ret != ::pilo::EC_OK)
+                        if (pre_visit)
                         {
-                            if (stop_on_error)
+                            int pre_ret = fsnvi->pre_dir_visit(pathstr.c_str());
+                            if (pre_ret != ::pilo::EC_OK)
                             {
-                                ::FindClose(handle);
-                                return pre_ret;
+                                if (stop_on_error)
+                                {
+                                    ::FindClose(handle);
+                                    return pre_ret;
+                                }
                             }
                         }
+                        
 
                         ::pilo::core::fs::path_string<PATH_BUFSZ> tmp_innerdir_pathstr;
                         ::pilo::error_number_t ret = tmp_innerdir_pathstr.assign(pathstr.c_str(), pathstr.length());
@@ -147,7 +172,7 @@ namespace pilo
 
                         if (findData.dwFileAttributes  & FILE_ATTRIBUTE_DIRECTORY)
                         {
-                            ::pilo::i32_t ret = travel_path_preorder(tmp_innerdir_pathstr, fsnvi, stop_on_error, true);
+                            ::pilo::i32_t ret = travel_path_preorder(tmp_innerdir_pathstr, fsnvi, pre_visit,post_visit, stop_on_error);
                             if (ret != ::pilo::EC_OK)
                             {
                                 if (stop_on_error)
@@ -188,9 +213,27 @@ namespace pilo
                         
                     } while (FindNextFile(handle, &findData) != FALSE); //find next
 
+                    if (post_visit)
+                    {
+                        ::pilo::i32_t post_ret = fsnvi->post_dir_visit(pathstr.c_str());
+                        if (post_ret != ::pilo::EC_OK)
+                        {
+                            if (stop_on_error)
+                            {
+                                FindClose(handle);
+                                return post_ret;
+                            }
+                        }
+                    }
+
+                    if (FindClose(handle) == -1)
+                    {
+                        return  MAKE_SYSERR(::pilo::EC_CLOSE_DIR_ERROR);
+                    }
+
                     M_UNUSED(fsnvi);
                     M_UNUSED(stop_on_error);
-                    M_UNUSED(visit_last_dir);
+                    M_UNUSED(post_visit);
 
                     return ::pilo::EC_OK;
                 }
@@ -270,9 +313,7 @@ namespace pilo
                 @note This method should be used after CheckPath() returned EC_OK, unless you are entirely sure the the path string is legal. \n
                 @see FSNodeTypeEnumeration
                 */
-                static bool dir_exist(const char* path);
-
-                static ::pilo::error_number_t travel_path_preorder(const char* root, fs_node_visitor_interface* fsnvi, bool stop_on_error, bool visit_last_dir);
+                static bool dir_exist(const char* path);             
                 static bool is_root(const char* path);
                 static ::pilo::error_number_t get_path_depth(size_t& dep, const char* path);
                 static ::pilo::error_number_t lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock);
