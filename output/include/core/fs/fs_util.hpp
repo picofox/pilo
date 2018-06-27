@@ -27,7 +27,7 @@
 #define MB_FS_TRAVELSAL_ALL           (~0U)
 #define MB_FS_TRAVELSAL_DELETE_DIR    (MB_FS_TRAVELSAL_DIR_POSTVIST | MB_FS_TRAVELSAL_VISIT_FILE)
 #define MB_FS_TRAVELSAL_FILE_ONLY     (MB_FS_TRAVELSAL_VISIT_FILE) 
-
+#define MB_FS_TRAVELSAL_XCOPY         (MB_FS_TRAVELSAL_DIR_PREVIST | MB_FS_TRAVELSAL_VISIT_FILE)
 
 namespace pilo
 {
@@ -105,13 +105,60 @@ namespace pilo
                     return ::pilo::core::fs::fs_util::travel_path_preorder(pathstr, &fnd, flag, true);
                 }
 
+                template<size_t PATH_BUFSZ>
+                static ::pilo::error_number_t copy_directory(::pilo::core::fs::path_string<PATH_BUFSZ>& dst_path, 
+                    ::pilo::core::fs::path_string<PATH_BUFSZ>& src_path, bool create_on_nonexist, bool force_overwrite)
+                {
+                    if (!dst_path.valid())
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+
+                    if (!dst_path.is_absolute())
+                    {
+                        if (dst_path.to_absolute(true, true) != ::pilo::EC_OK)
+                        {
+                            return ::pilo::EC_INVALID_PATH;
+                        }
+                    }
+
+                    if (!src_path.valid())
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+
+                    if (!src_path.is_absolute())
+                    {
+                        if (src_path.to_absolute(true, true) != ::pilo::EC_OK)
+                        {
+                            return ::pilo::EC_INVALID_PATH;
+                        }
+                    }
+
+                    ::pilo::error_number_t ret = ::pilo::EC_OK;
+                    ::pilo::core::fs::fs_util::EnumFSNodeType eType = ::pilo::core::fs::calculate_type(dst_path);
+                    if (eType == ::pilo::core::fs::fs_util::eFSNT_Directory)
+                    {
+
+                    }
+                    else if (eType == ::pilo::core::fs::fs_util::eFSNT_NonExist)
+                    {
+                        ret = ::pilo::core::fs::fs_util::create_directory(dst_path, 0);
+                    }
+
+
+
+                    return ::pilo::EC_OK;
+                }
+
+
                 static ::pilo::error_number_t travel_path_preorder(
                     const char* str,
                     fs_node_visitor_interface* fsnvi,
                     ::pilo::u32_t flags,
                     bool stop_on_error);
-                
-#if defined(WINDOWS)  
+
+#if defined(WINDOWS)
                 template<size_t PATH_BUFSZ>
                 static ::pilo::error_number_t travel_path_preorder(
                     ::pilo::core::fs::path_string<PATH_BUFSZ>& pathstr,

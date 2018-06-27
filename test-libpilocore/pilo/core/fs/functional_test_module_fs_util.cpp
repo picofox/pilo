@@ -34,6 +34,12 @@ namespace pilo
             }
         };
 
+#ifdef WINDOWS
+        static const char* __st_c_test_trv_paths[] = { "..\\tmp/test_dir" };
+#else
+        static const char* __st_c_test_trv_paths[] = { "..\\tmp/test_dir" };
+#endif
+
         static pilo::i32_t functional_is_absolute_path(void* param);   
         static pilo::i32_t functional_getcwd(void* param);
         static pilo::i32_t functional_traval_path_preorder(void* param);
@@ -49,13 +55,19 @@ namespace pilo
             { -1, "end", nullptr, nullptr, 0, -1, 0 },
         };
 
+
+
         pilo::i32_t functional_traval_path_preorder(void* param)
         {
             M_UNUSED(param);
-            
+
+            ::pilo::core::fs::path_string<256> dst_path("tmp/copied_dir");
+            ::pilo::core::fs::path_string<256> src_path(__st_c_test_trv_paths[0]);
+
+            ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::copy_directory()
 
             test_fs_node_visitor vistor;
-            ::pilo::core::fs::fs_util::travel_path_preorder("..\\tmp/d0", &vistor, MB_FS_TRAVELSAL_ALL, true);
+            ::pilo::core::fs::fs_util::travel_path_preorder(__st_c_test_trv_paths[0], &vistor, MB_FS_TRAVELSAL_XCOPY, true);
 
 
 

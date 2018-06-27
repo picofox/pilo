@@ -870,16 +870,11 @@ namespace pilo
 
 #               ifdef  WINDOWS
 
-				DWORD dwSavedAttr = ::GetFileAttributes(path);
-				::SetFileAttributes(path, FILE_ATTRIBUTE_NORMAL);
+
                 if (::DeleteFile(path) == TRUE)
                 {					
 					return ::pilo::EC_OK;
                 }
-				else
-				{
-					::SetFileAttributes(path, dwSavedAttr);
-				}
 
 #               else
 

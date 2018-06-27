@@ -1,0 +1,6 @@
+[test_dir] -> [lv1-0] -> lv1-0_testfile_0.txt
+          |              lv1-0_testfile_1.txt
+          ->  [lv1-1]
+          |
+          ->  [lv1-2] -> [lv2-0] -> lv2-0_testfile_0.txt
+                      -> [lv2-1] -> [lv3-0] -> lv3-0_testfile_0.txt
