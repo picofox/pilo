@@ -55,7 +55,7 @@ namespace pilo
             
 
             test_fs_node_visitor vistor;
-            ::pilo::core::fs::fs_util::travel_path_preorder("..\\tmp/d0", &vistor, MB_PRE_DIR_VIST | MB_VISIT_DIR | MB_POST_DIR_VIST, true);
+            ::pilo::core::fs::fs_util::travel_path_preorder("..\\tmp/d0", &vistor, MB_FS_TRAVELSAL_ALL, true);
 
 
 

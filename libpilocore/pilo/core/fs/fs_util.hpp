@@ -19,9 +19,14 @@
 #   define PILO_CREATE_DIRECTORY(P)(::mkdir(P, S_IRWXU | S_IRWXG | S_IRWXO) == 0)
 #endif
 
-#define MB_PRE_DIR_VIST   (1 << 0)
-#define MB_POST_DIR_VIST  (1 << 1)
-#define MB_VISIT_DIR    (1 << 2)
+#define MB_FS_TRAVELSAL_DIR_PREVIST   (1 << 0)
+#define MB_FS_TRAVELSAL_DIR_POSTVIST  (1 << 1)
+#define MB_FS_TRAVELSAL_VISIT_DIR     (1 << 2)
+#define MB_FS_TRAVELSAL_VISIT_FILE    (1 << 3)
+
+#define MB_FS_TRAVELSAL_ALL           (~0U)
+#define MB_FS_TRAVELSAL_DELETE_DIR    (MB_FS_TRAVELSAL_DIR_POSTVIST | MB_FS_TRAVELSAL_VISIT_FILE)
+#define MB_FS_TRAVELSAL_FILE_ONLY     (MB_FS_TRAVELSAL_VISIT_FILE) 
 
 
 namespace pilo
@@ -93,7 +98,7 @@ namespace pilo
                     ::pilo::u32_t flag = 0;
                     if (inc_dir)
                     {
-                        flag |= MB_POST_DIR_VIST;
+                        flag |= MB_FS_TRAVELSAL_DIR_POSTVIST;
                     }
 
                     ::pilo::core::fs::fs_node_delete_visitor fnd;
@@ -146,7 +151,7 @@ namespace pilo
 
                     bool has_error = false;
 
-                    if (flags & MB_PRE_DIR_VIST)
+                    if ((fsnvi != nullptr) && (flags & MB_FS_TRAVELSAL_DIR_PREVIST))
                     {
                         int pre_ret = fsnvi->pre_dir_visit(pathstr.c_str());
                         if (pre_ret != ::pilo::EC_OK)
@@ -186,7 +191,7 @@ namespace pilo
 
                         if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
                         {
-                            if ((fsnvi != nullptr) && (MB_VISIT_DIR & flags))
+                            if ((fsnvi != nullptr) && (MB_FS_TRAVELSAL_VISIT_DIR & flags))
                             {
                                 fs_find_data fd;
                                 fd.set_type(eFSNT_Directory);
@@ -222,7 +227,7 @@ namespace pilo
                         }
                         else //if (findData.dwFileAttributes)
                         {
-                            if (fsnvi != nullptr)
+                            if ((fsnvi != nullptr) && (MB_FS_TRAVELSAL_VISIT_FILE & flags))
                             {
                                 fs_find_data fd;
                                 fd.set_type(eFSNT_RegularFile);
@@ -250,7 +255,7 @@ namespace pilo
                         return  MAKE_SYSERR(::pilo::EC_CLOSE_DIR_ERROR);
                     }
 
-                    if (flags & MB_POST_DIR_VIST)
+                    if ((fsnvi != nullptr) && (flags & MB_FS_TRAVELSAL_DIR_POSTVIST))
                     {
                         ::pilo::i32_t post_ret = fsnvi->post_dir_visit(pathstr.c_str());
                         if (post_ret != ::pilo::EC_OK)
@@ -305,7 +310,7 @@ namespace pilo
 
                     bool has_error = false;
 
-                    if (flags & MB_PRE_DIR_VIST)
+                    if ((fsnvi != nullptr) && (flags & MB_FS_TRAVELSAL_DIR_PREVIST))
                     {
                         int pre_ret = fsnvi->pre_dir_visit(pathstr.c_str());
                         if (pre_ret != ::pilo::EC_OK)
@@ -351,7 +356,7 @@ namespace pilo
 
                         if (dir_result_ptr->d_type == DT_DIR)
                         {
-                            if ((fsnvi != nullptr) && (MB_VISIT_DIR & flags))
+                            if ((fsnvi != nullptr) && (MB_FS_TRAVELSAL_VISIT_DIR & flags))
                             {
                                 fs_find_data fd;
                                 fd.set_type(eFSNT_Directory);
@@ -387,7 +392,7 @@ namespace pilo
                         }
                         else
                         {
-                            if (fsnvi != nullptr)
+                            if ((fsnvi != nullptr) && (MB_FS_TRAVELSAL_VISIT_FILE & flags))
                             {
                                 fs_find_data fd;
                                 fd.set_type(eFSNT_RegularFile);
@@ -415,7 +420,7 @@ namespace pilo
                         return  MAKE_SYSERR(::pilo::EC_CLOSE_DIR_ERROR);
                     }
 
-                    if (flags & MB_POST_DIR_VIST)
+                    if ((fsnvi != nullptr) && (flags & MB_FS_TRAVELSAL_DIR_POSTVIST))
                     {
                         ::pilo::i32_t post_ret = fsnvi->post_dir_visit(pathstr.c_str());
                         if (post_ret != ::pilo::EC_OK)
