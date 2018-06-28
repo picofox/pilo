@@ -1225,9 +1225,23 @@ namespace pilo
 
             ::pilo::i32_t fs_node_delete_visitor::post_dir_visit(const char* path)
             {
-                return ::pilo::core::fs::fs_util::delete_empty_directory(path);        
+                return ::pilo::core::fs::fs_util::delete_empty_directory(path);
+			}
 
-            }
+
+			::pilo::i32_t fs_dir_copy_visitor::visit(const ::pilo::core::fs::fs_find_data* data)
+			{
+				M_UNUSED(data);
+				printf("creating file %s\n", data->filename());
+				return 0;
+			}
+
+			::pilo::i32_t fs_dir_copy_visitor::pre_dir_visit(const char* path)
+			{
+				M_UNUSED(path);
+				printf("creating dir %s\n", path);
+				return 0;
+			}
 
         }
     }

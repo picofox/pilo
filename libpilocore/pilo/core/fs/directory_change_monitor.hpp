@@ -266,13 +266,13 @@ namespace pilo
                 void dump_console();
 
                 public: //mothods to overload
-                virtual i32_t on_error(const char* dir_pathname, ::pilo::error_number_t err_code, ::pilo::os_error_number_t os_err_code) { M_UNUSED(dir_pathname) M_UNUSED(err_code); M_UNUSED(os_err_code); return ::pilo::EC_OK; }
+					virtual i32_t on_error(const char* dir_pathname, ::pilo::error_number_t err_code, ::pilo::os_error_number_t os_err_code) { M_UNUSED(dir_pathname); M_UNUSED(err_code); M_UNUSED(os_err_code); return ::pilo::EC_OK; }
                 virtual i32_t on_monitor_started(const char* dir_pathname, ::pilo::error_number_t err_code) { M_UNUSED(dir_pathname); M_UNUSED(err_code); return ::pilo::EC_OK; }
                 virtual i32_t on_monitor_stopped(const char* dir_pathname, ::pilo::error_number_t err_code) { M_UNUSED(dir_pathname); M_UNUSED(err_code); return ::pilo::EC_OK; }
-                virtual i32_t on_file_added(const char* dir_pathname, const char* filename_ptr, size_t filename_length) { M_UNUSED(dir_pathname) M_UNUSED(filename_ptr); M_UNUSED(filename_length); return ::pilo::EC_OK; }
-                virtual i32_t on_file_removed(const char* dir_pathname, const char* filename_ptr, size_t filename_length) { M_UNUSED(dir_pathname) M_UNUSED(filename_ptr); M_UNUSED(filename_length); return ::pilo::EC_OK; }
-                virtual i32_t on_file_modified(const char* dir_pathname, const char* filename_ptr, size_t filename_length) { M_UNUSED(dir_pathname) M_UNUSED(filename_ptr); M_UNUSED(filename_length); return ::pilo::EC_OK; }
-                virtual i32_t on_file_renamed(const char* dir_pathname, const char* old_filename_ptr, size_t old_filename_length, const char* neo_filename_ptr, size_t neo_filename_length) { M_UNUSED(dir_pathname) M_UNUSED(old_filename_ptr); M_UNUSED(old_filename_length); M_UNUSED(neo_filename_ptr); M_UNUSED(neo_filename_length);  return ::pilo::EC_OK; }
+				virtual i32_t on_file_added(const char* dir_pathname, const char* filename_ptr, size_t filename_length) { M_UNUSED(dir_pathname); M_UNUSED(filename_ptr); M_UNUSED(filename_length); return ::pilo::EC_OK; }
+				virtual i32_t on_file_removed(const char* dir_pathname, const char* filename_ptr, size_t filename_length) { M_UNUSED(dir_pathname); M_UNUSED(filename_ptr); M_UNUSED(filename_length); return ::pilo::EC_OK; }
+				virtual i32_t on_file_modified(const char* dir_pathname, const char* filename_ptr, size_t filename_length) { M_UNUSED(dir_pathname); M_UNUSED(filename_ptr); M_UNUSED(filename_length); return ::pilo::EC_OK; }
+				virtual i32_t on_file_renamed(const char* dir_pathname, const char* old_filename_ptr, size_t old_filename_length, const char* neo_filename_ptr, size_t neo_filename_length) { M_UNUSED(dir_pathname); M_UNUSED(old_filename_ptr); M_UNUSED(old_filename_length); M_UNUSED(neo_filename_ptr); M_UNUSED(neo_filename_length);  return ::pilo::EC_OK; }
                 protected:
                 mutable ::pilo::core::threading::recursive_mutex                        _m_tasks_mutex;
                 ::pilo::core::container::singly_linked_selflist<directory_monitor_task> _m_tasks;

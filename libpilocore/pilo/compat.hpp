@@ -4,13 +4,11 @@
 
 
 #if defined(WINDOWS)
-template <typename T>
-inline void piloUnused(T &x) { (void)x; }
-#   define M_UNUSED(x) piloUnused(x);
+#define M_UNUSED(x) do { (void)(x); } while (0)
 #   define MF_COUNT_OF _countof
 
 #else
-#   define M_UNUSED(x) (void)x;
+#   define M_UNUSED(x) (void)x
 #   define MF_COUNT_OF(_Array) (sizeof(_Array) / sizeof(_Array[0]))
 #endif
 

@@ -27,7 +27,7 @@
 #define MB_FS_TRAVELSAL_ALL           (~0U)
 #define MB_FS_TRAVELSAL_DELETE_DIR    (MB_FS_TRAVELSAL_DIR_POSTVIST | MB_FS_TRAVELSAL_VISIT_FILE)
 #define MB_FS_TRAVELSAL_FILE_ONLY     (MB_FS_TRAVELSAL_VISIT_FILE) 
-#define MB_FS_TRAVELSAL_XCOPY         (MB_FS_TRAVELSAL_DIR_PREVIST | MB_FS_TRAVELSAL_VISIT_FILE)
+#define MB_FS_TRAVELSAL_DIR_COPY      (MB_FS_TRAVELSAL_DIR_PREVIST | MB_FS_TRAVELSAL_VISIT_FILE)
 
 namespace pilo
 {
@@ -35,7 +35,7 @@ namespace pilo
     {
         namespace fs
         {
-            class fs_find_data;
+            class fs_find_data;			
 
             class fs_node_visitor_interface
             {
@@ -52,6 +52,13 @@ namespace pilo
                 virtual ::pilo::i32_t visit(const fs_find_data* data);
                 virtual ::pilo::i32_t post_dir_visit(const char* path);
             };
+
+			class fs_dir_copy_visitor : public fs_node_visitor_interface
+			{
+			public:
+				virtual ::pilo::i32_t visit(const ::pilo::core::fs::fs_find_data* data);
+				virtual ::pilo::i32_t pre_dir_visit(const char* path);
+			};
 
             class fs_util
             {
@@ -109,7 +116,7 @@ namespace pilo
                 static ::pilo::error_number_t copy_directory(::pilo::core::fs::path_string<PATH_BUFSZ>& dst_path, 
                     ::pilo::core::fs::path_string<PATH_BUFSZ>& src_path, bool inc_src_parent_dir,  bool force_overwrite)
                 {
-                        M_UNUSED(force_overwrite)
+					M_UNUSED(force_overwrite);
 
                     if (!dst_path.valid())
                     {
@@ -150,19 +157,14 @@ namespace pilo
                         {
                             return ret;
                         }
-
-                        ret = ::pilo::core::fs::fs_util::create_directory_recursively(dst_path.c_str(), force_overwrite);
-                        if (ret != ::pilo::EC_OK)
-                        {
-                            return ret;
-                        }
-
+                        
                     }
                     else // cp -R src/* dst/
                     {
 
                     }
-                                        
+                     
+					//create dst dir if it not exist
                     ::pilo::error_number_t ret = ::pilo::EC_OK;
                     ::pilo::core::fs::fs_util::EnumFSNodeType eType = ::pilo::core::fs::fs_util::calculate_type(dst_path.c_str());
                     if (eType == ::pilo::core::fs::fs_util::eFSNT_Directory)
@@ -171,15 +173,17 @@ namespace pilo
                     }
                     else if (eType == ::pilo::core::fs::fs_util::eFSNT_NonExist)
                     {
-                        ret = ::pilo::core::fs::fs_util::create_directory(dst_path.c_str(), 0);
+						ret = ::pilo::core::fs::fs_util::create_directory_recursively(dst_path.c_str(), force_overwrite);
                         if (ret != ::pilo::EC_OK)
                         {
                             return ret;
                         }
                     }
 
+					fs_dir_copy_visitor visitor;
+					ret = ::pilo::core::fs::fs_util::travel_path_preorder(src_path, &visitor, MB_FS_TRAVELSAL_DIR_COPY, true);
 
-                    return ::pilo::EC_OK;
+                    return ret;
                 }
 
 
@@ -808,7 +812,8 @@ namespace pilo
 //                     str = m_char;
 //                     delete m_char;
 //                     return str;
-//                 }
+//                 }
+
 #else
 
 #endif

@@ -463,7 +463,7 @@ namespace pilo
             {
                 M_UNUSED(data);
                 M_UNUSED(len);
-                M_UNUSED(target)
+				M_UNUSED(target);
                 return true;
             }
 
@@ -471,7 +471,7 @@ namespace pilo
             {
                 M_UNUSED(data);
                 M_UNUSED(len);
-                M_UNUSED(from)
+				M_UNUSED(from);
                 return len;
             }
 

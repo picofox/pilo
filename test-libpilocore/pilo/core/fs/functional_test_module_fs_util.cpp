@@ -35,9 +35,9 @@ namespace pilo
         };
 
 #ifdef WINDOWS
-        static const char* __st_c_test_trv_paths[] = { "..\\tmp/test_dir" };
+        static const char* __st_c_test_trv_paths[] = { "..\\data/test_dir" };
 #else
-        static const char* __st_c_test_trv_paths[] = { "..\\tmp/test_dir" };
+        static const char* __st_c_test_trv_paths[] = { "..\\data/test_dir" };
 #endif
 
         static pilo::i32_t functional_is_absolute_path(void* param);   
@@ -71,7 +71,7 @@ namespace pilo
             }
 
             test_fs_node_visitor vistor;
-            ::pilo::core::fs::fs_util::travel_path_preorder(__st_c_test_trv_paths[0], &vistor, MB_FS_TRAVELSAL_XCOPY, true);
+            ::pilo::core::fs::fs_util::travel_path_preorder(__st_c_test_trv_paths[0], &vistor, MB_FS_TRAVELSAL_DIR_COPY, true);
 
 
 
