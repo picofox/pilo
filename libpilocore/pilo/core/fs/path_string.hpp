@@ -169,6 +169,26 @@ namespace pilo
                     return ::pilo::EC_OK;
                 }
 
+                ::pilo::error_number_t erase_last_seperator()
+                {
+                    if (!valid())
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+
+#ifdef WINDOWS
+                    if (_m_string.back() == M_PATH_SEP_C)
+#else
+                    if (! _m_string.empty() && _m_string.back() == M_PATH_SEP_C)
+#endif
+
+                    {
+                        _m_string._pop_back();
+                    }
+
+                    return ::pilo::EC_OK;
+                }
+
                 ::pilo::error_number_t append_directory_seperator()
                 {
                     if (!valid())
@@ -247,6 +267,10 @@ namespace pilo
                         {
                             return ::pilo::EC_INVALID_PATH;
                         }
+                    }
+                    else
+                    {
+                        
                     }
 
                     return ::pilo::EC_OK;

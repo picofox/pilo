@@ -107,16 +107,18 @@ namespace pilo
 
                 template<size_t PATH_BUFSZ>
                 static ::pilo::error_number_t copy_directory(::pilo::core::fs::path_string<PATH_BUFSZ>& dst_path, 
-                    ::pilo::core::fs::path_string<PATH_BUFSZ>& src_path, bool create_on_nonexist, bool force_overwrite)
+                    ::pilo::core::fs::path_string<PATH_BUFSZ>& src_path, bool inc_src_parent_dir,  bool force_overwrite)
                 {
+                        M_UNUSED(force_overwrite)
+
                     if (!dst_path.valid())
                     {
                         return ::pilo::EC_INVALID_PATH;
-                    }
+                    }                    
 
                     if (!dst_path.is_absolute())
                     {
-                        if (dst_path.to_absolute(true, true) != ::pilo::EC_OK)
+                        if (dst_path.to_absolute(false, true) != ::pilo::EC_OK)
                         {
                             return ::pilo::EC_INVALID_PATH;
                         }
@@ -129,23 +131,52 @@ namespace pilo
 
                     if (!src_path.is_absolute())
                     {
-                        if (src_path.to_absolute(true, true) != ::pilo::EC_OK)
+                        if (src_path.to_absolute(false, true) != ::pilo::EC_OK)
                         {
                             return ::pilo::EC_INVALID_PATH;
                         }
                     }
 
+                    if (inc_src_parent_dir) //cp -R src/* dst/src/*
+                    {
+                        const char* parent_dirname_ptr = src_path.last_part();
+                        if (parent_dirname_ptr == nullptr)
+                        {
+                            return ::pilo::EC_INVALID_PATH;
+                        }
+
+                        ::pilo::error_number_t ret = dst_path.append_part_without_validation(parent_dirname_ptr, MC_INVALID_SIZE, false);
+                        if (ret != ::pilo::EC_OK)
+                        {
+                            return ret;
+                        }
+
+                        ret = ::pilo::core::fs::fs_util::create_directory_recursively(dst_path.c_str(), force_overwrite);
+                        if (ret != ::pilo::EC_OK)
+                        {
+                            return ret;
+                        }
+
+                    }
+                    else // cp -R src/* dst/
+                    {
+
+                    }
+                                        
                     ::pilo::error_number_t ret = ::pilo::EC_OK;
-                    ::pilo::core::fs::fs_util::EnumFSNodeType eType = ::pilo::core::fs::calculate_type(dst_path);
+                    ::pilo::core::fs::fs_util::EnumFSNodeType eType = ::pilo::core::fs::fs_util::calculate_type(dst_path.c_str());
                     if (eType == ::pilo::core::fs::fs_util::eFSNT_Directory)
                     {
 
                     }
                     else if (eType == ::pilo::core::fs::fs_util::eFSNT_NonExist)
                     {
-                        ret = ::pilo::core::fs::fs_util::create_directory(dst_path, 0);
+                        ret = ::pilo::core::fs::fs_util::create_directory(dst_path.c_str(), 0);
+                        if (ret != ::pilo::EC_OK)
+                        {
+                            return ret;
+                        }
                     }
-
 
 
                     return ::pilo::EC_OK;
