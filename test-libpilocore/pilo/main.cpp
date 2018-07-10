@@ -41,6 +41,84 @@
 #include "core/debug/heap/debug_new.hpp"
 #endif //
 
+const unsigned int __glb_cst_power_of_2[32] = {
+    0x00000001, 0x00000002, 0x00000004, 0x00000008, 0x00000010, 0x00000020, 0x00000040, 0x00000080,
+    0x00000100, 0x00000200, 0x00000400, 0x00000800, 0x00001000, 0x00002000, 0x00004000, 0x00008000,
+    0x00010000, 0x00020000, 0x00040000, 0x00080000, 0x00100000, 0x00200000, 0x00400000, 0x00800000,
+    0x01000000, 0x02000000, 0x04000000, 0x08000000, 0x10000000, 0x20000000, 0x40000000, 0x80000000
+};
+
+template<size_t CAPA_CNT, size_t UNIT_BITS>
+class fixed_bits_array
+{
+public:
+    typedef fixed_bits_array<CAPA_CNT, UNIT_BITS>  My_type;
+    const static size_t BYTE_LENGTH = (CAPA_CNT*UNIT_BITS + 7) >> 3;
+    const static size_t ARRAY_LENGTH = (BYTE_LENGTH + 3) >> 2;
+
+public:
+    fixed_bits_array()
+    {
+        M_ASSERT(UNIT_BITS < 32);
+        clear();
+    }
+
+    fixed_bits_array(const My_type &src)
+    {
+        M_ASSERT(UNIT_BITS < 32);
+        memcpy(_m_bitmap, src._m_bitmap, BYTE_LENGTH);
+    }
+
+    ::pilo::error_number_t assign(const char* data, size_t sz, size_t count)
+    {
+        M_ASSERT(UNIT_BITS < 32);
+        M_ASSERT(UNIT_BITS > 0);
+
+        if (count > CAPA_CNT)
+        {
+            return ::pilo::EC_OUT_OF_RANGE;
+        }
+
+        if (data == nullptr)
+        {
+            return ::pilo::EC_NULL_PARAM;
+        }
+
+        if (UNIT_BITS <= 0 || UNIT_BITS > 32)
+        {
+            return ::pilo::EC_OUT_OF_RANGE;
+        }
+
+        clear();
+
+        size_t min_sz = min(sz, BYTE_LENGTH);
+        ::memcpy((char*)_m_bitmap, data, min_sz);
+
+        _m_count = count;
+
+        return ::pilo::EC_OK;
+    }
+
+    
+
+    /**
+    * clear all bits
+    */
+    inline My_type& clear()
+    {
+        _m_count = 0;
+        memset(_m_bitmap, 0x00, ARRAY_LENGTH*4);
+        return *this;
+    }
+
+
+
+
+protected:
+    pilo::u32_t _m_bitmap[ARRAY_LENGTH];
+    size_t _m_count;
+
+};
 
 
 
@@ -398,6 +476,22 @@ int main(int argc, char *argv[])
 {
     M_UNUSED(argc);
     M_UNUSED(argv);	 
+
+    for (int i = 0; i < 32; i++)
+    {
+        if (i % 8== 0) printf("\n");
+        printf("0x%08x, ", 1<<i);
+
+       
+    }
+    printf("\n");
+
+    fixed_bits_array<5,2> fb;
+
+    unsigned int v = 38;
+
+    fb.unserialize((const char*)&v, 4);
+
 
 #ifdef _PILO_DEBUG_HEAP
     pilo_debug_heap_leak_set_verbose(false);
