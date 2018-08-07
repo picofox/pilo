@@ -58,9 +58,6 @@
     <Filter Include="pilo\core\threading">
       <UniqueIdentifier>{156a8351-2a7f-4d43-a81c-ad1c61d0be9f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pilo\core\debug\heap">
-      <UniqueIdentifier>{c3628195-773d-42fe-8dd1-d94117eacce2}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pilo\compat.hpp">
@@ -110,9 +107,6 @@
     </ClInclude>
     <ClInclude Include="pilo\core\datetime\tickcount_simu_thread.hpp">
       <Filter>pilo\core\datetime</Filter>
-    </ClInclude>
-    <ClInclude Include="pilo\core\debug\heap\debug_new.hpp">
-      <Filter>pilo\core\debug\heap</Filter>
     </ClInclude>
     <ClInclude Include="pilo\core\dll\dynamic_link_library.hpp">
       <Filter>pilo\core\dll</Filter>
@@ -333,6 +327,30 @@
     <ClInclude Include="pilo\core\threading\win_interlocked.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
+    <ClInclude Include="pilo\core\debug\debug_new.hpp">
+      <Filter>pilo\core\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\fs\buffered_file.hpp">
+      <Filter>pilo\core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\fs\path_string.hpp">
+      <Filter>pilo\core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\memory\buffer.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\string\auto_string.hpp">
+      <Filter>pilo\core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\threading\rw_mutex_r_locker.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\threading\rw_mutex_w_locker.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="pilo\core\dll\dll_manager.hpp">
+      <Filter>pilo\core\dll</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pilo\error.cpp">
@@ -343,12 +361,6 @@
     </ClCompile>
     <ClCompile Include="pilo\core\datetime\tickcount_simu_thread.cpp">
       <Filter>pilo\core\datetime</Filter>
-    </ClCompile>
-    <ClCompile Include="pilo\core\debug\heap\debug_new.cpp">
-      <Filter>pilo\core\debug\heap</Filter>
-    </ClCompile>
-    <ClCompile Include="pilo\core\dll\dynamic_link_library.cpp">
-      <Filter>pilo\core\dll</Filter>
     </ClCompile>
     <ClCompile Include="pilo\core\fs\directory_change_monitor.cpp">
       <Filter>pilo\core\fs</Filter>
@@ -433,6 +445,12 @@
     </ClCompile>
     <ClCompile Include="pilo\core\threading\recursive_timed_mutex.cpp">
       <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\debug\debug_new.cpp">
+      <Filter>pilo\core\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="pilo\core\dll\dynamic_link_library.cpp">
+      <Filter>pilo\core\dll</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

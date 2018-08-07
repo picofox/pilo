@@ -19,12 +19,14 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -37,22 +39,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\output\lib\</OutDir>
+    <OutDir>$(SolutionDir)\lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)tmp\$(ProjectName)\$(Platform)\$(Configuration)\$(ConfigurationType)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>libpilocore_vs10_$(PlatformName)_$(Configuration)_Static</TargetName>
+    <TargetName>libpilocore_vs11_$(PlatformName)_$(Configuration)_Static</TargetName>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\output\lib\</OutDir>
+    <OutDir>$(SolutionDir)\lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)tmp\$(ProjectName)\$(Platform)\$(Configuration)\$(ConfigurationType)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>libpilocore_vs10_$(PlatformName)_$(Configuration)_Static</TargetName>
+    <TargetName>libpilocore_vs11_$(PlatformName)_$(Configuration)_Static</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -140,6 +143,8 @@ copy /Y pilo\core\pattern\lazy_singletion_mts.hpp $(ProjectDir)..\output\include
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(ProjectDir)\pilo\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile />
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -224,13 +229,16 @@ copy /Y pilo\core\pattern\lazy_singletion_mts.hpp $(ProjectDir)..\output\include
     <ClInclude Include="pilo\core\container\singly_linked_selflist.hpp" />
     <ClInclude Include="pilo\core\datetime\datetime.hpp" />
     <ClInclude Include="pilo\core\datetime\tickcount_simu_thread.hpp" />
-    <ClInclude Include="pilo\core\debug\heap\debug_new.hpp" />
+    <ClInclude Include="pilo\core\debug\debug_new.hpp" />
+    <ClInclude Include="pilo\core\dll\dll_manager.hpp" />
     <ClInclude Include="pilo\core\dll\dynamic_link_library.hpp" />
     <ClInclude Include="pilo\core\fs\async_directory_changer_handler.hpp" />
+    <ClInclude Include="pilo\core\fs\buffered_file.hpp" />
     <ClInclude Include="pilo\core\fs\directory_change_monitor.hpp" />
     <ClInclude Include="pilo\core\fs\file.hpp" />
     <ClInclude Include="pilo\core\fs\fs_util.hpp" />
     <ClInclude Include="pilo\core\fs\io_device.hpp" />
+    <ClInclude Include="pilo\core\fs\path_string.hpp" />
     <ClInclude Include="pilo\core\info\cpu.hpp" />
     <ClInclude Include="pilo\core\io\fixed_memory_istream.hpp" />
     <ClInclude Include="pilo\core\io\fixed_memory_ostream.hpp" />
@@ -241,6 +249,7 @@ copy /Y pilo\core\pattern\lazy_singletion_mts.hpp $(ProjectDir)..\output\include
     <ClInclude Include="pilo\core\io\ostream_interface.hpp" />
     <ClInclude Include="pilo\core\log\syncronizedlocaltextlog.h" />
     <ClInclude Include="pilo\core\memory\autoreset_object_pool.hpp" />
+    <ClInclude Include="pilo\core\memory\buffer.hpp" />
     <ClInclude Include="pilo\core\memory\compactable_autoreset_object_pool.hpp" />
     <ClInclude Include="pilo\core\memory\compactable_memory_pool.hpp" />
     <ClInclude Include="pilo\core\memory\compactable_object_pool.hpp" />
@@ -281,6 +290,7 @@ copy /Y pilo\core\pattern\lazy_singletion_mts.hpp $(ProjectDir)..\output\include
     <ClInclude Include="pilo\core\process\process_util.hpp" />
     <ClInclude Include="pilo\core\random\simple_random.hpp" />
     <ClInclude Include="pilo\core\string\auto_astring.hpp" />
+    <ClInclude Include="pilo\core\string\auto_string.hpp" />
     <ClInclude Include="pilo\core\string\dynamic_astring.hpp" />
     <ClInclude Include="pilo\core\string\fixed_astring.hpp" />
     <ClInclude Include="pilo\core\string\fixed_wstring.hpp" />
@@ -296,6 +306,8 @@ copy /Y pilo\core\pattern\lazy_singletion_mts.hpp $(ProjectDir)..\output\include
     <ClInclude Include="pilo\core\threading\read_write_lock.hpp" />
     <ClInclude Include="pilo\core\threading\recursive_mutex.hpp" />
     <ClInclude Include="pilo\core\threading\recursive_timed_mutex.hpp" />
+    <ClInclude Include="pilo\core\threading\rw_mutex_r_locker.hpp" />
+    <ClInclude Include="pilo\core\threading\rw_mutex_w_locker.hpp" />
     <ClInclude Include="pilo\core\threading\sync_condition_variable_any.hpp" />
     <ClInclude Include="pilo\core\threading\win_interlocked.hpp" />
     <ClInclude Include="pilo\error.hpp" />
@@ -311,7 +323,7 @@ copy /Y pilo\core\pattern\lazy_singletion_mts.hpp $(ProjectDir)..\output\include
   <ItemGroup>
     <ClCompile Include="pilo\core\datetime\datetime.cpp" />
     <ClCompile Include="pilo\core\datetime\tickcount_simu_thread.cpp" />
-    <ClCompile Include="pilo\core\debug\heap\debug_new.cpp" />
+    <ClCompile Include="pilo\core\debug\debug_new.cpp" />
     <ClCompile Include="pilo\core\dll\dynamic_link_library.cpp" />
     <ClCompile Include="pilo\core\fs\directory_change_monitor.cpp" />
     <ClCompile Include="pilo\core\fs\fs_util.cpp" />

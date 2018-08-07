@@ -11,6 +11,8 @@ namespace pilo
     {
         namespace fs
         {
+            class fs_util;
+
             template<size_t BUFFSZ_DEFALT>
             class path_string 
             {

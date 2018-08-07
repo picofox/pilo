@@ -477,22 +477,6 @@ int main(int argc, char *argv[])
     M_UNUSED(argc);
     M_UNUSED(argv);	 
 
-    for (int i = 0; i < 32; i++)
-    {
-        if (i % 8== 0) printf("\n");
-        printf("0x%08x, ", 1<<i);
-
-       
-    }
-    printf("\n");
-
-    fixed_bits_array<5,2> fb;
-
-    unsigned int v = 38;
-
-    fb.unserialize((const char*)&v, 4);
-
-
 #ifdef _PILO_DEBUG_HEAP
     pilo_debug_heap_leak_set_verbose(false);
     pilo_debug_heap_leak_set_report_onexit(true);
