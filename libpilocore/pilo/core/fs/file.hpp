@@ -35,11 +35,19 @@ namespace pilo
 
                 file(const char* path)
                 {
+                    _m_os_file_descriptor = MC_INVALID_FILE_DESCRIPTOR;
+                    _m_state = ::pilo::core::fs::io_device::eIODS_Uninitialized;
+                    _m_context = nullptr;
+                    _m_init_flags = 0;
                     initialize(path, 0, nullptr);
                 }
 
                 file(const char* path, ::pilo::u32_t flag, void* context)
                 {
+                    _m_os_file_descriptor = MC_INVALID_FILE_DESCRIPTOR;
+                    _m_state = ::pilo::core::fs::io_device::eIODS_Uninitialized;
+                    _m_context = nullptr;
+                    _m_init_flags = 0;
                     initialize(path, flag, context);
                 }                
 
@@ -209,6 +217,37 @@ namespace pilo
                 }
 
             protected:
+                ::pilo::error_number_t _check_path_nolock(const char* path)
+                {
+                    ::pilo::core::fs::path_string<MC_PATH_MAX> path_to_check = path;
+
+                    ::pilo::error_number_t ret = path_to_check.to_absolute(false, true);
+                    if (ret != ::pilo::EC_OK)
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+
+                    path_to_check.erase_last_part(false, false);
+
+                    ::pilo::core::fs::fs_util::EnumFSNodeType etype = ::pilo::core::fs::fs_util::calculate_type(path_to_check.c_str());
+                    if (etype == ::pilo::core::fs::fs_util::eFSNT_Directory)
+                    {
+                        return ::pilo::EC_OK;
+                    }
+                    else if (etype != ::pilo::core::fs::fs_util::eFSNT_NonExist)
+                    {
+                        return ::pilo::EC_FILE_ALREADY_EXIST;
+                    }                   
+
+                    ret = ::pilo::core::fs::fs_util::create_directory_recursively(path_to_check.c_str(), false);
+                    if (ret != ::pilo::EC_OK)
+                    {
+                        return ::pilo::EC_CREATE_DIR_ERROR;
+                    }
+
+                    return ::pilo::EC_OK;
+                }
+
                 ::pilo::error_number_t _initialize_nolock(const char* path, ::pilo::u32_t flag, void* context)
                 {
                     if (path == nullptr)
@@ -246,7 +285,7 @@ namespace pilo
                         }
                         else if (enode_type == ::pilo::core::fs::fs_util::eFSNT_NonExist)
                         {
-
+                            
                         }
                         else if (enode_type == ::pilo::core::fs::fs_util::eFSNT_Directory)
                         {
@@ -311,6 +350,7 @@ namespace pilo
 
                 ::pilo::error_number_t _open_nolock(DeviceAccessModeEnumeration dev_acc_mode, DeviceRWModeEnumeration rw_mode, ::pilo::u32_t flag)
                 {
+                    _check_path_nolock(_m_path.c_str());
                     ::pilo::error_number_t ret =  ::pilo::core::fs::fs_util::open_file(_m_os_file_descriptor, 
                                                                 _m_path.c_str(),
                                                                 dev_acc_mode,

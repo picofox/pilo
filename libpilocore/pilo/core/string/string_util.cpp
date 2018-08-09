@@ -563,6 +563,48 @@ namespace pilo
                 return true;
             }
 
+            void string_util::erase_front_until(char* str, char ch, size_t sz,bool inc)
+            {
+                if (sz == MC_INVALID_SIZE)
+                {
+                    sz = ::pilo::core::string::string_util::length(str);
+                }
+
+                int n_ex = inc ? 1 : 0;
+                char* p = find(str ,ch, 0 , sz);
+                if (p != nullptr)
+                {
+                    size_t sz_copy = sz - (p-str+n_ex);
+                    if (sz_copy <= 0)
+                    {
+                        return;
+                    }
+                    memmove(str, p+n_ex, sz_copy);
+                    str[sz_copy] = 0;
+                }
+            } 
+
+            void string_util::erase_front_until(wchar_t* str, wchar_t ch, size_t sz,bool inc)
+            {
+                if (sz == MC_INVALID_SIZE)
+                {
+                    sz = ::pilo::core::string::string_util::length(str);
+                }
+
+                int n_ex = inc ? 1 : 0;
+                wchar_t* p = find(str ,ch, 0 , sz);
+                if (p != nullptr)
+                {
+                    size_t sz_copy = sz - (p-str+n_ex);
+                    if (sz_copy <= 0)
+                    {
+                        return;
+                    }
+                    memmove(str, p+n_ex, sz_copy*sizeof(wchar_t));
+                    str[sz_copy] = 0;
+                }
+            }
+
         }
     }
 }

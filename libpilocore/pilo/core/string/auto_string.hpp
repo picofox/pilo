@@ -448,6 +448,39 @@ namespace pilo
                 inline void push_back(value_type ch) { _push_back(ch); }
                 inline void pop_back() { _pop_back(); }
 
+                size_t find_first_of ( char c, size_t pos = 0 ) const
+                {
+                    if (pos >= _m_size) return MC_INVALID_SIZE;
+
+                    const char * p = nullptr;
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        const value_type* p = ::pilo::core::string::string_util::find(_m_dyn_data, c, pos, MC_INVALID_SIZE);                        
+                    }
+                    else
+                    {
+                        const value_type* p = ::pilo::core::string::string_util::find(_m_fix_data, c, pos, MC_INVALID_SIZE);
+                    }
+
+                    if (p == nullptr)
+                    {
+                        return MC_INVALID_SIZE;
+                    }
+                    return (p - _m_pdata) / sizeof(value_type); 
+                }
+
+                void erase_front_until(char ch, bool inc)
+                {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        ::pilo::core::string::string_util::erase_front_until(_m_dyn_data, ch, _m_size, inc);               
+                    }
+                    else
+                    {
+                        ::pilo::core::string::string_util::erase_front_until(_m_fix_data, ch, _m_size, inc);   
+                    }
+                }
+
             protected:
                 value_type& _at(size_t pos)
                 {
@@ -1031,6 +1064,21 @@ namespace pilo
                 ::pilo::error_number_t assign(const value_type* cstr, size_t len) { return _assign(cstr, len); }
                 inline void push_back(value_type ch) { _push_back(ch); }
                 inline void pop_back() { _pop_back(); }
+                size_t find_first_of ( value_type c, size_t pos = 0 ) const
+                {
+                    if (pos >= _m_size) return MC_INVALID_SIZE; 
+                    const value_type* p = ::pilo::core::string::string_util::find(_m_pdata, c, pos, MC_INVALID_SIZE);
+                    if (p == nullptr)
+                    {
+                        return MC_INVALID_SIZE;
+                    }
+                    return (p - _m_pdata) / sizeof(value_type);             
+                }
+
+                void erase_front_until(char ch, bool inc)
+                {                    
+                    ::pilo::core::string::string_util::erase_front_until(_m_pdata, ch, _m_size, inc);     
+                }
 
             protected:
                 value_type& _at(size_t pos)
@@ -1631,6 +1679,39 @@ namespace pilo
                 inline void push_back(value_type ch) { _push_back(ch); }
                 inline void pop_back() { _pop_back(); }
 
+                size_t find_first_of ( char c, size_t pos = 0 ) const
+                {
+                    if (pos >= _m_size) return MC_INVALID_SIZE;
+
+                    const char * p = nullptr;
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        const value_type* p = ::pilo::core::string::string_util::find(_m_dyn_data, c, pos, MC_INVALID_SIZE);                        
+                    }
+                    else
+                    {
+                        const value_type* p = ::pilo::core::string::string_util::find(_m_fix_data, c, pos, MC_INVALID_SIZE);
+                    }
+
+                    if (p == nullptr)
+                    {
+                        return MC_INVALID_SIZE;
+                    }
+                    return (p - _m_pdata) / sizeof(value_type); 
+                }
+
+                void erase_front_until(char ch, bool inc)
+                {
+                    if (nullptr != _m_dyn_data) //use dynamic buffer
+                    {
+                        ::pilo::core::string::string_util::erase_front_until(_m_dyn_data, ch, _m_size, inc);               
+                    }
+                    else
+                    {
+                        ::pilo::core::string::string_util::erase_front_until(_m_fix_data, ch, _m_size, inc);   
+                    }
+                }
+
             protected:
                 value_type& _at(size_t pos)
                 {
@@ -2211,6 +2292,22 @@ namespace pilo
                 ::pilo::error_number_t assign(const value_type* cstr, size_t len) { return _assign(cstr, len); }
                 inline void push_back(value_type ch) { _push_back(ch); }
                 inline void pop_back() { _pop_back(); }
+
+                size_t find_first_of ( value_type c, size_t pos = 0 ) const
+                {
+                    if (pos >= _m_size) return MC_INVALID_SIZE; 
+                    const value_type* p = ::pilo::core::string::string_util::find(_m_pdata, c, pos, MC_INVALID_SIZE);
+                    if (p == nullptr)
+                    {
+                        return MC_INVALID_SIZE;
+                    }
+                    return (p - _m_pdata) / sizeof(value_type);             
+                }
+
+                void erase_front_until(char ch, bool inc)
+                {                    
+                    ::pilo::core::string::string_util::erase_front_until(_m_pdata, ch,_m_size, inc);     
+                }
 
             protected:
                 value_type& _at(size_t pos)

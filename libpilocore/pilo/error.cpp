@@ -83,7 +83,8 @@ const char* __glb_pilo_error_code_to_string_list[pilo::EC_PILO_ERROR_CODE_COUNT]
     "EC_SEEK_FILE_ERROR",    
     "EC_UNINITIALIZED",
     "EC_DEV_ALREADY_OPENED",
-    "EC_DEV_NOT_OPENED",
+    "EC_DEV_NOT_OPENED", 
+    "EC_NOT_ABS_PATH",
 };
 
 
