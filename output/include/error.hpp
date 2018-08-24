@@ -83,8 +83,11 @@ namespace pilo
         EC_SEEK_FILE_ERROR,
         EC_UNINITIALIZED,
         EC_DEV_ALREADY_OPENED, 
-        EC_DEV_NOT_OPENED,
-        EC_PILO_ERROR_CODE_COUNT,        
+        EC_DEV_NOT_OPENED,          
+        EC_NOT_ABS_PATH,
+
+
+        EC_PILO_ERROR_CODE_COUNT, 
 	};
 
 }

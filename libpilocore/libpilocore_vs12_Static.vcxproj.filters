@@ -333,6 +333,9 @@
     <ClInclude Include="pilo\core\fs\path_string.hpp">
       <Filter>pilo\core\fs</Filter>
     </ClInclude>
+    <ClInclude Include="pilo\core\fs\mmap.hpp">
+      <Filter>pilo\core\fs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pilo\error.cpp">

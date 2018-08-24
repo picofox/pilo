@@ -186,6 +186,37 @@ namespace pilo
                     return ret;
                 }
 
+                static ::pilo::error_number_t calculate_file_size(size_t& refSize, const char* filename)
+                {
+                    if (filename == nullptr) return ::pilo::EC_NULL_PARAM;
+#if defined(WINDOWS)
+                    HANDLE hFile = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+                    if (INVALID_HANDLE_VALUE == hFile)
+                    {
+                        return ::pilo::EC_OBJECT_NOT_FOUND;
+                    }
+                    LARGE_INTEGER size;
+                    ::GetFileSizeEx(hFile, &size);
+                    ::CloseHandle(hFile);
+                    __int64 nSize =  size.QuadPart;
+                    refSize = (size_t) nSize;
+#else
+                    struct stat statbuf; 
+                    stat(filename,&statbuf); 
+                    refSize = statbuf.st_size;
+#endif
+                    return ::pilo::EC_OK;
+                }
+
+                static const char* extension_name(const char* filename)
+                {
+                    if (filename == nullptr) return nullptr;
+                    const char* pe = ::strrchr(filename, '.');
+                    if (pe == nullptr) return "";
+                    if (*(pe+1) == 0 ) return "";
+                    return pe+1;
+                }
+
 
                 static ::pilo::error_number_t travel_path_preorder(
                     const char* str,
@@ -786,7 +817,7 @@ namespace pilo
                     }
 
                     int len = MultiByteToWideChar(m_encode, 0, src_str, (int) src_len, NULL, 0);
-                    if (wBuffer == nullptr || wBufferLen <= 0 || len < wBufferLen)
+                    if (wBuffer == nullptr || wBufferLen <= 0 || len < (int) wBufferLen)
                     {
                         pBuffer = wBuffer;
                     }
@@ -861,6 +892,10 @@ namespace pilo
                 }
                 inline ::pilo::core::fs::fs_util::EnumFSNodeType type() const { return _m_type; }
                 inline const char* filename() const { return _m_full_pathname.last_part(); }
+                inline const char* extension_name() const
+                {
+                    return ::pilo::core::fs::fs_util::extension_name(filename());
+                }
                 inline const char* full_pathname() const { return _m_full_pathname.c_str(); }
                 inline size_t dir_length() const
                 {

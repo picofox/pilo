@@ -726,3 +726,66 @@ public:
         }
     }
 };
+
+typedef enum
+{
+    eGPE_None = 0,
+    eGPE_Read = 4,
+    eGPE_Write = 2,
+    eGPE_Exec = 1,
+
+    eGPE_ReadWrite = 6,
+    eGPE_ReadExec = 5,
+    eGPE_WriteExec = 3,
+    eGPE_All = 7,
+
+} PiloGenericPrivillegeEnumeration;
+
+
+template <typename T>
+void pilo_set_flag_bit_by_value(T v, T b)
+{
+    v |= b;
+}
+
+template <typename T>
+void pilo_clear_flag_bit_by_value(T v, T b)
+{
+    v &= (~b);
+}
+
+template <typename T>
+void pilo_set_flag_bit_by_index(T v, T b, bool enable)
+{
+    if (enable)
+    {
+        v |= (1 << b);
+    }
+    else
+    {
+        v &= (~(1 << b));
+    }
+
+}
+
+template <typename T>
+bool pilo_test_flag_bit_by_index(T v, T b)
+{
+    if (v & (1 << b) == 0)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+template <typename T>
+bool pilo_test_flag_bit_by_value(T v, T b)
+{
+    if (v & b == 0)
+    {
+        return false;
+    }
+
+    return true;
+}

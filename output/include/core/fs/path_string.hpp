@@ -11,6 +11,8 @@ namespace pilo
     {
         namespace fs
         {
+            class fs_util;
+
             template<size_t BUFFSZ_DEFALT>
             class path_string 
             {
@@ -140,12 +142,12 @@ namespace pilo
                     {
                         return ::pilo::EC_INVALID_PATH;
                     }
-                    const char* p = ::pilo::core::string::string_util::find_reversely(_m_string.c_str(), M_PATH_SEP_S, 1);
+                    const char* p = ::pilo::core::string::string_util::find_reversely(_m_string.c_str(), M_PATH_SEP_S, _m_string.length());
                     if (p == nullptr)
                     {
                         if (force_remove_root)
                         {
-                            clear();
+                            _m_string.clear();
                             _set_validity(false);
                             return ::pilo::EC_OK;
                         }
@@ -165,6 +167,23 @@ namespace pilo
                     _m_string[len] = 0;
                     _m_string.recalculate_size();
 
+
+                    return ::pilo::EC_OK;
+                }
+
+                ::pilo::error_number_t erase_root()
+                {
+                    if (!valid())
+                    {
+                        return ::pilo::EC_INVALID_PATH;
+                    }
+
+                    if (! is_absolute())
+                    {
+                        return ::pilo::EC_NOT_ABS_PATH;
+                    }
+
+                    _m_string.erase_front_until(M_PATH_SEP_C, true);
 
                     return ::pilo::EC_OK;
                 }

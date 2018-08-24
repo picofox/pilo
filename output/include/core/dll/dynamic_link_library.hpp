@@ -17,12 +17,16 @@ namespace pilo
         {
             class dynamic_link_library
             {
-                public:
-                dynamic_link_library() : _m_dll_module_handle(NULL) {}
+             public:
+                dynamic_link_library() : _m_dll_module_handle(NULL),_m_ref_count(0) {}
                 ~dynamic_link_library();
 
                 ::pilo::i32_t load(const char* name, ::pilo::u32_t flags);
                 ::pilo::i32_t unload();
+
+                inline void inc_ref_count() { _m_ref_count ++ ; }
+                inline void dec_ref_count() { _m_ref_count -- ; }
+                inline unsigned int ref_count() const { return _m_ref_count; }
 
                 template<typename T>
                 ::pilo::i32_t find_function(T* pfunc, const char*fname)
@@ -62,8 +66,12 @@ namespace pilo
 
                 }
 
-                protected:
-                os_dll_module_handle_t _m_dll_module_handle;
+            private:
+                M_DISABLE_COPY(dynamic_link_library);
+
+            protected:
+                os_dll_module_handle_t  _m_dll_module_handle;
+                unsigned int            _m_ref_count;
 
             };
         }        

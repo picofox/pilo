@@ -483,6 +483,49 @@ namespace pilo
                         return pb;
                     }
 
+
+                    static void erase_front_until(char* str, char ch, size_t sz, bool inc);
+                    static void erase_front_until(wchar_t* str, wchar_t ch, size_t sz, bool inc);
+
+
+                    template<typename T>
+                    static T* find(T* strSource, const T ch, size_t srcpos = 0, size_t count = MC_INVALID_SIZE)
+                    {
+                        if (strSource == nullptr)
+                        {
+                            return nullptr;
+                        }
+
+                        size_t strSourceLength;
+                        if (count == MC_INVALID_SIZE)
+                        {
+                            strSourceLength = ::pilo::core::string::string_util::length(strSource+srcpos);
+                            if (strSourceLength == 0)
+                            {
+                                return nullptr;
+                            }
+                        }
+                        else
+                        {
+                            strSourceLength = count;
+                        }
+
+                        if (strSourceLength == 0)
+                        {
+                            return nullptr;
+                        }                        
+
+                        for (int i = 0; i < (int)strSourceLength; i++)  
+                        {
+                            if (strSource[srcpos + i] == ch)
+                            {
+                                return strSource+srcpos+i;
+                            }
+                        }
+
+                        return nullptr;
+                    }
+
                     template<typename T>
                     static T* find(T* strSource, const T* needle, size_t count = MC_INVALID_SIZE)
                     {
