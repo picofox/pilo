@@ -186,6 +186,28 @@ namespace pilo
                     return ret;
                 }
 
+                static ::pilo::error_number_t calculate_file_size(size_t& refSize, os_file_descriptor_t fd)
+                {
+
+#if defined(WINDOWS)                  
+                    LARGE_INTEGER size;
+                    if (::GetFileSizeEx(fd, &size) == FALSE)
+                    {
+                        return ::pilo::EC_INVALID_FILE_DESCRIPTOR;
+                    }
+                    __int64 nSize = size.QuadPart;
+                    refSize = (size_t)nSize;
+#else
+                    struct stat statbuf;
+                    if ((fstat(fd, &statbuf) != 0) || (!S_ISREG(stbuf.st_mode)))
+                    {
+                        return ::pilo::EC_INVALID_FILE_DESCRIPTOR;
+                    }
+                    refSize = statbuf.st_size;
+#endif
+                    return ::pilo::EC_OK;
+                }
+
                 static ::pilo::error_number_t calculate_file_size(size_t& refSize, const char* filename)
                 {
                     if (filename == nullptr) return ::pilo::EC_NULL_PARAM;

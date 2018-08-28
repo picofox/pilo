@@ -85,6 +85,8 @@ namespace pilo
         EC_DEV_ALREADY_OPENED, 
         EC_DEV_NOT_OPENED,          
         EC_NOT_ABS_PATH,
+        EC_GET_FILE_SZ_FAILED,
+        EC_CREATE_FILE_MAP_ERROR,
 
 
         EC_PILO_ERROR_CODE_COUNT, 

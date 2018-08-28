@@ -89,8 +89,32 @@ namespace pilo
                         return ::pilo::EC_OPEN_FILE_FAILED;
                     }
 
+#ifdef WINDOWS
+                    _m_file_size = _m_file.get_file_size();
+                    if (_m_file_size == MC_INVALID_SIZE)
+                    {
+                        return ::pilo::EC_GET_FILE_SZ_FAILED;
+                    }
+                    DWORD hi = 0;
+                    DWORD lo = 0;
+                    hi = M_HI32BIT(_m_file_size);
+                    lo = M_LO32BIT(_m_file_size);
+                    _m_win32_map_handle = ::CreateFileMapping(_m_file.file_descriptor(), NULL, flag, M_HI32BIT, M_LO32BIT, NULL);
+                    if (!_m_win32_map_handle)
+                    {
+                        return ::pilo::EC_CREATE_FILE_MAP_ERROR;
+                    }
+
+
+#else
+
+
+#endif
+
                     return ret;
                 }
+
+
 
 
             protected:

@@ -216,6 +216,30 @@ namespace pilo
                     return ::pilo::core::fs::fs_util::unlock_file(_m_os_file_descriptor,  start_pos,  partial_size);
                 }
 
+                os_file_descriptor_t file_descriptor()
+                {
+                    return _m_os_file_descriptor;
+                }
+
+                size_t get_file_size() const
+                {
+                    size_t sz = MC_INVALID_FILE_DESCRIPTOR;
+                    if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        if (::pilo::EC_OK != ::pilo::core::fs::fs_util::calculate_file_size(sz, _m_path.c_str()))
+                        {
+                            return MC_INVALID_SIZE;
+                        }
+                        return sz;
+                    }
+                    
+                    if (::pilo::EC_OK != ::pilo::core::fs::fs_util::calculate_file_size(sz, _m_os_file_descriptor))
+                    {
+                        return MC_INVALID_SIZE;
+                    }
+                    return sz;
+                }
+
             protected:
                 ::pilo::error_number_t _check_path_nolock(const char* path)
                 {
