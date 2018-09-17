@@ -34,3 +34,4 @@ output/lib/libpilocore_vs12_x64_Release_Static.lib
 output/bin/perf-libpilocore_vs12_x64_Release_Static.exe
 output/bin/perf-libpilocore_vs12_x64_Release_Static.exe
 output/bin/test-libpilocore_vs12_x64_Release_Static.exe
+*.ilk
