@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{802d95f2-dc1e-4135-a974-b8e4e8e107b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="topics">
+      <UniqueIdentifier>{ff085dbc-3cf3-4869-a64f-6cb481c6bf68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="topics\path_finding">
+      <UniqueIdentifier>{9a0fd63e-2da7-4497-9173-80a246b55780}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\container">
+      <UniqueIdentifier>{c79385a2-24f0-4788-94e8-c300c4bfca3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\datetime">
+      <UniqueIdentifier>{28ce1418-dfc5-48e0-85f9-6b114fa26f4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\debug">
+      <UniqueIdentifier>{f6e3ba33-25c8-4b57-892e-5071f4ba950b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\dll">
+      <UniqueIdentifier>{4745f0ff-0d51-43da-b983-9ee43a81f945}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\fs">
+      <UniqueIdentifier>{e2a45ca7-5596-4f6e-a516-21528b0dcbdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\info">
+      <UniqueIdentifier>{eeb94dbe-232a-40dc-ace4-bb4f7b9237f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\io">
+      <UniqueIdentifier>{14e4c186-e3cc-47a5-8d1e-e77ab0c4275e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\log">
+      <UniqueIdentifier>{e119c8b5-4b95-42c4-8b47-67940fcde444}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\memory">
+      <UniqueIdentifier>{cc2d2724-1251-464a-ba99-a6f0ee7159e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\net">
+      <UniqueIdentifier>{e922fc52-5b72-41d2-b935-3d434784b8de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\pattern">
+      <UniqueIdentifier>{4ea7bbc0-6168-46df-a921-44d2c75e4c4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\process">
+      <UniqueIdentifier>{b28369e3-f2d2-498f-ba99-b10f48b970f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\threading">
+      <UniqueIdentifier>{88086478-8b0c-4fda-aa1a-a7ef57bf6f58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\random">
+      <UniqueIdentifier>{14c81e55-b89c-45ea-88d6-66be0d0314da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\string">
+      <UniqueIdentifier>{ce0ddc9a-be09-475e-b812-fe43baced812}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\pilo\compat.hpp" />
+    <ClInclude Include="..\..\src\pilo\error.hpp" />
+    <ClInclude Include="..\..\src\pilo\lang_feature.hpp" />
+    <ClInclude Include="..\..\src\pilo\sysdef.hpp" />
+    <ClInclude Include="..\..\src\pilo\types.hpp" />
+    <ClInclude Include="..\..\src\pilo\core\coredefs.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\parameter.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\topics\path_finding\astar_2d_behaviour.hpp">
+      <Filter>topics\path_finding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\topics\path_finding\astar_2d_fixed_bin_heap_opened_list.hpp">
+      <Filter>topics\path_finding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\topics\path_finding\astar_2d_path_finder.hpp">
+      <Filter>topics\path_finding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\topics\path_finding\astar_2d_priority_opened_list.hpp">
+      <Filter>topics\path_finding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\topics\path_finding\path_2d_map.hpp">
+      <Filter>topics\path_finding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\container\fixed_array.hpp">
+      <Filter>core\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\container\fixed_bin_heap.hpp">
+      <Filter>core\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\container\fixed_bitset.hpp">
+      <Filter>core\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\container\singly_linked_selflist.hpp">
+      <Filter>core\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\datetime\datetime.hpp">
+      <Filter>core\datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\datetime\tickcount_simu_thread.hpp">
+      <Filter>core\datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\debug\debug_new.hpp">
+      <Filter>core\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\dll\dll_manager.hpp">
+      <Filter>core\dll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\dll\dynamic_link_library.hpp">
+      <Filter>core\dll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\fs\async_directory_changer_handler.hpp">
+      <Filter>core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\fs\buffered_file.hpp">
+      <Filter>core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\fs\directory_change_monitor.hpp">
+      <Filter>core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\fs\file.hpp">
+      <Filter>core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\fs\fs_util.hpp">
+      <Filter>core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\fs\io_device.hpp">
+      <Filter>core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\fs\mmap.hpp">
+      <Filter>core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\fs\path_string.hpp">
+      <Filter>core\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\info\cpu.hpp">
+      <Filter>core\info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\io\fixed_memory_istream.hpp">
+      <Filter>core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\io\fixed_memory_ostream.hpp">
+      <Filter>core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\io\format_output.hpp">
+      <Filter>core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\io\istream_interface.hpp">
+      <Filter>core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\io\memory_istream_adapter.hpp">
+      <Filter>core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\io\memory_ostream_adapter.hpp">
+      <Filter>core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\io\ostream_interface.hpp">
+      <Filter>core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\log\syncronizedlocaltextlog.h">
+      <Filter>core\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\autoreset_object_pool.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\buffer.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\compactable_autoreset_object_pool.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\compactable_memory_pool.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\compactable_object_pool.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\compactable_overlapped_memory_pool.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\dynamic_buffer.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\dynamic_object_ring_buffer.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\dynamic_overlapped_memory_piece.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\fixed_buffer.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\fixed_memory_piece.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\fixed_overlapped_memory_piece.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\heap_memory_allocator.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\io_buffer.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\memory.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\memory_pool.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\object_pool.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\memory\overlapped_memory_pool.hpp">
+      <Filter>core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\basic_socket.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\basic_socket_server.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\epoll_socket.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\epoll_socket_server.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\epoll_tcp_listen_socket.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\epoll_tcp_socket.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\epoll_udp_socket.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\initiative_tcp_socket.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\iocp_socket.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\iocp_socket_server.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\iocp_tcp_listen_socket.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\iocp_tcp_socket.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\iocp_udp_socket.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\ipv4_address.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\ipv4_mask.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\net_sys_header.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\passive_tcp_socket.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\socket_platform.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\net\tcp_socket_buffer.hpp">
+      <Filter>core\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\string\auto_string.hpp">
+      <Filter>core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\string\fixed_astring.hpp">
+      <Filter>core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\string\fixed_wstring.hpp">
+      <Filter>core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\string\string_util.hpp">
+      <Filter>core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\random\simple_random.hpp">
+      <Filter>core\random</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\advanced_mutex_locker.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\atomic.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\basic_thread.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\dummy_mutex.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\dummy_read_write_lock.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\mutex_locker.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\nonrecursive_mutex.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\nonrecursive_timed_mutex.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\read_write_lock.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\recursive_mutex.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\recursive_timed_mutex.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\rw_mutex_r_locker.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\rw_mutex_w_locker.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\sync_condition_variable_any.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\threading\win_interlocked.hpp">
+      <Filter>core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\process\process.hpp">
+      <Filter>core\process</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\process\process_util.hpp">
+      <Filter>core\process</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\pattern\lazy_singletion_mts.hpp">
+      <Filter>core\pattern</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\pilo\error.cpp" />
+    <ClCompile Include="..\..\src\pilo\core\datetime\datetime.cpp">
+      <Filter>core\datetime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\datetime\tickcount_simu_thread.cpp">
+      <Filter>core\datetime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\debug\debug_new.cpp">
+      <Filter>core\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\dll\dynamic_link_library.cpp">
+      <Filter>core\dll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\fs\directory_change_monitor.cpp">
+      <Filter>core\fs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\fs\fs_util.cpp">
+      <Filter>core\fs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\info\cpu.cpp">
+      <Filter>core\info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\io\format_output.cpp">
+      <Filter>core\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\basic_socket.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\epoll_socket.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\epoll_socket_server.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\epoll_tcp_listen_socket.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\epoll_tcp_socket.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\initiative_tcp_socket.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\iocp_socket.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\iocp_socket_server.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\iocp_tcp_listen_socket.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\iocp_tcp_socket.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\ipv4_address.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\ipv4_mask.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\passive_tcp_socket.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\net\socket_platform.cpp">
+      <Filter>core\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\string\string_util.cpp">
+      <Filter>core\string</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\random\simple_random.cpp">
+      <Filter>core\random</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\threading\basic_thread.cpp">
+      <Filter>core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\threading\nonrecursive_mutex.cpp">
+      <Filter>core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\threading\nonrecursive_timed_mutex.cpp">
+      <Filter>core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\threading\read_write_lock.cpp">
+      <Filter>core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\threading\recursive_mutex.cpp">
+      <Filter>core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\threading\recursive_timed_mutex.cpp">
+      <Filter>core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\process\process_util.cpp">
+      <Filter>core\process</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

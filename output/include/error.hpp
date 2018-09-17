@@ -87,6 +87,9 @@ namespace pilo
         EC_NOT_ABS_PATH,
         EC_GET_FILE_SZ_FAILED,
         EC_CREATE_FILE_MAP_ERROR,
+        EC_UNMAP_FAILED,
+        EC_MAP_FAILED,
+        EC_CONTAINER_FULL,
 
 
         EC_PILO_ERROR_CODE_COUNT, 
