@@ -39,6 +39,7 @@
     <ClInclude Include="..\..\src\pilo\core\fs\mmap.hpp" />
     <ClInclude Include="..\..\src\pilo\core\fs\path_string.hpp" />
     <ClInclude Include="..\..\src\pilo\core\info\cpu.hpp" />
+    <ClInclude Include="..\..\src\pilo\core\info\system_info.hpp" />
     <ClInclude Include="..\..\src\pilo\core\io\fixed_memory_istream.hpp" />
     <ClInclude Include="..\..\src\pilo\core\io\fixed_memory_ostream.hpp" />
     <ClInclude Include="..\..\src\pilo\core\io\format_output.hpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="..\..\src\pilo\core\threading\win_interlocked.hpp" />
     <ClInclude Include="..\..\src\pilo\error.hpp" />
     <ClInclude Include="..\..\src\pilo\lang_feature.hpp" />
+    <ClInclude Include="..\..\src\pilo\pilo.hpp" />
     <ClInclude Include="..\..\src\pilo\sysdef.hpp" />
     <ClInclude Include="..\..\src\pilo\topics\path_finding\astar_2d_behaviour.hpp" />
     <ClInclude Include="..\..\src\pilo\topics\path_finding\astar_2d_fixed_bin_heap_opened_list.hpp" />
@@ -126,6 +128,7 @@
     <ClCompile Include="..\..\src\pilo\core\fs\directory_change_monitor.cpp" />
     <ClCompile Include="..\..\src\pilo\core\fs\fs_util.cpp" />
     <ClCompile Include="..\..\src\pilo\core\info\cpu.cpp" />
+    <ClCompile Include="..\..\src\pilo\core\info\system_info.cpp" />
     <ClCompile Include="..\..\src\pilo\core\io\format_output.cpp" />
     <ClCompile Include="..\..\src\pilo\core\net\basic_socket.cpp" />
     <ClCompile Include="..\..\src\pilo\core\net\epoll_socket.cpp" />
@@ -151,6 +154,7 @@
     <ClCompile Include="..\..\src\pilo\core\threading\recursive_mutex.cpp" />
     <ClCompile Include="..\..\src\pilo\core\threading\recursive_timed_mutex.cpp" />
     <ClCompile Include="..\..\src\pilo\error.cpp" />
+    <ClCompile Include="..\..\src\pilo\pilo.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7AC888B0-2D6C-4657-A951-34CC6AF15644}</ProjectGuid>

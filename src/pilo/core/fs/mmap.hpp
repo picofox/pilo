@@ -1,6 +1,7 @@
 #pragma once
 #include "core/fs/file.hpp"
 #include "core/container/fixed_array.hpp"
+#include "core/info/system_info.hpp"
 
 namespace pilo
 {
@@ -14,15 +15,16 @@ namespace pilo
             {
                 mmap_parameter()
                 {
-                    reset();
-                    
+                    reset();                    
                 }
 
                 void reset()
                 {
-                    m_address = MC_INVALID_PTR;
+                    m_address = nullptr;
+					m_address_required = nullptr;
                     m_offset = 0;
-                    m_length = 0;
+					m_offset_required = 0;
+					m_length = 0;
                     m_priv = PiloGenericPrivillegeEnumeration::eGPE_None;
                 }
 
@@ -35,8 +37,10 @@ namespace pilo
                 }
 
                 void*								m_address;
+				void*								m_address_required;
                 size_t                              m_offset;
-                size_t                              m_length;
+				size_t                              m_offset_required;
+				size_t								m_length;
                 PiloGenericPrivillegeEnumeration    m_priv;
 				
             };
@@ -65,7 +69,7 @@ namespace pilo
                     _finalize_nolock();
                 }
 
-				size_t max_count()
+				size_t capacity()
 				{
 					return _MAX_COUNT;
 				}
@@ -76,7 +80,11 @@ namespace pilo
                     return _m_map_parameters.size();
                 }
 
-				::pilo::error_number_t initialize(const char* path, DeviceAccessModeEnumeration eMode, PiloGenericPrivillegeEnumeration ePriv)
+				::pilo::error_number_t initialize(
+					const char* path, 
+					size_t length,
+					DeviceAccessModeEnumeration eMode, 
+					PiloGenericPrivillegeEnumeration ePriv)
 				{
 					::pilo::core::threading::nonrecursive_mutex<lock_type> locker(_m_lock);
                     ::pilo::error_number_t ret = _finalize_nolock();
@@ -85,7 +93,7 @@ namespace pilo
                         return ret;
                     }           
 
-					return _initialize_nolock(path, eMode, ePriv);
+					return _initialize_nolock(path, length, eMode, ePriv);
 				}
 
                 ::pilo::error_number_t finalize_nolock() 
@@ -160,11 +168,7 @@ namespace pilo
 					{
 						if (_m_map_parameters.at(i).m_address != nullptr)
 						{
-#ifdef WINDOWS
                             _unmap_nolock(i);
-#else
-
-#endif
 						}
 					}
 
@@ -188,57 +192,89 @@ namespace pilo
 
 				}
 
-                ::pilo::error_number_t _initialize_nolock(const char* path, DeviceAccessModeEnumeration eMode, PiloGenericPrivillegeEnumeration ePriv)
+				os_file_descriptor_t temp_fd = MC_INVALID_FILE_DESCRIPTOR;
+
+				::pilo::error_number_t _initialize_nolock(
+					const char* path,
+					size_t length;
+					DeviceAccessModeEnumeration eMode, 
+					PiloGenericPrivillegeEnumeration ePriv)
                 {
                     if (path == nullptr || *path == 0)
                     {
+						if (length == 0)
+						{
+							return ::pilo::EC_NONSENSE_OPERATION;
+						}
+
                         _m_global_priv = ePriv;
                         pilo_set_flag_bit_by_value(_m_flags, MB_MMAP_FLAG_ANONYMOUS);
                         return ::pilo::EC_OK;
                     }
+					else
+					{
+						::pilo::error_number_t ret = _m_file.initialize(path, 0, nullptr);
+						if (ret != ::pilo::EC_OK)
+						{
+							return ::pilo::EC_INITIALIZE_FAILED;
+						}
 
-                    ::pilo::error_number_t ret = _m_file.initialize(path, 0, nullptr);
-                    if (ret != ::pilo::EC_OK)
-                    {
-                        return ::pilo::EC_INITIALIZE_FAILED;
-                    }
+						if (ePriv == PiloGenericPrivillegeEnumeration::eGPE_None)
+						{
+							return  ::pilo::EC_NONSENSE_OPERATION;
+						}
 
-                    if (ePriv == PiloGenericPrivillegeEnumeration::eGPE_None)
-                    {
-                        return  ::pilo::EC_NONSENSE_OPERATION;
-                    }
+						DeviceRWModeEnumeration e_file_acc_prev = eDRWM_ReadWrite;
+						_m_global_priv = ePriv;
 
-                    DeviceRWModeEnumeration e_file_acc_prev = eDRWM_ReadWrite;
-					_m_global_priv.m_priv = ePriv;
+						if (pilo_test_flag_bit_by_value(ePriv, eGPE_Write))
+						{
+							e_file_acc_prev = eDRWM_ReadWrite;
+						}
+						else
+						{
+							e_file_acc_prev = eDRWM_Read;
+						}
 
-                    if (pilo_test_flag_bit_by_value(ePriv, eGPE_Write))
-                    {
-                        e_file_acc_prev = eDRWM_ReadWrite;
-                    }
-                    else
-                    {
-                        e_file_acc_prev = eDRWM_Read;
-                    } 
+						if (_m_file.open(eMode, e_file_acc_prev, 0))
+						{
+							return ::pilo::EC_OPEN_FILE_FAILED;
+						}
+					}	
 
-                    if (_m_file.open(eMode, e_file_acc_prev, 0))
-                    {
-                        return ::pilo::EC_OPEN_FILE_FAILED;
-                    }
+					temp_fd = _m_file.file_descriptor();
 
 #ifdef WINDOWS
-                    DWORD hi = 0;
-                    DWORD lo = 0;
-                    hi = M_HI32BIT(_m_file_size);
-                    lo = M_LO32BIT(_m_file_size);
-                    _m_win32_map_handle = ::CreateFileMapping(_m_file.file_descriptor(), NULL, flag, hi, lo, NULL);
-                    if (NULL == _m_win32_map_handle)
-                    {
-                        return ::pilo::EC_CREATE_FILE_MAP_ERROR;
-                    }
+					DWORD hi = 0;
+					DWORD lo = 0;
+					if (length >= 0)
+					{
+						hi = M_HI32BIT(length);
+						lo = M_LO32BIT(length);
+					}
+
+					_m_win32_map_handle = ::CreateFileMapping(temp_fd, NULL, flag, hi, lo, NULL);
+					if (NULL == _m_win32_map_handle)
+					{
+						return ::pilo::EC_CREATE_FILE_MAP_ERROR;
+					}
 #else
-
-
-#endif
+					size_t file_size = _m_file.get_file_size();
+					if (length == 0)
+					{
+						length = file_size;
+					}
+					else
+					{
+						if (length < file_size)
+						{
+							if (_m_file.seek(length, eDSW_Begin, nullptr) != ::pilo::EC_OK)
+							{
+								return ::pilo::EC_SEEK_FILE_ERROR;
+							}
+						}
+					}
+#endif	
 
                     return ret;
                 }
@@ -251,7 +287,9 @@ namespace pilo
                     if (ret) return ::pilo::EC_OK;
                     else return ::pilo::EC_SYNC_FILE_FAILED;
 #else
-
+					int ret = msync(_m_map_parameters.at(index).m_address, _m_map_parameters.at(index).m_length);
+					if (ret == 0) return ::pilo::EC_OK;
+					else return ::pilo::EC_SYNC_FILE_FAILED;
 #endif
 
                 }
@@ -264,6 +302,8 @@ namespace pilo
                         return ::pilo::EC_OBJECT_NOT_FOUND;
                     }
 
+					size_t mmap_offset = M_ALIGN_SIZE(offset, ::pilo::core::info::system_info::mmap_granuity());
+					void* mmap_addr = nullptr;
 #ifdef WINDOWS
                     DWORD priv = 0;
                     if (pilo_test_flag_bit_by_value(ePriv, PiloGenericPrivillegeEnumeration::eGPE_Exec))
@@ -281,49 +321,65 @@ namespace pilo
 
                     DWORD hi = 0;
                     DWORD lo = 0;
-                    hi = M_HI32BIT(offset);
-                    lo = M_LO32BIT(offset);
-                    LPVOID pret = MapViewOfFileEx(_m_win32_map_handle, priv, hi, lo, length, desired_start_address);
-                    if (pret == NULL)
-                    {
-                        return ::pilo::EC_MAP_FAILED;
-                    }
+					hi = M_HI32BIT(mmap_offset);
+					lo = M_LO32BIT(mmap_offset);
 
-
-                    _m_map_parameters[slot_index].m_address = pret;
-                    _m_map_parameters[slot_index].m_priv = ePriv;
-                    _m_map_parameters[slot_index].m_offset = offset;
-                    _m_map_parameters[slot_index].m_length = length;
-
-                    ref_index = slot_index;
-
-                    
+					mmap_addr = MapViewOfFileEx(_m_win32_map_handle, priv, hi, lo, length, desired_start_address);
+								                        
 #else
+					int priv = PROT_NONE;
+					if (pilo_test_flag_bit_by_value(ePriv, PiloGenericPrivillegeEnumeration::eGPE_Exec))
+					{
+						priv |= PROT_EXEC;
+					}
+					if (pilo_test_flag_bit_by_value(ePriv, PiloGenericPrivillegeEnumeration::eGPE_Read))
+					{
+						priv |= PROT_READ;
+					}
+					if (pilo_test_flag_bit_by_value(ePriv, PiloGenericPrivillegeEnumeration::eGPE_Write))
+					{
+						priv |= PROT_WRITE;
+					}
 
+					if (pilo_test_flag_bit_by_value(_m_flags, MB_MMAP_FLAG_ANONYMOUS))
+					{
+						mmap_addr = mmap(desired_start_address, length, priv, MAP_SHARED | MAP_ANONYMOUS, -1, mmap_offset);
+					}
+					else
+					{
+						mmap_addr = mmap(desired_start_address, length, priv, MAP_SHARED, _m_file.file_descriptor(), mmap_offset);
+					}					
 
 #endif
-                    return ::pilo::EC_OK;
+					if (mmap_addr == NULL)
+					{
+						return ::pilo::EC_MAP_FAILED;
+					}
+
+					ref_index = slot_index;
+					_m_map_parameters[slot_index].m_address = mmap_addr;
+					_m_map_parameters[slot_index].m_address_required = desired_start_address;
+					_m_map_parameters[slot_index].m_offset = mmap_offset;
+					_m_map_parameters[slot_index].m_offset_required = offset;
+					_m_map_parameters[slot_index].m_length = length;
+					_m_map_parameters[slot_index].m_priv = ePriv;
+					
+					return ::pilo::EC_OK;
                 }
 
                 ::pilo::error_number_t _unmap_nolock(size_t index)
                 {
                     _flush_nolock(index);
 #ifdef WINDOWS
-
-                    BOOL ret = UnmapViewOfFileEx(_m_map_parameters.at(index).m_address, _m_map_parameters.at(index).m_length);
-
+					BOOL unmap_ret = UnmapViewOfFileEx(_m_map_parameters.at(index).m_address, _m_map_parameters.at(index).m_length);
+					if (!unmap_ret) return ::pilo::EC_UNMAP_FAILED;
 #else
-
+					int unmap_ret = munmap(_m_map_parameters.at(index).m_address_m_map_parameters.at(index).m_length);
+					if (unmap_ret != 0) return ::pilo::EC_UNMAP_FAILED;
 #endif
+					_m_map_parameters.at(index).reset();
 
-                    if ((bool)ret)
-                    {
-                        _m_map_parameters.at(index).reset();
-                        return ::pilo::EC_OK;
-                    }
-                    else
-                        return ::pilo::EC_UNMAP_FAILED;
-
+					return ::pilo::EC_OK;
                 }
 
             private:

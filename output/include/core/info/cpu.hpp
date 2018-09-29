@@ -6,7 +6,7 @@ namespace pilo
 {
     namespace core
     {
-        namespace infomation
+        namespace info
         {
             void pilo_get_cpuidex(unsigned int CPUInfo[4], unsigned int InfoType, unsigned int ECXValue);
             void pilo_get_cpuid(unsigned int CPUInfo[4], unsigned int InfoType);

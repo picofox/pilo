@@ -4,7 +4,7 @@ namespace pilo
 {
     namespace core
     {
-        namespace infomation
+        namespace info
         {
 
             // intrinsics
