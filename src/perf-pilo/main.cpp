@@ -13,6 +13,17 @@
 #include "core/threading/basic_thread.hpp"
 #include "core/threading/nonrecursive_mutex.hpp"
 
+#ifdef TEST_VS_BOOST
+#   ifdef WINDOWS
+#       ifdef _DEBUG
+#           pragma comment(lib,"libboost_chrono-vc120-mt-gd-x64-1_66.lib")
+#       else
+#           pragma comment(lib,"libboost_chrono-vc120-mt-s-x64-1_66.lib")
+#       endif
+#   endif
+#endif
+
+
 
 int
 main(int argc, char *argv[])

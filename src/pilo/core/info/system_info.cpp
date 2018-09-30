@@ -18,5 +18,5 @@ void pilo::core::info::system_info::_get_mmap_granuity()
 }
 
 size_t pilo::core::info::system_info::_mmap_granuity = 0;
-size_t pilo::core::info::system_info::_flags = 0;
+::pilo::u64_t pilo::core::info::system_info::_flags = 0;
 
