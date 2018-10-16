@@ -46,6 +46,6 @@ namespace pilo
         extern pilo::test::testing_case g_functional_cases_dynamic_buffer[];
         extern pilo::test::testing_case g_functional_cases_file[];
         extern pilo::test::testing_case g_functional_cases_portable_object_pool[];
-        
+        extern pilo::test::testing_case g_functional_cases_mmap[];
     }
 }

@@ -1,0 +1,37 @@
+type=80011406 len=12:72
+start
+type=80011401 len=64:176
+type=80011401 len=64:176
+type=80011402 len=48:144
+
+nSeat=2 fChipBet=91238.400000 fChipLeft=7532095.600000 fRoundBet=91238.400000 bFold=0 nBlind=4 fThisBet=91238.400000
+type=80011402 len=48:144
+
+nSeat=3 fChipBet=91238.400000 fChipLeft=10181326.600000 fRoundBet=91238.400000 bFold=0 nBlind=4 fThisBet=91238.400000
+type=80011402 len=48:144
+
+nSeat=3 fChipBet=319334.400000 fChipLeft=9953230.600000 fRoundBet=319334.400000 bFold=0 nBlind=1 fThisBet=228096.000000
+type=80011402 len=48:144
+
+nSeat=2 fChipBet=547430.400000 fChipLeft=7075903.600000 fRoundBet=547430.400000 bFold=0 nBlind=2 fThisBet=456192.000000
+type=80011404 len=40:128
+type=80011402 len=48:144
+
+nSeat=3 fChipBet=547430.400000 fChipLeft=9725134.600000 fRoundBet=547430.400000 bFold=0 nBlind=0 fThisBet=228096.000000
+type=80011404 len=40:128
+type=80011402 len=48:144
+
+nSeat=2 fChipBet=7623333.400000 fChipLeft=0.600000 fRoundBet=7623333.400000 bFold=0 nBlind=0 fThisBet=7075903.000000
+type=80011404 len=40:128
+type=80011402 len=48:144
+
+nSeat=3 fChipBet=10272565.000000 fChipLeft=0.000000 fRoundBet=10272565.000000 bFold=0 nBlind=0 fThisBet=9725134.600000
+type=80011404 len=40:128
+type=80011402 len=48:144
+
+nSeat=2 fChipBet=7623333.400000 fChipLeft=0.600000 fRoundBet=7623333.400000 bFold=1 nBlind=0 fThisBet=0.000000
+type=80011403 len=88:224
+type=80011403 len=88:224
+type=80011403 len=88:224
+type=80011405 len=16:80
+type=80011406 len=12:72

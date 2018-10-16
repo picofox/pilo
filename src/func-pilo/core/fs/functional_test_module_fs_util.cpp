@@ -61,8 +61,9 @@ namespace pilo
         {
             M_UNUSED(param);
 
-            ::pilo::core::fs::path_string<256> dst_path("../tmp/copied_dir");
-            ::pilo::core::fs::path_string<256> src_path(__st_c_test_trv_paths[0]);
+            ::pilo::core::fs::path_string<256> dst_path("../test_data_dir/func_test/fs/dircopy_dst");
+            ::pilo::core::fs::path_string<256> src_path("../test_data_dir/func_test/fs/dircopy_src");
+
 
             ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::copy_directory(dst_path, src_path, true, true);
             if (ret != ::pilo::EC_OK)
@@ -72,10 +73,6 @@ namespace pilo
 
             test_fs_node_visitor vistor;
             ::pilo::core::fs::fs_util::travel_path_preorder(__st_c_test_trv_paths[0], &vistor, MB_FS_TRAVELSAL_DIR_COPY, true);
-
-
-
-
 
             return 0;
         }

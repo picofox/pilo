@@ -75,6 +75,9 @@
     <ClCompile Include="..\..\src\func-pilo\core\string\functional_test_module_class_string_util.cpp">
       <Filter>core\string</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\func-pilo\core\fs\functional_test_module_mmap.cpp">
+      <Filter>core\fs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\func-pilo\pilo_test.hpp" />
@@ -157,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\func-pilo\core\string\functional_test_module_class_string_util.hpp">
       <Filter>core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\func-pilo\core\fs\functional_test_module_mmap.hpp">
+      <Filter>core\fs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

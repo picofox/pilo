@@ -1,4 +1,5 @@
 #include "pilo_test.hpp"
+#include "pilo.hpp"
 #include <cstring>
 #include "core/io/format_output.hpp"
 #include "core/fs/functional_test_module_path.hpp"
@@ -12,6 +13,7 @@
 #include "core/threading/functional_test_module_class_recursive_mutex.hpp"
 #include "core/container/functional_test_module_class_fixed_array.hpp"
 #include "core/container/functional_test_module_class_fixed_bin_heap.hpp"
+#include "core/fs/functional_test_module_mmap.hpp"
 #include "core/io/functional_test_module_class_fixed_memory_stream.hpp"
 #include "core/container/functional_test_module_class_singly_linked_selflist.hpp"
 #include "core/memory/functional_test_module_class_overlapped_memory_pool.hpp"
@@ -31,6 +33,7 @@
 #include "core/pattern/lazy_singletion_mts.hpp"
 #include <iostream>
 #include <limits>
+
 
 
 #include "core/memory/presure_test_portable_object_pool.hpp"
@@ -475,6 +478,13 @@ int main(int argc, char *argv[])
     M_UNUSED(argc);
     M_UNUSED(argv);	 
 
+    int init_pilo_rc = -1;
+    if ((init_pilo_rc = ::pilo_initialize()) != 0)
+    {
+        ::pilo::core::io::console_format_output("pilo init failed. return code is %d", init_pilo_rc);
+        return -1;
+    }
+
 #ifdef _PILO_DEBUG_HEAP
     pilo_debug_heap_leak_set_verbose(false);
     pilo_debug_heap_leak_set_report_onexit(true);
@@ -504,7 +514,9 @@ int main(int argc, char *argv[])
     datetime_cases.run_cases(break_on_error);
     datetime_cases.console_output();
 
-
+    pilo::test::functional_test_module_mmap  mmap_cases(id++, "functional_test_module_mmap", pilo::test::g_functional_cases_mmap);
+    mmap_cases.run_cases(break_on_error);
+    mmap_cases.console_output();
 
 //     ::pilo::test::presure_test_portable_object_pool presure_obj_pool;
 //     presure_obj_pool.test(nullptr, 0, nullptr);

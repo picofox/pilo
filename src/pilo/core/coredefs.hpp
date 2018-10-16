@@ -193,7 +193,7 @@ template <class T> const T& pilo_max(const T& t1, const T& t2) { return t1 < t2 
 
 #define M_ALIGN_SIZE(size, align) ((size + align - 1) & (~(align - 1)))
 
-
-#define M_LO32BIT(q)           ((WORD)((DWORD_PTR)(q) & 0xffffffff))
-
-#define M_HI32BIT(q)           ((WORD)((DWORD_PTR)(q) >> 32))
+#define M_LO16BIT(_dw)           ((::pilo::u16_t)(((::pilo::u32_t)(_dw)) & 0xffff))
+#define M_HI16BIT(_dw)           ((::pilo::u16_t)((((::pilo::u32_t)(_dw)) >> 16) & 0xffff))
+#define M_LO32BIT(_qw)           ((::pilo::u32_t)(_qw))
+#define M_HI32BIT(_qw)           ((::pilo::u32_t)(((_qw) >> 32) & 0xffffffff))

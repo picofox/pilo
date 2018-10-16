@@ -55,9 +55,7 @@ namespace pilo
                 {
 					_m_global_priv = PiloGenericPrivillegeEnumeration::eGPE_None;
 					_m_flags = 0;
-                    _m_file_size = MC_INVALID_SIZE;
-                    _m_mapped_size = MC_INVALID_SIZE;
-                    _m_mapped_ptr = nullptr; 
+                    _m_file_size_init = MC_INVALID_SIZE;
 					_m_map_parameters.clear();
 #ifdef WINDOWS
                     _m_win32_map_handle = NULL;
@@ -74,7 +72,7 @@ namespace pilo
 					return _MAX_COUNT;
 				}
 
-                size_t count();
+                size_t count()
                 {
                     ::pilo::core::threading::nonrecursive_mutex<lock_type> locker(_m_lock);
                     return _m_map_parameters.size();
@@ -134,7 +132,7 @@ namespace pilo
                     return _unmap_nolock(index);
                 }
 
-                ::pilo::error_number_t mmap(OUT size_t& ref_index, size_t index, PiloGenericPrivillegeEnumeration e_priv, size_t offset, size_t length, void* desired_start_address)
+                ::pilo::error_number_t map(OUT size_t& ref_index, size_t index, PiloGenericPrivillegeEnumeration e_priv, size_t offset, size_t length, void* desired_start_address)
                 {
                     ::pilo::core::threading::nonrecursive_mutex<lock_type> locker(_m_lock);
                     if (_m_win32_map_handle == NULL)
@@ -142,7 +140,7 @@ namespace pilo
                         return ::pilo::EC_UNINITIALIZED;
                     }
 
-                    return _mmap_nolock(ref_index, index, e_priv, offset, length, desired_start_address);
+                    return _map_nolock(ref_index, index, e_priv, offset, length, desired_start_address);
                 }
 
 
@@ -183,23 +181,38 @@ namespace pilo
 
                     _m_global_priv = PiloGenericPrivillegeEnumeration::eGPE_None;
                     _m_flags = 0;
-                    _m_file_size = MC_INVALID_SIZE;
-                    _m_mapped_size = MC_INVALID_SIZE;
-                    _m_mapped_ptr = nullptr;
+                    _m_file_size_init = MC_INVALID_SIZE;
                     _m_map_parameters.clear();
 
                     return ::pilo::EC_OK;
 
-				}
-
-				os_file_descriptor_t temp_fd = MC_INVALID_FILE_DESCRIPTOR;
+				}				
 
 				::pilo::error_number_t _initialize_nolock(
 					const char* path,
-					size_t length;
+					size_t length,
 					DeviceAccessModeEnumeration eMode, 
 					PiloGenericPrivillegeEnumeration ePriv)
                 {
+                    os_file_descriptor_t temp_fd = MC_INVALID_FILE_DESCRIPTOR;
+                    if (ePriv == PiloGenericPrivillegeEnumeration::eGPE_None)
+                    {
+                        return  ::pilo::EC_NONSENSE_OPERATION;
+                    }
+
+                    DeviceRWModeEnumeration e_file_acc_prev = eDRWM_ReadWrite;
+                    _m_global_priv = ePriv;
+
+#ifdef WINDOWS
+                    DWORD win32_protect = PAGE_READONLY;
+#endif
+                    if (pilo_test_flag_bit_by_value(ePriv, eGPE_Write))
+                    {
+
+                        e_file_acc_prev = eDRWM_ReadWrite;
+                        win32_protect = PAGE_READWRITE;
+                    }
+
                     if (path == nullptr || *path == 0)
                     {
 						if (length == 0)
@@ -208,8 +221,8 @@ namespace pilo
 						}
 
                         _m_global_priv = ePriv;
+                        _m_file_size_init = MC_INVALID_SIZE;
                         pilo_set_flag_bit_by_value(_m_flags, MB_MMAP_FLAG_ANONYMOUS);
-                        return ::pilo::EC_OK;
                     }
 					else
 					{
@@ -217,32 +230,22 @@ namespace pilo
 						if (ret != ::pilo::EC_OK)
 						{
 							return ::pilo::EC_INITIALIZE_FAILED;
-						}
-
-						if (ePriv == PiloGenericPrivillegeEnumeration::eGPE_None)
-						{
-							return  ::pilo::EC_NONSENSE_OPERATION;
-						}
-
-						DeviceRWModeEnumeration e_file_acc_prev = eDRWM_ReadWrite;
-						_m_global_priv = ePriv;
-
-						if (pilo_test_flag_bit_by_value(ePriv, eGPE_Write))
-						{
-							e_file_acc_prev = eDRWM_ReadWrite;
-						}
-						else
-						{
-							e_file_acc_prev = eDRWM_Read;
-						}
+						}						
 
 						if (_m_file.open(eMode, e_file_acc_prev, 0))
 						{
 							return ::pilo::EC_OPEN_FILE_FAILED;
 						}
-					}	
 
-					temp_fd = _m_file.file_descriptor();
+                        temp_fd = _m_file.file_descriptor();
+
+                        if (temp_fd == MC_INVALID_FILE_DESCRIPTOR)
+                        {
+                            return ::pilo::EC_OPEN_FILE_FAILED;
+                        }
+
+                        _m_file_size_init = _m_file.get_file_size();
+					}					
 
 #ifdef WINDOWS
 					DWORD hi = 0;
@@ -251,15 +254,15 @@ namespace pilo
 					{
 						hi = M_HI32BIT(length);
 						lo = M_LO32BIT(length);
-					}
+					}                    
 
-					_m_win32_map_handle = ::CreateFileMapping(temp_fd, NULL, flag, hi, lo, NULL);
+                    _m_win32_map_handle = ::CreateFileMapping(temp_fd, NULL, win32_protect, hi, lo, NULL);
 					if (NULL == _m_win32_map_handle)
 					{
 						return ::pilo::EC_CREATE_FILE_MAP_ERROR;
 					}
 #else
-					size_t file_size = _m_file.get_file_size();
+                    size_t file_size = _m_file_size_init;
 					if (length == 0)
 					{
 						length = file_size;
@@ -294,7 +297,7 @@ namespace pilo
 
                 }
 
-                ::pilo::error_number_t _mmap_nolock(OUT size_t& ref_index, size_t index, PiloGenericPrivillegeEnumeration ePriv, size_t offset, size_t length, void* desired_start_address)
+                ::pilo::error_number_t _map_nolock(OUT size_t& ref_index, size_t index, PiloGenericPrivillegeEnumeration ePriv, size_t offset, size_t length, void* desired_start_address)
                 {
                     size_t slot_index = _get_available_slot_index(index);
                     if (slot_index == MC_INVALID_SIZE)
@@ -456,11 +459,7 @@ namespace pilo
             protected:
 				PiloGenericPrivillegeEnumeration    _m_global_priv;
 				::pilo::i32_t						_m_flags;
-                size_t                              _m_file_size;
-                size_t                              _m_mapped_size;
-                void *                              _m_mapped_ptr;
-				
-                
+                size_t                              _m_file_size_init;               
                 lock_type                           _m_lock;
                 ::pilo::core::fs::file<MC_PATH_MAX, ::pilo::core::threading::dummy_read_write_lock> _m_file;
 				::pilo::core::container::fixed_array<mmap_parameter, _MAX_COUNT> _m_map_parameters;
@@ -472,7 +471,7 @@ namespace pilo
 
 
             private:
-                M_DISABLE_COPY
+                M_DISABLE_COPY(mmap);
             };
 
         }

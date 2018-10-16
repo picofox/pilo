@@ -158,6 +158,7 @@
     <ClCompile Include="..\..\src\func-pilo\core\datetime\functional_test_module_class_datetime.cpp" />
     <ClCompile Include="..\..\src\func-pilo\core\fs\functional_test_module_file.cpp" />
     <ClCompile Include="..\..\src\func-pilo\core\fs\functional_test_module_fs_util.cpp" />
+    <ClCompile Include="..\..\src\func-pilo\core\fs\functional_test_module_mmap.cpp" />
     <ClCompile Include="..\..\src\func-pilo\core\fs\functional_test_module_path.cpp" />
     <ClCompile Include="..\..\src\func-pilo\core\io\functional_test_module_class_fixed_memory_stream.cpp" />
     <ClCompile Include="..\..\src\func-pilo\core\memory\functional_test_module_class_compactable_memory_pool.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="..\..\src\func-pilo\core\datetime\functional_test_module_class_datetime.hpp" />
     <ClInclude Include="..\..\src\func-pilo\core\fs\functional_test_module_file.hpp" />
     <ClInclude Include="..\..\src\func-pilo\core\fs\functional_test_module_fs_util.hpp" />
+    <ClInclude Include="..\..\src\func-pilo\core\fs\functional_test_module_mmap.hpp" />
     <ClInclude Include="..\..\src\func-pilo\core\fs\functional_test_module_path.hpp" />
     <ClInclude Include="..\..\src\func-pilo\core\io\functional_test_module_class_fixed_memory_stream.hpp" />
     <ClInclude Include="..\..\src\func-pilo\core\memory\functional_test_module_class_compactable_memory_pool.hpp" />
