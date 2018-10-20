@@ -441,14 +441,24 @@ namespace pilo
                 ::pilo::error_number_t _write_nolock(const void* buffer, size_t len, size_t* written_len)
                 {
 #ifdef          WINDOWS
+                    DWORD nTmpWriteBS = 0;
                     if (!WriteFile(_m_os_file_descriptor,
                         buffer,
                         (DWORD) len,
-                        (DWORD*)written_len,
+                        (DWORD*)&nTmpWriteBS,
                         NULL))
                     {
                         return ::pilo::EC_WRITE_FILE_ERROR;
                     }
+                    else
+                    {
+                        if (written_len != nullptr)
+                        {
+                            *written_len = (size_t)nTmpWriteBS;
+                        }
+                    }
+
+
 #else
                     ssize_t nRet = ::write(_m_os_file_descriptor, buffer, len);
                     if (written_len != nullptr)

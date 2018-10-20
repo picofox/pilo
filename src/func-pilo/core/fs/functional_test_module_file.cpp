@@ -55,9 +55,9 @@ namespace pilo
         };
 
 #ifdef WINDOWS
-        static const char* __st_c_test_file_paths[] = {"..\\..\\output\\tmp\\", "..\\..\\output\\tmp\\d0\\d1\\testfile"};
+        static const char* __st_c_test_file_paths[] = {"../../test_data_dir/func_test/fs/del_test/", "..\\..\\test_data_dir\\func_test\\fs\\file\\d0\\d1\\testinitfile"};
 #else
-        static const char* __st_c_test_file_paths[] = {"../../output/tmp/", "../../output/tmp/d0/d1/testfile"};
+        static const char* __st_c_test_file_paths[] = {"../../test_data_dir/func_test/fs/del_test/", "../../test_data_dir/func_test/fs/file/d0/d1/testinitfile"};
 #endif
 
         static pilo::i32_t functional_test_init(void* param);
@@ -128,13 +128,25 @@ namespace pilo
             ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
 
             ::pilo::core::fs::file<> f0;
+
+            char szbuffer[1024] = { 0 };
+            ::pilo::core::fs::fs_util::get_current_working_directory(szbuffer, sizeof(szbuffer), false, nullptr, false);
             
+            err = ::pilo::core::fs::fs_util::create_directory_recursively("../../test_data_dir/func_test/fs/del_test", false);
+            if (err != ::pilo::EC_OK)
+            {
+                return -1000;
+            }
+
 
             err = ::pilo::core::fs::fs_util::delete_directory(__st_c_test_file_paths[0], false);
             if (err != ::pilo::EC_OK)
             {                
                 return -1;
             }
+
+            ::pilo::core::fs::fs_util::delete_regular_file(__st_c_test_file_paths[1]);
+
             err = f0.initialize(__st_c_test_file_paths[1], MB_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE, nullptr);
             if (err != ::pilo::EC_OK)
             {                
