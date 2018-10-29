@@ -160,8 +160,6 @@ namespace pilo
             protected:
 				::pilo::error_number_t _finalize_nolock()
 				{
-                    ::pilo::error_number_t ret = ::pilo::EC_OK;
-
 					for (size_t i = 0; i < _m_map_parameters.size(); i++)
 					{
 						if (_m_map_parameters.at(i).m_address != nullptr)
@@ -374,7 +372,7 @@ namespace pilo
                 {
                     _flush_nolock(index);
 #ifdef WINDOWS
-					BOOL unmap_ret = UnmapViewOfFileEx(_m_map_parameters.at(index).m_address, _m_map_parameters.at(index).m_length);
+					BOOL unmap_ret = UnmapViewOfFileEx(_m_map_parameters.at(index).m_address,  (ULONG) _m_map_parameters.at(index).m_length);
 					if (!unmap_ret) return ::pilo::EC_UNMAP_FAILED;
 #else
 					int unmap_ret = munmap(_m_map_parameters.at(index).m_address_m_map_parameters.at(index).m_length);

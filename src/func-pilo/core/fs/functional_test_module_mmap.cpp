@@ -1,4 +1,5 @@
 #include "core/fs/mmap.hpp"
+#include "core/fs/file.hpp"
 #include "core/io/format_output.hpp"
 #include "./functional_test_module_mmap.hpp"
 #include "core/threading/basic_thread.hpp"
@@ -20,6 +21,13 @@ namespace pilo
         pilo::i32_t functional_test_mmap_basic(void* param)
         {
             M_UNUSED(param);
+
+            ::pilo::core::fs::fs_util::create_directory_recursively("../../test_data_dir/func_test/fs/mmap/", false);
+            ::pilo::core::fs::fs_util::delete_regular_file("../../test_data_dir/func_test/fs/mmap/basic.mmap");
+
+
+            ::pilo::core::fs::mmap<1> map0;
+
 
             return ::pilo::EC_OK;
         }
