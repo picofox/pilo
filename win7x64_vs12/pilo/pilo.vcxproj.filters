@@ -345,6 +345,12 @@
       <Filter>core\info</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\pilo.hpp" />
+    <ClInclude Include="..\..\src\pilo\core\container\dynamic_array.hpp">
+      <Filter>core\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\container\sorted_dynamic_array.hpp">
+      <Filter>core\container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\pilo\error.cpp" />

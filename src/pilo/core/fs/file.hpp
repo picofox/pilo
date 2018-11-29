@@ -223,7 +223,7 @@ namespace pilo
 
                 size_t get_file_size() const
                 {
-                    size_t sz = MC_INVALID_FILE_DESCRIPTOR;
+                    size_t sz = MC_INVALID_SIZE;
                     if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
                     {
                         if (::pilo::EC_OK != ::pilo::core::fs::fs_util::calculate_file_size(sz, _m_path.c_str()))

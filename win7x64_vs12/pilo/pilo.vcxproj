@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\pilo\compat.hpp" />
+    <ClInclude Include="..\..\src\pilo\core\container\dynamic_array.hpp" />
     <ClInclude Include="..\..\src\pilo\core\container\fixed_array.hpp" />
     <ClInclude Include="..\..\src\pilo\core\container\fixed_bin_heap.hpp" />
     <ClInclude Include="..\..\src\pilo\core\container\fixed_bitset.hpp" />
     <ClInclude Include="..\..\src\pilo\core\container\singly_linked_selflist.hpp" />
+    <ClInclude Include="..\..\src\pilo\core\container\sorted_dynamic_array.hpp" />
     <ClInclude Include="..\..\src\pilo\core\coredefs.hpp" />
     <ClInclude Include="..\..\src\pilo\core\datetime\datetime.hpp" />
     <ClInclude Include="..\..\src\pilo\core\datetime\tickcount_simu_thread.hpp" />

@@ -2,6 +2,56 @@
 #include "core/fs/file.hpp"
 #include "core/container/fixed_array.hpp"
 #include "core/info/system_info.hpp"
+#include "core/threading/rw_mutex_r_locker.hpp"
+#include "core/threading/rw_mutex_w_locker.hpp"
+
+#define MB_MMAP_FLAG_ANONYMOUS  (1<<0)
+
+namespace pilo
+{
+	namespace core
+	{
+		namespace fs
+		{
+			struct mmap_parameter
+			{
+				mmap_parameter()
+				{
+					reset();
+				}
+
+				void reset()
+				{
+					m_address = nullptr;
+					m_address_required = nullptr;
+					m_offset = 0;
+					m_offset_required = 0;
+					m_length = 0;
+					m_priv = PiloGenericPrivillegeEnumeration::eGPE_None;
+				}
+
+				bool unused() const
+				{
+					if (m_address == nullptr)
+						return true;
+					else
+						return false;
+				}
+
+				void*								m_address;
+				void*								m_address_required;
+				size_t                              m_offset;
+				size_t                              m_offset_required;
+				size_t								m_length;
+				PiloGenericPrivillegeEnumeration    m_priv;
+
+			};
+		}
+	}
+}
+
+DECLARE_SIMPLE_TYPE(::pilo::core::fs::mmap_parameter);
+
 
 namespace pilo
 {
@@ -9,41 +59,6 @@ namespace pilo
     {
         namespace fs
         {
-#define MB_MMAP_FLAG_ANONYMOUS  (1<<0)
-
-            struct mmap_parameter
-            {
-                mmap_parameter()
-                {
-                    reset();                    
-                }
-
-                void reset()
-                {
-                    m_address = nullptr;
-					m_address_required = nullptr;
-                    m_offset = 0;
-					m_offset_required = 0;
-					m_length = 0;
-                    m_priv = PiloGenericPrivillegeEnumeration::eGPE_None;
-                }
-
-                bool unused() const
-                {
-                    if (m_address == nullptr)
-                        return true;
-                    else
-                        return false;
-                }
-
-                void*								m_address;
-				void*								m_address_required;
-                size_t                              m_offset;
-				size_t                              m_offset_required;
-				size_t								m_length;
-                PiloGenericPrivillegeEnumeration    m_priv;
-				
-            };
 
             template<size_t _MAX_COUNT, typename _LOCK_TYPE = ::pilo::core::threading::dummy_read_write_lock>
             class mmap
@@ -74,7 +89,7 @@ namespace pilo
 
                 size_t count()
                 {
-                    ::pilo::core::threading::nonrecursive_mutex<lock_type> locker(_m_lock);
+					::pilo::core::threading::rw_mutex_r_locker<lock_type> locker(_m_lock);
                     return _m_map_parameters.size();
                 }
 
@@ -84,7 +99,7 @@ namespace pilo
 					DeviceAccessModeEnumeration eMode, 
 					PiloGenericPrivillegeEnumeration ePriv)
 				{
-					::pilo::core::threading::nonrecursive_mutex<lock_type> locker(_m_lock);
+                    ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
                     ::pilo::error_number_t ret = _finalize_nolock();
                     if (ret != ::pilo::EC_OK)
                     {
@@ -96,13 +111,13 @@ namespace pilo
 
                 ::pilo::error_number_t finalize_nolock() 
                 {
-                    ::pilo::core::threading::nonrecursive_mutex<lock_type> locker(_m_lock);
+                    ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
                     return _finalize_nolock();
                 }
 
                 ::pilo::error_number_t flush(size_t index)
                 {
-                    ::pilo::core::threading::nonrecursive_mutex<lock_type> locker(_m_lock);
+                    ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
                     if (index >= _m_map_parameters.size())
                     {
                         return ::pilo::EC_OUT_OF_RANGE;
@@ -118,7 +133,7 @@ namespace pilo
 
                 ::pilo::error_number_t unmap(size_t index)
                 {
-                    ::pilo::core::threading::nonrecursive_mutex<lock_type> locker(_m_lock);
+                    ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
                     if (index >= _m_map_parameters.size())
                     {
                         return ::pilo::EC_OUT_OF_RANGE;
@@ -134,7 +149,7 @@ namespace pilo
 
                 ::pilo::error_number_t map(OUT size_t& ref_index, size_t index, PiloGenericPrivillegeEnumeration e_priv, size_t offset, size_t length, void* desired_start_address)
                 {
-                    ::pilo::core::threading::nonrecursive_mutex<lock_type> locker(_m_lock);
+                    ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
                     if (_m_win32_map_handle == NULL)
                     {
                         return ::pilo::EC_UNINITIALIZED;
@@ -144,15 +159,31 @@ namespace pilo
                 }
 
 
-                size_t mapped_ptr(size_t index)
+                void* mapped_ptr(size_t index)
                 {
-                    ::pilo::core::threading::nonrecursive_mutex<lock_type> locker(_m_lock);
+                    ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
+                    if (index >= _m_map_parameters.size())
+                    {
+                        return nullptr;
+                    }
+
+                    return _m_map_parameters.at(index).m_address;
+                }
+
+                ::pilo::error_number_t get_mapped_info(mmap_parameter* pinfo, size_t index)
+                {
+                    ::pilo::core::threading::rw_mutex_r_locker<lock_type> locker(_m_lock);
                     if (index >= _m_map_parameters.size())
                     {
                         return ::pilo::EC_OUT_OF_RANGE;
                     }
 
-                    return _m_map_parameters.at(index).m_address;
+                    if (pinfo)
+                    {
+                        *pinfo = _m_map_parameters.at(index);
+                    }
+
+                    return ::pilo::EC_OK;
                 }
 
 
@@ -242,7 +273,20 @@ namespace pilo
                             return ::pilo::EC_OPEN_FILE_FAILED;
                         }
 
-                        _m_file_size_init = _m_file.get_file_size();
+                        if (length <= 0)
+                        {
+                            _m_file_size_init = _m_file.get_file_size();
+                        }
+                        else
+                        {
+                            _m_file_size_init = length;
+                        }
+
+                        if (_m_file_size_init <= 0)
+                        {
+                            return ::pilo::EC_INVALID_PARAM;
+                        }
+                        
 					}					
 
 #ifdef WINDOWS
@@ -277,7 +321,7 @@ namespace pilo
 					}
 #endif	
 
-                    return ret;
+                    return ::pilo::EC_OK;
                 }
 
                 ::pilo::error_number_t _flush_nolock(size_t index)
@@ -305,6 +349,10 @@ namespace pilo
 
 					size_t mmap_offset = M_ALIGN_SIZE(offset, ::pilo::core::info::system_info::mmap_granuity());
 					void* mmap_addr = nullptr;
+                    if (length == 0)
+                    {
+                        length = _m_file_size_init;
+                    }
 #ifdef WINDOWS
                     DWORD priv = 0;
                     if (pilo_test_flag_bit_by_value(ePriv, PiloGenericPrivillegeEnumeration::eGPE_Exec))
@@ -323,7 +371,7 @@ namespace pilo
                     DWORD hi = 0;
                     DWORD lo = 0;
 					hi = M_HI32BIT(mmap_offset);
-					lo = M_LO32BIT(mmap_offset);
+					lo = M_LO32BIT(mmap_offset);                    
 
 					mmap_addr = MapViewOfFileEx(_m_win32_map_handle, priv, hi, lo, length, desired_start_address);
 								                        
@@ -372,7 +420,7 @@ namespace pilo
                 {
                     _flush_nolock(index);
 #ifdef WINDOWS
-					BOOL unmap_ret = UnmapViewOfFileEx(_m_map_parameters.at(index).m_address,  (ULONG) _m_map_parameters.at(index).m_length);
+					BOOL unmap_ret = UnmapViewOfFile(_m_map_parameters.at(index).m_address);
 					if (!unmap_ret) return ::pilo::EC_UNMAP_FAILED;
 #else
 					int unmap_ret = munmap(_m_map_parameters.at(index).m_address_m_map_parameters.at(index).m_length);

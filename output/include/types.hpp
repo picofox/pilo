@@ -771,7 +771,7 @@ void pilo_set_flag_bit_by_index(T v, ::pilo::u32_t b, bool enable)
 template <typename T>
 bool pilo_test_flag_bit_by_index(T v, ::pilo::u32_t b)
 {
-    if (v & (1 << b) == 0)
+    if ((v & (1 << b)) == 0)
     {
         return false;
     }
@@ -782,7 +782,7 @@ bool pilo_test_flag_bit_by_index(T v, ::pilo::u32_t b)
 template <typename T>
 bool pilo_test_flag_bit_by_value(T v, T b)
 {
-    if (v & b == 0)
+    if ((v & b) == 0)
     {
         return false;
     }

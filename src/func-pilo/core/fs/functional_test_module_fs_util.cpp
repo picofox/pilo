@@ -62,7 +62,7 @@ namespace pilo
             M_UNUSED(param);
 
             ::pilo::core::fs::path_string<256> dst_path("../../test_data_dir/func_test/fs/dircopy_dst");
-            ::pilo::core::fs::path_string<256> src_path("../../test_data_dir/func_test/fs/dircopy_src");
+            ::pilo::core::fs::path_string<256> src_path("../../test_data_dir/readonly\\test_fs_tree");
 
 
             ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::copy_directory(dst_path, src_path, true, true);
