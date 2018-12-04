@@ -5,7 +5,7 @@
 
 int pilo_initialize()
 {
-	if (! ::pilo::core::info::system_info::good())
+    if (! ::pilo::core::info::system_info::good())
 	{
 		return -1;
 	}

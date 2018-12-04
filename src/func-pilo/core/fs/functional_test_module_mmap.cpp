@@ -3,7 +3,19 @@
 #include "core/io/format_output.hpp"
 #include "./functional_test_module_mmap.hpp"
 #include "core/threading/basic_thread.hpp"
+#include "core/io/format_output.hpp"
 
+
+struct test_mmap_rec
+{
+    test_mmap_rec()
+    {
+        m_id = -1;
+        name[0] = 0;
+    }
+    int m_id;
+    char name[12];
+};
 
 namespace pilo
 {
@@ -53,7 +65,71 @@ namespace pilo
                 return -30;
             }
 
+            if (info.m_length != 16 * 1024 * 1024)
+            {
+                return -40;
+            }
 
+            for (size_t bo = 0; bo < 1024 * 1024; bo++)
+            {
+                test_mmap_rec rec;
+                rec.m_id = (int) bo;
+                ::pilo::core::io::string_format_output(rec.name, 12, "n_%09d",bo);
+                memcpy(ptr+ bo* 16, &rec, 16);
+            }
+
+            mmp0.finalize();
+
+            ::pilo::core::fs::fs_util::delete_regular_file(mmp_file_path0);
+
+            ::pilo::core::fs::mmap<2> mmp1;
+            ret = mmp1.initialize(mmp_file_path0, 16 * 1024 * 1024, ::pilo::core::fs::eDAM_CreateAlways, eGPE_ReadWrite);
+            if (ret != ::pilo::EC_OK)
+            {
+                return -110;
+            }
+
+            size_t idxes[2];
+            ret = mmp1.map(idxes[0], MC_INVALID_SIZE, eGPE_ReadWrite, 0, 16 * 512 * 1024, nullptr);
+            if (ret != ::pilo::EC_OK)
+            {
+                return -120;
+            }
+            ret = mmp1.map(idxes[1], MC_INVALID_SIZE, eGPE_ReadWrite, 16 * 512 * 1024, 16 * 512 * 1024, nullptr);
+            if (ret != ::pilo::EC_OK)
+            {
+                return -130;
+            }
+
+            ptr = (char*) mmp1.mapped_ptr(idxes[0]);
+            if (ptr == nullptr)
+            {
+                return -140;
+            }
+            for (size_t bo = 0; bo < 512 * 1024; bo++)
+            {
+                test_mmap_rec rec;
+                rec.m_id = (int)bo;
+                ::pilo::core::io::string_format_output(rec.name, 12, "a_%09d", bo);
+                memcpy(ptr + bo * 16, &rec, 16);
+            }
+
+            ptr = (char*)mmp1.mapped_ptr(idxes[1]);
+            if (ptr == nullptr)
+            {
+                return -150;
+            }
+            for (size_t bo = 0; bo < 512 * 1024; bo++)
+            {
+                test_mmap_rec rec;
+                rec.m_id = (int)bo;
+                ::pilo::core::io::string_format_output(rec.name, 12, "b_%09d", bo);
+                memcpy(ptr + bo * 16, &rec, 16);
+            }
+
+            mmp1.finalize();
+
+            ::pilo::core::fs::fs_util::delete_regular_file(mmp_file_path0);
 
             return ::pilo::EC_OK;
         }

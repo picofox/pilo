@@ -119,8 +119,37 @@ namespace pilo
 
                 //element access
                 const wchar_t* c_str() const;
-                wchar_t& operator[] (size_t pos);
-                const wchar_t& operator[] (size_t pos) const;
+                wchar_t& operator[] (size_t pos)
+                {
+                    if (max_capacity <= pos)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    if (pos >= _m_size)
+                    {
+                        _m_data[pos] = 0;
+                    }
+
+                    return _m_data[pos];
+                }
+                const wchar_t& operator[] (size_t pos) const
+                {
+                    if (max_capacity <= pos)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    if (pos >= _m_size)
+                    {
+                        M_ASSERT(false);
+                        throw pilo::EC_REACH_UPPER_LIMIT;
+                    }
+
+                    return _m_data[pos];
+                }
                 wchar_t& at(size_t pos);
                 const wchar_t& at(size_t pos) const;
                 wchar_t& back();
@@ -613,40 +642,7 @@ namespace pilo
             }
 
             //element access
-            template< size_t max_capacity>
-            wchar_t& pilo::core::string::fixed_wstring<max_capacity>::operator[](size_t pos)
-            {
-                if (max_capacity <= pos)
-                {
-                    M_ASSERT(false);
-                    throw pilo::EC_REACH_UPPER_LIMIT;
-                }
-
-                if (pos >= _m_size)
-                {
-                    _m_data[pos] = 0;
-                }
-
-                return _m_data[pos];
-            }
-
-            template< size_t max_capacity>
-            const wchar_t& pilo::core::string::fixed_wstring<max_capacity>::operator[](size_t pos) const
-            {
-                if (max_capacity <= pos)
-                {
-                    M_ASSERT(false);
-                    throw pilo::EC_REACH_UPPER_LIMIT;
-                }
-
-                if (pos >= _m_size)
-                {
-                    M_ASSERT(false);
-                    throw pilo::EC_REACH_UPPER_LIMIT;
-                }
-
-                return _m_data[pos];
-            }
+           
 
             template< size_t max_capacity>
             wchar_t& pilo::core::string::fixed_wstring<max_capacity>::at(size_t pos)

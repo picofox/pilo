@@ -1,6 +1,6 @@
 #include "system_info.hpp"
 
-void pilo::core::info::system_info::_get_mmap_granuity()
+void pilo::core::info::system_info::_calculate_mmap_granuity()
 {
 #ifdef WINDOWS
 	SYSTEM_INFO tagSystemInf;
@@ -18,5 +18,5 @@ void pilo::core::info::system_info::_get_mmap_granuity()
 }
 
 size_t pilo::core::info::system_info::_mmap_granuity = 0;
-::pilo::u64_t pilo::core::info::system_info::_flags = 0;
+::pilo::u64_t pilo::core::info::system_info::_flags = 0xFFFFFFFFFFFFFFFF;
 

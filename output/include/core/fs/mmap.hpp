@@ -109,7 +109,7 @@ namespace pilo
 					return _initialize_nolock(path, length, eMode, ePriv);
 				}
 
-                ::pilo::error_number_t finalize_nolock() 
+                ::pilo::error_number_t finalize() 
                 {
                     ::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
                     return _finalize_nolock();

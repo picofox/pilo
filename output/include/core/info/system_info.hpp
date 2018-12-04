@@ -13,9 +13,7 @@ namespace pilo
 			public:
 				system_info()
 				{
-					_flags = 0;
-					_get_mmap_granuity();
-
+					_flags = 0xFFFFFFFFFFFFFFFF;					
 				}
 
 				inline static size_t mmap_granuity()
@@ -23,10 +21,20 @@ namespace pilo
 					return _mmap_granuity;
 				}
 
-				inline static bool good() { return (_flags == 0); }
+				inline static bool good() 
+                { 
+                    if (_flags == 0)
+                    {
+                        return true;
+                    }
+
+                    _flags = 0;
+                    _calculate_mmap_granuity();
+                    return (_flags == 0);
+                }
 
 			private:
-				static void _get_mmap_granuity();
+				static void _calculate_mmap_granuity();
 
 			private:
 				static ::pilo::u64_t _flags;
