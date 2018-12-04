@@ -92,6 +92,7 @@
     <ClInclude Include="..\..\src\pilo\core\process\process.hpp" />
     <ClInclude Include="..\..\src\pilo\core\process\process_util.hpp" />
     <ClInclude Include="..\..\src\pilo\core\random\simple_random.hpp" />
+    <ClInclude Include="..\..\src\pilo\core\string\anonymous_mmap.hpp" />
     <ClInclude Include="..\..\src\pilo\core\string\auto_string.hpp" />
     <ClInclude Include="..\..\src\pilo\core\string\fixed_astring.hpp" />
     <ClInclude Include="..\..\src\pilo\core\string\fixed_wstring.hpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="..\..\src\pilo\core\net\socket_platform.cpp" />
     <ClCompile Include="..\..\src\pilo\core\process\process_util.cpp" />
     <ClCompile Include="..\..\src\pilo\core\random\simple_random.cpp" />
+    <ClCompile Include="..\..\src\pilo\core\string\anonymous_mmap.cpp" />
     <ClCompile Include="..\..\src\pilo\core\string\string_util.cpp" />
     <ClCompile Include="..\..\src\pilo\core\threading\basic_thread.cpp" />
     <ClCompile Include="..\..\src\pilo\core\threading\nonrecursive_mutex.cpp" />

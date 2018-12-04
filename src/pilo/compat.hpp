@@ -4,12 +4,14 @@
 
 
 #if defined(WINDOWS)
-#define M_UNUSED(x) do { (void)(x); } while (0)
+#   define M_UNUSED(x) do { (void)(x); } while (0)
 #   define MF_COUNT_OF _countof
+#   define MC_MAP_FAILED_INDICATOR  (NULL)
 
 #else
 #   define M_UNUSED(x) (void)x
 #   define MF_COUNT_OF(_Array) (sizeof(_Array) / sizeof(_Array[0]))
+#   define MC_MAP_FAILED_INDICATOR  (MAP_FAILED)
 #endif
 
 

@@ -26,7 +26,7 @@ namespace pilo
         pilo::test::testing_case g_functional_cases_mmap[] =
         {
             /*---"---------------------------------------------"*/
-            { 1, "initilized()                                 ", nullptr, functional_test_mmap_basic, 0, -1, (pilo::u32_t) - 1 },
+            { 1, "basicfunc()                                  ", nullptr, functional_test_mmap_basic, 0, -1, (pilo::u32_t) - 1 },
             { -1, "end", nullptr, nullptr, 0, -1, 0 },
         };
 

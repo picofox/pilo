@@ -5,8 +5,6 @@
 #include "core/threading/rw_mutex_r_locker.hpp"
 #include "core/threading/rw_mutex_w_locker.hpp"
 
-#define MB_MMAP_FLAG_ANONYMOUS  (1<<0)
-
 namespace pilo
 {
 	namespace core
@@ -69,7 +67,6 @@ namespace pilo
                 mmap()
                 {
 					_m_global_priv = PiloGenericPrivillegeEnumeration::eGPE_None;
-					_m_flags = 0;
                     _m_file_size_init = MC_INVALID_SIZE;
 					_m_map_parameters.clear();
 #ifdef WINDOWS
@@ -207,9 +204,7 @@ namespace pilo
                     }
 #endif
                     _m_file.finalize();
-
                     _m_global_priv = PiloGenericPrivillegeEnumeration::eGPE_None;
-                    _m_flags = 0;
                     _m_file_size_init = MC_INVALID_SIZE;
                     _m_map_parameters.clear();
 
@@ -223,6 +218,11 @@ namespace pilo
 					DeviceAccessModeEnumeration eMode, 
 					PiloGenericPrivillegeEnumeration ePriv)
                 {
+                    if (path == nullptr || *path == 0)
+                    {
+                        return ::pilo::EC_NULL_PARAM;
+                    }
+
                     os_file_descriptor_t temp_fd = MC_INVALID_FILE_DESCRIPTOR;
                     if (ePriv == PiloGenericPrivillegeEnumeration::eGPE_None)
                     {
@@ -242,52 +242,38 @@ namespace pilo
                         win32_protect = PAGE_READWRITE;
                     }
 
-                    if (path == nullptr || *path == 0)
+                    ::pilo::error_number_t ret = _m_file.initialize(path, 0, nullptr);
+                    if (ret != ::pilo::EC_OK)
                     {
-						if (length == 0)
-						{
-							return ::pilo::EC_NONSENSE_OPERATION;
-						}
-
-                        _m_global_priv = ePriv;
-                        _m_file_size_init = MC_INVALID_SIZE;
-                        pilo_set_flag_bit_by_value(_m_flags, MB_MMAP_FLAG_ANONYMOUS);
+                        return ::pilo::EC_INITIALIZE_FAILED;
                     }
-					else
-					{
-						::pilo::error_number_t ret = _m_file.initialize(path, 0, nullptr);
-						if (ret != ::pilo::EC_OK)
-						{
-							return ::pilo::EC_INITIALIZE_FAILED;
-						}						
 
-						if (_m_file.open(eMode, e_file_acc_prev, 0))
-						{
-							return ::pilo::EC_OPEN_FILE_FAILED;
-						}
+                    if (_m_file.open(eMode, e_file_acc_prev, 0))
+                    {
+                        return ::pilo::EC_OPEN_FILE_FAILED;
+                    }
 
-                        temp_fd = _m_file.file_descriptor();
+                    temp_fd = _m_file.file_descriptor();
 
-                        if (temp_fd == MC_INVALID_FILE_DESCRIPTOR)
-                        {
-                            return ::pilo::EC_OPEN_FILE_FAILED;
-                        }
+                    if (temp_fd == MC_INVALID_FILE_DESCRIPTOR)
+                    {
+                        return ::pilo::EC_OPEN_FILE_FAILED;
+                    }
 
-                        if (length <= 0)
-                        {
-                            _m_file_size_init = _m_file.get_file_size();
-                        }
-                        else
-                        {
-                            _m_file_size_init = length;
-                        }
+                    if (length <= 0)
+                    {
+                        _m_file_size_init = _m_file.get_file_size();
+                    }
+                    else
+                    {
+                        _m_file_size_init = length;
+                    }
 
-                        if (_m_file_size_init <= 0)
-                        {
-                            return ::pilo::EC_INVALID_PARAM;
-                        }
-                        
-					}					
+                    if (_m_file_size_init <= 0)
+                    {
+                        return ::pilo::EC_INVALID_PARAM;
+                    }
+				
 
 #ifdef WINDOWS
 					DWORD hi = 0;
@@ -390,17 +376,11 @@ namespace pilo
 						priv |= PROT_WRITE;
 					}
 
-					if (pilo_test_flag_bit_by_value(_m_flags, MB_MMAP_FLAG_ANONYMOUS))
-					{
-						mmap_addr = mmap(desired_start_address, length, priv, MAP_SHARED | MAP_ANONYMOUS, -1, mmap_offset);
-					}
-					else
-					{
-						mmap_addr = mmap(desired_start_address, length, priv, MAP_SHARED, _m_file.file_descriptor(), mmap_offset);
-					}					
+                    mmap_addr = mmap(desired_start_address, length, priv, MAP_SHARED, _m_file.file_descriptor(), mmap_offset);
+				
 
 #endif
-					if (mmap_addr == NULL)
+					if (mmap_addr == MC_MAP_FAILED_INDICATOR)
 					{
 						return ::pilo::EC_MAP_FAILED;
 					}
@@ -504,7 +484,6 @@ namespace pilo
 
             protected:
 				PiloGenericPrivillegeEnumeration    _m_global_priv;
-				::pilo::i32_t						_m_flags;
                 size_t                              _m_file_size_init;               
                 lock_type                           _m_lock;
                 ::pilo::core::fs::file<MC_PATH_MAX, ::pilo::core::threading::dummy_read_write_lock> _m_file;
