@@ -1,3 +1,4 @@
+#pragma once
 #include "core/coredefs.hpp"
 
 #define MB_SYSINFO_FLAG_MMAP_GRAN	(0)

@@ -351,7 +351,7 @@
     <ClInclude Include="..\..\src\pilo\core\container\sorted_dynamic_array.hpp">
       <Filter>core\container</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\pilo\core\string\anonymous_mmap.hpp">
+    <ClInclude Include="..\..\src\pilo\core\fs\anonymous_mmap.hpp">
       <Filter>core\fs</Filter>
     </ClInclude>
   </ItemGroup>
@@ -454,7 +454,7 @@
       <Filter>core\info</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\pilo\pilo.cpp" />
-    <ClCompile Include="..\..\src\pilo\core\string\anonymous_mmap.cpp">
+    <ClCompile Include="..\..\src\pilo\core\fs\anonymous_mmap.cpp">
       <Filter>core\fs</Filter>
     </ClCompile>
   </ItemGroup>
