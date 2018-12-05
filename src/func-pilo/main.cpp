@@ -535,11 +535,11 @@ int main(int argc, char *argv[])
 //     string_util_cases.console_output();
 
 
-// 
-//     pilo::test::functional_test_module_class_fixed_wstring  fixed_wstring_cases(id++, "functional_test_module_class_fixed_wstring", pilo::test::g_functional_cases_fixed_wstring);
-//     fixed_wstring_cases.run_cases(break_on_error);
-//     fixed_wstring_cases.console_output();
-// 
+
+    pilo::test::functional_test_module_class_fixed_wstring  fixed_wstring_cases(id++, "functional_test_module_class_fixed_wstring", pilo::test::g_functional_cases_fixed_wstring);
+    fixed_wstring_cases.run_cases(break_on_error);
+    fixed_wstring_cases.console_output();
+
 
 
 //     pilo::test::functional_test_module_class_basic_thread  basic_thread_cases(id++, "functional_test_module_class_basic_thread", pilo::test::g_functional_cases_basic_thread);

@@ -123,11 +123,6 @@ namespace pilo
                     return *this;
                 }
 
-                operator const char* ()
-                {
-                    return _m_data;
-                }
-
                 //attribute
                 size_t size() const;
                 size_t length() const;
@@ -712,34 +707,34 @@ namespace pilo
             }
 
             //element access
-            template< size_t max_capacity>
-            char& pilo::core::string::fixed_astring<max_capacity>::operator[](size_t pos)
-            {
-                if (max_capacity < pos)
-                {
-                    M_ASSERT(false);
-                    throw pilo::EC_REACH_UPPER_LIMIT;
-                }
-
-                if (pos > _m_size)
-                {
-                    _m_data[pos] = 0;
-                }
-
-                return _m_data[pos];
-            }
-
-            template< size_t max_capacity>
-            const char& pilo::core::string::fixed_astring<max_capacity>::operator[](size_t pos) const
-            {
-                if (pos > _m_size)
-                {
-                    M_ASSERT(false);
-                    throw pilo::EC_REACH_UPPER_LIMIT;
-                }
-
-                return _m_data[pos];
-            }
+             template< size_t max_capacity>
+             char& pilo::core::string::fixed_astring<max_capacity>::operator[](size_t pos)
+             {
+                 if (max_capacity < pos)
+                 {
+                     M_ASSERT(false);
+                     throw pilo::EC_REACH_UPPER_LIMIT;
+                 }
+ 
+                 if (pos > _m_size)
+                 {
+                     _m_data[pos] = 0;
+                 }
+ 
+                 return _m_data[pos];
+             }
+ 
+             template< size_t max_capacity>
+             const char& pilo::core::string::fixed_astring<max_capacity>::operator[](size_t pos) const
+             {
+                 if (pos > _m_size)
+                 {
+                     M_ASSERT(false);
+                     throw pilo::EC_REACH_UPPER_LIMIT;
+                 }
+ 
+                 return _m_data[pos];
+             }
 
             template< size_t max_capacity>
             char& pilo::core::string::fixed_astring<max_capacity>::at(size_t pos)
