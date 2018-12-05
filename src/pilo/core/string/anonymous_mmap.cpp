@@ -39,7 +39,13 @@ namespace pilo
                 DWORD lo = 0;
                 if (length >= 0)
                 {
+#ifdef __x86_64__
                     hi = M_HI32BIT(length);
+#else
+                    hi = 0;
+#endif // __x86_64__
+
+                    
                     lo = M_LO32BIT(length);
                 }
 

@@ -280,7 +280,12 @@ namespace pilo
 					DWORD lo = 0;
 					if (length >= 0)
 					{
-						hi = M_HI32BIT(length);
+#ifdef __x86_64__
+                        hi = M_HI32BIT(length);
+#else
+                        hi = 0;
+#endif // __x86_64__
+
 						lo = M_LO32BIT(length);
 					}                    
 
@@ -356,7 +361,12 @@ namespace pilo
 
                     DWORD hi = 0;
                     DWORD lo = 0;
-					hi = M_HI32BIT(mmap_offset);
+#ifdef __x86_64__
+                    hi = M_HI32BIT(length);
+#else
+                    hi = 0;
+#endif // __x86_64__
+
 					lo = M_LO32BIT(mmap_offset);                    
 
 					mmap_addr = MapViewOfFileEx(_m_win32_map_handle, priv, hi, lo, length, desired_start_address);
