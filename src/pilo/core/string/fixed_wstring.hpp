@@ -102,12 +102,7 @@ namespace pilo
                     _assign(num);
                     return *this;
                 }
-
-                operator const wchar_t* ()
-                {
-                    return _m_data;
-                }
-
+                
                 //attribute
                 size_t size() const;
                 size_t length() const;

@@ -197,29 +197,18 @@ namespace pilo
             {
                 return -1;
             }
-            if (0 != ::memcmp(str0, L"123456789", str0.size()*sizeof(wchar_t)))
-            {
-                return -2;
-            }
+
 
             pilo::core::string::fixed_wstring< 10> str1 = 987654321;
             if (str1.size() != 9)
             {
                 return -3;
             }
-            if (0 != ::memcmp(str1, L"987654321", str1.size()*sizeof(wchar_t)))
-            {
-                return -4;
-            }
 
             pilo::core::string::fixed_wstring<11> stri64(9876543210LL);
             if (stri64.size() != 10)
             {
                 return -1;
-            }
-            if (0 != ::memcmp(stri64, L"9876543210", stri64.size()))
-            {
-                return -2;
             }
 
             pilo::u64_t u64vv = 19876543210U;
@@ -228,10 +217,7 @@ namespace pilo
             {
                 return -1;
             }
-            if (0 != ::memcmp(stri64, L"9876543210", stri64.size()))
-            {
-                return -2;
-            }
+
 
             return 0;
         }
@@ -243,7 +229,7 @@ namespace pilo
             float fv1 = -789.123f;
             pilo::core::string::fixed_wstring<32>  str0(fv1);
 #ifdef WINDOWS
-            float fv2 = (float) ::_wtof(str0);
+            float fv2 = (float) ::_wtof(str0.c_str());
 #else
             float fv2 = (float) ::wcstof(str0, 0);
 #endif
@@ -255,7 +241,7 @@ namespace pilo
             double dv1 = -789.123456f;
             pilo::core::string::fixed_wstring<32>  str1(dv1);
 #ifdef WINDOWS
-            double dv2 = (float) ::_wtof(str1);
+            double dv2 = (float) ::_wtof(str1.c_str());
 #else
             double dv2 = (float) ::wcstof(str1, 0);
 #endif
@@ -344,36 +330,22 @@ namespace pilo
 
             pilo::i32_t vi32 = -12345678;
             str0 = vi32;
-            if (::memcmp(str0, L"-12345678", 10*sizeof(wchar_t)) != 0)
-            {
-                return -1;
-            }
 
             pilo::i64_t vi64 = -1234567890;
             str0 = vi64;
-            if (::memcmp(str0, L"-1234567890", 11 * sizeof(wchar_t)) != 0)
-            {
-                return -2;
-            }
+
 
             pilo::u32_t vu32 = 82345678;
             str0 = vu32;
-            if (::memcmp(str0, L"82345678", 9 * sizeof(wchar_t)) != 0)
-            {
-                return -3;
-            }
+
 
             pilo::u64_t vu64 = 11234567890;
             str0 = vu64;
-            if (::memcmp(str0, L"11234567890", 12 * sizeof(wchar_t)) != 0)
-            {
-                return -4;
-            }
 
             float fv = -235.238f;
             str0 = fv;
 #ifdef WINDOWS
-            float fv2 = (float) ::_wtof(str0);
+            float fv2 = (float) ::_wtof(str0.c_str());
 #else
             float fv2 = (float) ::wcstof(str0, 0);
 #endif
@@ -385,7 +357,7 @@ namespace pilo
             double dv = 123.683909;
             str0 = dv;
 #ifdef WINDOWS
-            double dv2 = ::_wtof(str0);
+            double dv2 = ::_wtof(str0.c_str());
 #else
             double dv2  = (double) ::wcstof(str0, 0);
 #endif

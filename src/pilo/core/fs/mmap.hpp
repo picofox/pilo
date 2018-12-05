@@ -424,7 +424,7 @@ namespace pilo
             private:
                 size_t _find_free_slot()
                 {
-                    for (int i = 0; i < _m_map_parameters.size(); i++)
+                    for (size_t i = 0; i <  _m_map_parameters.size(); i++)
                     {
                         if (_m_map_parameters.at(i).m_address == nullptr)
                         {
