@@ -43,6 +43,7 @@ namespace pilo
         static pilo::i32_t functional_is_absolute_path(void* param);   
         static pilo::i32_t functional_getcwd(void* param);
         static pilo::i32_t functional_traval_path_preorder(void* param);
+        static pilo::i32_t functional_truncate(void* param);
 
         pilo::test::testing_case g_functional_cases_fs_util[] =
         {
@@ -50,11 +51,76 @@ namespace pilo
             { 1, "is_absolute_path                             ", nullptr, functional_is_absolute_path, 0, -1, (pilo::u32_t) - 1 },
             { 2, "get_current_working_directory                ", nullptr, functional_getcwd          , 0, -1, (pilo::u32_t) - 1 },
             { 3, "traval_path_preorder                         ", nullptr, functional_traval_path_preorder, 0, -1, (pilo::u32_t) - 1 },
-
+            { 4, "truncate                                     ", nullptr, functional_truncate,        0, -1, (pilo::u32_t) - 1 },
 
             { -1, "end", nullptr, nullptr, 0, -1, 0 },
         };
 
+        pilo::i32_t functional_truncate(void* param)
+        {
+            M_UNUSED(param);
+            const char* test_file_path = "..\\..\\test_data_dir\\func_test\\fs\\fs_util\\test_truncate.dat";
+            ::pilo::core::fs::fs_util::delete_regular_file(test_file_path);
+            size_t sz = 0;
+
+            ::pilo::error_number_t eret = ::pilo::core::fs::fs_util::create_regular_file(test_file_path, false);
+            if (eret != ::pilo::EC_OK)
+            {
+                return -1;
+            }
+
+            eret = ::pilo::core::fs::fs_util::truncate_file(test_file_path, 1234567);
+            if (eret != ::pilo::EC_OK)
+            {
+                return -10;
+            }
+
+            eret = ::pilo::core::fs::fs_util::calculate_file_size(sz, test_file_path);
+            if (eret != ::pilo::EC_OK)
+            {
+                return -15;
+            }
+            if (sz != 1234567)
+            {
+                return -16;
+            }
+
+            eret = ::pilo::core::fs::fs_util::truncate_file(test_file_path, 999);
+            if (eret != ::pilo::EC_OK)
+            {
+                return -30;
+            }
+
+            eret = ::pilo::core::fs::fs_util::calculate_file_size(sz, test_file_path);
+            if (eret != ::pilo::EC_OK)
+            {
+                return -40;
+            }
+            if (sz != 999)
+            {
+                return -50;
+            }
+
+            eret = ::pilo::core::fs::fs_util::truncate_file(test_file_path, 0);
+            if (eret != ::pilo::EC_OK)
+            {
+                return -30;
+            }
+            eret = ::pilo::core::fs::fs_util::calculate_file_size(sz, test_file_path);
+            if (eret != ::pilo::EC_OK)
+            {
+                return -40;
+            }
+            if (sz != 0)
+            {
+                return -50;
+            }
+
+
+
+
+            return ::pilo::EC_OK;
+        }
 
 
         pilo::i32_t functional_traval_path_preorder(void* param)

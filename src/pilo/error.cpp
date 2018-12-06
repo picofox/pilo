@@ -90,6 +90,9 @@ const char* __glb_pilo_error_code_to_string_list[pilo::EC_PILO_ERROR_CODE_COUNT]
     "EC_UNMAP_FAILED",
     "EC_MAP_FAILED",
     "EC_CONTAINER_FULL",
+    "EC_IO_SEEK_ERROR",
+    "EC_DEV_TRUNK_ERROR",
+    "EC_CREATE_FILE_ERROR",
 };
 
 

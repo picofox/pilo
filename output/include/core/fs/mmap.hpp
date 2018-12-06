@@ -306,7 +306,7 @@ namespace pilo
 						{
 							if (_m_file.seek(length, eDSW_Begin, nullptr) != ::pilo::EC_OK)
 							{
-								return ::pilo::EC_SEEK_FILE_ERROR;
+                                return ::pilo::EC_DEV_SEEK_ERROR;
 							}
 						}
 					}

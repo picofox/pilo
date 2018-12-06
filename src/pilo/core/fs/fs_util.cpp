@@ -1068,6 +1068,86 @@ namespace pilo
                 
             }
 
+            ::pilo::error_number_t fs_util::truncate_file(::pilo::os_file_descriptor_t fildes, size_t sz, bool reset_ptr)
+            {                
+#ifdef WINDOWS
+                if (seek_file(fildes, (ssize_t) sz, eDSW_Begin) != ::pilo::EC_OK)
+                {
+                    return MAKE_SYSERR(::pilo::EC_DEV_SEEK_ERROR);
+                }
+
+                if (!SetEndOfFile(fildes))
+                {
+                    return MAKE_SYSERR(::pilo::EC_DEV_TRUNK_ERROR);
+                }
+#else
+                if (ftruncate(fildes, sz))
+                {
+                    return MAKE_SYSERR(::pilo::EC_DEV_TRUNK_ERROR);
+                }
+#endif
+
+                if (reset_ptr)
+                {
+                    if (seek_file(fildes, 0, eDSW_Begin) != ::pilo::EC_OK)
+                    {
+                        return MAKE_SYSERR(::pilo::EC_DEV_SEEK_ERROR);
+                    }
+                }
+
+                return ::pilo::EC_OK;
+            }
+
+            ::pilo::error_number_t fs_util::truncate_file(const char* path, size_t sz)
+            {
+#ifdef WINDOWS
+                os_file_descriptor_t fd;
+                ::pilo::error_number_t ret = ::pilo::core::fs::fs_util::open_file(fd, path, ::pilo::core::fs::eDAM_OpenExisting, ::pilo::core::fs::eDRWM_Write, 0);
+                if (ret != ::pilo::EC_OK)
+                {
+                    return MAKE_SYSERR(::pilo::EC_OPEN_FILE_FAILED);
+                }
+                
+                if (::pilo::EC_OK != truncate_file(fd, sz, false))
+                {
+                    return ::pilo::EC_DEV_TRUNK_ERROR;
+                }
+
+                if (::pilo::EC_OK !=  ::pilo::core::fs::fs_util::close_file(fd ,0))
+                {
+                    return ::pilo::EC_CLOSE_FILE_ERROR;
+                }
+
+#else
+                if (truncate(path, sz))
+                {
+                    return MAKE_SYSERR(::pilo::EC_DEV_TRUNK_ERROR);
+                }
+#endif
+
+                return ::pilo::EC_OK;
+            }
+
+            ::pilo::error_number_t fs_util::seek_file(::pilo::os_file_descriptor_t fildes, ssize_t sz, DeviceSeekWhenceEnumeration eWhence)
+            {
+#ifdef WINDOWS
+                LARGE_INTEGER li;
+                li.QuadPart = sz;
+                if (!::SetFilePointerEx(fildes, li, NULL, eWhence))
+                {
+                    return MAKE_SYSERR(::pilo::EC_DEV_SEEK_ERROR);
+                }
+
+#else
+                off64_t nRet = lseek64(fildes, sz, eWhence);
+                if (nRet == -1)
+                {
+                    return MAKE_SYSERR(::pilo::EC_DEV_SEEK_ERROR);
+                }
+#endif
+                return ::pilo::EC_OK;
+            }
+
             ::pilo::error_number_t fs_util::get_file_modified_time(::pilo::core::datetime::datetime &dt, const char* filepath)
             {
                 MP_CHECK_EMPTY_CSTR_RET(filepath, ::pilo::EC_INVALID_PARAM);

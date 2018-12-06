@@ -212,7 +212,7 @@ namespace pilo
                 {
                     if (filename == nullptr) return ::pilo::EC_NULL_PARAM;
 #if defined(WINDOWS)
-                    HANDLE hFile = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+                    HANDLE hFile = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
                     if (INVALID_HANDLE_VALUE == hFile)
                     {
                         return ::pilo::EC_OBJECT_NOT_FOUND;
@@ -669,6 +669,10 @@ namespace pilo
                 static ::pilo::error_number_t create_regular_file(const char* path, bool always);
                 static ::pilo::error_number_t open_file(::pilo::os_file_descriptor_t& fildes, const char* path, ::pilo::core::fs::DeviceAccessModeEnumeration, ::pilo::core::fs::DeviceRWModeEnumeration, ::pilo::u32_t flags);
                 static ::pilo::error_number_t close_file(::pilo::os_file_descriptor_t fd, ::pilo::u32_t flags);
+                static ::pilo::error_number_t truncate_file(::pilo::os_file_descriptor_t fildes, size_t sz, bool reset_ptr);
+                static ::pilo::error_number_t truncate_file(const char* path, size_t sz);
+                static ::pilo::error_number_t seek_file(::pilo::os_file_descriptor_t fildes, ssize_t sz, DeviceSeekWhenceEnumeration eWhence);
+  
 
                 static ::pilo::error_number_t  get_file_modified_time(::pilo::core::datetime::datetime &dt, const char* filepath);
 

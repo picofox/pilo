@@ -413,6 +413,7 @@ namespace pilo
     typedef DWORD                   os_thread_id_t;
     typedef CONDITION_VARIABLE      os_event_handle_t;
     typedef CRITICAL_SECTION        os_cs_handle_t;    
+    typedef SSIZE_T                 ssize_t;
     
 
 #else

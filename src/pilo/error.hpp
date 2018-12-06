@@ -90,6 +90,9 @@ namespace pilo
         EC_UNMAP_FAILED,
         EC_MAP_FAILED,
         EC_CONTAINER_FULL,
+        EC_DEV_SEEK_ERROR,
+        EC_DEV_TRUNK_ERROR,
+        EC_CREATE_FILE_ERROR,
 
 
         EC_PILO_ERROR_CODE_COUNT, 

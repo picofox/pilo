@@ -80,7 +80,7 @@ namespace pilo
 
             ::pilo::error_number_t err = ::pilo::EC_UNDEFINED;
             ::pilo::core::fs::file<> f0;
-            err = f0.initialize(__st_c_test_file_paths[1], MB_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE, nullptr);
+            err = f0.initialize(__st_c_test_file_paths[1], MB_IO_DEV_INIT_FLAG_AUTO_CREATE, nullptr);
 
             err = f0.open(::pilo::core::fs::eDAM_CreateAlways, ::pilo::core::fs::eDRWM_Write, 0);
             if (err != ::pilo::EC_OK)
@@ -147,13 +147,13 @@ namespace pilo
 
             ::pilo::core::fs::fs_util::delete_regular_file(__st_c_test_file_paths[1]);
 
-            err = f0.initialize(__st_c_test_file_paths[1], MB_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE, nullptr);
+            err = f0.initialize(__st_c_test_file_paths[1], MB_IO_DEV_INIT_FLAG_AUTO_CREATE, nullptr);
             if (err != ::pilo::EC_OK)
             {                
                 return -5;
             }
             f0.finalize();
-            err = f0.initialize(__st_c_test_file_paths[1], MB_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE, nullptr);
+            err = f0.initialize(__st_c_test_file_paths[1], MB_IO_DEV_INIT_FLAG_AUTO_CREATE, nullptr);
             if (err != ::pilo::EC_FILE_ALREADY_EXIST)
             {
                 return -10;
@@ -162,8 +162,8 @@ namespace pilo
 
 
 
-            err = f0.initialize(__st_c_test_file_paths[1], MB_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE | 
-                                MB_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ, nullptr);
+            err = f0.initialize(__st_c_test_file_paths[1], MB_IO_DEV_INIT_FLAG_AUTO_CREATE |
+                MB_IO_DEV_INIT_FLAG_FORCE_DELETE_FILE, nullptr);
             if (err != ::pilo::EC_OK)
             {
                 return -20;
@@ -171,10 +171,10 @@ namespace pilo
             f0.finalize();      
 
 
-            err = f0.initialize(__st_c_test_file_paths[1], MB_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE | 
-                                                    MB_IO_DEV_FLAG_FORCE_DELETE_DIR_ON_INITIALIZE |
-                                                    MB_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ |
-                                                    MB_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE, nullptr);
+            err = f0.initialize(__st_c_test_file_paths[1], MB_IO_DEV_INIT_FLAG_AUTO_CREATE |
+                MB_IO_DEV_INIT_FLAG_FORCE_DELETE_DIR |
+                MB_IO_DEV_INIT_FLAG_FORCE_DELETE_FILE |
+                MB_IO_DEV_INIT_FLAG_AUTO_DELETE_ON_FINALIZE, nullptr);
 
             if (err != ::pilo::EC_OK)
             {
@@ -204,7 +204,7 @@ namespace pilo
                 }
             }            
 
-            err = f0.open(::pilo::core::fs::eDAM_OpenExisting, ::pilo::core::fs::eDRWM_Write, MB_IO_DEV_OP_FLAG_APPEND | MB_IO_DEV_OP_REOPEN);
+            err = f0.open(::pilo::core::fs::eDAM_OpenExisting, ::pilo::core::fs::eDRWM_Write, MB_IO_DEV_OPEN_FLAG_APPEND | MB_IO_DEV_OPEN_REOPEN);
             if (err != ::pilo::EC_OK)
             {
                 return -50;
@@ -227,7 +227,7 @@ namespace pilo
 
             err = f0.close();
 
-            err = f0.open(::pilo::core::fs::eDAM_OpenExisting, ::pilo::core::fs::eDRWM_Read, MB_IO_DEV_OP_REOPEN);
+            err = f0.open(::pilo::core::fs::eDAM_OpenExisting, ::pilo::core::fs::eDRWM_Read, MB_IO_DEV_OPEN_REOPEN);
             if (err != ::pilo::EC_OK)
             {
                 return -90;
@@ -258,7 +258,7 @@ namespace pilo
                 return -130;
             }
 
-            err = f0.open(::pilo::core::fs::eDAM_OpenExisting, ::pilo::core::fs::eDRWM_Read, MB_IO_DEV_OP_REOPEN);
+            err = f0.open(::pilo::core::fs::eDAM_OpenExisting, ::pilo::core::fs::eDRWM_Read, MB_IO_DEV_OPEN_REOPEN);
             if (err != ::pilo::EC_OK)
             {
                 return -140;

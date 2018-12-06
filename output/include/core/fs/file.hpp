@@ -509,7 +509,7 @@ namespace pilo
                     LARGE_INTEGER liRet;
                     if (!::SetFilePointerEx(_m_os_file_descriptor, liOff, &liRet, eWhence))
                     {
-                        return ::pilo::EC_SEEK_FILE_ERROR;
+                        return ::pilo::EC_DEV_SEEK_ERROR;
                     }
                     if (r_offset)
                     {
@@ -520,7 +520,7 @@ namespace pilo
                     if (r_offset != nullptr) *r_offset = nRet;
                     if (nRet == -1)
                     {
-                        return ::pilo::EC_SEEK_FILE_ERROR;
+                        return ::pilo::EC_DEV_SEEK_ERROR;
                     }
 #endif               
                     return ::pilo::EC_OK;
