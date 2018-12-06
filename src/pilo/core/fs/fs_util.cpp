@@ -995,17 +995,17 @@ namespace pilo
 
 #               ifdef  WINDOWS
                 DWORD dwAccesss = (DWORD) drwm;
-                if (flags & MB_IO_DEV_OP_FLAG_APPEND)
+                if (flags & MB_IO_DEV_OPEN_FLAG_APPEND)
                 {
                     dwAccesss = FILE_APPEND_DATA;
                 }
 
                 DWORD internal_flags = FILE_ATTRIBUTE_NORMAL;
-                if (flags & MB_IO_DEV_OP_SYNC)
+                if (flags & MB_IO_DEV_OPEN_SYNC)
                 {
                     internal_flags |= FILE_FLAG_WRITE_THROUGH;
                 }
-                if (flags & MB_IO_DEV_OP_NO_OS_CACHE)
+                if (flags & MB_IO_DEV_OPEN_NO_OS_CACHE)
                 {
                     internal_flags |= FILE_FLAG_NO_BUFFERING;
                     internal_flags |= FILE_FLAG_WRITE_THROUGH;
@@ -1014,11 +1014,11 @@ namespace pilo
                 fildes = ::CreateFile(path, dwAccesss, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, dam, internal_flags, 0);
 
 #               else
-                if (flags & MB_IO_DEV_OP_SYNC)
+                if (flags & MB_IO_DEV_OPEN_SYNC)
                 {
-                    flags |= O_SYNC;
+                    flags |= O_DSYNC;
                 }
-                if (flags & MB_IO_DEV_OP_NO_OS_CACHE)
+                if (flags & MB_IO_DEV_OPEN_NO_OS_CACHE)
                 {
                     flags |= O_SYNC;
                     flags |= O_DIRECT;

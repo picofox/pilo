@@ -144,7 +144,7 @@ namespace pilo
 
                     _m_path = path_buffer;
 
-                    if (flag & MB_IO_DEV_FLAG_AUTO_CREATE_ON_INITIALIZE)
+                    if (flag & MB_IO_DEV_INIT_FLAG_AUTO_CREATE)
                     {
                         ::pilo::core::fs::fs_util::EnumFSNodeType enode_type = ::pilo::core::fs::fs_util::calculate_type(_m_path.c_str());
                         if (enode_type == ::pilo::core::fs::fs_util::eFSNT_Error)
@@ -165,7 +165,7 @@ namespace pilo
                         }
                         else if (enode_type == ::pilo::core::fs::fs_util::eFSNT_Directory)
                         {
-                            if (flag & MB_IO_DEV_FLAG_FORCE_DELETE_DIR_ON_INITIALIZE)
+                            if (flag & MB_IO_DEV_INIT_FLAG_FORCE_DELETE_DIR)
                             {
                                 err = ::pilo::core::fs::fs_util::delete_directory(path, true);
                                 if (err != ::pilo::EC_OK)
@@ -180,7 +180,7 @@ namespace pilo
                         }
                         else if (enode_type == ::pilo::core::fs::fs_util::eFSNT_RegularFile)
                         {
-                            if (flag & MB_IO_DEV_FLAG_FORCE_DELETE_FILE_ON_INITIALIZ)
+                            if (flag & MB_IO_DEV_INIT_FLAG_FORCE_DELETE_FILE)
                             {
                                 err = ::pilo::core::fs::fs_util::delete_regular_file(path);
                                 if (err != ::pilo::EC_OK)
@@ -205,7 +205,7 @@ namespace pilo
 
                 virtual ::pilo::error_number_t _finalize_nolock()
                 {
-                    if (_m_init_flags & MB_IO_DEV_FLAG_AUTO_DELETE_ON_FINALIZE)
+                    if (_m_init_flags & MB_IO_DEV_INIT_FLAG_AUTO_DELETE)
                     {
                         return ::pilo::core::fs::fs_util::delete_regular_file(_m_path.c_str());
                     }
