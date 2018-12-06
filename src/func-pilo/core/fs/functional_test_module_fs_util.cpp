@@ -120,7 +120,7 @@ namespace pilo
             }
 
 
-
+            ::pilo::core::fs::fs_util::delete_regular_file(ps.c_str());
 
             return ::pilo::EC_OK;
         }
