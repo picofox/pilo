@@ -8,6 +8,7 @@
 #include "core/datetime/datetime.hpp"
 #include "core/fs/fs_util.hpp"
 #include "./functional_test_module_fs_util.hpp"
+#include "core/fs/path_string.hpp"
 
 namespace pilo
 {
@@ -59,23 +60,25 @@ namespace pilo
         pilo::i32_t functional_truncate(void* param)
         {
             M_UNUSED(param);
-            const char* test_file_path = "..\\..\\test_data_dir\\func_test\\fs\\fs_util\\test_truncate.dat";
-            ::pilo::core::fs::fs_util::delete_regular_file(test_file_path);
+            const char* test_file_path = "../..\\test_data_dir/func_test\\fs\\fs_util\\test_truncate.dat";
+            ::pilo::core::fs::path_string<256> ps(test_file_path);
+
+            ::pilo::core::fs::fs_util::delete_regular_file(ps.c_str());
             size_t sz = 0;
 
-            ::pilo::error_number_t eret = ::pilo::core::fs::fs_util::create_regular_file(test_file_path, false);
+            ::pilo::error_number_t eret = ::pilo::core::fs::fs_util::create_regular_file(ps.c_str(), false);
             if (eret != ::pilo::EC_OK)
             {
                 return -1;
             }
 
-            eret = ::pilo::core::fs::fs_util::truncate_file(test_file_path, 1234567);
+            eret = ::pilo::core::fs::fs_util::truncate_file(ps.c_str(), 1234567);
             if (eret != ::pilo::EC_OK)
             {
                 return -10;
             }
 
-            eret = ::pilo::core::fs::fs_util::calculate_file_size(sz, test_file_path);
+            eret = ::pilo::core::fs::fs_util::calculate_file_size(sz, ps.c_str());
             if (eret != ::pilo::EC_OK)
             {
                 return -15;
@@ -85,13 +88,13 @@ namespace pilo
                 return -16;
             }
 
-            eret = ::pilo::core::fs::fs_util::truncate_file(test_file_path, 999);
+            eret = ::pilo::core::fs::fs_util::truncate_file(ps.c_str(), 999);
             if (eret != ::pilo::EC_OK)
             {
                 return -30;
             }
 
-            eret = ::pilo::core::fs::fs_util::calculate_file_size(sz, test_file_path);
+            eret = ::pilo::core::fs::fs_util::calculate_file_size(sz, ps.c_str());
             if (eret != ::pilo::EC_OK)
             {
                 return -40;
@@ -101,12 +104,12 @@ namespace pilo
                 return -50;
             }
 
-            eret = ::pilo::core::fs::fs_util::truncate_file(test_file_path, 0);
+            eret = ::pilo::core::fs::fs_util::truncate_file(ps.c_str(), 0);
             if (eret != ::pilo::EC_OK)
             {
                 return -30;
             }
-            eret = ::pilo::core::fs::fs_util::calculate_file_size(sz, test_file_path);
+            eret = ::pilo::core::fs::fs_util::calculate_file_size(sz, ps.c_str());
             if (eret != ::pilo::EC_OK)
             {
                 return -40;
