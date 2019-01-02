@@ -34,10 +34,7 @@ namespace pilo
                 }                
                 thisThread->_m_state = eFinished;
                 thisThread->on_finished(); // do Some User task
-
-
-                _endthreadex(0);
-                
+             
                 return 0;
             }
 

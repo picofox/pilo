@@ -34,6 +34,7 @@
     <ClInclude Include="..\..\src\pilo\core\dll\dynamic_link_library.hpp" />
     <ClInclude Include="..\..\src\pilo\core\fs\anonymous_mmap.hpp" />
     <ClInclude Include="..\..\src\pilo\core\fs\async_directory_changer_handler.hpp" />
+    <ClInclude Include="..\..\src\pilo\core\fs\async_threaded_device_writer.hpp" />
     <ClInclude Include="..\..\src\pilo\core\fs\buffered_file.hpp" />
     <ClInclude Include="..\..\src\pilo\core\fs\directory_change_monitor.hpp" />
     <ClInclude Include="..\..\src\pilo\core\fs\file.hpp" />

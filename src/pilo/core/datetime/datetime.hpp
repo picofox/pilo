@@ -24,118 +24,233 @@
 #include "tickcount_simu_thread.hpp" 
 #endif
 
+#define MB_PILO_DATETIME_IGNORE_DATE (1)
+#define MB_PILO_DATETIME_IGNORE_TIME (2)
+
 namespace pilo
 {
 	namespace core
 	{
 		namespace datetime
 		{           
+            static const char* __pilo_stc_local_date_fmt[] = {
+                "%04d-%02d-%02d",
+                "%d-%d-%d",
+                "%04d/%02d/%02d",
+                "%0d/%0d/%0d",
+                "%04d.%02d.%02d",
+                "%d.%d.%d",
+                "%04d %02d %02d",
+                "%0d %0d %0d",
+            };
 
-			struct local_time
-			{
-				pilo::i32_t      hour;
-                pilo::i32_t      minute;
-                pilo::i32_t      second;
-                pilo::i32_t      millisecond;
+            static const char* __pilo_stc_local_date_fmt_with_space[] = {
+                "%04d-%02d-%02d ",
+                "%d-%d-%d ",
+                "%04d/%02d/%02d ",
+                "%0d/%0d/%0d ",
+                "%04d.%02d.%02d ",
+                "%d.%d.%d ",
+                "%04d %02d %02d ",
+                "%0d %0d %0d ",
+            };
 
-                inline bool is_valid() const
+            struct local_date
+            {
+                local_date() : year(0), month(0), day(0), flags(0) {}
+                ::pilo::i32_t    year;
+                ::pilo::i8_t     month;
+                ::pilo::i8_t     day;
+                ::pilo::i16_t    flags; //unused
+
+                inline void reset()
                 {
-                    if (this->hour < 0 || this->hour > 24) return false;
-                    if (this->minute < 0 || this->minute > 60) return false;
-                    if (this->second < 0 || this->second > 60) return false;
+                    year = 0;
+                    month = 0;
+                    day = 0;
+                }
 
-                    if (this->millisecond != (pilo::i32_t)(-1))
+                inline bool set(::pilo::i32_t y, ::pilo::i8_t m, ::pilo::i8_t d)
+                {
+                    year = y;
+                    month = m;
+                    day = d;
+                    if (!valid())
                     {
-                        if (this->millisecond < 0 || this->millisecond > 1000) return false;
+                        return false;
                     }
+
                     return true;
-                }                
+                }
 
-                pilo::core::string::fixed_astring<24> to_string() const
+                inline bool valid() const
                 {
-                    pilo::core::string::fixed_astring<24> str;
+                    if (this->month < 1 || this->month > 12) return false;
+                    if (this->day < 1 || this->day > 31) return false;
+                    return true;
+                }
 
-                    if (is_valid())
+                size_t to_string(char* szBuffer, size_t sz, PiloDateFormatEnumeration fmt, bool append_space)
+                {
+                    if (append_space)
                     {
-                        if (this->millisecond != -1)
-                        {
-                            str.format("%02d:%02d:%02d.%03d", hour, minute, second, millisecond);
-                        }
-                        else
-                        {
-                            str.format("%02d:%02d:%02d", hour, minute, second);
-                        }
+                        return ::pilo::core::io::string_format_output(szBuffer, sz, __pilo_stc_local_date_fmt_with_space[fmt], year, month, day);
                     }
                     else
                     {
-                        str.format("<Invalid Format of local_time@%p>", this);
-                    }
-                    
-                    return str;
+                        return ::pilo::core::io::string_format_output(szBuffer, sz, __pilo_stc_local_date_fmt[fmt], year, month, day);
+                    }                    
                 }
-			};
+            };
+ 
+            struct local_time
+            {
+                ::pilo::u8_t      flags;
+                ::pilo::i8_t      hour;
+                ::pilo::i8_t      minute;
+                ::pilo::i8_t      second;
+                ::pilo::i32_t     microsecond;
+
+                local_time() : flags(0), hour(0), minute(0), second(0), microsecond(0) {}
+
+                inline void reset()
+                {
+                    hour = 0;
+                    minute = 0;
+                    second = 0;
+                    microsecond = 0;
+                }
+
+                inline bool set(::pilo::i8_t h, ::pilo::i8_t m, ::pilo::i8_t s, ::pilo::i32_t ms)
+                {
+                    hour = h;
+                    minute = m;
+                    second = s;
+                    microsecond = ms;
+
+                    if (!valid())
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                inline bool valid() const
+                {
+                    if (this->hour < 0 || this->hour > 23) return false;
+                    if (this->minute < 0 || this->minute > 59) return false;
+                    if (this->second < 0 || this->second > 59) return false;
+
+                    if (this->microsecond != (pilo::i32_t)(-1))
+                    {
+                        if (this->microsecond < 0 || this->microsecond > 999999) return false;
+                    }
+                    return true;
+                }
+
+                size_t to_string(char* szBuffer, size_t sz, PiloTimeFormatEnumeration mode)
+                {
+                    if (mode == ePTF_HHcMMcSS)
+                    {
+                        return ::pilo::core::io::string_format_output(szBuffer, sz, "%02d:%02d:%02d", (int) hour, (int)minute, (int)second);
+                    }
+                    else if (mode == ePTF_HHcMMcSSpMS)
+                    {
+                        return ::pilo::core::io::string_format_output(szBuffer, sz, "%02d:%02d:%02d", (int)hour, (int)minute, (int)second);                        
+                    }
+                    else if (mode == ePTF_HHcMMcSSpMIL)
+                    {
+                        return ::pilo::core::io::string_format_output(szBuffer, sz, "%02d:%02d:%02d.%03d", (int)hour, (int)minute, (int)second, microsecond / 1000);
+                    }
+                    return 0;
+                }
+            };
 
 			struct local_datetime
 			{
-                pilo::i32_t     year;
-                pilo::i32_t     month;
-                pilo::i32_t     day;
-                pilo::i32_t     hour;
-                pilo::i32_t     minute;
-                pilo::i32_t     second;
-                pilo::i32_t     millisecond;
+                local_date      date;
+                local_time      time;
 
-                bool is_valid() const;
+                inline void reset()
+                {
+                    date.reset();
+                    time.reset();
+                }
+
+                inline bool set(::pilo::i32_t Y, ::pilo::i8_t M, ::pilo::i8_t D, ::pilo::i8_t h, ::pilo::i8_t m, ::pilo::i8_t s, ::pilo::i32_t ms)
+                {
+                    date.set(Y, M, D);
+                    time.set(h, m, s, ms);
+                    if (!valid())
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                bool valid() const
+                {
+                    if (!pilo_test_flag_bit_by_value<::pilo::u8_t>(time.flags, (::pilo::u8_t)MB_PILO_DATETIME_IGNORE_DATE))
+                    {
+                        if (! date.valid()) return false;
+                    }
+
+                    if (!pilo_test_flag_bit_by_value<::pilo::u8_t>(time.flags, (::pilo::u8_t)MB_PILO_DATETIME_IGNORE_TIME))
+                    {
+                        if (!time.valid()) return false;
+                    }
+
+                    return true;
+                }
+
+                size_t to_string(char* szBuffer, size_t sz, PiloDateFormatEnumeration date_mode, PiloTimeFormatEnumeration time_mode)
+                {
+                    size_t index = date.to_string(szBuffer, sz, date_mode, true);
+                    index += time.to_string(szBuffer + index, sz - index, time_mode);
+                    return index;
+                }
                 
-                bool from_string(const char * datetimeStr)
+                bool from_string(const char * datetimeStr, bool use_millisecond)
                 {
                     char* ss[7];
-                    char cTmp[128];
+                    char cTmp[128] = {0};
 
                     int len = (int)::pilo::core::string::string_util::length(datetimeStr);
                     if (len >= 128) len = 100;
 
                     memcpy(cTmp, datetimeStr, len);
-                    cTmp[len] = '\0';
 
                     size_t n = ::pilo::core::string::string_util::split(cTmp, "+-:/\\ \t.", ss, 7);
                     if (n < 3) return false;
 
-                    this->year = ::pilo::core::string::string_util::cstr_to_int32(ss[0]);
-                    this->month = ::pilo::core::string::string_util::cstr_to_int32(ss[1]);
-                    this->day = ::pilo::core::string::string_util::cstr_to_int32(ss[2]);
+                    this->date.year = ::pilo::core::string::string_util::cstr_to_int32(ss[0]);
+                    this->date.month =  (::pilo::i8_t) ::pilo::core::string::string_util::cstr_to_int32(ss[1]);
+                    this->date.day = (::pilo::i8_t)::pilo::core::string::string_util::cstr_to_int32(ss[2]);
 
-                    if (n >= 4) this->hour = ::pilo::core::string::string_util::cstr_to_int32(ss[3]);
-                    if (n >= 5) this->minute = ::pilo::core::string::string_util::cstr_to_int32(ss[4]);
-                    if (n >= 6) this->second = ::pilo::core::string::string_util::cstr_to_int32(ss[5]);
-                    if (n >= 7) this->millisecond = ::pilo::core::string::string_util::cstr_to_int32(ss[6]);
-
-                    return true;
-                }
-
-                ::pilo::core::string::fixed_astring<48> to_string() const
-                {
-                    pilo::core::string::fixed_astring<48> str;
-        
-                    if (is_valid())
+                    if (n >= 4) this->time.hour = (::pilo::i8_t)::pilo::core::string::string_util::cstr_to_int32(ss[3]);
+                    if (n >= 5) this->time.minute = (::pilo::i8_t)::pilo::core::string::string_util::cstr_to_int32(ss[4]);
+                    if (n >= 6) this->time.second = (::pilo::i8_t) ::pilo::core::string::string_util::cstr_to_int32(ss[5]);
+                    if (n >= 7)
                     {
-                        if (millisecond != -1)
+                        if (use_millisecond)
                         {
-                            str.format("%04d-%02d-%02d %02d:%02d:%02d.%03d", year, month, day, hour, minute, second, millisecond);                            
+                            this->time.microsecond = ::pilo::core::string::string_util::cstr_to_int32(ss[6]) * 1000;
                         }
                         else
                         {
-                            str.format("%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, minute, second);
-                        }                        
+                            this->time.microsecond = ::pilo::core::string::string_util::cstr_to_int32(ss[6]);
+                        }
                     }
-                    else
+
+                    if (!valid())
                     {
-                        str.format("<Invalid Format of local_datetime@%p>", this);
-                    }                    
-                    
-                    return str;
+                        return false;
+                    }                                        
+
+                    return true;
                 }
-                
 			};
 			class datetime
 			{
@@ -144,9 +259,9 @@ namespace pilo
                 static pilo::i32_t diff_seconds_local_to_utc();
 				static int  days_in_months(int year, int month);
 				static bool is_leap_year(int year);
-				static bool is_valid_local_datetime(const local_datetime& ldt);
                 static ::pilo::core::datetime::local_datetime now();
                 static ::pilo::i64_t epoch_time();
+
 
 #ifdef WINDOWS
 
@@ -349,7 +464,7 @@ namespace pilo
                 
 			public:
 				datetime();
-				datetime(pilo::i64_t t);
+                datetime(pilo::i64_t tick, PiloDateTimeModeEnumeration mode);
 				datetime(const local_datetime& ldt);
 				datetime(const datetime& other);
 				datetime& operator=(const datetime& other);
@@ -371,15 +486,16 @@ namespace pilo
                 pilo::i32_t month_day() const;
                 datetime& add_days(int days);
                 datetime& add_seconds(int seconds);
-                datetime& refresh();                
+                datetime& update();                
 
-                pilo::core::string::fixed_astring<48> to_string() const;
-                bool from_string(const char * datetimeStr);
+                size_t to_string(char* szBuffer, size_t sz, PiloDateFormatEnumeration date_mode, PiloTimeFormatEnumeration time_mode) const;
+                bool from_string(const char * datetimeStr, bool use_milli);
                 
 
             public:
 				bool from_local_datetime(const local_datetime& ldt);
                 bool to_local_datetime(local_datetime& ldt) const;  
+                void set(pilo::i64_t tick, PiloDateTimeModeEnumeration mode);
 
 			protected:
                 ::pilo::i64_t   m_epoch;               

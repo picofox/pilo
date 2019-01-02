@@ -354,6 +354,9 @@
     <ClInclude Include="..\..\src\pilo\core\fs\anonymous_mmap.hpp">
       <Filter>core\fs</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\pilo\core\fs\async_threaded_device_writer.hpp">
+      <Filter>core\fs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\pilo\error.cpp" />

@@ -790,3 +790,35 @@ bool pilo_test_flag_bit_by_value(T v, T b)
 
     return true;
 }
+
+typedef enum
+{
+    ePDF_YYYYdMMdDD = 0,
+    ePDF_YdMdD = 1,
+    ePDF_YYYYsMMsDD = 2,
+    ePDF_YsMsD = 3,
+    ePDF_YYYYpMMpDD = 4,
+    ePDF_YpMpD = 5,
+    ePDF_YYYYwMMwDD = 6,
+    ePDF_YwMwD = 7,
+    ePDF_Count = 8,
+
+} PiloDateFormatEnumeration;
+
+typedef enum
+{
+    ePTF_HHcMMcSS = 0,
+    ePTF_HHcMMcSSpMS = 1,
+    ePTF_HHcMMcSSpMIL = 2,    
+    ePTF_Count = 3,
+
+} PiloTimeFormatEnumeration;
+
+typedef enum
+{
+    ePDTM_Microsecond = 0,
+    ePDTM_Millisecond = 1,
+    ePDTM_Seconds = 2,
+
+
+} PiloDateTimeModeEnumeration;

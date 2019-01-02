@@ -1,5 +1,5 @@
 #include "datetime.hpp"
-#include "core/threading/recursive_mutex.hpp"
+#include "core/threading/nonrecursive_mutex.hpp"
 #include "core/threading/mutex_locker.hpp"
 
 namespace pilo
@@ -10,12 +10,12 @@ namespace pilo
 		{  
             datetime::datetime() :m_epoch(::pilo::core::datetime::datetime::now_microsecs())
 			{
-
+                
 			}
 
-			datetime::datetime(pilo::i64_t tick) : m_epoch(tick)
+            datetime::datetime(pilo::i64_t tick, PiloDateTimeModeEnumeration mode)
 			{
-
+                set(tick,mode);
 			}
 
 			datetime::datetime(const local_datetime& ldt)
@@ -66,7 +66,7 @@ namespace pilo
                 {
                     return -1;
                 }
-                return ldt.day;
+                return ldt.date.day;
             }
 
 
@@ -82,60 +82,66 @@ namespace pilo
                 return *this;
             }
 
-            datetime& datetime::refresh()
+            datetime& datetime::update()
             {
                 m_epoch = ::pilo::core::datetime::datetime::now_microsecs();
                 return *this;
             }
 
-            pilo::core::string::fixed_astring<48> datetime::to_string() const
+            size_t datetime::to_string(char* szBuffer, size_t sz, PiloDateFormatEnumeration date_mode, PiloTimeFormatEnumeration time_mode) const
             {
                 pilo::core::datetime::local_datetime ldt;
                 if (! this->to_local_datetime(ldt))
                 {
-                    pilo::core::string::fixed_astring<48> err_str;
-                    err_str.format("[to_local_datetime()<-to_string() failed.]");
-                    return err_str;
+
+                    ::pilo::core::string::string_util::copy(szBuffer, "[to_local_datetime()<-to_string() failed.]");
+                    return ::pilo::core::string::string_util::length("[to_local_datetime()<-to_string() failed.]");
                 }
                 else
                 {
-                    return ldt.to_string();
+
+                    return ldt.to_string(szBuffer,sz,date_mode, time_mode);
                 }
                 
             }
 
-            bool datetime::from_string(const char * datetimeStr)
+            bool datetime::from_string(const char * datetimeStr, bool use_milli)
             {
                 local_datetime ldt;
                 memset(&ldt, 0, sizeof(ldt));
-                ldt.from_string(datetimeStr);
+                ldt.from_string(datetimeStr, use_milli);
                 return this->from_local_datetime(ldt);
             }
 
             bool datetime::from_local_datetime(const local_datetime& ldt)
 			{
-				if (!::pilo::core::datetime::datetime::is_valid_local_datetime(ldt))
+				if (! ldt.valid())
 				{
 					return false;
 				}
 
-				::pilo::i64_t epoch_secs = ::pilo::core::datetime::datetime::calculate_year_initial_second_fast(ldt.year);
+				::pilo::i64_t epoch_secs = ::pilo::core::datetime::datetime::calculate_year_initial_second_fast(ldt.date.year);
                 if (epoch_secs < 0) epoch_secs = 0;
 
-				for (int i = 1; i < ldt.month; i++)
+				for (int i = 1; i < ldt.date.month; i++)
 				{
-					int days = ::pilo::core::datetime::datetime::days_in_months(ldt.year, i);
+					int days = ::pilo::core::datetime::datetime::days_in_months(ldt.date.year, i);
                     epoch_secs += days * day_seconds;
 				}
 
-                epoch_secs += (ldt.day - 1) * day_seconds;
-                epoch_secs += ldt.hour * hour_seconds;
-                epoch_secs += ldt.minute * min_seconds;
-                epoch_secs += ldt.second;
+                epoch_secs += (ldt.date.day - 1) * day_seconds;
+                epoch_secs += ldt.time.hour * hour_seconds;
+                epoch_secs += ldt.time.minute * min_seconds;
+                epoch_secs += ldt.time.second;
 
                 m_epoch = epoch_secs * 1000000;
-				return true;
 
+                if (ldt.time.microsecond > 0)
+                {
+                    m_epoch += ldt.time.microsecond;
+                }
+                
+				return true;
 			}
 
             bool datetime::to_local_datetime(local_datetime& ref_ldt) const
@@ -145,11 +151,19 @@ namespace pilo
                 //static const ::pilo::core::datetime::local_datetime emptyDatetime = { 0, 0, 0, 0, 0, 0, -1 };
 
                 ::pilo::i64_t epoch_secs = m_epoch / 1000000;
+                if (epoch_secs < 0)
+                {
+                    return false;
+                }
+                ::pilo::i32_t ms_left = (::pilo::i32_t) (m_epoch - (epoch_secs * 1000000));
 
                 int ys = (int)(epoch_secs / max_year_secs);
-                ::pilo::core::datetime::local_datetime ldt = { (pilo::i32_t)ys + 1970, (pilo::i32_t)1, (pilo::i32_t)1, (pilo::i32_t)0, (pilo::i32_t)0, (pilo::i32_t)0, (pilo::i32_t) - 1 };
+                ::pilo::core::datetime::local_datetime ldt;
+                //
+                ldt.reset();
+                ldt.date.year = ys;
 
-                pilo::i64_t secs = datetime::calculate_year_initial_second_fast(ldt.year);
+                pilo::i64_t secs = datetime::calculate_year_initial_second_fast(ldt.date.year);
                 if (secs < 0) 
                 {
                     return false;
@@ -157,7 +171,7 @@ namespace pilo
 
                 while (true)
                 {
-                    pilo::i64_t secs2 = datetime::calculate_year_initial_second_fast(ldt.year + 1);
+                    pilo::i64_t secs2 = datetime::calculate_year_initial_second_fast(ldt.date.year + 1);
                     if (secs2 < 0) 
                     {
                         return false;
@@ -167,21 +181,21 @@ namespace pilo
                     {
                         break;
                     }
-                    ldt.year += 1;
+                    ldt.date.year += 1;
                     secs = secs2;
                 }
 
                 pilo::i64_t delta = epoch_secs - secs;
-                for (; ldt.month <= 12; ldt.month++)
+                for (; ldt.date.month <= 12; ldt.date.month++)
                 {
-                    int days = ::pilo::core::datetime::datetime::days_in_months(ldt.year, ldt.month);
+                    int days = ::pilo::core::datetime::datetime::days_in_months(ldt.date.year, ldt.date.month);
                     if (delta >= days*day_seconds)
                     {
                         delta -= days*day_seconds;
                     }
                     else
                     {
-                        for (; ldt.day <= days; ldt.day++)
+                        for (; ldt.date.day <= days; ldt.date.day++)
                         {
                             if (delta >= day_seconds)
                             {
@@ -189,9 +203,10 @@ namespace pilo
                             }
                             else
                             {
-                                ldt.hour = (pilo::i8_t)(delta / hour_seconds);
-                                ldt.minute = (pilo::i8_t)((delta%hour_seconds) / min_seconds);
-                                ldt.second = (pilo::i8_t)((delta%hour_seconds) % min_seconds);
+                                ldt.time.hour = (pilo::i8_t)(delta / hour_seconds);
+                                ldt.time.minute = (pilo::i8_t)((delta%hour_seconds) / min_seconds);
+                                ldt.time.second = (pilo::i8_t)((delta%hour_seconds) % min_seconds);
+                                ldt.time.microsecond =(pilo::i8_t) ms_left;
                                 ref_ldt = ldt;
                                 return true;
                             }
@@ -203,40 +218,32 @@ namespace pilo
                 return false;
             }
 
-            bool datetime::is_valid_local_datetime(const local_datetime& ldt)
-			{				
-				return ldt.is_valid();
-			}
+            void datetime::set(pilo::i64_t tick, PiloDateTimeModeEnumeration mode)
+            {
+                if (mode == ePDTM_Seconds)
+                {
+                    m_epoch = tick * 1000000;
+                }
+                else if (mode == ePDTM_Millisecond)
+                {
+                    m_epoch = tick * 1000;
+                }
+                else if (mode == ePDTM_Microsecond)
+                {
+                    m_epoch = tick;
+                }
+            }
 
             pilo::core::datetime::local_datetime datetime::now()
             {
                 ::pilo::core::datetime::local_datetime ldt;
-#ifdef      WINDOWS
-                SYSTEMTIME stTime;
-                GetLocalTime(&stTime);
-                ldt.year        = stTime.wYear;
-                ldt.month       = stTime.wMonth;
-                ldt.day         = stTime.wDay;
-                ldt.hour        = stTime.wHour;
-                ldt.minute      = stTime.wMinute;
-                ldt.second      = stTime.wSecond;
-                ldt.millisecond = stTime.wMilliseconds;   
-       
-#else
-                struct timeval tv;
-                struct timezone tz;
-                struct tm tms;
-                ::gettimeofday(&tv, &tz);
-                ::localtime_r(&tv.tv_sec, &tms);
-                ldt.year        = 1900 + tms.tm_year;
-                ldt.month       = 1 + tms.tm_mon;
-                ldt.day         = tms.tm_mday;
-                ldt.hour        = tms.tm_hour;
-                ldt.minute      = tms.tm_min;
-                ldt.second      = tms.tm_sec;
-                ldt.millisecond = tv.tv_usec / 1000;
+                ::pilo::core::datetime::datetime dt;
+                if (! dt.to_local_datetime(ldt))
+                {
+                    ldt.date.day = -1;
+                    ldt.time.hour = -1;
+                }                
 
-#endif
                 return ldt;
             }
 
@@ -269,7 +276,7 @@ namespace pilo
 				const int startYear = 1971;
 				const int endYear = startYear + year_count;
 
-				static ::pilo::core::threading::recursive_mutex mx;
+				static ::pilo::core::threading::nonrecursive_mutex mx;
 				static ::pilo::i64_t yearSecs[year_count];
 				volatile static bool bInit = false;
 
@@ -285,7 +292,7 @@ namespace pilo
 					}
 					else
 					{
-						::pilo::core::threading::mutex_locker<::pilo::core::threading::recursive_mutex> am(mx);
+						::pilo::core::threading::mutex_locker<::pilo::core::threading::nonrecursive_mutex> am(mx);
 						if (bInit)
 						{
 							return yearSecs[year - startYear];
@@ -305,21 +312,21 @@ namespace pilo
 
             pilo::i64_t datetime::calculate_day_initial_second(pilo::i64_t sec)
             {
-                datetime dt(sec*1000000);
+                datetime dt(sec, ePDTM_Seconds);
                 local_datetime ldt; 
                 if (! dt.to_local_datetime(ldt))
                 {
-                    return  (pilo::i64_t) - 1;
+                    return  (pilo::i64_t) -1;
                 }
 
-                ldt.hour = ldt.minute = ldt.second = 0;
+                ldt.time.hour = ldt.time.minute = ldt.time.second = 0;
                 dt.from_local_datetime(ldt);
                 return (pilo::i64_t)dt.seconds_since_epoch();
             }
 
             pilo::i64_t datetime::calculate_week_initial_second(pilo::i64_t sec)
             {
-                ::pilo::core::datetime::datetime dt(sec*1000000);
+                ::pilo::core::datetime::datetime dt(sec, ePDTM_Seconds);
 
                 ::pilo::core::datetime::local_datetime ldt;
                 if (!dt.to_local_datetime(ldt))
@@ -327,7 +334,7 @@ namespace pilo
                     return  (pilo::i64_t) -1;
                 }
 
-                ldt.hour = ldt.minute = ldt.second = 0;
+                ldt.time.hour = ldt.time.minute = ldt.time.second = 0;
                 dt.from_local_datetime(ldt);
 
                 int weekDay = dt.week_day();
@@ -341,13 +348,13 @@ namespace pilo
 
             pilo::i64_t datetime::calculate_month_initial_second(pilo::i64_t sec)
             {
-                ::pilo::core::datetime::datetime dt(sec*1000000);
+                ::pilo::core::datetime::datetime dt(sec, ePDTM_Seconds);
                 ::pilo::core::datetime::local_datetime ldt;
                 dt.to_local_datetime(ldt);
-                ldt.hour = ldt.minute = ldt.second = 0;
+                ldt.time.reset();
                 dt.from_local_datetime(ldt);
 
-                dt.add_days(1 - ldt.day);
+                dt.add_days(1 - ldt.date.day);
 
                 return (pilo::i64_t)dt.seconds_since_epoch();
             }
@@ -364,24 +371,24 @@ namespace pilo
 
             pilo::i64_t datetime::calculate_next_month_initial_second(pilo::i64_t sec)
             {
-                ::pilo::core::datetime::datetime dt(sec*1000000);
+                ::pilo::core::datetime::datetime dt(sec, ePDTM_Seconds);
                 ::pilo::core::datetime::local_datetime ldt;
                 dt.to_local_datetime(ldt);
-                ldt.hour = ldt.minute = ldt.second = 0;
+                ldt.time.reset();
                 dt.from_local_datetime(ldt);
-                dt.add_days(1 - ldt.day);
+                dt.add_days(1 - ldt.date.day);
 
-                int mdays = ::pilo::core::datetime::datetime::days_in_months(ldt.year, ldt.month);
+                int mdays = ::pilo::core::datetime::datetime::days_in_months(ldt.date.year, ldt.date.month);
                 return ::pilo::core::datetime::datetime::calculate_day_initial_second(sec) + day_seconds*mdays;                
             }
 
             pilo::i64_t datetime::calculate_next_year_initial_second(pilo::i64_t sec)
             {
-                ::pilo::core::datetime::datetime dt(sec*1000000);
+                ::pilo::core::datetime::datetime dt(sec, ePDTM_Seconds);
                 ::pilo::core::datetime::local_datetime ldt;
                 dt.to_local_datetime(ldt);
 
-                return ::pilo::core::datetime::datetime::calculate_week_initial_second(ldt.year+1);
+                return ::pilo::core::datetime::datetime::calculate_year_initial_second(ldt.date.year+1);
             }
 
             bool datetime::operator==(const ::pilo::core::datetime::datetime& other) const
@@ -427,7 +434,7 @@ namespace pilo
 
             int datetime::days_in_months(int year, int month)
 			{
-				static int leapDays[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+				static int leapDays[] =    { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 				static int nonleapDays[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 				if (::pilo::core::datetime::datetime::is_leap_year(year))
 				{
@@ -437,7 +444,7 @@ namespace pilo
 				{
 					return nonleapDays[month - 1];
 				}
-			}
+			} 
 
 			bool datetime::is_leap_year(int year)
 			{
@@ -449,7 +456,7 @@ namespace pilo
 					}
 					else
 					{
-						return false;
+						return true;
 					}
 				}
 				else
@@ -457,23 +464,6 @@ namespace pilo
 					return false;
 				}
 			}
-
-            bool local_datetime::is_valid() const
-            {
-                if (this->month < 1 || this->month > 12) return false;
-                int days = ::pilo::core::datetime::datetime::days_in_months(this->year, this->month);
-                if (this->day < 1 || this->day > days) return false;
-                if (this->hour < 0 || this->hour > 24) return false;
-                if (this->minute < 0 || this->minute > 60) return false;
-                if (this->second < 0 || this->second > 60) return false;
-
-                if (this->millisecond != (pilo::i32_t)(-1))
-                {
-                    if (this->millisecond < 0 || this->millisecond >= 1000) return false;
-                }
-                return true;
-            }
-
         }
 	}
 }

@@ -1169,24 +1169,13 @@ namespace pilo
                     return MAKE_SYSERR(::pilo::EC_GET_FILE_TIME_ERROR);
                 }              
                 ::CloseHandle(hFile);
-                SYSTEMTIME local_os_time;
+
 
                 FileTimeToLocalFileTime(&modified_os_time, &modified_os_time_local);
 
-                ZeroMemory(&local_os_time, sizeof(SYSTEMTIME));
-                FileTimeToSystemTime(&modified_os_time_local, &local_os_time);  
-                
+                ::pilo::i64_t v = (((static_cast<::pilo::i64_t>(modified_os_time_local.dwHighDateTime) << 32) | modified_os_time_local.dwLowDateTime) - MC_WIN_EPOCH_DIFF_HUNA) / 10;
 
-                ::pilo::core::datetime::local_datetime pilo_local_dt;
-                pilo_local_dt.year = local_os_time.wYear;
-                pilo_local_dt.month = local_os_time.wMonth;
-                pilo_local_dt.day = local_os_time.wDay;
-                pilo_local_dt.hour = local_os_time.wHour;
-                pilo_local_dt.minute = local_os_time.wMinute;
-                pilo_local_dt.second = local_os_time.wSecond;
-                pilo_local_dt.millisecond = local_os_time.wMilliseconds;
-
-                dt.from_local_datetime(pilo_local_dt);
+                dt.set(v, ePDTM_Microsecond);
 
 #else
                 struct stat stbuf;
@@ -1195,7 +1184,7 @@ namespace pilo
                     return MAKE_SYSERR(::pilo::EC_GET_FILE_TIME_ERROR);
                 }
 
-                dt = ((::pilo::i64_t) stbuf.st_mtime);
+                dt.set ( ((::pilo::i64_t) stbuf.st_mtime), ePDTM_Seconds );
 
 #endif // WINDOWS
                 
