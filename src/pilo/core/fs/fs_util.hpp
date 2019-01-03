@@ -675,6 +675,7 @@ namespace pilo
   
 
                 static ::pilo::error_number_t  get_file_modified_time(::pilo::core::datetime::datetime &dt, const char* filepath);
+                static ::pilo::i64_t get_file_modified_time(const char* filepath);
 
                 static ::pilo::error_number_t dir_str_append_last_sep_nocheck(char* buffer, size_t* rlen)
                 {

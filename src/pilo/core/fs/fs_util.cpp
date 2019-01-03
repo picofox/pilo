@@ -1204,6 +1204,42 @@ namespace pilo
                 return ::pilo::EC_OK;
             }            
 
+            ::pilo::i64_t fs_util::get_file_modified_time(const char* filepath)
+            {
+                ::pilo::i64_t t = -1;
+#ifdef WINDOWS
+                HANDLE hFile = ::CreateFile(
+                    filepath,
+                    0,
+                    FILE_SHARE_READ,
+                    NULL,
+                    OPEN_EXISTING,
+                    FILE_ATTRIBUTE_NORMAL,
+                    NULL);
+
+                if (hFile == INVALID_HANDLE_VALUE)
+                {
+                    return -1;
+                }
+
+                FILETIME lwt;                
+                if (::GetFileTime(hFile, 0, 0, &lwt))
+                {
+                    t = (static_cast<__int64>(lwt.dwHighDateTime) << 32) + lwt.dwLowDateTime;
+                }
+                ::CloseHandle(hFile);
+#else
+                struct stat stbuf;
+                if (::stat(filepath, &stbuf) == -1)
+                {
+                    return MAKE_SYSERR(::pilo::EC_GET_FILE_TIME_ERROR);
+                }
+
+                t = (::pilo::i64_t) stbuf.st_mtime;
+#endif
+                return t;
+            }
+
             ::pilo::error_number_t fs_util::_compact_path_once(char * pBuffer, size_t len)
             {
 #ifdef WINDOWS
