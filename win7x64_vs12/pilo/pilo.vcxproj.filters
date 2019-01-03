@@ -354,13 +354,11 @@
     <ClInclude Include="..\..\src\pilo\core\fs\anonymous_mmap.hpp">
       <Filter>core\fs</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="..\..\src\pilo\core\fs\async_threaded_device_writer.hpp">
       <Filter>core\fs</Filter>
-=======
+    </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\threading\user_mutex.hpp">
       <Filter>core\threading</Filter>
->>>>>>> a8c42ec232355f3a70c3fe29e679e5680f3ad31b
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
