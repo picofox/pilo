@@ -14,111 +14,146 @@ namespace pilo
 {
     namespace test
     {
-        static pilo::i32_t functional_static_now(void* param);
-        static pilo::i32_t functional_static_calculate_initials(void* param);
-        static pilo::i32_t functional_format(void* param);
-
-        
-
-        
-
-        pilo::i32_t functional_format(void* param)
+        static bool  stc_test_leap_year(int n)
         {
-            M_UNUSED(param);
-            ::pilo::core::datetime::datetime dt;
-            bool bret = dt.from_string("2018-07-05 17:15:00");
-            if (!bret)
+
+            if (((n % 100 != 0) && (n % 4 == 0)) || (n % 400 == 0))
             {
-                return -1;
+                return true;
             }
-
-            ::pilo::core::datetime::local_datetime ldt;
-            bret = ldt.from_string("2018-07-05 17:15:00.876");
-            if (!bret)
+            else
             {
-                return -10;
+                return false;
             }
-
-            pilo::core::string::fixed_astring<48> str = ldt.to_string();
-
-            if (str != pilo::core::string::fixed_astring<48>("2018-07-05 17:15:00.876"))
-            {
-                return -20;
-            }
-
-            ::pilo::core::datetime::datetime dt2;
-            bret = dt2.from_local_datetime(ldt);
-            if (!bret)
-            {
-                return -30;
-            }
-
-            ::pilo::core::datetime::local_datetime ldt2;
-            bret = dt2.to_local_datetime(ldt2);
-            if (!bret)
-            {
-                return -50;
-            }
-
-            if (dt2 != dt)
-            {
-               return -40;
-            }            
-
-            return 0;
         }
+
+        static ::pilo::i64_t stc_test_day_1st_sec(::pilo::i64_t secs)
+        {
+            struct tm tmv;
+#ifdef WINDOWS
+            localtime_s(&tmv, (time_t*) &secs);
+#else
+            localtime_r(&tmv, (time_t*) &secs);
+#endif
+            tmv.tm_hour = 0;
+            tmv.tm_min = 0;
+            tmv.tm_sec = 0;
+
+            return mktime(&tmv);
+        }
+
+
+        static pilo::i32_t functional_is_leap(void* param);
+        static pilo::i32_t functional_days_in_month(void* param);
+        static pilo::i32_t functional_calculate_year_initial_second(void* param);
+        static pilo::i32_t functional_calculate_day_initial_second(void* param);
 
         pilo::test::testing_case g_functional_cases_datetime[] =
         {
             /*---"----------------------------------------------"*/
-            { 1, "static now                                    ", nullptr, functional_static_now, 0, -1, (pilo::u32_t) - 1 },
-            { 2, "static calculate initial seconds              ", nullptr, functional_static_calculate_initials, 0, -1, (pilo::u32_t) - 1 },
-            { 3, "static format string                          ", nullptr, functional_format, 0, -1, (pilo::u32_t) - 1 },
+            { 1, "is_leap                                       ", nullptr, functional_is_leap, 0, -1, (pilo::u32_t) - 1 },
+            { 2, "days_in_month                                 ", nullptr, functional_days_in_month, 0, -1, (pilo::u32_t) - 1 },
+            { 3, "static calculate year initial seconds         ", nullptr, functional_calculate_year_initial_second, 0, -1, (pilo::u32_t) - 1 },
+            { 4, "static calculate day initial seconds          ", nullptr, functional_calculate_day_initial_second, 0, -1, (pilo::u32_t) - 1 },
 
 
             { -1, "end", nullptr, nullptr, 0, -1, 0 },
         };
+        
 
-        pilo::i32_t functional_static_now(void* param)
+        pilo::i32_t functional_calculate_day_initial_second(void* param)
         {
             M_UNUSED(param);
-            ::pilo::core::datetime::local_datetime ldt = ::pilo::core::datetime::datetime::now();
 
-            if (!ldt.is_valid())
+           
+            ::pilo::i64_t start = ::pilo::core::datetime::datetime::now_millisecs() / 1000;
+
+            for (int i = (int) start; i < INT_MAX - 12345 -1; i += 12345)
             {
-                return -1;
+                ::pilo::i64_t v1 = ::pilo::core::datetime::datetime::calculate_day_initial_second(i);
+                ::pilo::i64_t v2 = stc_test_day_1st_sec(i);
+
+                if (v1 != v2)
+                {
+                    return -1;
+                }
             }
 
             return 0;
         }
 
-        pilo::i32_t functional_static_calculate_initials(void* param)
+        
+
+        pilo::i32_t functional_is_leap(void* param)
         {
             M_UNUSED(param);
-            ::pilo::i64_t ept2000 = ::pilo::core::datetime::datetime::calculate_year_initial_second(2000);
-            ::pilo::i64_t ept2009 = ::pilo::core::datetime::datetime::calculate_year_initial_second(2009);
 
-            ::pilo::i64_t diff = ept2009 - ept2000;
-
-            if (diff != 86400 * 365 * 9 + 3 * 86400)
+            for (int y = 0; y < 100000; y++)
             {
-                return -1;
+                bool bl1 = stc_test_leap_year(y);
+                bool bl2 = ::pilo::core::datetime::datetime::is_leap_year(y);
+                if (bl1 != bl2)
+                {
+                    return -1;
+                }
+            }
+            return 0;
+        }
+
+        pilo::i32_t functional_days_in_month(void* param)
+        {
+            M_UNUSED(param);
+
+            for (int y = 1970; y < 13000; y++)
+            {
+                bool bl = stc_test_leap_year(y);
+                for (int i = 1; i < 13; i++)
+                {
+                    ::pilo::i8_t v = ::pilo::core::datetime::datetime::days_in_months(y, i);
+                    int cv = 0;
+                    if (i == 1 || i == 3 || i == 5 || i == 7 || i == 8 || i == 10 || i == 12)
+                    {
+                        cv = 31;
+                    }
+                    else if (i == 4 || i == 6 || i == 9 || i == 11)
+                    {
+                        cv = 30;
+                    }
+                    else
+                    {
+                        if (bl)
+                        {
+                            cv = 29;
+                        }
+                        else
+                        {
+                            cv = 28;
+                        }
+                    }
+
+                    if (cv != v)
+                    {
+                        return -1;
+                    }
+                }
             }
 
-            ept2000 = ::pilo::core::datetime::datetime::calculate_year_initial_second_fast(2000);
-            ept2009 = ::pilo::core::datetime::datetime::calculate_year_initial_second_fast(2009);
-            diff = ept2009 - ept2000;
-            if (diff != 86400 * 365 * 9 + 3 * 86400)
-            {
-                return -10;
-            }
+            return 0;
+        }
 
-            ::pilo::i64_t ept2010 = ::pilo::core::datetime::datetime::calculate_year_initial_second_fast(2010);
-            ::pilo::i64_t ept2019 = ::pilo::core::datetime::datetime::calculate_year_initial_second_fast(2019);
-            diff = ept2019 - ept2010;
-            if (diff != 86400 * 365 * 9 + 2 * 86400)
+        pilo::i32_t functional_calculate_year_initial_second(void* param)
+        {
+            M_UNUSED(param);
+            
+            for (int i = 0; i < 300000; i++)
             {
-                return -20;
+                ::pilo::i64_t v1 = ::pilo::core::datetime::datetime::calculate_year_initial_second_fast(i);
+                ::pilo::i64_t v2 = ::pilo::core::datetime::datetime::calculate_year_initial_second(i);
+
+                if (v2 != v1)
+                {
+                    return -1;
+                }
             }
 
             return 0;

@@ -8,6 +8,43 @@ namespace pilo
 	{
 		namespace datetime
 		{  
+#define MC_DATETIME_YEAR_1ST_SECS_CACHE_SIZE    (256)
+            const static ::pilo::i64_t __cst_stc_year_1st_secs_cache[] = {
+                31507200, 63043200, 94665600, 126201600, 157737600, 189273600, 220896000, 252432000,
+                283968000, 315504000, 347126400, 378662400, 410198400, 441734400, 473356800, 504892800,
+                536428800, 567964800, 599587200, 631123200, 662659200, 694195200, 725817600, 757353600,
+                788889600, 820425600, 852048000, 883584000, 915120000, 946656000, 978278400, 1009814400,
+                1041350400, 1072886400, 1104508800, 1136044800, 1167580800, 1199116800, 1230739200, 1262275200,
+                1293811200, 1325347200, 1356969600, 1388505600, 1420041600, 1451577600, 1483200000, 1514736000,
+                1546272000, 1577808000, 1609430400, 1640966400, 1672502400, 1704038400, 1735660800, 1767196800,
+                1798732800, 1830268800, 1861891200, 1893427200, 1924963200, 1956499200, 1988121600, 2019657600,
+                2051193600, 2082729600, 2114352000, 2145888000, 2177424000, 2208960000, 2240582400, 2272118400,
+                2303654400, 2335190400, 2366812800, 2398348800, 2429884800, 2461420800, 2493043200, 2524579200,
+                2556115200, 2587651200, 2619273600, 2650809600, 2682345600, 2713881600, 2745504000, 2777040000,
+                2808576000, 2840112000, 2871734400, 2903270400, 2934806400, 2966342400, 2997964800, 3029500800,
+                3061036800, 3092572800, 3124195200, 3155731200, 3187267200, 3218803200, 3250425600, 3281961600,
+                3313497600, 3345033600, 3376656000, 3408192000, 3439728000, 3471264000, 3502886400, 3534422400,
+                3565958400, 3597494400, 3629116800, 3660652800, 3692188800, 3723724800, 3755347200, 3786883200,
+                3818419200, 3849955200, 3881577600, 3913113600, 3944649600, 3976185600, 4007808000, 4039344000,
+                4070880000, 4102416000, 4133952000, 4165488000, 4197024000, 4228560000, 4260182400, 4291718400,
+                4323254400, 4354790400, 4386412800, 4417948800, 4449484800, 4481020800, 4512643200, 4544179200,
+                4575715200, 4607251200, 4638873600, 4670409600, 4701945600, 4733481600, 4765104000, 4796640000,
+                4828176000, 4859712000, 4891334400, 4922870400, 4954406400, 4985942400, 5017564800, 5049100800,
+                5080636800, 5112172800, 5143795200, 5175331200, 5206867200, 5238403200, 5270025600, 5301561600,
+                5333097600, 5364633600, 5396256000, 5427792000, 5459328000, 5490864000, 5522486400, 5554022400,
+                5585558400, 5617094400, 5648716800, 5680252800, 5711788800, 5743324800, 5774947200, 5806483200,
+                5838019200, 5869555200, 5901177600, 5932713600, 5964249600, 5995785600, 6027408000, 6058944000,
+                6090480000, 6122016000, 6153638400, 6185174400, 6216710400, 6248246400, 6279868800, 6311404800,
+                6342940800, 6374476800, 6406099200, 6437635200, 6469171200, 6500707200, 6532329600, 6563865600,
+                6595401600, 6626937600, 6658560000, 6690096000, 6721632000, 6753168000, 6784790400, 6816326400,
+                6847862400, 6879398400, 6911020800, 6942556800, 6974092800, 7005628800, 7037251200, 7068787200,
+                7100323200, 7131859200, 7163481600, 7195017600, 7226553600, 7258089600, 7289625600, 7321161600,
+                7352697600, 7384233600, 7415856000, 7447392000, 7478928000, 7510464000, 7542086400, 7573622400,
+                7605158400, 7636694400, 7668316800, 7699852800, 7731388800, 7762924800, 7794547200, 7826083200,
+                7857619200, 7889155200, 7920777600, 7952313600, 7983849600, 8015385600, 8047008000, 8078544000            
+            };
+
+
             datetime::datetime() :m_epoch(::pilo::core::datetime::datetime::now_microsecs())
 			{
                 
@@ -120,7 +157,7 @@ namespace pilo
 					return false;
 				}
 
-				::pilo::i64_t epoch_secs = ::pilo::core::datetime::datetime::calculate_year_initial_second_fast(ldt.date.year);
+				::pilo::i64_t epoch_secs = ::pilo::core::datetime::datetime::calculate_year_initial_second_fast_local(ldt.date.year);
                 if (epoch_secs < 0) epoch_secs = 0;
 
 				for (int i = 1; i < ldt.date.month; i++)
@@ -160,10 +197,10 @@ namespace pilo
                 int ys = (int)(epoch_secs / max_year_secs);
                 ::pilo::core::datetime::local_datetime ldt;
                 //
-                ldt.reset();
-                ldt.date.year = ys;
+                ldt.set(ys+1970, 1,1,0,0,0,0);
+                ldt.date.year = ys + 1970;
 
-                pilo::i64_t secs = datetime::calculate_year_initial_second_fast(ldt.date.year);
+                pilo::i64_t secs = datetime::calculate_year_initial_second_fast_local(ldt.date.year);
                 if (secs < 0) 
                 {
                     return false;
@@ -171,7 +208,7 @@ namespace pilo
 
                 while (true)
                 {
-                    pilo::i64_t secs2 = datetime::calculate_year_initial_second_fast(ldt.date.year + 1);
+                    pilo::i64_t secs2 = datetime::calculate_year_initial_second_fast_local(ldt.date.year + 1);
                     if (secs2 < 0) 
                     {
                         return false;
@@ -206,7 +243,7 @@ namespace pilo
                                 ldt.time.hour = (pilo::i8_t)(delta / hour_seconds);
                                 ldt.time.minute = (pilo::i8_t)((delta%hour_seconds) / min_seconds);
                                 ldt.time.second = (pilo::i8_t)((delta%hour_seconds) % min_seconds);
-                                ldt.time.microsecond =(pilo::i8_t) ms_left;
+                                ldt.time.microsecond =(pilo::i32_t) ms_left;
                                 ref_ldt = ldt;
                                 return true;
                             }
@@ -256,61 +293,36 @@ namespace pilo
                 return (::pilo::i64_t) _time32(NULL);
 #   endif
 #else
-             
-                return (::pilo::i64_t) ::time(NULL);;
 
-                
+                return (::pilo::i64_t) ::time(NULL);;
 #endif
 
             }
 
-            pilo::i64_t datetime::calculate_year_initial_second(int year)
+            pilo::i64_t datetime::calculate_year_initial_second_local(int year)
 			{
 				struct tm stm = { 0, 0, 0, 1, 0, year - 1900, 0, 0, 0 };
-				return mktime(&stm);
+                pilo::i64_t v =  mktime(&stm);
+                return v;
 			}
 
-			pilo::i64_t datetime::calculate_year_initial_second_fast(int year)
+			pilo::i64_t datetime::calculate_year_initial_second_fast_local(int year)
 			{
-#define year_count 200
-				const int startYear = 1971;
-				const int endYear = startYear + year_count;
 
-				static ::pilo::core::threading::nonrecursive_mutex mx;
-				static ::pilo::i64_t yearSecs[year_count];
-				volatile static bool bInit = false;
+				const int startYear = 1971;
+                const int endYear = startYear + MC_DATETIME_YEAR_1ST_SECS_CACHE_SIZE;
 
 				if (year < startYear || year >= endYear)
 				{
-					return ::pilo::core::datetime::datetime::calculate_year_initial_second(year);
+					return ::pilo::core::datetime::datetime::calculate_year_initial_second_local(year);
 				}
 				else
 				{
-					if (bInit)
-					{
-						return yearSecs[year - startYear];
-					}
-					else
-					{
-						::pilo::core::threading::mutex_locker<::pilo::core::threading::nonrecursive_mutex> am(mx);
-						if (bInit)
-						{
-							return yearSecs[year - startYear];
-						}
-						else
-						{
-							for (int i = 0; i < year_count; i++)
-							{
-								yearSecs[i] = ::pilo::core::datetime::datetime::calculate_year_initial_second(startYear + i);
-							}
-							bInit = true;
-							return yearSecs[year - startYear];
-						}
-					}
+                    return __cst_stc_year_1st_secs_cache[year - 1971];
 				}
 			}
 
-            pilo::i64_t datetime::calculate_day_initial_second(pilo::i64_t sec)
+            pilo::i64_t datetime::calculate_day_initial_second_local(pilo::i64_t sec)
             {
                 datetime dt(sec, ePDTM_Seconds);
                 local_datetime ldt; 
@@ -361,7 +373,7 @@ namespace pilo
 
             pilo::i64_t datetime::calculate_next_day_initial_second(pilo::i64_t sec)
             {
-                return ::pilo::core::datetime::datetime::calculate_day_initial_second(sec) + day_seconds;
+                return ::pilo::core::datetime::datetime::calculate_day_initial_second_local(sec) + day_seconds;
             }
 
             pilo::i64_t datetime::calculate_next_week_initial_second(pilo::i64_t sec)
@@ -379,7 +391,7 @@ namespace pilo
                 dt.add_days(1 - ldt.date.day);
 
                 int mdays = ::pilo::core::datetime::datetime::days_in_months(ldt.date.year, ldt.date.month);
-                return ::pilo::core::datetime::datetime::calculate_day_initial_second(sec) + day_seconds*mdays;                
+                return ::pilo::core::datetime::datetime::calculate_day_initial_second_local(sec) + day_seconds*mdays;                
             }
 
             pilo::i64_t datetime::calculate_next_year_initial_second(pilo::i64_t sec)
@@ -388,7 +400,7 @@ namespace pilo
                 ::pilo::core::datetime::local_datetime ldt;
                 dt.to_local_datetime(ldt);
 
-                return ::pilo::core::datetime::datetime::calculate_year_initial_second(ldt.date.year+1);
+                return ::pilo::core::datetime::datetime::calculate_year_initial_second_local(ldt.date.year+1);
             }
 
             bool datetime::operator==(const ::pilo::core::datetime::datetime& other) const
@@ -432,10 +444,10 @@ namespace pilo
 #endif
             }
 
-            int datetime::days_in_months(int year, int month)
+            ::pilo::i8_t datetime::days_in_months(int year, int month)
 			{
-				static int leapDays[] =    { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-				static int nonleapDays[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+                static ::pilo::i8_t  leapDays[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+                static ::pilo::i8_t  nonleapDays[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 				if (::pilo::core::datetime::datetime::is_leap_year(year))
 				{
 					return leapDays[month - 1];

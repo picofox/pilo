@@ -494,6 +494,10 @@ int main(int argc, char *argv[])
     bool break_on_error = true;
     pilo::i32_t id = 1;
 
+    ::pilo::test::functional_test_module_class_datetime datetime_cases(id++, "functional_test_module_class_datetime", pilo::test::g_functional_cases_datetime);
+    datetime_cases.run_cases(break_on_error);
+    datetime_cases.console_output();
+
     pilo::test::functional_test_module_class_fixed_astring  fixed_astring_cases(id++, "functional_test_module_class_fixed_astring", pilo::test::g_functional_cases_fixed_astring);
     fixed_astring_cases.run_cases(break_on_error);
     fixed_astring_cases.console_output();
@@ -509,10 +513,6 @@ int main(int argc, char *argv[])
     pilo::test::functional_test_module_file  file_cases(id++, "functional_test_module_file", pilo::test::g_functional_cases_file);
     file_cases.run_cases(break_on_error);
     file_cases.console_output();
-
-    ::pilo::test::functional_test_module_class_datetime datetime_cases(id++, "functional_test_module_class_datetime", pilo::test::g_functional_cases_datetime);
-    datetime_cases.run_cases(break_on_error);
-    datetime_cases.console_output();
 
     pilo::test::functional_test_module_mmap  mmap_cases(id++, "functional_test_module_mmap", pilo::test::g_functional_cases_mmap);
     mmap_cases.run_cases(break_on_error);
@@ -601,9 +601,7 @@ int main(int argc, char *argv[])
 //     io_buffer_cases.run_cases(break_on_error);
 //     io_buffer_cases.console_output();
 // 
-//     ::pilo::test::functional_test_module_class_datetime datetime_cases(id++, "functional_test_module_class_datetime", pilo::test::g_functional_cases_datetime);
-//     datetime_cases.run_cases(break_on_error);
-//     datetime_cases.console_output();
+//     
 // 
 
 // 

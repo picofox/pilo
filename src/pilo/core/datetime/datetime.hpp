@@ -257,18 +257,13 @@ namespace pilo
 			public:
 				enum   { day_seconds = 24 * 3600, hour_seconds = 3600, min_seconds = 60 };
                 static pilo::i32_t diff_seconds_local_to_utc();
-				static int  days_in_months(int year, int month);
+                static ::pilo::i8_t  days_in_months(int year, int month);
 				static bool is_leap_year(int year);
                 static ::pilo::core::datetime::local_datetime now();
                 static ::pilo::i64_t epoch_time();
 
 
 #ifdef WINDOWS
-
-                inline ::pilo::i64_t ticks_to_epoch_secs(::pilo::i64_t v)
-                {
-                    return (v / 10000000);
-                }
 
                 inline static ::pilo::i64_t steady_now_ticks() //nano in windws
                 {
@@ -347,12 +342,6 @@ namespace pilo
 #endif
 
 #else
-
-
-                inline ::pilo::i64_t ticks_to_epoch_secs(::pilo::i64_t v)
-                {
-                    return v / 1000000000;
-                }
 
                 inline static ::pilo::i64_t steady_now_ticks() //nano in windws
                 {
@@ -452,9 +441,9 @@ namespace pilo
 #endif // WINDOWS
                 
 
-				static pilo::i64_t calculate_year_initial_second(int year);
-				static pilo::i64_t calculate_year_initial_second_fast(int year);
-                static pilo::i64_t calculate_day_initial_second(pilo::i64_t sec);
+				static pilo::i64_t calculate_year_initial_second_local(int year);
+				static pilo::i64_t calculate_year_initial_second_fast_local(int year);
+                static pilo::i64_t calculate_day_initial_second_local(pilo::i64_t sec);
                 static pilo::i64_t calculate_week_initial_second(pilo::i64_t sec);
                 static pilo::i64_t calculate_month_initial_second(pilo::i64_t sec);
                 static pilo::i64_t calculate_next_day_initial_second(pilo::i64_t sec);

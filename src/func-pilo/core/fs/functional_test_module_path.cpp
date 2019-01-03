@@ -82,11 +82,11 @@ namespace pilo
                     return -40;
                 }
 
-                printf("-> (%s) \n",path_abs_test.c_str());
+               // printf("-> (%s) \n",path_abs_test.c_str());
 
                 ret = path_abs_test.to_absolute(true, true);
 
-                printf("-> (%s) \n", path_abs_test.c_str());
+               // printf("-> (%s) \n", path_abs_test.c_str());
                 if (ret != ::pilo::EC_OK)
                 {
                     return -40;
@@ -141,12 +141,12 @@ namespace pilo
 
             for (int i = 0; i < (int) (sizeof(__st_c_test_to_abs_paths) / sizeof(char*)); i++)
             {
-                printf("(%s)\n", __st_c_test_to_abs_paths[i]);
+                //printf("(%s)\n", __st_c_test_to_abs_paths[i]);
                 path_abs_test.assign(__st_c_test_to_abs_paths[i]);
                 ::pilo::error_number_t ret = path_abs_test.to_absolute(false, true);
                 if (ret != ::pilo::EC_OK)
                 {
-                    printf("(%s) Failed\n", __st_c_test_to_abs_paths[i]);
+                   // printf("(%s) Failed\n", __st_c_test_to_abs_paths[i]);
                     return -40;
                 }
 
