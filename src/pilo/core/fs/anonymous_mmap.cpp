@@ -16,12 +16,16 @@ namespace pilo
 #ifdef WINDOWS
                 DWORD hi = 0;
                 DWORD lo = 0;
+
+#   ifdef __x86_64__
                 if (length >= 0)
                 {
                     hi = M_HI32BIT(length);
                     lo = M_LO32BIT(length);
                 }
-
+#   else
+                lo = length;
+#   endif 
                 _m_win32_map_handle = ::CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, hi, lo, NULL);
                 if (NULL == _m_win32_map_handle)
                 {

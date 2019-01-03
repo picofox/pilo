@@ -472,6 +472,7 @@ namespace pilo
 	typedef vec3_t<float> f_vec3_t;
     typedef rect_t<pilo::u8_t>	u8_rect_t;
     typedef vec2_t<float> f_vec2_t;
+    typedef vec3_t<pilo::i32_t> i32_vec3_t;
 
 
 
@@ -488,54 +489,65 @@ namespace pilo
     */
     template <typename T> struct _type_default_value_
     {
+        static const bool need_set_default_value = true;
         static const T& get() { static T v; return v; }
     };
     template <typename T> struct _type_default_value_<T*>
     {
+        static const bool need_set_default_value = true;
         static T* get() { return nullptr; }
     };
     template <> struct _type_default_value_<void*>
     {
+        static const bool need_set_default_value = true;
         static void* get() { return nullptr; }
     };
 
     template <> struct _type_default_value_<i8_t>
     {
-            static i8_t get() { return 0; }
+        static const bool need_set_default_value = true;
+        static i8_t get() { return 0; }
     };
 
     template <> struct _type_default_value_<i16_t>
     {
+        static const bool need_set_default_value = true;
         static i16_t get() { return 0; }
     };
 
     template <> struct _type_default_value_<i32_t>
     {
+        static const bool need_set_default_value = true;
         static i32_t get() { return 0; }
     };
 
     template <> struct _type_default_value_<i64_t>
     {
+        static const bool need_set_default_value = true;
         static i64_t get() { return 0; }
     };
 
     template <> struct _type_default_value_<u8_t>
     {
+        static const bool need_set_default_value = true;
         static u8_t get() { return 0; }
     };
 
     template <> struct _type_default_value_<u16_t>
     {
+        static const bool need_set_default_value = true;
         static u16_t get() { return 0; }
     };
 
     template <> struct _type_default_value_<u32_t>
     {
+        static const bool need_set_default_value = true;
         static u32_t get() { return 0; }
     };
 
     template <> struct _type_default_value_<u64_t>
     {
+        static const bool need_set_default_value = true;
         static u64_t get() { return 0; }
     };
 
