@@ -8,8 +8,9 @@ namespace pilo
 	{
 		namespace datetime
 		{  
-#define MC_DATETIME_YEAR_1ST_SECS_CACHE_SIZE    (256)
-            const static ::pilo::i64_t __cst_stc_year_1st_secs_cache[] = {
+#define MC_DATETIME_YEAR_1ST_SECS_CACHE_SIZE            (256)
+#define MC_DATETIME_YEAR_1ST_SECS_CACHE_MAX_YEAR        (1970+MC_DATETIME_YEAR_1ST_SECS_CACHE_SIZE-1)
+            const static ::pilo::i64_t __cst_stc_year_1st_secs_cache_local[] = { -28800,
                 31507200, 63043200, 94665600, 126201600, 157737600, 189273600, 220896000, 252432000,
                 283968000, 315504000, 347126400, 378662400, 410198400, 441734400, 473356800, 504892800,
                 536428800, 567964800, 599587200, 631123200, 662659200, 694195200, 725817600, 757353600,
@@ -41,7 +42,7 @@ namespace pilo
                 7100323200, 7131859200, 7163481600, 7195017600, 7226553600, 7258089600, 7289625600, 7321161600,
                 7352697600, 7384233600, 7415856000, 7447392000, 7478928000, 7510464000, 7542086400, 7573622400,
                 7605158400, 7636694400, 7668316800, 7699852800, 7731388800, 7762924800, 7794547200, 7826083200,
-                7857619200, 7889155200, 7920777600, 7952313600, 7983849600, 8015385600, 8047008000, 8078544000            
+                7857619200, 7889155200, 7920777600, 7952313600, 7983849600, 8015385600, 8047008000            
             };
 
 
@@ -157,7 +158,7 @@ namespace pilo
 					return false;
 				}
 
-				::pilo::i64_t epoch_secs = ::pilo::core::datetime::datetime::calculate_year_initial_second_fast_local(ldt.date.year);
+				::pilo::i64_t epoch_secs = ::pilo::core::datetime::datetime::calculate_year_initial_second_local(ldt.date.year);
                 if (epoch_secs < 0) epoch_secs = 0;
 
 				for (int i = 1; i < ldt.date.month; i++)
@@ -200,16 +201,16 @@ namespace pilo
                 ldt.set(ys+1970, 1,1,0,0,0,0);
                 ldt.date.year = ys + 1970;
 
-                pilo::i64_t secs = datetime::calculate_year_initial_second_fast_local(ldt.date.year);
-                if (secs < 0) 
+                pilo::i64_t secs = datetime::calculate_year_initial_second_local(ldt.date.year);
+                if (secs == INT64_MIN) 
                 {
                     return false;
                 }
 
                 while (true)
                 {
-                    pilo::i64_t secs2 = datetime::calculate_year_initial_second_fast_local(ldt.date.year + 1);
-                    if (secs2 < 0) 
+                    pilo::i64_t secs2 = datetime::calculate_year_initial_second_local(ldt.date.year + 1);
+                    if (secs2 == INT64_MIN)
                     {
                         return false;
                     }
@@ -299,26 +300,60 @@ namespace pilo
 
             }
 
-            pilo::i64_t datetime::calculate_year_initial_second_local(int year)
-			{
-				struct tm stm = { 0, 0, 0, 1, 0, year - 1900, 0, 0, 0 };
-                pilo::i64_t v =  mktime(&stm);
-                return v;
-			}
 
-			pilo::i64_t datetime::calculate_year_initial_second_fast_local(int year)
+			pilo::i64_t datetime::calculate_year_initial_second_local(int year)
 			{
-
-				const int startYear = 1971;
+				const int startYear = 1970;
                 const int endYear = startYear + MC_DATETIME_YEAR_1ST_SECS_CACHE_SIZE;
 
-				if (year < startYear || year >= endYear)
+				if (year >= endYear)
 				{
-					return ::pilo::core::datetime::datetime::calculate_year_initial_second_local(year);
+                    if (year < 3000)
+                    {
+                        struct tm stm = { 0, 0, 0, 1, 0, year - 1900, 0, 0, 0 };
+                        pilo::i64_t v = mktime(&stm);
+                        if (v < 0)
+                        {
+                            return INT64_MIN;
+                        }
+                        return v;
+                    }
+                    else
+                    {
+                        ::pilo::i64_t secs = __cst_stc_year_1st_secs_cache_local[MC_DATETIME_YEAR_1ST_SECS_CACHE_SIZE - 1];
+                        for (int i = MC_DATETIME_YEAR_1ST_SECS_CACHE_MAX_YEAR; i < year; i++)
+                        {
+                            if (is_leap_year(i))
+                            {
+                                secs += (366 * 86400);
+                            }
+                            else
+                            {
+                                secs += (365 * 86400);
+                            }
+                        }
+                        return secs;
+                    }                     
 				}
+                else if (year < startYear)
+                {
+                    ::pilo::i64_t secs = __cst_stc_year_1st_secs_cache_local[0];
+                    for (int i = 1970; i > year; i--)
+                    {
+                        if (is_leap_year(i-1))
+                        {
+                            secs -= (366 * 86400);
+                        }
+                        else
+                        {
+                            secs -= (365 * 86400);
+                        }
+                    }
+                    return secs;
+                }
 				else
 				{
-                    return __cst_stc_year_1st_secs_cache[year - 1971];
+                    return __cst_stc_year_1st_secs_cache_local[year - 1970];
 				}
 			}
 

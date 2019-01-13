@@ -440,10 +440,8 @@ namespace pilo
 
 #endif // WINDOWS
                 
-
-				static pilo::i64_t calculate_year_initial_second(int year);
-				static pilo::i64_t calculate_year_initial_second_fast(int year);
-                static pilo::i64_t calculate_day_initial_second(pilo::i64_t sec);
+				static pilo::i64_t calculate_year_initial_second_local(int year);
+                static pilo::i64_t calculate_day_initial_second_local(pilo::i64_t sec);
                 static pilo::i64_t calculate_week_initial_second(pilo::i64_t sec);
                 static pilo::i64_t calculate_month_initial_second(pilo::i64_t sec);
                 static pilo::i64_t calculate_next_day_initial_second(pilo::i64_t sec);
@@ -485,6 +483,7 @@ namespace pilo
 				bool from_local_datetime(const local_datetime& ldt);
                 bool to_local_datetime(local_datetime& ldt) const;  
                 void set(pilo::i64_t tick, PiloDateTimeModeEnumeration mode);
+                ::pilo::i64_t epoch_microseconds() const { return m_epoch;  }
 
 			protected:
                 ::pilo::i64_t   m_epoch;               
