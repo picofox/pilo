@@ -140,6 +140,7 @@ namespace pilo
 
             ::pilo::core::datetime::datetime dt(0, ePDTM_Seconds);
             ::pilo::core::datetime::local_datetime ldt;
+  
 
             dt.to_local_datetime(ldt);
             if (ldt.time.hour != 8)
@@ -181,7 +182,7 @@ namespace pilo
                     return -60;
                 }
                 if (msleft != ldt.time.microsecond)
-                {
+                {                
                     return -70;
                 }
             }
@@ -191,7 +192,6 @@ namespace pilo
 
             return 0;
         }
-
 
         pilo::i32_t functional_calculate_day_initial_second(void* param)
         {
@@ -283,6 +283,10 @@ namespace pilo
         pilo::i32_t functional_calculate_year_initial_second(void* param)
         {
             M_UNUSED(param);
+
+            ::pilo::core::datetime::local_datetime ldt;
+             
+            ldt.reset(1);
             
             for (int i = 1970; i < 3007; i++)
             {
@@ -339,6 +343,18 @@ namespace pilo
             if (t1 != -11676124800LL)
             {
                 return -9;
+            }
+
+            t1 = ::pilo::core::datetime::datetime::calculate_year_initial_second_local(100);
+            if (t1 != -59011488000LL)
+            {
+                return -10;
+            }
+
+            t1 = ::pilo::core::datetime::datetime::calculate_year_initial_second_local(MC_PILO_DATETIME_MAX_YEAR);
+            if (t1 == INT64_MIN)
+            {
+                return -2;
             }
 
             return 0;

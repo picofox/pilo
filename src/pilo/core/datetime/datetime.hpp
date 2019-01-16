@@ -27,12 +27,19 @@
 #define MB_PILO_DATETIME_IGNORE_DATE (1)
 #define MB_PILO_DATETIME_IGNORE_TIME (2)
 
+#define MC_PILO_DATETIME_MAX_YEAR (291672)
+#define MC_DATETIME_YEAR_1ST_SECS_CACHE_SIZE            (256)
+#define MC_DATETIME_YEAR_1ST_SECS_CACHE_MAX_YEAR        (1970+MC_DATETIME_YEAR_1ST_SECS_CACHE_SIZE-1)
+
+
 namespace pilo
 {
 	namespace core
 	{
 		namespace datetime
 		{           
+            class datetime;
+
             static const char* __pilo_stc_local_date_fmt[] = {
                 "%04d-%02d-%02d",
                 "%d-%d-%d",
@@ -57,17 +64,56 @@ namespace pilo
 
             struct local_date
             {
-                local_date() : year(0), month(0), day(0), flags(0) {}
+                local_date() : year(0), month(0), day(0), week_day(0), time_zone(0) {}
                 ::pilo::i32_t    year;
                 ::pilo::i8_t     month;
                 ::pilo::i8_t     day;
-                ::pilo::i16_t    flags; //unused
+                ::pilo::i8_t     week_day; 
+                ::pilo::i8_t     time_zone;
 
-                inline void reset()
+                inline void reset(int timezone_mode = 0)
                 {
                     year = 0;
                     month = 0;
                     day = 0;
+                    week_day = 0;
+
+                    if (timezone_mode > 0)
+                    {
+                        set_local_timezone();
+                        
+                    }
+                    else if (timezone_mode < 0)
+                    {
+                        time_zone = 0;
+                    }
+                }
+
+                inline void set_local_timezone()
+                {
+#ifdef      WINDOWS
+                    pilo::i32_t t;
+                    _get_timezone((long*)&t);
+                    time_zone = (::pilo::i8_t)  (t / 3600);
+
+#else
+                    time_zone = (::pilo::i8_t)  (time_zone / 3600);
+#endif
+                }
+
+                inline bool set(::pilo::i32_t y, ::pilo::i8_t m, ::pilo::i8_t d, ::pilo::i8_t tz)
+                {
+                    year = y;
+                    month = m;
+                    day = d;
+                    time_zone = tz;
+                    if (!valid())
+                    {
+                        return false;
+                    }
+                    
+
+                    return true;
                 }
 
                 inline bool set(::pilo::i32_t y, ::pilo::i8_t m, ::pilo::i8_t d)
@@ -105,20 +151,30 @@ namespace pilo
  
             struct local_time
             {
-                ::pilo::u8_t      flags;
+                ::pilo::u8_t      time_zone;
                 ::pilo::i8_t      hour;
                 ::pilo::i8_t      minute;
                 ::pilo::i8_t      second;
                 ::pilo::i32_t     microsecond;
 
-                local_time() : flags(0), hour(0), minute(0), second(0), microsecond(0) {}
+                local_time() : time_zone(0), hour(0), minute(0), second(0), microsecond(0) {}
 
-                inline void reset()
+                inline void reset(int timezone_mode = 0)
                 {
                     hour = 0;
                     minute = 0;
                     second = 0;
                     microsecond = 0;
+
+                    if (timezone_mode > 0)
+                    {
+                        set_local_timezone();
+
+                    }
+                    else if (timezone_mode < 0)
+                    {
+                        time_zone = 0;
+                    }
                 }
 
                 inline bool set(::pilo::i8_t h, ::pilo::i8_t m, ::pilo::i8_t s, ::pilo::i32_t ms)
@@ -127,6 +183,22 @@ namespace pilo
                     minute = m;
                     second = s;
                     microsecond = ms;
+
+                    if (!valid())
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                inline bool set(::pilo::i8_t h, ::pilo::i8_t m, ::pilo::i8_t s, ::pilo::i32_t ms, ::pilo::i8_t tz)
+                {
+                    hour = h;
+                    minute = m;
+                    second = s;
+                    microsecond = ms;
+                    time_zone = tz;
 
                     if (!valid())
                     {
@@ -147,6 +219,18 @@ namespace pilo
                         if (this->microsecond < 0 || this->microsecond > 999999) return false;
                     }
                     return true;
+                }
+
+                inline void set_local_timezone()
+                {
+#ifdef      WINDOWS
+                    pilo::i32_t t;
+                    _get_timezone((long*)&t);
+                    time_zone = (::pilo::i8_t)  (t / 3600);
+
+#else
+                    time_zone = (::pilo::i8_t)  (time_zone / 3600);
+#endif
                 }
 
                 size_t to_string(char* szBuffer, size_t sz, PiloTimeFormatEnumeration mode)
@@ -172,10 +256,10 @@ namespace pilo
                 local_date      date;
                 local_time      time;
 
-                inline void reset()
+                inline void reset(int timezone_mode = 0)
                 {
-                    date.reset();
-                    time.reset();
+                    date.reset(timezone_mode);
+                    time.reset(timezone_mode);
                 }
 
                 inline bool set(::pilo::i32_t Y, ::pilo::i8_t M, ::pilo::i8_t D, ::pilo::i8_t h, ::pilo::i8_t m, ::pilo::i8_t s, ::pilo::i32_t ms)
@@ -190,14 +274,26 @@ namespace pilo
                     return true;
                 }
 
-                bool valid() const
+                inline bool set(::pilo::i32_t Y, ::pilo::i8_t M, ::pilo::i8_t D, ::pilo::i8_t h, ::pilo::i8_t m, ::pilo::i8_t s, ::pilo::i32_t ms, ::pilo::i8_t tz)
                 {
-                    if (!pilo_test_flag_bit_by_value<::pilo::u8_t>(time.flags, (::pilo::u8_t)MB_PILO_DATETIME_IGNORE_DATE))
+                    date.set(Y, M, D,tz);
+                    time.set(h, m, s, ms, tz);
+                    if (!valid())
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                bool valid(::pilo::u32_t flags = 0) const
+                {
+                    if (!pilo_test_flag_bit_by_value<::pilo::u32_t>(flags, (::pilo::u8_t)MB_PILO_DATETIME_IGNORE_DATE))
                     {
                         if (! date.valid()) return false;
                     }
 
-                    if (!pilo_test_flag_bit_by_value<::pilo::u8_t>(time.flags, (::pilo::u8_t)MB_PILO_DATETIME_IGNORE_TIME))
+                    if (!pilo_test_flag_bit_by_value<::pilo::u32_t>(flags, (::pilo::u8_t)MB_PILO_DATETIME_IGNORE_TIME))
                     {
                         if (!time.valid()) return false;
                     }
@@ -440,7 +536,7 @@ namespace pilo
 
 #endif // WINDOWS
                 
-				static pilo::i64_t calculate_year_initial_second_local(int year);
+				static pilo::i64_t calculate_year_initial_second_local(::pilo::i32_t year, ::pilo::i32_t timezone = INT_MAX);
                 static pilo::i64_t calculate_day_initial_second_local(pilo::i64_t sec);
                 static pilo::i64_t calculate_week_initial_second(pilo::i64_t sec);
                 static pilo::i64_t calculate_month_initial_second(pilo::i64_t sec);

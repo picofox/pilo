@@ -478,6 +478,8 @@ int main(int argc, char *argv[])
     M_UNUSED(argc);
     M_UNUSED(argv);	 
 
+    _tzset();
+
     int init_pilo_rc = -1;
     if ((init_pilo_rc = ::pilo_initialize()) != 0)
     {
