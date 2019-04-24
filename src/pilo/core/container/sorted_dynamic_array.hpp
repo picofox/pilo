@@ -1,5 +1,5 @@
 #pragma once
-#include "pilo/core/coredefs.hpp"
+#include "core/coredefs.hpp"
 #include "dynamic_array.hpp"
 
 namespace pilo
