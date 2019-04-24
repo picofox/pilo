@@ -103,14 +103,15 @@ namespace pilo
                 size_t find(const value_type& val) const
                 {
                     bool found;
-                    size_t pos = this->bsearch(val, found);
+                    int pos = this->bsearch(val, found);
                     if (!found) return MC_INVALID_SIZE;
                     return pos;
                 }
                 size_t insert(const value_type& val)
                 {
                     bool found;
-                    size_t pos = this->bsearch(val, found);
+                    int pos = this->bsearch(val, found);
+					if (pos < 0) return MC_INVALID_SIZE;
                     base_type::insert(pos, val);
                     return pos;
                 }
@@ -118,7 +119,8 @@ namespace pilo
                 {
                     bool found;
                     size_t pos = this->bsearch(val, found);
-                    if (found) return -1;
+					if (found) return MC_INVALID_SIZE;
+					if (pos < 0) return MC_INVALID_SIZE;
                     base_type::insert(pos, val);
                     return pos;
                 }
@@ -170,7 +172,7 @@ namespace pilo
                 /**
                 * 实现对半查找，返回值是元素应当插入的位置
                 */
-                size_t bsearch(const value_type& val, bool& found) const
+                ::pilo::i32_t bsearch(const value_type& val, bool& found) const
                 {
                     found = false;
                     if (base_type::_m_size < 1) return 0;
@@ -194,7 +196,7 @@ namespace pilo
                             if (0 == (result = m_cmp(val, *(const value_type*)mid)))
                             {
                                 found = true;
-                                return (size_t)((mid - orig) / unitlen);
+                                return (int)((mid - orig) / unitlen);
                             }
                             else if (result < 0)
                             {	// val < mid
@@ -203,7 +205,7 @@ namespace pilo
 
                                 if (lo > hi)
                                 {
-                                    return (size_t)((mid - orig) / unitlen);
+                                    return (int)((mid - orig) / unitlen);
                                 }
                             }
                             else
@@ -213,7 +215,7 @@ namespace pilo
 
                                 if (lo > hi)
                                 {
-                                    return (size_t)((mid - orig) / unitlen + 1);
+                                    return (int)((mid - orig) / unitlen + 1);
                                 }
                             }
                         }
@@ -223,24 +225,24 @@ namespace pilo
                             if (!n)
                             {
                                 found = true;
-                                return (size_t)((lo - orig) / unitlen);
+                                return (int)((lo - orig) / unitlen);
                             }
                             else if (n < 0)
                             {
-                                return (size_t)((lo - orig) / unitlen);
+                                return (int)((lo - orig) / unitlen);
                             }
                             else
                             {
-                                return (size_t)((lo - orig) / unitlen + 1);
+                                return (int)((lo - orig) / unitlen + 1);
                             }
                         }
                         else
                         {	//没有
-                            return (size_t)((lo - orig) / unitlen);
+                            return (int)((lo - orig) / unitlen);
                         }
                     }
                     //不可达
-                    return MC_INVALID_SIZE;
+                    return -1;
                 }
             };
 

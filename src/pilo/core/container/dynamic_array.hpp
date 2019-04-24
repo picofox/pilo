@@ -64,8 +64,7 @@ namespace pilo
                 {
                     if (this == &o) return *this;
 
-                    this->cle
-                        ar();
+                    this->clear();
                     if (o._m_size==0) return *this;
 
                     if (_m_capacity < o._m_size) this->inflate(o._m_size);

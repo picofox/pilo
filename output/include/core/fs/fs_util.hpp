@@ -655,6 +655,7 @@ namespace pilo
                 static ::pilo::error_number_t get_path_depth(size_t& dep, const char* path);
                 static ::pilo::error_number_t lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock);
                 static ::pilo::error_number_t try_lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock);
+                static ::pilo::error_number_t timed_lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock, ::pilo::i32_t timeout);
                 static ::pilo::error_number_t unlock_file(os_file_descriptor_t fildes, size_t start_pos, size_t size_to_lock);
 
 
@@ -673,6 +674,8 @@ namespace pilo
                 static ::pilo::error_number_t truncate_file(const char* path, size_t sz);
                 static ::pilo::error_number_t seek_file(::pilo::os_file_descriptor_t fildes, ssize_t sz, DeviceSeekWhenceEnumeration eWhence);
   
+                static size_t file_ptr_pos(::pilo::os_file_descriptor_t fildes, size_t& refRet);
+
 
                 static ::pilo::error_number_t  get_file_modified_time(::pilo::core::datetime::datetime &dt, const char* filepath);
                 static ::pilo::i64_t get_file_modified_time(const char* filepath);

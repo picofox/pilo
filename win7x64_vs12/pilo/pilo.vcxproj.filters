@@ -52,7 +52,7 @@
     <Filter Include="core\string">
       <UniqueIdentifier>{ce0ddc9a-be09-475e-b812-fe43baced812}</UniqueIdentifier>
     </Filter>
-    <Filter Include="core\info\fs">
+    <Filter Include="core\fs">
       <UniqueIdentifier>{e2a45ca7-5596-4f6e-a516-21528b0dcbdc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -111,28 +111,28 @@
       <Filter>core\dll</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\fs\async_directory_changer_handler.hpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\fs\buffered_file.hpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\fs\directory_change_monitor.hpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\fs\file.hpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\fs\fs_util.hpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\fs\io_device.hpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\fs\mmap.hpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\fs\path_string.hpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\info\cpu.hpp">
       <Filter>core\info</Filter>
@@ -352,10 +352,10 @@
       <Filter>core\container</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\fs\anonymous_mmap.hpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\fs\async_threaded_device_writer.hpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\pilo\core\threading\user_mutex.hpp">
       <Filter>core\threading</Filter>
@@ -376,10 +376,10 @@
       <Filter>core\dll</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\pilo\core\fs\directory_change_monitor.cpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\pilo\core\fs\fs_util.cpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\pilo\core\info\cpu.cpp">
       <Filter>core\info</Filter>
@@ -461,7 +461,7 @@
     </ClCompile>
     <ClCompile Include="..\..\src\pilo\pilo.cpp" />
     <ClCompile Include="..\..\src\pilo\core\fs\anonymous_mmap.cpp">
-      <Filter>core\info\fs</Filter>
+      <Filter>core\fs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

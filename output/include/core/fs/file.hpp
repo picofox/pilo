@@ -170,6 +170,12 @@ namespace pilo
                     return _seek_nolock(offset, eWhence, r_offset);
                 }
 
+				::pilo::error_number_t truncate(size_t sz, bool reset_ptr)
+				{
+					::pilo::core::threading::rw_mutex_w_locker<lock_type> locker(_m_lock);
+					return _truncate(sz, reset_ptr);
+				}
+
                 ::pilo::error_number_t flock_shared(size_t start_pos, size_t partial_size)
                 {
                     if (_m_os_file_descriptor == MC_INVALID_FILE_DESCRIPTOR)
@@ -370,6 +376,11 @@ namespace pilo
 
                     return ::pilo::EC_OK;
                 }
+
+				::pilo::error_number_t _truncate(size_t sz, bool reset_ptr)
+				{
+					return ::pilo::core::fs::fs_util::truncate_file(_m_os_file_descriptor, sz, reset_ptr);					
+				}
 
                 ::pilo::error_number_t _open_nolock(DeviceAccessModeEnumeration dev_acc_mode, DeviceRWModeEnumeration rw_mode, ::pilo::u32_t flag)
                 {

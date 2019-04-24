@@ -8,6 +8,7 @@
 #include <sys/stat.h>  
 #include <stdio.h>  
 #include <errno.h> 
+#include "core/threading/basic_thread.hpp"
 
 namespace pilo
 {
@@ -534,38 +535,50 @@ namespace pilo
 
             }
 
+            //to lock whole file set start_pos to 0, size_to_lock to 0
+            pilo::error_number_t fs_util::timed_lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock, ::pilo::i32_t timeout)
+            {
+                ::pilo::error_number_t rc = ::pilo::EC_OK;
+                ::pilo::i64_t start_ts = ::pilo::core::datetime::datetime::now_millisecs();
+                do 
+                {
+                    rc = try_lock_file(fildes, is_exclusive, start_pos, size_to_lock);
+                    ::pilo::i64_t end_ts = ::pilo::core::datetime::datetime::now_millisecs();
+                    if (timeout >= 0)
+                    {
+                        if (end_ts - start_ts > timeout)
+                        {
+                            return ::pilo::EC_TIMEOUT;
+                        }
+                    }
+                    
+                    ::pilo::core::threading::basic_thread::usleep(100);
+                } while (rc != ::pilo::EC_OK);
+
+                return ::pilo::EC_OK;
+            }
+
             pilo::error_number_t fs_util::lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock)
             {
 #           ifdef  WINDOWS
-                DWORD flag = 0;
-                if (is_exclusive)
+                ::pilo::error_number_t rc = ::pilo::EC_OK;
+                do 
                 {
-                    flag = LOCKFILE_EXCLUSIVE_LOCK;
-                }
+                    rc = try_lock_file(fildes, is_exclusive, start_pos, size_to_lock);
+                    Sleep(0);                  
 
-                OVERLAPPED overlapvar = { 0 };
-                ULARGE_INTEGER li_size;
-                li_size.QuadPart = (size_to_lock == MC_INVALID_SIZE) ? UINT64_MAX : size_to_lock;
-                LARGE_INTEGER li_start_pos;
-                li_start_pos.QuadPart = start_pos;
-                overlapvar.Offset = li_start_pos.LowPart;
-                overlapvar.OffsetHigh = li_start_pos.HighPart;
+                } while (rc != ::pilo::EC_OK);
+
+
                 
-                BOOL success = ::LockFileEx(fildes, flag, 0, li_size.LowPart, li_size.HighPart, &overlapvar);
-                if (! success)
-                {
-                    return MAKE_SYSERR(::pilo::EC_LOCK_FILE_ERROR);
-                }
-                
-#           else
-                struct  flock   param ;
+#           else //to lock whole file set l_start to 0£¬l_whence to SEEK_SET£¬ l_len to 0¡£
+                struct  flock   param;
                 int             type_param = (is_exclusive) ? F_WRLCK : F_RDLCK;
-                size_t          size_param = (size_to_lock == MC_INVALID_SIZE) ? 0 : size_to_lock;
 
                 param.l_type = type_param;
                 param.l_whence = SEEK_SET;
-                param.l_start = start_pos; 
-                param.l_len = size_param;                
+                param.l_start = start_pos;
+                param.l_len = size_to_lock;
 
                 if (fcntl(fildes, F_SETLKW, &param) == -1)
                 {
@@ -579,22 +592,24 @@ namespace pilo
             pilo::error_number_t fs_util::try_lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock)
             {
 #           ifdef  WINDOWS
-                DWORD flag = 0;
-                if (is_exclusive)
+                if (size_to_lock == 0)
                 {
-                    flag = LOCKFILE_EXCLUSIVE_LOCK | LOCKFILE_FAIL_IMMEDIATELY;
+                    size_to_lock = (size_t) UINT64_MAX;
                 }
 
-                OVERLAPPED overlapvar = { 0 };
-                ULARGE_INTEGER li_size;
-                li_size.QuadPart = (size_to_lock == MC_INVALID_SIZE) ? UINT64_MAX : size_to_lock;
-                LARGE_INTEGER li_start_pos;
-                li_start_pos.QuadPart = start_pos;
-                overlapvar.Offset = li_start_pos.LowPart;
-                overlapvar.OffsetHigh = li_start_pos.HighPart;
+                LARGE_INTEGER li_pos, li_size;
+                li_pos.QuadPart = start_pos;
+                li_size.QuadPart = size_to_lock;
 
-                BOOL success = ::LockFileEx(fildes, flag, 0, li_size.LowPart, li_size.HighPart, &overlapvar);
-                if (!success)
+                BOOL bRet =  LockFile(
+                    fildes,
+                    li_pos.LowPart,
+                    li_pos.HighPart,
+                    li_size.LowPart,
+                    li_size.HighPart
+                    );
+
+                if (!bRet)
                 {
                     return MAKE_SYSERR(::pilo::EC_LOCK_FILE_ERROR);
                 }
@@ -602,12 +617,11 @@ namespace pilo
 #           else
                 struct  flock   param;
                 int             type_param = (is_exclusive) ? F_WRLCK : F_RDLCK;
-                size_t          size_param = (size_to_lock == MC_INVALID_SIZE) ? 0 : size_to_lock;
 
                 param.l_type = type_param;
                 param.l_whence = SEEK_SET;
                 param.l_start = start_pos;
-                param.l_len = size_param;
+                param.l_len = size_to_lock;
 
                 if (fcntl(fildes, F_SETLK, &param) == -1)
                 {
@@ -621,15 +635,24 @@ namespace pilo
             pilo::error_number_t fs_util::unlock_file(os_file_descriptor_t fildes, size_t start_pos, size_t size_to_lock)
             {
 #           ifdef  WINDOWS
-                OVERLAPPED overlapvar = { 0 };
-                ULARGE_INTEGER li_size;
-                li_size.QuadPart = (size_to_lock == MC_INVALID_SIZE) ? UINT64_MAX : size_to_lock;
-                LARGE_INTEGER li_start_pos;
-                li_start_pos.QuadPart = start_pos;
-                overlapvar.Offset = li_start_pos.LowPart;
-                overlapvar.OffsetHigh = li_start_pos.HighPart;
 
-                BOOL success = ::UnlockFileEx(fildes, 0, li_size.LowPart, li_size.HighPart, &overlapvar);
+                if (size_to_lock == 0)
+                {
+                    size_to_lock = (size_t) UINT64_MAX;
+                }
+
+                LARGE_INTEGER li_pos, li_size;
+                li_pos.QuadPart = start_pos;
+                li_size.QuadPart = size_to_lock;
+
+                BOOL success = UnlockFile(
+                    fildes,
+                    li_pos.LowPart,
+                    li_pos.HighPart,
+                    li_size.LowPart,
+                    li_size.HighPart
+                    );
+
                 if (!success)
                 {
                     return MAKE_SYSERR(::pilo::EC_LOCK_FILE_ERROR);
@@ -638,12 +661,11 @@ namespace pilo
 
 #           else
                 struct  flock   param;
-                size_t          size_param = (size_to_lock == MC_INVALID_SIZE) ? 0 : size_to_lock;
 
                 param.l_type = F_UNLCK;;
                 param.l_whence = SEEK_SET;
                 param.l_start = start_pos;
-                param.l_len = size_param;
+                param.l_len = size_to_lock;
 
                 if (fcntl(fildes, F_SETLK, &param) == -1)
                 {
@@ -1146,6 +1168,29 @@ namespace pilo
                 }
 #endif
                 return ::pilo::EC_OK;
+            }
+
+            size_t fs_util::file_ptr_pos(::pilo::os_file_descriptor_t fildes, size_t& refRet)
+            {
+#ifdef WINDOWS                
+                LARGE_INTEGER li;
+                li.QuadPart = 0;
+                LARGE_INTEGER ret;
+                if (!::SetFilePointerEx(fildes, li, &ret, FILE_CURRENT ))
+                {
+                    return MAKE_SYSERR(::pilo::EC_DEV_SEEK_ERROR);
+                }
+                refRet = (size_t) ret.QuadPart;
+
+#else
+                off64_t nRet = lseek64(fildes, sz, eWhence);
+                if (nRet == -1)
+                {
+                    return MAKE_SYSERR(::pilo::EC_DEV_SEEK_ERROR);
+                }
+
+                refRet = (ssize_t) nRet;
+#endif
             }
 
             ::pilo::error_number_t fs_util::get_file_modified_time(::pilo::core::datetime::datetime &dt, const char* filepath)

@@ -401,6 +401,129 @@ namespace pilo
         T x;
         T y;
         T z;
+
+        template<typename _RetType, int _NUM,  int _DENO >
+        void set_x(const _RetType& v) 
+        {
+            if (_DENO == 0) return;
+            if (_NUM == _DENO)
+            {
+                x = static_cast<T>(v);
+            }
+            else
+            {
+                x = static_cast<T>(v) * _NUM / _DENO; 
+            }
+            
+        }
+        template<typename _RetType, int _NUM,  int _DENO >
+        void set_y(const _RetType& v) 
+        {
+            if (_DENO == 0) return;
+            if (_NUM == _DENO)
+            {
+                y = static_cast<T>(v);
+            }
+            else
+            {
+                y = static_cast<T>(v) * _NUM / _DENO; 
+            }
+            
+        }
+        template<typename _RetType, int _NUM,  int _DENO >
+        void set_z(const _RetType& v) 
+        {
+            if (_DENO == 0) return;
+            if (_NUM == _DENO)
+            {
+                z = static_cast<T>(v) * _NUM;
+            }
+            else
+            {
+                z = static_cast<T>(v) * _NUM / _DENO; 
+            }            
+        }
+
+        template<typename _RetType,int _NUM, int _DENO >
+        _RetType get_x() const
+        {
+            if (_DENO != 0)
+            {
+                return static_cast<_RetType>( (x * _NUM) / _DENO);
+            }
+            else
+            {
+                if (_NUM == 0)
+                {
+                    return (std::numeric_limits<_RetType>::max)();
+                }
+                else
+                {
+                    if ((_NUM > 0 && x > 0) || (_NUM < 0 && x < 0))
+                    {
+                        return (std::numeric_limits<_RetType>::max)();
+                    }
+                    else
+                    {
+                        return (std::numeric_limits<_RetType>::min)();
+                    }
+                }
+            }
+        }
+
+        template<typename _RetType,int _NUM, int _DENO >
+        _RetType get_y() const
+        {
+            if (_DENO != 0)
+            {
+                return static_cast<_RetType>( (y * _NUM) / _DENO);
+            }
+            else
+            {
+                if (_NUM == 0)
+                {
+                    return ((std::numeric_limits<_RetType>::max)());
+                }
+                else
+                {
+                    if ((_NUM > 0 && y > 0) || (_NUM < 0 && y < 0))
+                    {
+                        return (std::numeric_limits<_RetType>::max)();
+                    }
+                    else
+                    {
+                        return (std::numeric_limits<_RetType>::min)();
+                    }
+                }
+            }
+        }
+
+        template<typename _RetType,int _NUM, int _DENO >
+        _RetType get_z() const
+        {
+            if (_DENO != 0)
+            {
+                return static_cast<_RetType>( (z * _NUM) / _DENO);
+            }
+            else
+            {
+                if (_NUM == 0)
+                {
+                    return (std::numeric_limits<_RetType>::max)();
+                }
+                else
+                {
+                    if ((_NUM > 0 && z > 0) || (_NUM < 0 && z < 0))
+                    {
+                        return (std::numeric_limits<_RetType>::max)();
+                    }
+                    else
+                    {
+                        return (std::numeric_limits<_RetType>::min)();
+                    }
+                }
+            }
+        }
     };
 
 #if defined(WIN32) || defined(WINDOWS)
@@ -473,6 +596,7 @@ namespace pilo
     typedef rect_t<pilo::u8_t>	u8_rect_t;
     typedef vec2_t<float> f_vec2_t;
     typedef vec3_t<pilo::i32_t> i32_vec3_t;
+    typedef vec3_t<double> rl_vec3_t;
 
 
 
@@ -756,19 +880,19 @@ typedef enum
 
 
 template <typename T>
-void pilo_set_flag_bit_by_value(T v, T b)
+void pilo_set_flag_bit_by_value(T& v, T b)
 {
     v |= b;
 }
 
 template <typename T>
-void pilo_clear_flag_bit_by_value(T v, T b)
+void pilo_clear_flag_bit_by_value(T& v, T b)
 {
     v &= (~b);
 }
 
 template <typename T>
-void pilo_set_flag_bit_by_index(T v, ::pilo::u32_t b, bool enable)
+void pilo_set_flag_bit_by_index(T& v, ::pilo::u32_t b, bool enable)
 {
     if (enable)
     {
@@ -776,7 +900,7 @@ void pilo_set_flag_bit_by_index(T v, ::pilo::u32_t b, bool enable)
     }
     else
     {
-        v &= (~(1 << b));
+        v &= (T) (~(1 << b));
     }
 
 }

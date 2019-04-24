@@ -49,7 +49,7 @@ namespace pilo
 #endif
                 }
 
-                inline bool trylock() const
+                inline bool try_lock() const
                 {
 #ifdef WINDOWS
                     if (TryEnterCriticalSection((CRITICAL_SECTION*)&internal_handle()))
