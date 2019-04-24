@@ -27,6 +27,7 @@
 #include "core/memory/functional_test_module_class_dynamic_buffer.hpp"
 #include "core/fs/functional_test_module_file.hpp"
 #include "core/fs/fs_util.hpp"
+#include "core/container/sorted_dynamic_array.hpp"
 #include "core/process/process_util.hpp"
 #include "core/random/simple_random.hpp"
 #include "core/datetime/datetime.hpp"
@@ -472,6 +473,21 @@ class test_mtx : public ::pilo::core::threading::basic_thread
    
 };
 
+class PlayerRunningRecord
+{
+public:
+	PlayerRunningRecord() : m_nTimeCost(0), m_tickTimeStamp(-1)  {}
+
+	bool operator < (const PlayerRunningRecord& other) const
+	{
+		return this->m_nTimeCost < other.m_nTimeCost;
+	}
+
+	unsigned int  m_nTimeCost;
+	::pilo::i64_t m_tickTimeStamp;
+};
+
+DECLARE_SIMPLE_TYPE(PlayerRunningRecord)
 
 int main(int argc, char *argv[])
 {
@@ -479,6 +495,13 @@ int main(int argc, char *argv[])
     M_UNUSED(argv);	 
 
     _tzset();
+
+	::pilo::core::container::sorted_dynamic_array<PlayerRunningRecord> v;
+	PlayerRunningRecord rec;
+	rec.m_nTimeCost = 1; rec.m_tickTimeStamp = 343;
+	v.insert(rec);
+	rec.m_nTimeCost = 1; rec.m_tickTimeStamp = 343;
+	v.insert(rec);
 
     int init_pilo_rc = -1;
     if ((init_pilo_rc = ::pilo_initialize()) != 0)

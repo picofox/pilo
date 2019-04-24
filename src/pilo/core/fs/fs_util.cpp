@@ -592,9 +592,10 @@ namespace pilo
             pilo::error_number_t fs_util::try_lock_file(os_file_descriptor_t fildes, bool is_exclusive, size_t start_pos, size_t size_to_lock)
             {
 #           ifdef  WINDOWS
+				M_UNUSED(is_exclusive);
                 if (size_to_lock == 0)
                 {
-                    size_to_lock = (size_t) UINT64_MAX;
+                    size_to_lock = (size_t) SIZE_MAX;
                 }
 
                 LARGE_INTEGER li_pos, li_size;
@@ -638,7 +639,7 @@ namespace pilo
 
                 if (size_to_lock == 0)
                 {
-                    size_to_lock = (size_t) UINT64_MAX;
+                    size_to_lock = (size_t) SIZE_MAX;
                 }
 
                 LARGE_INTEGER li_pos, li_size;
@@ -1191,6 +1192,7 @@ namespace pilo
 
                 refRet = (ssize_t) nRet;
 #endif
+				return 0;
             }
 
             ::pilo::error_number_t fs_util::get_file_modified_time(::pilo::core::datetime::datetime &dt, const char* filepath)
