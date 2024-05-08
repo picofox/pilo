@@ -2,3 +2,6 @@
 output/
 build/win-vs17/*
 !build/win-vs17/CMakeLists.txt
+!build/win-vs17/*.vcxproj
+!build/win-vs17/*.filters
+!build/win-vs17/libpilo.sln

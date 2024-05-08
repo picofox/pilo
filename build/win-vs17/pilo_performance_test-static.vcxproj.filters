@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_performance_test\core\container\case_concurrent_queue_pivot.cpp">
+      <Filter>pilo_performance_test\core\container</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_performance_test\core\memory\case_linked_byte_buffer_pivot.cpp">
+      <Filter>pilo_performance_test\core\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_performance_test\main.cpp">
+      <Filter>pilo_performance_test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo_performance_test\pilo_performance_test.hpp">
+      <Filter>pilo_performance_test</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\projects\git_repo\libpilo\build\win-vs17\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="pilo_performance_test">
+      <UniqueIdentifier>{8FD1F7B3-BB53-3860-909C-322F6F332A3B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo_performance_test\core">
+      <UniqueIdentifier>{C256B024-D7A1-3132-A07A-D86DC96B3434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo_performance_test\core\container">
+      <UniqueIdentifier>{CCE3E159-5920-309D-85C5-E8AB96BFE58B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo_performance_test\core\memory">
+      <UniqueIdentifier>{5A8E114B-17BA-3C62-894F-63B4A2A22028}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

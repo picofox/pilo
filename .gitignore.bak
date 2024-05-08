@@ -1,4 +1,4 @@
-*.exe
+﻿*.exe
 output/
-build/win-vs17/*
-!build/win-vs17/CMakeLists.txt
+#build/win-vs17/*
+#!build/win-vs17/CMakeLists.txt
