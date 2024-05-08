@@ -50,6 +50,25 @@ message("PILO_OUTPUT_DIR is -> <${PILO_OUTPUT_DIR}>")
 set(LIBRARY_OUTPUT_PATH ${PILO_OUTPUT_DIR}/lib)
 message("LIBRARY_OUTPUT_PATH is -> <${LIBRARY_OUTPUT_PATH}>")
 
+function(get_current_directory_depth depth_var)
+  set(current_path "${CMAKE_CURRENT_SOURCE_DIR}")
+  set(depth 0)
+  
+  while(NOT "${current_path}" STREQUAL "/")
+    get_filename_component(parent_path "${current_path}" PATH)
+    if(NOT "${parent_path}" STREQUAL "${current_path}")
+      math(EXPR depth "${depth} + 1")
+      set(current_path "${parent_path}")
+    else()
+      # Reached the root directory or a loop occurred.
+      break()
+    endif()
+  endwhile()
+  
+  set(${depth_var} ${depth} PARENT_SCOPE)
+endfunction()
+
+get_current_directory_depth(dir_depth)
 
 macro(source_group_by_dir source_files)
     if(MSVC)
@@ -68,7 +87,7 @@ macro(source_group_by_dir source_files)
             
           list(LENGTH fplist len)
 
-          list(SUBLIST fplist 5 -1 sgbd_file_list)
+          list(SUBLIST fplist ${dir_depth} -1 sgbd_file_list)
 					string(REPLACE ";" "<->"  grppathname ${sgbd_file_list})
           source_group(${grppathname} FILES ${sgbd_file})   
         endforeach(sgbd_file)
