@@ -6,6 +6,7 @@ namespace pilo
 {
 	namespace stable_test
 	{
+		int case_tlv_pathset(::pilo::core::testing::stable_test_case* p_case);
 		int case_tlv_serialization(::pilo::core::testing::stable_test_case* p_case);
 		int case_tlv_acc_dict(::pilo::core::testing::stable_test_case* p_case);
 		int case_tlv_acc_array(::pilo::core::testing::stable_test_case* p_case);
