@@ -68,7 +68,7 @@ macro(source_group_by_dir source_files)
             
           list(LENGTH fplist len)
 
-          list(SUBLIST fplist 6 -1 sgbd_file_list)
+          list(SUBLIST fplist 5 -1 sgbd_file_list)
 					string(REPLACE ";" "<->"  grppathname ${sgbd_file_list})
           source_group(${grppathname} FILES ${sgbd_file})   
         endforeach(sgbd_file)
