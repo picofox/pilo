@@ -35,8 +35,6 @@
 
 #define PMI_INVALID_PTR			(void*)(~0)
 
-#define PMI_INVALID_PATH_LEN	((::pilo::u16_t) (0xFFFF))
-
 #define PMI_INVALID_THREAD_ID   (::pilo::os_thread_id_t (-1))
 #define PMI_INVALID_TIMESTAMP   (::pilo::i64_t  (~1))
 
