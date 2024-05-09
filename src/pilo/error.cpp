@@ -36,7 +36,7 @@ namespace pilo
         "Non-Spec", "Operation", "Memroy","Pointer","Param"
         ,"Resource", "Object", "Buffer", "Message", "Value"
         ,"TLV","TestCase", "TLV internal data", "TLV internal array", "Element"
-        , "Container", "Wired Key Type", "Wired Value Type"
+        , "Container", "Wired Key Type", "Wired Value Type", "Get CWD"
     };
 
     static const char* g_err_predict_desc[PEP_COUNT]

@@ -30,7 +30,9 @@
 #define PES_CONT            (15)
 #define PES_WK_TYPE          (16)
 #define PES_WV_TYPE          (17)
-#define PES_COUNT           (18)
+#define PES_GETCWD          (18)
+#define PES_COUNT           (19)
+
 
 
 

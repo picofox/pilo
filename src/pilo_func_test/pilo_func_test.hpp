@@ -38,6 +38,11 @@ namespace pilo
 
 		namespace core
 		{
+			namespace io
+			{
+				int case_get_paths(::pilo::core::testing::func_test_case* p_case);
+			}
+
 			namespace rtti
 			{
 				int case_wired_deque_pushback(::pilo::core::testing::func_test_case* p_case);

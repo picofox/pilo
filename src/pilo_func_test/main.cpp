@@ -52,12 +52,13 @@ int main(int argc, char * argv[])
 void load_cases(func_test_suite * suite)
 {	
 
-	 suite->register_case("case_map_serialize", ::pilo::func_test::core::rtti::case_map_serialize, nullptr);
-	 suite->register_case("case_wired_deque_pushback", ::pilo::func_test::core::rtti::case_wired_deque_pushback, nullptr);
-	 suite->register_case("case_wired_deque_basic", ::pilo::func_test::core::rtti::case_wired_deque_basic, nullptr);
-	 suite->register_case("case_map_keyi8", ::pilo::func_test::core::rtti::case_map_keyi8, nullptr);
+	suite->register_case("case_map_serialize", ::pilo::func_test::core::io::case_get_paths, nullptr);
+	suite->register_case("case_map_serialize", ::pilo::func_test::core::rtti::case_map_serialize, nullptr);
+	suite->register_case("case_wired_deque_pushback", ::pilo::func_test::core::rtti::case_wired_deque_pushback, nullptr);
+	suite->register_case("case_wired_deque_basic", ::pilo::func_test::core::rtti::case_wired_deque_basic, nullptr);
+	suite->register_case("case_map_keyi8", ::pilo::func_test::core::rtti::case_map_keyi8, nullptr);
 	
-	 suite->register_case("base64_static", ::pilo::func_test::case_base64_static, nullptr);
+	suite->register_case("base64_static", ::pilo::func_test::case_base64_static, nullptr);
 	
 	 suite->register_case("tlv_path_set", ::pilo::func_test::case_tlv_path_set, nullptr);
 	 suite->register_case("tlv_dict", ::pilo::func_test::case_tlv_dict, nullptr);

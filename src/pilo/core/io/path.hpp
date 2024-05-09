@@ -90,7 +90,7 @@ namespace pilo
                     {
                         if (PMI_PATH_SEP == path_str[len - 1])
                         {
-                            len = path_string_remove_endsep_inplace(path_str, len);
+                            len = path::string_remove_endsep_inplace(path_str, len);
                         }
                     }
 
