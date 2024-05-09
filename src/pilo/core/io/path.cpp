@@ -15,7 +15,12 @@ namespace pilo
                 , ::pilo::i32_t endsep_mode, ::pilo::pathlen_t extra_space)
             {
                 char* strRet = buffer;
-                ::pilo::pathlen_t ret_size = 0;
+                ::pilo::pathlen_t ret_size = 0;                
+
+#           ifdef  WINDOWS
+                ::pilo::pathlen_t szMesured = 0;
+                ::pilo::pathlen_t szFinal = 0;
+
                 ::pilo::pathlen_t max_capa;
                 if (cc_buffer > path::length_max)
                 {
@@ -25,11 +30,6 @@ namespace pilo
                 {
                     max_capa = (::pilo::pathlen_t)cc_buffer;
                 }
-
-#           ifdef  WINDOWS
-                ::pilo::pathlen_t szMesured = 0;
-                ::pilo::pathlen_t szFinal = 0;
-
                 szMesured = (::pilo::pathlen_t)GetCurrentDirectoryA(0, 0);
                 ::pilo::u32_t test_size = szMesured + 5 + extra_space;
                 if (test_size >= path::length_max)
