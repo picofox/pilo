@@ -51,8 +51,11 @@ int main(int argc, char * argv[])
 
 void load_cases(func_test_suite * suite)
 {	
+	suite->register_case("path_basic", ::pilo::func_test::core::io::case_path_basic, nullptr);
 
-	suite->register_case("case_map_serialize", ::pilo::func_test::core::io::case_get_paths, nullptr);
+	suite->register_case("get_paths", ::pilo::func_test::core::io::case_get_paths, nullptr);
+	suite->register_case("paths_attr", ::pilo::func_test::core::io::case_paths_attr, nullptr);
+	
 	suite->register_case("case_map_serialize", ::pilo::func_test::core::rtti::case_map_serialize, nullptr);
 	suite->register_case("case_wired_deque_pushback", ::pilo::func_test::core::rtti::case_wired_deque_pushback, nullptr);
 	suite->register_case("case_wired_deque_basic", ::pilo::func_test::core::rtti::case_wired_deque_basic, nullptr);

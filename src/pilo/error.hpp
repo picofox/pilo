@@ -31,8 +31,11 @@
 #define PES_WK_TYPE          (16)
 #define PES_WV_TYPE          (17)
 #define PES_GETCWD          (18)
-#define PES_COUNT           (19)
-
+#define PES_FILE_ATTR       (19)
+#define PES_SYMLINK        (20)
+#define PES_TEXT           (21)
+#define PES_PATH_STR            (22)
+#define PES_COUNT           (23)
 
 
 
@@ -67,7 +70,13 @@
 #define PEP_WIRED_TYPE_CONV_FAILED  (28)
 #define PEP_CLONE_FAILED    (29)
 #define PEP_EXIST           (30)
-#define PEP_COUNT           (31)
+#define PEP_INV_CHARS       (31)
+#define PEP_INCOMP          (32)
+#define PEP_ICONV_FAILED    (33)
+#define PEP_FMT_FATAL       (34)   
+
+
+#define PEP_COUNT           (35)
 
 
 

@@ -1,14 +1,11 @@
 ﻿#pragma once
 
-#include	"pilo/core/testing/func_test_case.hpp"
+#include "pilo/core/testing/func_test_case.hpp"
 
 namespace pilo
 {
 	namespace func_test
-	{
-
-		
-
+	{		
 		
 		int case_base64_static(::pilo::core::testing::func_test_case* p_case);
 		int case_tlv_path_set(::pilo::core::testing::func_test_case* p_case);
@@ -34,13 +31,14 @@ namespace pilo
 		int case_tlv_float(::pilo::core::testing::func_test_case* p_case);
 		
 
-		
 
 		namespace core
 		{
 			namespace io
 			{
+				int case_path_basic(::pilo::core::testing::func_test_case* p_case);
 				int case_get_paths(::pilo::core::testing::func_test_case* p_case);
+				int case_paths_attr(::pilo::core::testing::func_test_case* p_case);
 			}
 
 			namespace rtti

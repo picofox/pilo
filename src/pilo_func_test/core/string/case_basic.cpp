@@ -3,6 +3,7 @@
 #include "pilo/core/string/string_operation.hpp"
 #include "pilo/core/io/formatted_io.hpp"
 
+
 using namespace ::pilo::func_test;
 
 
@@ -46,9 +47,6 @@ namespace pilo
 						p_case->set_desc(errmsg_buffer);
 						return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID, 0);
 					}
-
-
-
 
 
 					p_case->set_result(PILO_OK);

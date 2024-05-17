@@ -588,6 +588,117 @@ namespace pilo
 		return T(); // 这将尝试调用T的默认构造函数
 	}
 
+	struct _pilo_truetype
+	{
+		static bool get()
+		{
+			return true;
+		}
+	};
+
+	struct _pilo_falsetype//非基本类型
+	{
+		static bool get()
+		{
+			return false;
+		}
+	};
+
+	template <class _Tp>//非基本类型不特化
+	struct _pilo_type_trait
+	{
+		typedef _pilo_falsetype   is_basetype;
+	};
+
+	template <>//基本类型的全特化
+	struct _pilo_type_trait< bool>
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< char>
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< unsigned char >
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< short>
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< unsigned short >
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< int>
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< unsigned int >
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< long>
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< unsigned long >
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< long long >
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< unsigned long long>
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< float>
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< double>
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
+	struct _pilo_type_trait< long double >
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <class _Tp>
+	struct _pilo_type_trait< _Tp*>//指针类型的偏特化
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
 
 } //pilo
 
