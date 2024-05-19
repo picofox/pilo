@@ -157,6 +157,8 @@ namespace pilo
                 static ::pilo::err_t get_path_node_type(const char* path, ::pilo::pathlen_t path_len,  ::pilo::i8_t path_type_hint, ::pilo::i8_t& node_type, ::pilo::i8_t* target_node_type, ::pilo::char_buffer_t* buffer);
                 static ::pilo::err_t make_dir(const char* dirpath, ::pilo::pathlen_t path_len);
 
+                static ::pilo::err_t get_executable_path(::pilo::core::io::path * path);
+
                 template<typename TA_CHAR>
                 static ::pilo::i8_t absolute_type(const TA_CHAR* path_cstr, bool* end_with_sep, ::pilo::pathlen_t length = path::unknow_length)
                 {
@@ -238,8 +240,8 @@ namespace pilo
 
                     path() : _m_pathstr_ptr(nullptr), _m_length(0), _m_capacity(0), _m_filename_start_pos(path::unknow_length), _m_ext_filename_len(path::invalid_ext_length),_m_type(path::path_type_na)
                     {
-                    }                       
-
+                    }       
+                    ::pilo::err_t append(bool is_dir, const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra);
                     ::pilo::err_t set(bool is_dir, const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra);
                     ::pilo::err_t set(bool is_dir, const char* p)
                     {
@@ -316,6 +318,8 @@ namespace pilo
                         return _m_type;
                     }
 
+                    
+
                     inline const char* filename() const
                     {
                         if (this->_m_filename_start_pos >= this->_m_length
@@ -333,7 +337,7 @@ namespace pilo
                         {
                             return nullptr;
                         }
-                        return this->_m_pathstr_ptr + _m_ext_filename_len;
+                        return this->_m_pathstr_ptr + this->_m_length - _m_ext_filename_len;
                     }
 
                     inline const char* filebasename(::pilo::pathlen_t & rlen) const
@@ -380,6 +384,15 @@ namespace pilo
                             rlen = _m_filename_start_pos - 1;
                         }                        
                         return this->_m_pathstr_ptr;
+                    }
+
+                    inline std::string parentpathname() const
+                    {
+                        ::pilo::pathlen_t rlen = 0;
+                        const char* ptr = parentpathname(rlen);
+                        if (ptr == nullptr)
+                            return "";
+                        return std::string(ptr, (size_t)rlen);
                     }
 
                     inline ::pilo::err_t get_parentpathname(::pilo::char_buffer_t& ret) const

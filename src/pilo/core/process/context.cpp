@@ -41,6 +41,21 @@ namespace pilo
                     , "local_bn"
                 );
 
+                ::pilo::err_t err = PILO_OK;
+                err = ::pilo::core::io::path::get_executable_path(& (this->_proc_paths[(int)path_types::exe]));
+                if (err != PILO_OK)
+                    return err;
+
+                std::string bin_str = this->_proc_paths[(int)path_types::exe].parentpathname();
+                err = (this->_proc_paths[(int)path_types::bin].set(true, bin_str.c_str(), bin_str.size(), 0));
+                if (err != PILO_OK)
+                    return err;
+
+                std::string par_str = this->_proc_paths[(int)path_types::bin].parentpathname();
+                err = (this->_proc_paths[(int)path_types::parent].set(true, par_str.c_str(), par_str.size(), 0));
+                if (err != PILO_OK)
+                    return err;
+
                 return PILO_OK;
             }
 

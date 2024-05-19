@@ -8,6 +8,8 @@
 #include <algorithm>
 #include "constants.hpp"
 #include <cstring>
+#include "../memory/util.hpp"
+
 
 #define PMI_STRING_LAST_SECTION_FLAG     (1)
 #define PMI_STRING_ITER_CREATION_FLAG     (2)
@@ -71,7 +73,7 @@ namespace pilo
             template<typename TA_CHAR>
             ::pilo::i64_t cstring_ch_count(const TA_CHAR* str, ::pilo::i64_t offset, ::pilo::i64_t length,  TA_CHAR ch)
             {
-                ::pilo::64_t count = 0;
+                ::pilo::i64_t count = 0;
                 for (::pilo::i64_t i = offset; i < length; i ++) {
                     if (str[i] == ch) {
                         count++;
@@ -1920,6 +1922,41 @@ namespace pilo
                 return buffer;
             }
 
+            
+            template<typename TA_RAC>
+            ::pilo::err_t concatenate_rac(::pilo::char_buffer_t* buffer, const TA_RAC& rac, const char* sep, ::pilo::i32_t sep_len)
+            {
+                if (sep == nullptr)
+                {
+                    sep = "";
+                }
+                if (sep_len < 0)
+                {
+                    sep_len = (::pilo::i32_t) ::pilo::core::string::character_count(sep);
+                }
+                ::pilo::i32_t csize = 0;
+                TA_RAC::const_iterator cit = rac.cbegin();
+                for (; cit != rac.cend(); cit++)
+                {
+                    csize += (::pilo::i32_t) (*cit)->length;
+                    csize += sep_len;
+                }
+                csize++;
+                buffer->check_more_space(csize);
+                cit = rac.cbegin();
+                for (; cit != rac.cend(); cit++)
+                {
+                    if (cit != rac.cbegin())
+                    {
+                        *buffer->ptr() = PMI_PATH_SEP;
+                        buffer->add_size((::pilo::i32_t)1);
+                    }
+                    ::pilo::core::string::n_copyz(buffer->ptr(), buffer->space_available(), (*cit)->ptr, (*cit)->length);
+                    buffer->add_size((::pilo::i32_t)(*cit)->length);
+
+                }
+                return PILO_OK;
+            }
             
         }
     }

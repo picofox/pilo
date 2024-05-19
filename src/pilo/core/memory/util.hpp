@@ -360,13 +360,14 @@ namespace pilo
                 ::pilo::err_t add_size(::pilo::i32_t sz)
                 {
                     ::pilo::i32_t ret = _data_size + sz;
-                    if (ret < 0 || ret > _capacity)
+                    if (ret < 0 || ret > capacity())
                     {
                         PMC_ASSERT(false);
                         return ::pilo::make_core_error(PES_ELEM, PEP_ARR_IDX_OOB);
                     }
 
                     _data_size += sz;
+                    return PILO_OK;
                 }
 
                 ::pilo::i32_t& ref_size()
@@ -399,7 +400,8 @@ namespace pilo
                 typedef TA_ELEMOBJ value_type;
 
             public:
-                object_array_adapter(value_type* orig_buffer, ::pilo::i32_t sz, ::pilo::i32_t data_size = 0 ,bool is_dynamic = false) : _ptr(orig_buffer), _capacity(sz),_data_size(data_size), _is_dynamic(is_dynamic)
+                object_array_adapter(value_type* orig_buffer, ::pilo::i32_t sz, ::pilo::i32_t data_size = 0 ,bool is_dynamic = false)
+                    : _ptr(orig_buffer), _capacity(sz),_data_size(data_size), _is_dynamic(is_dynamic)
                 {
                 }
                 object_array_adapter() : _ptr(nullptr), _capacity(0), _data_size(0), _is_dynamic(false)
@@ -474,7 +476,7 @@ namespace pilo
                 
                 ::pilo::err_t check_more_space(::pilo::i32_t neosz)
                 {
-                    ::pilo::i32_t delta = neosz - this->space_available;
+                    ::pilo::i32_t delta = neosz - this->space_available();
                     if (delta > 0)
                     {
                         ::pilo::i32_t nsz = this->space_available() + delta;
