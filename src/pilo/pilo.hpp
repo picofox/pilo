@@ -18,6 +18,17 @@
 
 #endif
 
+#ifdef WINDOWS
+
+
+#   define PMI_PATH_MAX     MAX_PATH
+
+#else
+#   define PMI_PATH_MAX     PATH_MAX
+
+#endif // WINDOWS
+
+
 #define PMF_MAKE_U8(l, h)      ((unsigned char)(((unsigned char)(((unsigned char)(l)) & 0xf)) | ((unsigned char)((unsigned char)(((unsigned char)(h)) & 0xf))) << 4))
 #define PMF_LO_NIMBLE_OF_8(w)            ((unsigned char)(((unsigned char)(w)) & 0xf))
 #define PMF_HI_NIMBLE_OF_8(w)           ((unsigned char)((((unsigned char)(w)) >> 4) & 0xf))

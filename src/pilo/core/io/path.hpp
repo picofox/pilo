@@ -9,6 +9,7 @@
 #include "../memory/compactable_autoreset_object_pool.hpp"
 #include "../memory/util.hpp"
 
+
 #define PMI_STC_PARAM_PATH_STEP_SIZE    (510)
 #define PMI_PATH_MAX_SIZE (65535)
 
@@ -18,6 +19,7 @@ namespace pilo
 
     namespace core
     {
+
         namespace io
         {           
 
@@ -26,6 +28,18 @@ namespace pilo
             {
 
             public:
+                enum class predefined_pilo_dir_enum
+                {
+                    cwd = 0,
+                    exe,
+                    home,
+                    bin,
+                    cnf,
+                    log,
+                    tmp,
+                    count,
+                };
+
                 const static ::pilo::u8_t invalid_ext_length = 0xFF;
                 const static ::pilo::u16_t unknow_length = 0xFFFF;
                 const static ::pilo::u16_t length_max = 65534;
@@ -45,7 +59,6 @@ namespace pilo
 
                 const static ::pilo::i8_t relative = 0;
                 const static ::pilo::i8_t absolute = 1;
-
 
             public: //static methods
                 /**
@@ -152,12 +165,11 @@ namespace pilo
                     return PILO_OK;
                 }
 
-                static ::pilo::err_t validate_path(::pilo::char_buffer_t* buffer, const char* path, ::pilo::i64_t len, ::pilo::pathlen_t extra, ::pilo::i8_t & fs_type, bool & is_file);
+                static ::pilo::err_t validate_path(::pilo::char_buffer_t* buffer, const char* path, ::pilo::i64_t len, ::pilo::pathlen_t extra, ::pilo::i8_t & fs_type, bool & isabs, predefined_pilo_dir_enum rel_to_abs_basis);
                 static ::pilo::err_t get_cwd(::pilo::char_buffer_t& buffer,  ::pilo::i32_t endsep_mode, ::pilo::pathlen_t extra_space = 0);
                 static ::pilo::err_t get_path_node_type(const char* path, ::pilo::pathlen_t path_len,  ::pilo::i8_t path_type_hint, ::pilo::i8_t& node_type, ::pilo::i8_t* target_node_type, ::pilo::char_buffer_t* buffer);
                 static ::pilo::err_t make_dir(const char* dirpath, ::pilo::pathlen_t path_len);
-
-                static ::pilo::err_t get_executable_path(::pilo::core::io::path * path);
+                static ::pilo::err_t get_executable_path(::pilo::core::io::path * path, ::pilo::pathlen_t extra);
 
                 template<typename TA_CHAR>
                 static ::pilo::i8_t absolute_type(const TA_CHAR* path_cstr, bool* end_with_sep, ::pilo::pathlen_t length = path::unknow_length)
@@ -223,34 +235,48 @@ namespace pilo
 
 
                 public:
-                    path(bool is_dir, const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra)
+                    path(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::cwd)
                     {
-                        set(is_dir, p, len, extra);
+                        set(p, len, extra, rel_to_abs_basis);
                     }
 
-                    path(bool is_dir, const char* p, ::pilo::i64_t len)
+                    path(const char* p, ::pilo::i64_t len, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::cwd)
                     {
-                        set(is_dir, p, len, 0);
+                        set(p, len, 0, rel_to_abs_basis);
                     }
 
-                    path(bool is_dir, const char* p)
+                    path(const char* p, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::cwd)
                     {
-                        set(is_dir, p, path::unknow_length, 0);
+                        set(p, path::unknow_length, 0, rel_to_abs_basis);
                     }
 
-                    path() : _m_pathstr_ptr(nullptr), _m_length(0), _m_capacity(0), _m_filename_start_pos(path::unknow_length), _m_ext_filename_len(path::invalid_ext_length),_m_type(path::path_type_na)
+                    path() : _m_pathstr_ptr(nullptr), _m_length(0), _m_capacity(0), _m_lastpart_start_pos(path::unknow_length), _m_ext_name_len(path::invalid_ext_length),_m_type(path::path_type_na)
                     {
                     }       
-                    ::pilo::err_t append(bool is_dir, const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra);
-                    ::pilo::err_t set(bool is_dir, const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra);
-                    ::pilo::err_t set(bool is_dir, const char* p)
+                    ::pilo::err_t append(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::cwd);
+                    ::pilo::err_t append(const char* p, ::pilo::i64_t len, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::cwd)
                     {
-                        return set(is_dir, p, path::unknow_length, 0);
+                        return append(p, len, 0, rel_to_abs_basis);
                     }
-                    inline bool is_dir() const
+                    ::pilo::err_t append(const char* p,  predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::cwd)
                     {
-                        return (this->_m_filename_start_pos == path::unknow_length);
+                        return append(p, path::unknow_length, 0, rel_to_abs_basis);
                     }
+
+                    ::pilo::err_t set(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::cwd);
+                    ::pilo::err_t set(const char* p, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::cwd)
+                    {
+                        return set(p, path::unknow_length, 0, rel_to_abs_basis);
+                    }
+
+                    ::pilo::err_t fill_with_cwd(::pilo::pathlen_t extra);
+                    ::pilo::err_t fill_with_exe(::pilo::pathlen_t extra);
+                    ::pilo::err_t fill_with_home(::pilo::pathlen_t extra);
+                    ::pilo::err_t fill_with_bin(::pilo::pathlen_t extra);
+                    ::pilo::err_t fill_with_cnf(::pilo::pathlen_t extra);
+                    ::pilo::err_t fill_with_log(::pilo::pathlen_t extra);
+                    ::pilo::err_t fill_with_tmp(::pilo::pathlen_t extra);
+
 
                     inline bool invalid() const
                     {
@@ -265,7 +291,7 @@ namespace pilo
 
                     bool like_a_dir() const
                     {
-                        if (this->_m_filename_start_pos == path::unknow_length)
+                        if (this->_m_lastpart_start_pos == path::unknow_length)
                         {
                             return true;
                         }
@@ -283,7 +309,7 @@ namespace pilo
                         return !f1.equals_to(f2);
                     }
 
-                    inline const char* fullpathname() const
+                    inline const char* fullpath() const
                     {
                         return _m_pathstr_ptr;
                     }
@@ -298,19 +324,19 @@ namespace pilo
                         return _m_length;
                     }
 
-                    inline ::pilo::pathlen_t filename_start_pos() const
+                    inline ::pilo::pathlen_t lastpart_start_pos() const
                     {
-                        return _m_filename_start_pos;
+                        return _m_lastpart_start_pos;
                     }
 
-                    inline ::pilo::pathlen_t filename_len() const
+                    inline ::pilo::pathlen_t lastpart_len() const
                     {
-                        return _m_length - _m_filename_start_pos;
+                        return _m_length - _m_lastpart_start_pos;
                     }
 
                     inline ::pilo::u8_t extname_len() const
                     {
-                        return _m_ext_filename_len;
+                        return _m_ext_name_len;
                     }
 
                     inline ::pilo::i8_t type() const
@@ -320,47 +346,47 @@ namespace pilo
 
                     
 
-                    inline const char* filename() const
+                    inline const char* lastpart() const
                     {
-                        if (this->_m_filename_start_pos >= this->_m_length
-                            || this->_m_filename_start_pos == path::unknow_length)
+                        if (this->_m_lastpart_start_pos >= this->_m_length
+                            || this->_m_lastpart_start_pos == path::unknow_length)
                         {
                             return nullptr;
                         }
-                        return this->_m_pathstr_ptr + _m_filename_start_pos;
+                        return this->_m_pathstr_ptr + _m_lastpart_start_pos;
                     }
 
                     inline const char* extname() const
                     {
-                        if ((::pilo::pathlen_t)this->_m_ext_filename_len >= this->_m_length
-                            || this->_m_ext_filename_len == path::invalid_ext_length)
+                        if ((::pilo::pathlen_t)this->_m_ext_name_len >= this->_m_length
+                            || this->_m_ext_name_len == path::invalid_ext_length)
                         {
                             return nullptr;
                         }
-                        return this->_m_pathstr_ptr + this->_m_length - _m_ext_filename_len;
+                        return this->_m_pathstr_ptr + this->_m_length - _m_ext_name_len;
                     }
 
-                    inline const char* filebasename(::pilo::pathlen_t & rlen) const
+                    inline const char* basename(::pilo::pathlen_t & rlen) const
                     {
-                        if (_m_ext_filename_len == path::invalid_ext_length)
+                        if (_m_ext_name_len == path::invalid_ext_length)
                         {
-                            rlen = this->_m_ext_filename_len;
-                            return filename();
+                            rlen = this->_m_ext_name_len;
+                            return lastpart();
                         }
-                        else if (_m_ext_filename_len == 0)
+                        else if (_m_ext_name_len == 0)
                         {
-                            rlen = this->_m_ext_filename_len - 1;
-                            return filename();
+                            rlen = this->_m_ext_name_len - 1;
+                            return lastpart();
                         }
 
-                        rlen = this->_m_ext_filename_len - 1 - _m_ext_filename_len;
-                        return filename();
+                        rlen = _m_length - this->_m_lastpart_start_pos - 1 - _m_ext_name_len;
+                        return lastpart();
                     }
 
-                    inline ::pilo::err_t get_filebasename(::pilo::char_buffer_t& ret) const
+                    inline ::pilo::err_t get_basename(::pilo::char_buffer_t& ret) const
                     {
                         ::pilo::pathlen_t rlen = 0;
-                        const char* p = filebasename(rlen);
+                        const char* p = basename(rlen);
                         if (p == nullptr)
                             return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
                         ret.check_space(rlen + 1);
@@ -369,36 +395,36 @@ namespace pilo
                         return PILO_OK;
                     }
 
-                    inline const char* parentpathname(::pilo::pathlen_t& rlen) const
+                    inline const char* parentpath(::pilo::pathlen_t& rlen) const
                     {
-                        if (_m_filename_start_pos == 0)
+                        if (_m_lastpart_start_pos == 0)
                         {
                             return nullptr;
                         }
-                        if (_m_filename_start_pos == path::unknow_length)
+                        if (_m_lastpart_start_pos == path::unknow_length)
                         {
-                            rlen = _m_length;
+                            return nullptr;
                         }
                         else
                         {
-                            rlen = _m_filename_start_pos - 1;
+                            rlen = _m_lastpart_start_pos - 1;
                         }                        
                         return this->_m_pathstr_ptr;
                     }
 
-                    inline std::string parentpathname() const
+                    inline std::string parentpath() const
                     {
                         ::pilo::pathlen_t rlen = 0;
-                        const char* ptr = parentpathname(rlen);
+                        const char* ptr = parentpath(rlen);
                         if (ptr == nullptr)
                             return "";
                         return std::string(ptr, (size_t)rlen);
                     }
 
-                    inline ::pilo::err_t get_parentpathname(::pilo::char_buffer_t& ret) const
+                    inline ::pilo::err_t get_parentpath(::pilo::char_buffer_t& ret) const
                     {
                         ::pilo::pathlen_t rlen = 0;
-                        const char* p = parentpathname(rlen);
+                        const char* p = parentpath(rlen);
                         if (p == nullptr)
                             return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
                         ret.check_space(rlen + 1);
@@ -416,17 +442,41 @@ namespace pilo
                         _m_pathstr_ptr = nullptr;
                         _m_length = 0;
                         _m_capacity = 0;
-                        _m_filename_start_pos = path::unknow_length;
-                        _m_ext_filename_len = path::invalid_ext_length;
+                        _m_lastpart_start_pos = path::unknow_length;
+                        _m_ext_name_len = path::invalid_ext_length;
                         _m_type = path::path_type_na;
                     }
 
                     inline void clear()
                     {
                         _m_length = 0;
-                        _m_filename_start_pos = path::unknow_length;
-                        _m_ext_filename_len = path::invalid_ext_length;
+                        _m_lastpart_start_pos = path::unknow_length;
+                        _m_ext_name_len = path::invalid_ext_length;
                         _m_type = path::path_type_na;
+                    }
+
+                    inline bool is_root()
+                    {
+#ifdef WINDOWS
+                        if (_m_type == path::local_fs_path && _m_pathstr_ptr != nullptr && _m_length == 6)
+                        {
+                            if (::pilo::core::string::strict_compare(_m_pathstr_ptr, 0, ::pilo::core::string::constants<char>::root_dir_sep(), 0, 4) == 0)
+                            {
+                                if (std::isalpha(_m_pathstr_ptr[4]) && _m_pathstr_ptr[5] == ':')
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+#else
+                        if (_m_type == path::local_fs_path && _m_pathstr_ptr != nullptr && _m_length == 0)
+                        {
+                            return true;
+                        }
+#endif // WINDOWS
+
+                        return false;
+                        
                     }
                     
 
@@ -434,8 +484,8 @@ namespace pilo
                     char*    _m_pathstr_ptr;
                     ::pilo::pathlen_t       _m_capacity;
                     ::pilo::pathlen_t       _m_length;
-                    ::pilo::pathlen_t       _m_filename_start_pos;
-                    ::pilo::u8_t            _m_ext_filename_len;
+                    ::pilo::pathlen_t       _m_lastpart_start_pos;
+                    ::pilo::u8_t            _m_ext_name_len;
                     ::pilo::i8_t            _m_type;
 
 

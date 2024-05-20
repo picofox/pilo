@@ -74,7 +74,7 @@ namespace pilo
             ::pilo::i64_t cstring_ch_count(const TA_CHAR* str, ::pilo::i64_t offset, ::pilo::i64_t length,  TA_CHAR ch)
             {
                 ::pilo::i64_t count = 0;
-                for (::pilo::i64_t i = offset; i < length; i ++) {
+                for (::pilo::i64_t i = offset; i < offset + length; i ++) {
                     if (str[i] == ch) {
                         count++;
                     }

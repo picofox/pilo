@@ -30,6 +30,7 @@ int main(int argc, char * argv[])
 
 	PILO_CONTEXT->initialize();
 
+
 	stable_test_suite suite_default;
 
 	load_cases(&suite_default);

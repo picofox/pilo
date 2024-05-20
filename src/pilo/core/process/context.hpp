@@ -23,18 +23,7 @@ namespace pilo
                     inline static ::pilo::pointer allocate() {return ::pilo::core::pattern::singleton<page_allocator_type>::instance()->allocate(); }
                     inline static void deallocate(::pilo::pointer p) { ::pilo::core::pattern::singleton<page_allocator_type>::instance()->deallocate(p); }
 
-                };
-
-                enum class path_types
-                {
-                    cwd = 0,
-                    exe = 1,
-                    parent = 2,
-                    bin = 3,                    
-                    log = 4,
-                    tmp = 5,
-                    count = 6,
-                };
+                };                
 
             public:
                 context();
@@ -42,16 +31,74 @@ namespace pilo
                 ::pilo::core::stat::pool_object_stat_manager& pool_object_stat_mgr() { return _pool_object_stat_mgr;}
                 ::pilo::i32_t initialize();
                 void finalize();
-                inline const ::pilo::core::io::path& proc_path(int which) const { return _proc_paths[which];}
-                inline const ::pilo::core::io::path& exec_path() const { return _proc_paths[(int)path_types::exe]; }
-                inline const ::pilo::core::io::path& parent_path() const { return _proc_paths[(int)path_types::parent]; }
-                inline const ::pilo::core::io::path& bin_path() const { return _proc_paths[(int)path_types::bin]; }
-
+                inline const ::pilo::core::io::path& cwd(bool update = false)
+                {
+                    if (update)
+                    {
+                        _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::cwd].fill_with_cwd(0);
+                    }
+                    return _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::cwd];
+                }
+                inline const ::pilo::core::io::path& exec_path(bool update = false)
+                { 
+                    if (update)
+                    {
+                        _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::exe].fill_with_exe(0);
+                    }
+                    return _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::exe]; 
+                }
+                inline const ::pilo::core::io::path& bin_path(bool update = false)
+                {
+                    if (update)
+                    {
+                        _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::bin].fill_with_bin(0);
+                    }
+                    return _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::bin];
+                }
+                inline const ::pilo::core::io::path& home_path(bool update = false)
+                { 
+                    if (update)
+                    {
+                        _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::home].fill_with_home(0);
+                    }
+                    return _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::home]; 
+                }
+                inline const ::pilo::core::io::path& cnf_path(bool update = false)
+                {
+                    if (update)
+                    {
+                        _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::cnf].fill_with_cnf(0);
+                    }
+                    return _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::cnf];
+                }
+                inline const ::pilo::core::io::path& log_path(bool update = false)
+                {
+                    if (update)
+                    {
+                        _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::log].fill_with_log(0);
+                    }
+                    return _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::log];
+                }
+                inline const ::pilo::core::io::path& tmp_path(bool update = false)
+                {
+                    if (update)
+                    {
+                        _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::cnf].fill_with_tmp(0);
+                    }
+                    return _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::tmp];
+                }
+                inline const ::pilo::core::io::path& proc_path(::pilo::core::io::path::predefined_pilo_dir_enum which) const { return _proc_paths[(int)which];}
+                
+              
                 inline ::pilo::pointer allocate_page_buffer() { return  _page_pool->allocate(); }
                 inline void deallocate_page_buffer(::pilo::pointer p) { _page_pool->deallocate(p); }
 
+                std::string startup_info() const;
+
             private:                
-                ::pilo::core::io::path _proc_paths[(int)path_types::count];
+                ::pilo::core::io::path _proc_paths[(int)::pilo::core::io::path::predefined_pilo_dir_enum::count];
+
+
 
                 page_allocator::page_allocator_type*   _page_pool;
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;

@@ -29,34 +29,34 @@ namespace pilo
 				}
 
 				static int s_validate_path(::pilo::core::io::path* p, const char* pc, ::pilo::pathlen_t len
-					, const char * fn, const char* en, const char* pardir, bool is_dir)
+					, const char* fn, const char* en, const char* pardir, const char* bn)
 				{
 					if (p == nullptr) return -1;
 					if (p->length() != len)
 					{
 						return -2;
 					}
-					if (::pilo::core::string::strict_compare(p->fullpathname(), 0, pc, 0, len) != 0)
+					if (::pilo::core::string::strict_compare(p->fullpath(), 0, pc, 0, len) != 0)
 					{
 						return -3;
 					}
 
 					if (fn == nullptr)
 					{
-						if (p->filename() != nullptr)
+						if (p->lastpart() != nullptr)
 							return -4;
 					}
 					else
 					{
 						::pilo::pathlen_t fnlen = (::pilo::pathlen_t) ::pilo::core::string::character_count(fn);
-						if (fnlen != p->filename_len())
-							return -5;						
-						if (::pilo::core::string::strict_compare(p->filename(), 0, fn, 0, fnlen) != 0)
+						if (fnlen != p->lastpart_len())
+							return -5;
+						if (::pilo::core::string::strict_compare(p->lastpart(), 0, fn, 0, fnlen) != 0)
 						{
 							return -6;
 						}
 					}
-					
+
 					if (en == nullptr)
 					{
 						if (p->extname() != nullptr)
@@ -74,7 +74,7 @@ namespace pilo
 					}
 
 					::pilo::pathlen_t rlen = 0;
-					const char* par = p->parentpathname(rlen);					
+					const char* par = p->parentpath(rlen);
 					if (pardir == nullptr)
 					{
 						if (par != nullptr)
@@ -91,8 +91,8 @@ namespace pilo
 						}
 					}
 
-
-					if (p->like_a_dir() != is_dir)
+					const char* basename = p->basename(rlen);
+					if (::pilo::core::string::strict_compare(basename, 0, bn, 0, rlen) != 0)
 					{
 						return -13;
 					}
@@ -106,167 +106,181 @@ namespace pilo
 					if (!p0.invalid())					
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "empty path should be invalid");
 					
-					p0.set(false, "a");
+					p0.set("a");
 					if (p0.invalid())					
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 shoud be valid");					
 					int vret = 0;
-					if ((vret = s_validate_path(&p0, "a", 1, "a", nullptr, nullptr ,false)) != 0)					
+					if ((vret = s_validate_path(&p0, "a", 1, "a", nullptr, nullptr, "a")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed %d", vret);
 					
 
-					::pilo::err_t err = p0.set(false, "|");
+					::pilo::err_t err = p0.set("|");
 					if (err == PILO_OK)					
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed |");
 					
 
-					err = p0.set(false, "ab");
+					err = p0.set("ab");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed ab");
-					if ((vret = s_validate_path(&p0, "ab", 2, "ab", nullptr, nullptr, false)) != 0)
+					if ((vret = s_validate_path(&p0, "ab", 2, "ab", nullptr, nullptr, "ab")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed ab %d", vret);
 
-					err = p0.set(true, "ddd");
+					err = p0.set("ddd");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed ddd");
-					if ((vret = s_validate_path(&p0, "ddd", 3, nullptr, nullptr, "ddd", true)) != 0)
+					if ((vret = s_validate_path(&p0, "ddd", 3, "ddd", nullptr, nullptr, "ddd")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f: %d", vret);
 
-					err = p0.set(false, "ddd");
+					err = p0.set("ddd.txt");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed ddd");
-					if ((vret = s_validate_path(&p0, "ddd", 3, "ddd", nullptr, nullptr, false)) != 0)
+					if ((vret = s_validate_path(&p0, "ddd.txt", 7, "ddd.txt", "txt", nullptr, "ddd")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f: %d", vret);
 
+					err = p0.set(".ddd.txt");
+					if (err != PILO_OK)
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed ddd");
+					if ((vret = s_validate_path(&p0, ".ddd.txt", 8, ".ddd.txt", "txt", nullptr, ".ddd")) != 0)
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f: %d", vret);
 #ifdef WINDOWS
-					err = p0.set(true, "\\\\?\\Z:");
+					err = p0.set("\\\\?\\Z:");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed \\\\?\\Z:");
-					if ((vret = s_validate_path(&p0, "\\\\?\\Z:", 6, nullptr, nullptr, "\\\\?\\Z:", true)) != 0)
+					if ((vret = s_validate_path(&p0, "\\\\?\\Z:", 6, "\\\\?\\Z:", nullptr, nullptr, "\\\\?\\Z:")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed \\\\?\\Z: %d", vret);
 
-					err = p0.set(true, "\\\\?\\");
+					err = p0.set("\\\\?\\");
 					if (err == PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed ! \\\\?\\ %d", vret);
 
-					err = p0.set(true, "\\\\?\\C");
+					err = p0.set("\\\\?\\C");
 					if (err == PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed ! \\\\?\\C %d", vret);
 
-					err = p0.set(true, "/");
+					err = p0.set("/");
 					if (err == PILO_OK)					
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed ! %d", vret);					
 
-					err = p0.set(true, "f:");
+					err = p0.set("f:");
 					if (err != PILO_OK)					
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f:");					
-					if ((vret = s_validate_path(&p0, "\\\\?\\f:", 6, nullptr, nullptr, "\\\\?\\f:", true)) != 0)
+					if ((vret = s_validate_path(&p0, "\\\\?\\f:", 6, "\\\\?\\f:", nullptr, nullptr, "\\\\?\\f:")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f: %d", vret);					
 
-					err = p0.set(true, "a\\");
+					err = p0.set("a\\");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a\\");
-					if ((vret = s_validate_path(&p0, "a", 1, nullptr, nullptr, "a", true)) != 0)
-						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f: %d", vret);
+					if ((vret = s_validate_path(&p0, "a", 1, "a", nullptr, nullptr, "a")) != 0)
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed %d", vret);
 
-					err = p0.set(true, "d\\\\");
+					err = p0.set("d\\\\");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed d\\\\");
-					if ((vret = s_validate_path(&p0, "d", 1, nullptr, nullptr, "d", true)) != 0)
-						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f: %d", vret);
+					if ((vret = s_validate_path(&p0, "d", 1, "d", nullptr, nullptr, "d")) != 0)
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed %d", vret);
 
-					err = p0.set(true, "\\\\d");
+					err = p0.set("\\\\d");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed \\\\d");
-					if ((vret = s_validate_path(&p0, "\\\\d", 3, nullptr, nullptr, "\\\\d", true)) != 0)
+					if ((vret = s_validate_path(&p0, "\\\\d", 3, "d", nullptr, "\\", "d")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed \\\\d %d", vret);
 
-					err = p0.set(true, "f:\\");
+					err = p0.set("f:\\");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f:");
-					if ((vret = s_validate_path(&p0, "\\\\?\\f:", 6, nullptr, nullptr, "\\\\?\\f:", true)) != 0)
+					if ((vret = s_validate_path(&p0, "\\\\?\\f:", 6, "\\\\?\\f:", nullptr, nullptr, "\\\\?\\f:")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f: %d", vret);
 
-					err = p0.set(false, "E:d");
+					err = p0.set("E:d");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed E:d");
-					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\d", 8, "d", nullptr, "\\\\?\\E:", false)) != 0)
+					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\d", 8, "d", nullptr, "\\\\?\\E:", "d")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed E:d %d", vret);
 
-					err = p0.set(true, "E:d");
-					if (err != PILO_OK)
-						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed E:d");
-					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\d", 8, nullptr, nullptr, "\\\\?\\E:\\d", true)) != 0)
-						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed E:d %d", vret);
-
-					err = p0.set(true, "f:/");
+					err = p0.set("f:/");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f:/");
-					if ((vret = s_validate_path(&p0, "\\\\?\\f:", 6, nullptr, nullptr, "\\\\?\\f:", true)) != 0)
-						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f:/ %d", vret);
+					if ((vret = s_validate_path(&p0, "\\\\?\\f:", 6, "\\\\?\\f:", nullptr, nullptr, "\\\\?\\f:")) != 0)
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f: %d", vret);
 
-					err = p0.set(false, "a/b");
+					err = p0.set("a/b");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a/b");
-					if ((vret = s_validate_path(&p0, "a\\b", 3, "b", nullptr, "a", false)) != 0)
+					if ((vret = s_validate_path(&p0, "a\\b", 3, "b", nullptr, "a", "b")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a/b %d", vret);
 
-
-					err = p0.set(false, "E:\\a\\b\\c\\d\\e.txt");
+					err = p0.set("E:\\a\\b\\c\\d\\e.txt");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a/b");
-					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\a\\b\\c\\d\\e.txt", 20, "e.txt", "txt", "\\\\?\\E:\\a\\b\\c\\d", false)) != 0)
+					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\a\\b\\c\\d\\e.txt", 20, "e.txt", "txt", "\\\\?\\E:\\a\\b\\c\\d", "e")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a/b %d", vret);
 
-					err = p0.set(false, "E:\\a\\\\\\b\\c\\d\\\\\\e.txt");
+					err = p0.set("E:\\a\\\\\\b\\c\\d\\\\\\e.txt");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a/b");
-					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\a\\b\\c\\d\\e.txt", 20, "e.txt", "txt", "\\\\?\\E:\\a\\b\\c\\d", false)) != 0)
+					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\a\\b\\c\\d\\e.txt", 20, "e.txt", "txt", "\\\\?\\E:\\a\\b\\c\\d", "e")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a/b %d", vret);
 
-					err = p0.set(false, "E:\\\\a\\\\\\b\\.\\c\\d\\.\\\\e.txt");
+					err = p0.set("E:\\\\a\\\\\\b\\.\\c\\d\\.\\\\e.txt");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a/b");
-					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\a\\b\\c\\d\\e.txt", 20, "e.txt", "txt", "\\\\?\\E:\\a\\b\\c\\d", false)) != 0)
+					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\a\\b\\c\\d\\e.txt", 20, "e.txt", "txt", "\\\\?\\E:\\a\\b\\c\\d", "e")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a/b %d", vret);
 
-					err = p0.set(false, "E:\\a\\b\\c\\..\\..\\d\\e.txt");
+					err = p0.set("E:\\a\\b\\c\\..\\..\\d\\e.txt");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed E:\\a\\b\\c\\..\\..\\d\\e.txt");
-					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\a\\d\\e.txt", 16, "e.txt", "txt", "\\\\?\\E:\\a\\d", false)) != 0)
+					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\a\\d\\e.txt", 16, "e.txt", "txt", "\\\\?\\E:\\a\\d", "e")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed E:\\a\\b\\c\\..\\..\\d\\e.txt %d", vret);
+
+					err = p0.set("E:\\a\\b\\c\\..\\..\\d\\e\\\\");
+					if (err != PILO_OK)
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "E:\\a\\b\\c\\..\\..\\d\\e\\\\");
+					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\a\\d\\e", (::pilo::pathlen_t)::pilo::core::string::character_count("\\\\?\\E:\\a\\d\\e"), "e", nullptr, "\\\\?\\E:\\a\\d", "e")) != 0)
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed E:\\a\\b\\c\\..\\..\\d\\e.txt %d", vret);
+					err = p0.append("f\\g\\h");
+					if (err != PILO_OK)
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "append f\\g\\h");
+					if ((vret = s_validate_path(&p0, "\\\\?\\E:\\a\\d\\e\\f\\g\\h", (::pilo::pathlen_t)::pilo::core::string::character_count("\\\\?\\E:\\a\\d\\e\\f\\g\\h"), "h", nullptr, "\\\\?\\E:\\a\\d\\e\\f\\g", "h")) != 0)
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed E:\\a\\b\\c\\..\\..\\d\\e.txt %d", vret);
+
+
+					err = p0.set("f:\\目录1\\目录2\\目录3\\目录_del\\目录_del\\..\\..\\目录4\\目录5\\目录_del3\\..\\目录6");
+					if (err != PILO_OK)
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "set long chn path");
+					if ((vret = s_validate_path(&p0, "\\\\?\\f:\\目录1\\目录2\\目录3\\目录4\\目录5\\目录6", (::pilo::pathlen_t)::pilo::core::string::character_count("\\\\?\\f:\\目录1\\目录2\\目录3\\目录4\\目录5\\目录6"), "目录6", nullptr, "\\\\?\\f:\\目录1\\目录2\\目录3\\目录4\\目录5", "目录6")) != 0)
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed chn dir path %d", vret);
+
+
 #else
 
 
-					err = p0.set(false, "f:");
+					err = p0.set("f:");
 					if (err == PILO_OK)
 					{
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed !f:");
 					}
 
-					err = p0.set(true, "a/");
+					err = p0.set("a/");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a/");
-					if ((vret = s_validate_path(&p0, "a", 1, nullptr, nullptr, "a", false)) != 0)
+					if ((vret = s_validate_path(&p0, "a", 1, nullptr, nullptr, "a", "a")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f: %d", vret);
 
-					err = p0.set(false, "/a/b/c/d/e.txt");
+					err = p0.set("/a/b/c/d/e.txt");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed /a/b/c/d/e.txt");
-					if ((vret = s_validate_path(&p0, "/a/b/c/d/e.txt", 14, "e.txt", "txt", "/a/b/c/d", false)) != 0)
+					if ((vret = s_validate_path(&p0, "/a/b/c/d/e.txt", 14, "e.txt", "txt", "/a/b/c/d", "e")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed /a/b/c/d/e.txt %d", vret);
 
-					err = p0.set(false, "/a/////b/////c////d/e.txt");
+					err = p0.set("/a/////b/////c////d/e.txt");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed /a/b/c/d/e.txt");
-					if ((vret = s_validate_path(&p0, "/a/b/c/d/e.txt", 14, "e.txt", "txt", "/a/b/c/d", false)) != 0)
+					if ((vret = s_validate_path(&p0, "/a/b/c/d/e.txt", 14, "e.txt", "txt", "/a/b/c/d", "e")) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed /a/b/c/d/e.txt %d", vret);
 
 #endif
 
-
-					printf("%s\n", PILO_CONTEXT->exec_path().fullpathname());
-
-					printf("%s\n", PILO_CONTEXT->parent_path().fullpathname());
 					p_case->set_result(PILO_OK);
 					return 0;
 				}
