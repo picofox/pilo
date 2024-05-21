@@ -56,17 +56,17 @@ namespace pilo
                     return PILO_OK;
                 }
 
+                void format_header(::std::stringstream& ss) const;
                 std::string format_header() const;
+                void format_seperator(::std::stringstream& ss,char ch, ::pilo::i32_t cnt) const;
 
                 template<typename INT_T>
-                std::string format_field(::pilo::i64_t index, INT_T iv)
+                void format_field(::std::stringstream& ss, ::pilo::i64_t index, INT_T iv)
                 {
                     char buffer[128] = { 0 };
                     if (_meta_fields[index].readablize())
                     {
                         ::pilo::core::string::number_to_string_adv<INT_T>(buffer, PMF_COUNT_OF(buffer), iv, nullptr, _meta_fields[index].readable_format().c_str());
-
-                        ::std::stringstream ss;
                         if (_meta_fields[index].left_align())
                         {
                             ss << std::left << std::setw(_meta_fields[index].width()) << buffer;
@@ -76,49 +76,57 @@ namespace pilo
                             ss << std::right << std::setw(_meta_fields[index].width()) << buffer;
                         }
                         ss << _meta_fields[index].seperator();
-                        return ss.str();
                     }
                     else
                     {
-             
-                        ::std::stringstream ss;
                         if (_meta_fields[index].left_align())
                         {
-                            ss << std::left << std::setw(_meta_fields[index].width()) << std::fixed  << iv;
+                            ss << std::left << std::setw(_meta_fields[index].width()) << std::fixed << iv;
                         }
                         else
                         {
-                            ss << std::right << std::setw(_meta_fields[index].width()) << std::fixed  <<iv;
+                            ss << std::right << std::setw(_meta_fields[index].width()) << std::fixed << iv;
                         }
                         ss << _meta_fields[index].seperator();
-                        return ss.str();
                     }
                 }
 
+                template<typename INT_T>
+                std::string format_field(::pilo::i64_t index, INT_T iv)
+                {
+                    ::std::stringstream ss;
+                    format_field(ss, index,  iv);
+                    return ss.str();
+                }
 
-                std::string format_field(::pilo::i64_t index, const char * str)
+                void format_field(::std::stringstream & ss, ::pilo::i64_t index, const char* str)
                 {
                     if (str == nullptr)
                         str = "null-str";
                     std::string rstr = str;
-                    ::std::stringstream ss;
                     ::pilo::u8_t real_len = (::pilo::u8_t) ::pilo::core::string::character_count(str);
                     if (real_len > (::pilo::u8_t)_meta_fields[index].width())
                     {
                         if (_meta_fields[index].trunc())
                         {
                             rstr = rstr.substr(0, (_meta_fields[index].width()));
-                        }                        
+                        }
                     }
                     if (_meta_fields[index].left_align())
                     {
-                        ss << std::left << std::setw(_meta_fields[index].width()) << rstr;                        
+                        ss << std::left << std::setw(_meta_fields[index].width()) << rstr;
                     }
                     else
                     {
                         ss << std::right << std::setw(_meta_fields[index].width()) << rstr;
                     }
                     ss << _meta_fields[index].seperator();
+                }
+
+                std::string format_field(::pilo::i64_t index, const char * str)
+                {                    
+                    ::std::stringstream ss;
+                    format_field(ss, index, str);
                     return ss.str();
                 }
 

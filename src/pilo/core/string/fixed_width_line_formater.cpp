@@ -6,10 +6,9 @@ namespace pilo
     {
         namespace string
         {
-            std::string fixed_width_line_formater::format_header() const
+            void fixed_width_line_formater::format_header(::std::stringstream& ss) const
             {
-                ::std::stringstream ss;
-                for (::pilo::i64_t i = 0; i < (::pilo::i64_t) _meta_fields.size(); i++)
+                for (::pilo::i64_t i = 0; i < (::pilo::i64_t)_meta_fields.size(); i++)
                 {
                     ::pilo::u8_t real_len = (::pilo::u8_t)_meta_fields[i].name().size();
                     ::pilo::u8_t diff = 0;
@@ -35,8 +34,22 @@ namespace pilo
                     }
                     ss << _meta_fields[i].seperator();
                 }
+                ss << std::endl;            
+            }
+
+            std::string fixed_width_line_formater::format_header() const
+            {
+                ::std::stringstream ss;
+                format_header(ss);
+                return ss.str();
+            }
+            void fixed_width_line_formater::format_seperator(::std::stringstream& ss, char ch, ::pilo::i32_t cnt) const
+            {
+                while (cnt-- > 0)
+                {
+                    ss << ch;
+                }
                 ss << std::endl;
-                return ss.str();;
             }
         }
     }

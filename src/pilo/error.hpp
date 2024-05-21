@@ -35,7 +35,9 @@
 #define PES_SYMLINK        (20)
 #define PES_TEXT           (21)
 #define PES_PATH_STR            (22)
-#define PES_COUNT           (23)
+#define PES_DIR              (23)
+#define PES_FILE              (24)
+#define PES_COUNT           (25)
 
 
 
@@ -74,9 +76,10 @@
 #define PEP_INCOMP          (32)
 #define PEP_ICONV_FAILED    (33)
 #define PEP_FMT_FATAL       (34)   
+#define PEP_CREATE_FAILED   (35)
+#define PEP_DEL_FAILED      (36)  
 
-
-#define PEP_COUNT           (35)
+#define PEP_COUNT           (37)
 
 
 

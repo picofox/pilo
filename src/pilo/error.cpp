@@ -37,7 +37,7 @@ namespace pilo
         ,"Resource", "Object", "Buffer", "Message", "Value"
         ,"TLV","TestCase", "TLV internal data", "TLV internal array", "Element"
         , "Container", "Wired Key Type", "Wired Value Type", "Get CWD", "File Attribute"
-        , "Symbol Link", "Text", "Path String"
+        , "Symbol Link", "Text", "Path String", "Dir", "File"
     };
 
     static const char* g_err_predict_desc[PEP_COUNT]
@@ -49,6 +49,7 @@ namespace pilo
         , "lenth is inconsistent", "buffer data is partial", "is insufficient", "data inconsistent", "is valid."
         , "type mismatch.", "validation failed.", "array index out of bound.", "wired type convert failed.", "clone failed."
         , "Already exist","Charset Conv Failed", "Contain Invalid chars", "Is Incomplete", "Format Fatal Error"
+        , "Creation Failed", "Deletion Failed"
     };   
 
     os_error_number_t get_os_last_error()

@@ -49,7 +49,7 @@ namespace pilo {
 					{
                         c[i] = replacement;
                         rep_count++;
-                        if (rep_count >= max_count)
+                        if (max_count > 0 && rep_count >= max_count)
 						    break;
 					}
 				}

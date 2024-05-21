@@ -47,6 +47,14 @@ namespace pilo
                 return true;
             }
 
+            ::pilo::i8_t path::absolute_type() const
+            {
+                if (this->invalid())
+                    return path::path_type_na;
+
+                return path::absolute_type(this->_m_pathstr_ptr, nullptr, this->_m_length);
+            }
+
             ::pilo::err_t path::set(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir_enum rel_to_abs_basis)
             {
                 if (p == nullptr) return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
@@ -111,6 +119,94 @@ namespace pilo
                 return PILO_OK;
             }
 
+            ::pilo::err_t path::forward_iterate(iter_func_t func, void* ctx, bool ignore_err)
+            {
+                if (this->invalid())
+                {
+                    return ::pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
+                }
+                if (func == nullptr)
+                {
+                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                }
+
+                if (this->is_root())
+                    return PILO_OK;
+
+                ::pilo::err_t err = PILO_OK;
+                const char* p = nullptr;
+                const char* s = _m_pathstr_ptr;
+                ::pilo::i64_t l = (::pilo::i64_t)_m_length;
+                ::pilo::i32_t idx = 0;
+                ::pilo::pathlen_t beg = 0;
+                if (this->absolute_type() == path::relative)
+                {
+                    
+                }
+                else if (this->absolute_type() == path::other_absolute)
+                {
+#ifdef WINDOWS
+                    beg = 2;
+#else
+                    return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+#endif
+                }
+                else if (this->absolute_type() == path::absolute)
+                {
+#ifdef WINDOWS
+                    beg = 7;
+#else
+                    beg = 1;
+#endif
+                }
+                else
+                {
+                    return ::pilo::make_core_error(PES_PATH_STR, PEP_TYPE_MISMATCH);
+                }
+
+                while (true)
+                {
+                    p = ::pilo::core::string::find_char(s + beg, l - beg, PMI_PATH_SEP);
+                    if (p != nullptr)
+                    {
+                        ::pilo::pathlen_t plen = (::pilo::pathlen_t)(p - _m_pathstr_ptr);
+                        err = func(this, plen, idx++, true, ctx);
+                        if (err != PILO_OK)
+                        {
+                            if (!ignore_err)
+                                return err;
+                        }
+
+                        s = p + 1;
+                        l = _m_length - plen - 1;
+                        if (*s == 0 || l <= 0)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        err = func(this, this->_m_length, idx++, true, ctx);
+                        if (err != PILO_OK)
+                        {
+                            if (!ignore_err)
+                                return err;
+                        }
+                        break;
+                    }
+                }
+
+                return err;
+            }
+
+            ::pilo::err_t path::create(::pilo::i8_t fs_node_type, bool is_force)
+            {
+                if (fs_node_type == path::fs_node_type_dir)
+                    return this->forward_iterate(path::s_dir_create_handler, is_force ? (void*)"" : nullptr, false);
+                else
+                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+            }
+
             ::pilo::err_t path::fill_with_cwd(::pilo::pathlen_t extra)
             {
                 char cbf[PMI_PATH_MAX] = { 0 };
@@ -119,7 +215,7 @@ namespace pilo
                 if (err != PILO_OK)
                     return err;
 
-                return this->set(buffer.begin(), buffer.size(), extra, path::predefined_pilo_dir_enum::cwd);
+                return this->set(buffer.begin(), buffer.size(), extra, ::pilo::predefined_pilo_dir_enum::cwd);
             }
 
             ::pilo::err_t path::fill_with_exe(::pilo::pathlen_t extra)
@@ -279,27 +375,64 @@ namespace pilo
                 {
                     return ::pilo::make_core_error(PES_PATH_STR, PEP_TOO_LARGE);
                 }
-                //buffer->check_space((::pilo::i32_t)path_str_len + 6 + (::pilo::i32_t)extra);
 
                 ::pilo::core::memory::object_array<char, 64> tmp_path;
-                tmp_path.check_space((::pilo::i32_t)path_str_len + 6);
-                if (::std::isalpha(path_str[0]) && path_str[1] == ':')
+                ::pilo::i8_t abs_type = path::absolute_type(path_str, nullptr, (::pilo::pathlen_t) path_str_len);
+                if (abs_type == path::relative)
                 {
-                    ::pilo::core::string::n_copyz(tmp_path.begin(), tmp_path.capacity(), ::pilo::core::string::constants<char>::root_dir_sep(), ::pilo::core::string::constants<char>::root_dir_sep_length());
-                    tmp_path.set_size((::pilo::i32_t) ::pilo::core::string::constants<char>::root_dir_sep_length());
+                    if (rel_to_abs_basis != predefined_pilo_dir_enum::count)
+                    {
+                        path prefix;
+                        if (prefix.fill_with_predef_path(rel_to_abs_basis, 0) != PILO_OK)
+                        {
+                            return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
+                        }
+                        tmp_path.check_space((::pilo::i32_t)prefix.length() + (::pilo::i32_t)path_str_len + 2);
+                        ::pilo::core::string::n_copyz(tmp_path.begin(), tmp_path.capacity(), prefix.fullpath(), prefix.length());
+                        tmp_path.set_size(prefix.length());
+                        if (path_str[0] != PMI_PATH_SEP)
+                        {
+                            *tmp_path.ptr() = PMI_PATH_SEP;
+                            tmp_path.add_size(1);
+                        }
+                        ::pilo::core::string::n_copyz(tmp_path.ptr(), tmp_path.space_available(), path_str, path_str_len);
+                        tmp_path.add_size((::pilo::i32_t)path_str_len);
+                    }  
+                    else
+                    {
+                        tmp_path.check_space((::pilo::i32_t)path_str_len + 1);
+                        ::pilo::core::string::n_copyz(tmp_path.begin(), tmp_path.capacity(), path_str, path_str_len);
+                        tmp_path.set_size((::pilo::i32_t)path_str_len);
+                    }                    
                 }
+                else
+                {
+#ifdef WINDOWS        
+                    if (::std::isalpha(path_str[0]) && path_str[1] == ':')
+                    {
+                        tmp_path.check_space((::pilo::i32_t)path_str_len + 7);
+                        ::pilo::core::string::n_copyz(tmp_path.begin(), tmp_path.capacity(), ::pilo::core::string::constants<char>::root_dir_sep(), ::pilo::core::string::constants<char>::root_dir_sep_length());
+                        tmp_path.set_size((::pilo::i32_t) ::pilo::core::string::constants<char>::root_dir_sep_length());
+                    }
+                    else
+                    {
+                        tmp_path.check_space((::pilo::i32_t)path_str_len + 1);
+                    }
 
-                ::pilo::core::string::n_copyz(tmp_path.ptr(), tmp_path.space_available(), path_str, path_str_len);
-                tmp_path.add_size((::pilo::i32_t)path_str_len);                
+#else
+                    tmp_path.check_space((::pilo::i32_t)path_str_len + 1);
+                    
+#endif
+                    ::pilo::core::string::n_copyz(tmp_path.ptr(), tmp_path.space_available(), path_str, path_str_len);
+                    tmp_path.add_size((::pilo::i32_t)path_str_len);
+                }                                          
 
-                ::pilo::pathlen_t endidx = 1;
+                ::pilo::pathlen_t endidx = 0;
 #ifdef WINDOWS
                 if (tmp_path.size() > 3 && ::pilo::core::string::strict_compare(tmp_path.begin(), 0
                     , ::pilo::core::string::constants<char>::root_dir_sep(), 0
                     , ::pilo::core::string::constants<char>::root_dir_sep_length()) == 0)
                 {
-
-                    ::pilo::core::string::replace_char(tmp_path.begin()+4, tmp_path.size()-4, '/', '\\');
 
                     if (tmp_path.size() >= 4 && tmp_path.size() < 6)
                     {
@@ -308,10 +441,16 @@ namespace pilo
                     isabs = true;
                     endidx = 4;                    
                 }
-                else
+                else if (tmp_path.size() > 1)
                 {
-                    ::pilo::core::string::replace_char(tmp_path.begin(), tmp_path.size(), '/', '\\');
+                    if (tmp_path.at(0) == '\\' && tmp_path.at(1) == '\\')
+                    {
+                        endidx = 2;
+                    }
                 }
+
+                ::pilo::core::string::replace_char(tmp_path.begin()+endidx, tmp_path.size()-endidx, '/', '\\');
+                
                 ::pilo::i64_t rscnt = 0;
                 ::pilo::i64_t rscnt2 = 0;
                 ::pilo::core::string::rescanable_replace_inplace(tmp_path.begin() + endidx, tmp_path.size() - endidx, tmp_path.capacity() - endidx, "\\\\", "\\", &rscnt);
@@ -342,6 +481,11 @@ namespace pilo
                         break;
                 }
                 tmp_path.add_size(len_to_dec);
+
+                if (tmp_path.size() < 1)
+                {
+                    return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
+                }
 
                 //all cases
 #ifdef WINDOWS
@@ -418,107 +562,34 @@ namespace pilo
                         buffer->set_size(8);
                         fs_type = ::pilo::core::io::path::local_fs_path;
                         return PILO_OK;
-                    }                    
-
-                    for (::pilo::i32_t i = 0; i < tmp_path.size(); i++)
-                    {
-                        if (::pilo::core::string::find_char(::pilo::core::string::constants<char>::illegal_path_chars()
-                            , (::pilo::i64_t) ::pilo::core::string::constants<char>::illegal_path_chars_length(), tmp_path.begin()[i]))
-                        {
-                            return ::pilo::make_core_error(PES_PATH_STR, PEP_INV_CHARS);
-                        }
-                    }
-
-                    ::pilo::core::string::n_copyz(buffer->begin(), buffer->capacity(), tmp_path.begin(), tmp_path.size());
-                    buffer->set_size((::pilo::i32_t)tmp_path.size());
-                    fs_type = ::pilo::core::io::path::local_fs_path;
-                    return PILO_OK;
+                    } 
                 }
-                else
+
+                fs_type = ::pilo::core::io::path::local_fs_path;
+                if (isabs)
                 {
-                    fs_type = ::pilo::core::io::path::local_fs_path;
-                    if (isabs)
+                    if (tmp_path.size() == 6)
                     {
-                        if (tmp_path.size() == 6)
-                        {
-                            buffer->check_space(7);
-                            ::pilo::core::string::n_copyz(buffer->begin(), buffer->capacity(), tmp_path.begin(), tmp_path.size());
-                            buffer->set_size((::pilo::i32_t)tmp_path.size());
-                            fs_type = ::pilo::core::io::path::local_fs_path;
-                            return PILO_OK;                            
-                        }
-                        else if (tmp_path.size() < 6)
-                        {
-                            return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
-                        }
-                        else
-                        {
-                            if (tmp_path.at(6) != PMI_PATH_SEP)
-                            {
-                                ::pilo::core::string::n_movez(tmp_path.begin()+7, tmp_path.capacity() - 7,  tmp_path.begin() + 6, tmp_path.size() - 6);
-                                tmp_path.begin()[6]= PMI_PATH_SEP;
-                                tmp_path.add_size(1);
-                            }
-
-                            for (::pilo::pathlen_t i = 6; i < tmp_path.size(); i++)
-                            {
-                                if (::pilo::core::string::find_char(::pilo::core::string::constants<char>::illegal_path_chars()
-                                    , (::pilo::i64_t) ::pilo::core::string::constants<char>::illegal_path_chars_length(), tmp_path.at(i)) != nullptr)
-                                {
-                                    return ::pilo::make_core_error(PES_PATH_STR, PEP_INV_CHARS);
-                                }
-                            }
-                            
-                            ::pilo::i32_t pcnt = (::pilo::i32_t) ::pilo::core::string::cstring_ch_count(tmp_path.begin(), 5, tmp_path.size() - 5, PMI_PATH_SEP);
-                            if (pcnt > 0 && ::pilo::core::string::find_substring(tmp_path.begin(), "..", tmp_path.size()))
-                            {
-                                ::pilo::core::memory::object_array<::pilo::cstr_ref<char>, 1> parts;
-                                parts.check_space(pcnt + 1);
-                                ::pilo::i64_t nparts = ::pilo::core::string::split_fixed(tmp_path.begin()+5, tmp_path.size()-5
-                                   ,"\\", 1, parts.begin(), parts.capacity(), false, true, false, false);
-                                if (nparts < 2)
-                                {
-                                    PMC_ASSERT(false);
-                                    return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
-                                }
-
-                                parts.at(0).ptr = tmp_path.begin();
-                                parts.at(0).length += 5;    
-                                std::vector<::pilo::cstr_ref<char>*> vec;
-                                vec.push_back(&parts.at((int)0));
-                                for (::pilo::i64_t j = 1; j < nparts; j++)
-                                {
-                                    //printf(" -> [%s]\n", parts.at((int)j).to_string().c_str());
-                                    if (parts.at((int)j).length == 2 && parts.at((int)j).ptr[0] == '.' && parts.at((int)j).ptr[1] == '.')
-                                    {
-                                        if (vec.size() > 1)
-                                            vec.pop_back();
-                                        else
-                                        {
-                                            return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        vec.push_back(&parts.at((int)j));
-                                    }                    
-
-                                }
-                                ::pilo::core::string::concatenate_rac(buffer, vec, "\\", 1);
-                            }
-                            else
-                            {        
-                                buffer->check_space(tmp_path.size() + 1);
-                                ::pilo::core::string::n_copyz(buffer->begin(), buffer->capacity(), tmp_path.begin(), tmp_path.size());
-                                buffer->set_size(tmp_path.size());
-                            }
-                            
-                            return PILO_OK;
-                        }                        
+                        buffer->check_space(7);
+                        ::pilo::core::string::n_copyz(buffer->begin(), buffer->capacity(), tmp_path.begin(), tmp_path.size());
+                        buffer->set_size((::pilo::i32_t)tmp_path.size());
+                        fs_type = ::pilo::core::io::path::local_fs_path;
+                        return PILO_OK;                            
                     }
-                    else //relative p
+                    else if (tmp_path.size() < 6)
                     {
-                        for (::pilo::pathlen_t i = 0; i < tmp_path.size(); i++)
+                        return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
+                    }
+                    else
+                    {
+                        if (tmp_path.at(6) != PMI_PATH_SEP)
+                        {
+                            ::pilo::core::string::n_movez(tmp_path.begin()+7, tmp_path.capacity() - 7,  tmp_path.begin() + 6, tmp_path.size() - 6);
+                            tmp_path.begin()[6]= PMI_PATH_SEP;
+                            tmp_path.add_size(1);
+                        }
+
+                        for (::pilo::pathlen_t i = 6; i < tmp_path.size(); i++)
                         {
                             if (::pilo::core::string::find_char(::pilo::core::string::constants<char>::illegal_path_chars()
                                 , (::pilo::i64_t) ::pilo::core::string::constants<char>::illegal_path_chars_length(), tmp_path.at(i)) != nullptr)
@@ -526,23 +597,25 @@ namespace pilo
                                 return ::pilo::make_core_error(PES_PATH_STR, PEP_INV_CHARS);
                             }
                         }
-
-                        ::pilo::i32_t pcnt = (::pilo::i32_t) ::pilo::core::string::cstring_ch_count(tmp_path.begin(), 0, tmp_path.size(), PMI_PATH_SEP);
+                            
+                        ::pilo::i32_t pcnt = (::pilo::i32_t) ::pilo::core::string::cstring_ch_count(tmp_path.begin(), 5, tmp_path.size() - 5, PMI_PATH_SEP);
                         if (pcnt > 0 && ::pilo::core::string::find_substring(tmp_path.begin(), "..", tmp_path.size()))
                         {
                             ::pilo::core::memory::object_array<::pilo::cstr_ref<char>, 1> parts;
                             parts.check_space(pcnt + 1);
-                            ::pilo::i64_t nparts = ::pilo::core::string::split_fixed(tmp_path.begin(), tmp_path.size()
-                                , "\\", 1, parts.begin(), parts.capacity(), false, true, false, false);
+                            ::pilo::i64_t nparts = ::pilo::core::string::split_fixed(tmp_path.begin()+5, tmp_path.size()-5
+                                ,"\\", 1, parts.begin(), parts.capacity(), false, true, false, false);
                             if (nparts < 2)
                             {
                                 PMC_ASSERT(false);
                                 return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
                             }
 
-
+                            parts.at(0).ptr = tmp_path.begin();
+                            parts.at(0).length += 5;    
                             std::vector<::pilo::cstr_ref<char>*> vec;
-                            for (::pilo::i64_t j = 0; j < nparts; j++)
+                            vec.push_back(&parts.at((int)0));
+                            for (::pilo::i64_t j = 1; j < nparts; j++)
                             {
                                 //printf(" -> [%s]\n", parts.at((int)j).to_string().c_str());
                                 if (parts.at((int)j).length == 2 && parts.at((int)j).ptr[0] == '.' && parts.at((int)j).ptr[1] == '.')
@@ -557,25 +630,44 @@ namespace pilo
                                 else
                                 {
                                     vec.push_back(&parts.at((int)j));
-                                }
+                                }                    
 
                             }
                             ::pilo::core::string::concatenate_rac(buffer, vec, "\\", 1);
                         }
                         else
-                        {
+                        {        
                             buffer->check_space(tmp_path.size() + 1);
                             ::pilo::core::string::n_copyz(buffer->begin(), buffer->capacity(), tmp_path.begin(), tmp_path.size());
                             buffer->set_size(tmp_path.size());
                         }
-                    }
+                            
+                        return PILO_OK;
+                    }                        
                 }
+                else //relative p
+                {
+                    for (::pilo::pathlen_t i = 0; i < tmp_path.size(); i++)
+                    {
+                        if (::pilo::core::string::find_char(::pilo::core::string::constants<char>::illegal_path_chars()
+                            , (::pilo::i64_t) ::pilo::core::string::constants<char>::illegal_path_chars_length(), tmp_path.at(i)) != nullptr)
+                        {
+                            return ::pilo::make_core_error(PES_PATH_STR, PEP_INV_CHARS);
+                        }
+                    }        
+
+
+
+                    buffer->check_space(tmp_path.size() + 1);
+                    ::pilo::core::string::n_copyz(buffer->begin(), buffer->capacity(), tmp_path.begin(), tmp_path.size());
+                    buffer->set_size(tmp_path.size());
+                        
+                }
+                
                 
 #else
 
 #endif
-
-
 
                 return PILO_OK;
             }
@@ -779,28 +871,49 @@ namespace pilo
 
 
 
-            ::pilo::err_t path::make_dir(const char* dirpath, ::pilo::pathlen_t path_len)
+            ::pilo::err_t path::make_dir(const char* dirpath, ::pilo::pathlen_t path_len, bool )
             {
-                if (dirpath == nullptr || *dirpath == 0 || path_len == 0)
-                {
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
-                }
-                wchar_t wpath_buffer[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = {0};
-                ::pilo::wchar_buffer_t wpath(wpath_buffer, PMF_COUNT_OF(wpath_buffer));
-                if (path_len == path::unknow_length)
-                {
-                    path_len = (::pilo::pathlen_t) ::pilo::core::string::character_count(dirpath);
-                }
-
-                ::pilo::err_t err = ::pilo::core::i18n::utf8_to_os_unicode(wpath, dirpath, (::pilo::i32_t) path_len, 0);
+#ifdef WINDOWS
+                wchar_t wb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
+                ::pilo::wchar_buffer_t buffer(wb, PMI_STCPARAM_PATH_DEFAULT_LENGTH, 0, false);
+                ::pilo::err_t err = ::pilo::core::i18n::utf8_to_os_unicode(buffer, dirpath, path_len);
                 if (err != PILO_OK)
                     return err;
+                BOOL result = CreateDirectoryW(buffer.begin(), NULL);
+                if (! result) 
+                {
+                    ::pilo::i8_t node_type = path::node_type_na;
+                    err = path::get_path_node_type(dirpath, path_len, path::local_fs_path, node_type, nullptr, nullptr);
+                    if (err != PILO_OK)
+                        return err;
+                    if (node_type == path::fs_node_type_dir)
+                    {
+                        return PILO_OK;
+                    }
+                    else
+                    {
+                        PMC_ASSERT(false);
+                    }
+                }
+#else
+                std::string d(dirpath, (size_t)path_len);
+                int result = mkdir(dirpath.c_str(), 0755);
+                if (result != 0)
+                {
+                    ::pilo::i8_t node_type = path::node_type_na;
+                    err = path::get_path_node_type(dirpath, path_len, path::local_fs_path, node_type, nullptr, nullptr);
+                    if (err != PILO_OK)
+                        return err;
+                    if (node_type == path::fs_node_type_dir)
+                    {
+                        return PILO_OK;
+                    }
+                    else
+                    {
 
-             //   ::pilo::i8_t node_type = p::node_type_na;              
-                
-
-
-
+                    }
+                }
+#endif
 
                 return PILO_OK;
             }

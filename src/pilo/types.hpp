@@ -700,6 +700,18 @@ namespace pilo
 		typedef _pilo_truetype     is_basetype;
 	};
 
+	enum class predefined_pilo_dir_enum
+	{
+		cwd = 0,
+		exe,
+		home,
+		bin,
+		cnf,
+		log,
+		tmp,
+		count,
+	};
+
 } //pilo
 
 #endif //__pilo_types_hpp_

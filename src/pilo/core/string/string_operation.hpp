@@ -1340,7 +1340,7 @@ namespace pilo
 				{
 					length = ::pilo::core::string::character_count(str);
 				}
-				return ::pilo::core::algorithm::find_reversely_in_array_by_value<CHAR_T>(str, length, v);
+				return ::pilo::core::algorithm::find_in_array_by_value<CHAR_T>(str, length, v);
 			}
 
             template<typename CHAR_T>
