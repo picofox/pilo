@@ -78,8 +78,9 @@
 #define PEP_FMT_FATAL       (34)   
 #define PEP_CREATE_FAILED   (35)
 #define PEP_DEL_FAILED      (36)  
-
-#define PEP_COUNT           (37)
+#define PEP_FS_LINK_FAILED  (37)  
+#define PEP_OPEN_FAILED     (38)
+#define PEP_COUNT           (39)
 
 
 

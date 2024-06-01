@@ -21,6 +21,12 @@ namespace pilo
 				int case_tcp_stdm_128_queue_1g_count(::pilo::core::testing::stable_test_case* p_case);
 				int case_concurrent_queue_for_1g_count(::pilo::core::testing::stable_test_case* p_case);
 			}
+
+			namespace io
+			{
+				void tttt();
+				int case_path_creation(::pilo::core::testing::stable_test_case* p_case);
+			}
 		}
 	}
 }

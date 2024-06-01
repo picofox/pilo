@@ -7,6 +7,10 @@ namespace pilo {
         namespace i18n {
             ::pilo::err_t os_unicode_to_utf8(::pilo::char_buffer_t& buffer, const wchar_t* src, ::pilo::i32_t src_len, ::pilo::i32_t extra = 0);
             ::pilo::err_t utf8_to_os_unicode(::pilo::wchar_buffer_t& buffer,const char* src, ::pilo::i32_t src_len, ::pilo::i32_t extra = 0);
+
+            ::pilo::err_t utf8_to_ansi(::pilo::char_buffer_t& buffer, const char* src, ::pilo::i32_t src_len, ::pilo::i32_t extra = 0);
+            ::pilo::err_t ansi_to_utf8(::pilo::char_buffer_t& buffer, const char* src, ::pilo::i32_t src_len, ::pilo::i32_t extra = 0);
+
         }
     }
 }

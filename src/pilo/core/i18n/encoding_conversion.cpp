@@ -42,12 +42,11 @@ namespace pilo {
             }
 #endif
 
-            //GBK <-> Unicode LE
-
-            
-
             ::pilo::err_t os_unicode_to_utf8(::pilo::char_buffer_t& buffer, const wchar_t* src, ::pilo::i32_t src_len, ::pilo::i32_t extra)
             {
+                if (extra < 0)
+                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+
                 if (src == nullptr || src_len < 0)
                 {
                     return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
@@ -64,33 +63,38 @@ namespace pilo {
                 ::pilo::i32_t max_need_capa = (src_len + 1 + extra) * 4;
                 if (buffer.invalid())
                 {
-                    buffer.check_space(max_need_capa);
+                    buffer.check_more_space(max_need_capa);
                 }
-                else if (buffer.capacity() <= (1 + extra))
+                else if (buffer.space_available() <= (1 + extra))
                 {
-                    buffer.check_space(max_need_capa);
+                    buffer.check_more_space(max_need_capa);
                 }
                 
-#ifdef WINDOWS                
-                
-                ::pilo::i32_t ret = WideCharToMultiByte(CP_UTF8, 0, src, src_len, buffer.ptr(), buffer.space_available() - (1 + extra), nullptr, nullptr);
-                if (ret > 0)
+#ifdef WINDOWS      
+                int tmpcchlen = buffer.space_available() - (1 + extra);
+                ::pilo::i32_t ret = PILO_OK;
+                if (tmpcchlen > 0)
                 {
-                    buffer.set(ret, 0);
-                    buffer.add_size(ret);
-                    return PILO_OK;
-                }                                
+                    ret = WideCharToMultiByte(CP_UTF8, 0, src, src_len, buffer.ptr(), buffer.space_available() - (1 + extra), nullptr, nullptr);
+                    if (ret > 0)
+                    {
+                        buffer.add_size(ret);
+                        buffer.append(0);
+                        return PILO_OK;
+                    }
+                }                
+                                             
                 ::pilo::i32_t cal_len = WideCharToMultiByte(CP_UTF8, 0, src, src_len, nullptr, 0, nullptr, nullptr);
                 if (cal_len <= 0)
                 {
                     return ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
                 }
-                buffer.check_space(cal_len + 1 + extra);
+                buffer.check_more_space(cal_len + 1 + extra);
                 ret = WideCharToMultiByte(CP_UTF8, 0, src, src_len, buffer.ptr(), cal_len+1, nullptr, nullptr);
                 if (ret > 0)
                 {
-                    buffer.set(ret, 0);
                     buffer.add_size(ret);
+                    buffer.append(0);
                     return PILO_OK;
                 }
 
@@ -102,8 +106,8 @@ namespace pilo {
                 );
                 if (ret > 0)
                 {
-                    buffer.set(ret, 0);
                     buffer.add_size(ret);
+                    buffer.append(0);
                     return PILO_OK;
                 }
                 else
@@ -113,7 +117,7 @@ namespace pilo {
                         return ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
                     }
                 }
-                buffer.check_space(max_need_capa);
+                buffer.check_more_space(max_need_capa);
                 ret = _iconv_convert_any_to_any_fixed(
                     PMS_OS_UNICODE_NAME, "utf-8",
                     buffer.ptr(), buffer.space_available() - (1 + extra),
@@ -121,8 +125,8 @@ namespace pilo {
                 );
                 if (ret > 0)
                 {
-                    buffer.set(ret, 0);
                     buffer.add_size(ret);
+                    buffer.append(0);
                     return PILO_OK;
                 }                
 #endif         
@@ -132,6 +136,8 @@ namespace pilo {
 
             ::pilo::err_t utf8_to_os_unicode(::pilo::wchar_buffer_t& buffer, const char* src, ::pilo::i32_t src_len, ::pilo::i32_t extra)
             {
+                if (extra < 0)
+                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
                 if (src == nullptr || src_len < 0)
                 {
                     return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
@@ -148,33 +154,38 @@ namespace pilo {
                 ::pilo::i32_t max_need_capa = (src_len + 1 + extra) * 4;
                 if (buffer.invalid())
                 {
-                    buffer.check_space(max_need_capa);
+                    buffer.check_more_space(max_need_capa);
                 }
-                else if (buffer.capacity() < (1 + extra))
+                else if (buffer.space_available() <= (1 + extra))
                 {
-                    buffer.check_space(max_need_capa);
+                    buffer.check_more_space(max_need_capa);
                 }
 
 #ifdef WINDOWS
-
-                ::pilo::i32_t ret = MultiByteToWideChar(CP_UTF8, 0, src, src_len, buffer.ptr(), buffer.space_available() - (1 + extra));
-                if (ret > 0)
+                int tmpcchlen  = buffer.space_available() - (1 + extra);
+                ::pilo::i32_t ret = PILO_OK;
+                if (tmpcchlen > 0)
                 {
-                    buffer.set(ret, 0);
-                    buffer.add_size(ret);
-                    return PILO_OK;
+                    ret = MultiByteToWideChar(CP_UTF8, 0, src, src_len, buffer.ptr(), tmpcchlen);
+                    if (ret > 0)
+                    {
+                        buffer.add_size(ret);
+                        buffer.append(0);
+                        return PILO_OK;
+                    }
                 }
+                
                 ::pilo::i32_t cal_len = MultiByteToWideChar(CP_UTF8, 0, src, src_len, nullptr, 0);
                 if (cal_len <= 0)
                 {
                     return ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
                 }
-                buffer.check_space((cal_len + 1 + extra) * sizeof(wchar_t));
+                buffer.check_more_space((cal_len + 1 + extra) * sizeof(wchar_t));
                 ret = MultiByteToWideChar(CP_UTF8, 0, src, src_len, buffer.ptr(), cal_len + 1);
                 if (ret > 0)
                 {
-                    buffer.set(ret, 0);
                     buffer.add_size(ret);
+                    buffer.append(0);
                     return PILO_OK;
                 }
 
@@ -186,8 +197,8 @@ namespace pilo {
                 );
                 if (ret > 0)
                 {
-                    buffer.set(ret, 0);
                     buffer.add_size(ret);
+                    buffer.append(0);
                     return PILO_OK;
                 }
                 else
@@ -197,7 +208,7 @@ namespace pilo {
                         return ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
                     }
                 }
-                buffer.check_space(max_need_capa);
+                buffer.check_more_space(max_need_capa);
                 ret = _iconv_convert_any_to_any_fixed(
                     PMS_OS_UNICODE_NAME, "utf-8",
                     (char*)buffer.ptr(), (buffer.space_available() - (1 + extra)) * sizeof(wchar_t),
@@ -205,14 +216,168 @@ namespace pilo {
                 );
                 if (ret > 0)
                 {
-                    buffer.set(ret, 0);
-                    buffer.set_size(ret);
+                    buffer.add_size((::pilo::i32_t)ret);
+                    buffer.append(0);
                     return PILO_OK;
                 }
 #endif         
                 return ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED, 1);
 
 
+
+            }
+
+            ::pilo::err_t utf8_to_ansi(::pilo::char_buffer_t& buffer, const char* src, ::pilo::i32_t src_len, ::pilo::i32_t extra)
+            {
+                if (extra < 0)
+                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+
+                if (src == nullptr || src_len < 0)
+                {
+                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                }
+                else if (*src == 0 || src_len == 0)
+                {
+                    return PILO_OK;
+                }
+
+                if (src_len < 0)
+                {
+                    src_len = (::pilo::i32_t) ::pilo::core::string::character_count(src);
+                }
+
+                ::pilo::i32_t max_need_capa = (src_len + 1 + extra);
+                if (buffer.invalid())
+                {
+                    buffer.check_more_space(max_need_capa);
+                }
+                else if (buffer.space_available() <= (1 + extra))
+                {
+                    buffer.check_more_space(max_need_capa);
+                }
+
+#if defined(WINDOWS)
+                ::pilo::core::memory::object_array<wchar_t, PMI_STCPARAM_PATH_DEFAULT_LENGTH> wbuf;
+                int dwUnicodeLen = MultiByteToWideChar(CP_UTF8, 0, src, src_len, NULL, 0);
+                dwUnicodeLen++;
+                wbuf.check_more_space(dwUnicodeLen + 1);                
+                int ret = MultiByteToWideChar(CP_UTF8, 0, src, src_len, wbuf.begin(), dwUnicodeLen);
+                if (ret <= 0)
+                {
+                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                }
+                wbuf.begin()[ret] = 0;
+                wbuf.set_size(ret);
+                
+                int len = WideCharToMultiByte(CP_ACP, 0, (const wchar_t*)wbuf.begin(), wbuf.size(), NULL, 0, NULL, NULL);
+                buffer.check_more_space(len + 1 + extra);                
+                ret = WideCharToMultiByte(CP_ACP, 0, (const wchar_t*)wbuf.begin(), wbuf.size(), buffer.ptr(), len + 1, NULL, NULL);
+                if (ret <= 0)
+                {
+                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                }
+                buffer.add_size(ret);
+                buffer.append(0);
+
+#else
+                size_t ret = _iconv_convert_any_to_any_fixed(
+                    "utf-8", PMS_CODE_PAGE_GBK_NAME,
+                    (char*)buffer.ptr(), (buffer.space_available() - (1 + extra)),
+                    src, src_len
+                );
+                if (ret > 0)
+                {
+                    buffer.add_size((::pilo::i32_t)ret);
+                    buffer.append(0);
+                    return PILO_OK;
+                }
+                ::pilo::i32_t max_len = (src_len + 1 + extra) * 2;
+                buffer.check_more_space(max_len);
+                ret = _iconv_convert_any_to_any_fixed(
+                    "utf-8", PMS_CODE_PAGE_GBK_NAME,
+                    (char*)buffer.ptr(), (buffer.space_available() - (1 + extra)),
+                    src, src_len
+                );
+                if (ret <= 0)
+                {
+                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                }
+                buffer.add_size((::pilo::i32_t)ret);
+                buffer.append(0);
+
+#endif
+                return PILO_OK;
+
+            }
+
+            ::pilo::err_t ansi_to_utf8(::pilo::char_buffer_t& buffer, const char* src, ::pilo::i32_t src_len, ::pilo::i32_t extra)
+            {
+                if (extra < 0)
+                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+
+                if (src == nullptr || src_len < 0)
+                {
+                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                }
+                else if (*src == 0 || src_len == 0)
+                {
+                    return PILO_OK;
+                }
+
+                if (src_len < 0)
+                {
+                    src_len = (::pilo::i32_t) ::pilo::core::string::character_count(src);
+                }
+#if defined(WINDOWS)
+                ::pilo::core::memory::object_array<wchar_t, PMI_STCPARAM_PATH_DEFAULT_LENGTH> wbuf;
+                int dwUnicodeLen = MultiByteToWideChar(CP_ACP, 0, src, src_len, NULL, 0);
+                dwUnicodeLen++;
+                wbuf.check_space(dwUnicodeLen);
+                int ret = MultiByteToWideChar(CP_ACP, 0, src, src_len, wbuf.begin(), dwUnicodeLen);
+                if (ret <= 0)
+                {
+                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                }
+                wbuf.begin()[ret] = 0;
+                wbuf.set_size(ret);
+
+                int len = WideCharToMultiByte(CP_UTF8, 0, (const wchar_t*)wbuf.begin(), wbuf.size(), NULL, 0, NULL, NULL);
+                buffer.check_more_space(len + 1 + extra);
+                ret = WideCharToMultiByte(CP_UTF8, 0, (const wchar_t*)wbuf.begin(), wbuf.size(), buffer.ptr(), len + 1, NULL, NULL);
+                if (ret <= 0)
+                {
+                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                }
+                buffer.add_size(len);
+                buffer.append(0);
+#else
+                size_t ret = _iconv_convert_any_to_any_fixed(
+                    PMS_CODE_PAGE_GBK_NAME, "utf-8",
+                    (char*)buffer.ptr(), (buffer.space_available() - (1 + extra)),
+                    src, src_len
+                );
+                if (ret > 0)
+                {
+                    buffer.add_size((::pilo::i32_t)ret);
+                    buffer.append(0);
+                    return PILO_OK;
+                }
+                ::pilo::i32_t max_len = (src_len + 1 + extra);
+                buffer.check_more_space(max_len);
+                ret = _iconv_convert_any_to_any_fixed(
+                    PMS_CODE_PAGE_GBK_NAME, "utf-8",
+                    (char*)buffer.ptr(), (buffer.space_available() - (1 + extra)),
+                    src, src_len
+                );
+                if (ret <= 0)
+                {
+                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                }
+                buffer.add_size((::pilo::i32_t)ret);
+                buffer.append(0);
+
+#endif
+                return PILO_OK;
 
             }
 

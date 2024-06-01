@@ -641,6 +641,12 @@ namespace pilo
 	};
 
 	template <>
+	struct _pilo_type_trait< wchar_t >
+	{
+		typedef _pilo_truetype     is_basetype;
+	};
+
+	template <>
 	struct _pilo_type_trait< int>
 	{
 		typedef _pilo_truetype     is_basetype;

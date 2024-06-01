@@ -1832,6 +1832,84 @@ namespace pilo
                 }
                 return ret;
 			}
+
+
+            int validate_path(::pilo::core::io::path* p, const char* pc, ::pilo::pathlen_t len
+                , const char* fn, const char* en, const char* pardir, const char* bn, ::pilo::i8_t at)
+            {
+                if (p == nullptr) return -1;
+                if (p->length() != len)
+                {
+                    return -2;
+                }
+                if (::pilo::core::string::strict_compare(p->fullpath(), 0, pc, 0, len) != 0)
+                {
+                    return -3;
+                }
+
+                if (fn == nullptr)
+                {
+                    if (p->lastpart() != nullptr)
+                        return -4;
+                }
+                else
+                {
+                    ::pilo::pathlen_t fnlen = (::pilo::pathlen_t) ::pilo::core::string::character_count(fn);
+                    if (fnlen != p->lastpart_len())
+                        return -5;
+                    if (::pilo::core::string::strict_compare(p->lastpart(), 0, fn, 0, fnlen) != 0)
+                    {
+                        return -6;
+                    }
+                }
+
+                if (en == nullptr)
+                {
+                    if (p->extname() != nullptr)
+                        return -7;
+                }
+                else
+                {
+                    ::pilo::pathlen_t enlen = (::pilo::pathlen_t) ::pilo::core::string::character_count(en);
+                    if (enlen != p->extname_len())
+                        return -8;
+                    if (::pilo::core::string::strict_compare(p->extname(), 0, en, 0, enlen) != 0)
+                    {
+                        return -9;
+                    }
+                }
+
+                ::pilo::pathlen_t rlen = 0;
+                const char* par = p->parentpath(rlen);
+                if (pardir == nullptr)
+                {
+                    if (par != nullptr)
+                        return -10;
+                }
+                else
+                {
+                    ::pilo::pathlen_t parlen = (::pilo::pathlen_t) ::pilo::core::string::character_count(pardir);
+                    if (parlen != rlen)
+                        return -11;
+                    if (::pilo::core::string::strict_compare(pardir, 0, par, 0, rlen) != 0)
+                    {
+                        return -12;
+                    }
+                }
+
+                const char* basename = p->basename(rlen);
+                if (::pilo::core::string::strict_compare(basename, 0, bn, 0, rlen) != 0)
+                {
+                    return -13;
+                }
+
+                if (p->absolute_type() != at)
+                {
+                    return -14;
+                }
+
+                return 0;
+            }
 		}
 	}
 }

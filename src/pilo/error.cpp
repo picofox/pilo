@@ -44,12 +44,12 @@ namespace pilo
     {
         "OK", "OK but with info", "no sense", "is null", "is empty"
         , "is invalid", "not exist", "is duplicated", "is temporary NA", "is not support"
-        , "is disabled", "is aborted", "is canceled", "read failed", "write failed"
+        , "is disabled", "is aborted", "is canceled", "Read Failed", "Write Failed"
         , "offset invalid", "too small", "too large", "loops infinitely", "length invalid"
         , "lenth is inconsistent", "buffer data is partial", "is insufficient", "data inconsistent", "is valid."
-        , "type mismatch.", "validation failed.", "array index out of bound.", "wired type convert failed.", "clone failed."
+        , "type mismatch.", "validation Failed.", "array index out of bound.", "wired type convert Failed.", "clone Failed."
         , "Already exist","Charset Conv Failed", "Contain Invalid chars", "Is Incomplete", "Format Fatal Error"
-        , "Creation Failed", "Deletion Failed"
+        , "Creation Failed", "Deletion Failed", "Link Failed", "Open Failed"
     };   
 
     os_error_number_t get_os_last_error()

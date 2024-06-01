@@ -728,7 +728,7 @@ namespace pilo
 
             ::pilo::i32_t strict_compare(const char* str0, ::pilo::i64_t begin_pos_0, const char* str1, ::pilo::i64_t begin_pos_1, ::pilo::i64_t length)
             {
-                if (length == -1)
+                if (length < 0)
                 {
                     return ::strcmp(str0 + begin_pos_0, str1 + begin_pos_1);
                 }
@@ -740,7 +740,7 @@ namespace pilo
 
             ::pilo::i32_t strict_compare(const wchar_t* str0, ::pilo::i64_t begin_pos_0, const wchar_t* str1, ::pilo::i64_t begin_pos_1, ::pilo::i64_t length)
             {
-                if (length == -1)
+                if (length < 0)
                 {
                     return ::wcscmp(str0 + begin_pos_0, str1 + begin_pos_1);
                 }
@@ -752,7 +752,7 @@ namespace pilo
 
 			::pilo::i32_t i_compare(const char* str0, ::pilo::i64_t begin_pos_0, const char* str1, ::pilo::i64_t begin_pos_1, ::pilo::i64_t length)
 			{
-				if (length == -1)
+				if (length < 0)
 				{
 					return PMF_STRING_I_COMPARE_A(str0 + begin_pos_0, str1 + begin_pos_1);
 				}
@@ -765,7 +765,7 @@ namespace pilo
 
 			::pilo::i32_t i_compare(const wchar_t* str0, ::pilo::i64_t begin_pos_0, const wchar_t* str1, ::pilo::i64_t begin_pos_1, ::pilo::i64_t length)
 			{
-				if (length == -1)
+				if (length < 0)
 				{
 					return PMF_STRING_I_COMPARE_W(str0 + begin_pos_0, str1 + begin_pos_1);
 				}

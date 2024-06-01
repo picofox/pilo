@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <memory>
+#include <wchar.h>
 
 namespace pilo
 {
@@ -36,6 +37,8 @@ namespace pilo
             class object_array<TA_ELEMOBJ, TV_SIZE, _pilo_falsetype>
             {
             public:
+                typedef TA_ELEMOBJ value_type;
+            public:
                 object_array() : _dynamic(nullptr), _dynamic_capacity(-1), _data_size(0), _fixed{}
                 {
                     
@@ -54,6 +57,17 @@ namespace pilo
                     _dynamic = nullptr;
                     _dynamic_capacity = -1;
                     _data_size = 0;
+                }
+
+                ::pilo::err_t check_more_space(::pilo::i32_t neosz)
+                {
+                    ::pilo::i32_t delta = neosz - this->space_available();
+                    if (delta > 0)
+                    {
+                        ::pilo::i32_t nsz = this->capacity() + delta;
+                        return check_space(nsz);
+                    }
+                    return PILO_OK;
                 }
 
                 ::pilo::i32_t check_space(::pilo::i32_t neosz)
@@ -87,6 +101,28 @@ namespace pilo
                         }
                     }
                     return 0;
+                }
+
+                ::pilo::err_t append(value_type&& value)
+                {
+                    if (capacity() <= size())
+                    {
+                        this->check_more_space(1);
+                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                    }
+                    this->begin()[this->size()] = value
+                    return PILO_OK;
+                }
+
+                ::pilo::err_t append(const value_type& value)
+                {
+                    if (capacity() <= size())
+                    {
+                        this->check_more_space(1);
+                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                    }
+                    this->begin()[this->size()] = value
+                        return PILO_OK;
                 }
 
                 TA_ELEMOBJ* begin()
@@ -196,6 +232,8 @@ namespace pilo
                     return PILO_OK;
                 }
 
+
+
                 ::pilo::i32_t& ref_size()
                 {
                     return _data_size;
@@ -210,6 +248,8 @@ namespace pilo
             template<typename TA_ELEMOBJ, ::pilo::i32_t TV_SIZE>
             class object_array<TA_ELEMOBJ, TV_SIZE, _pilo_truetype>
             {
+            public:
+                typedef TA_ELEMOBJ value_type;
             public:
                 object_array() : _dynamic(nullptr), _dynamic_capacity(-1), _data_size(0), _fixed{ 0 }
                 {
@@ -230,13 +270,24 @@ namespace pilo
                     _data_size = 0;
                 }
 
+                ::pilo::err_t check_more_space(::pilo::i32_t neosz)
+                {
+                    ::pilo::i32_t delta = neosz - this->space_available();
+                    if (delta > 0)
+                    {
+                        ::pilo::i32_t nsz = this->capacity() + delta;
+                        return check_space(nsz);
+                    }
+                    return PILO_OK;
+                }
+
                 ::pilo::i32_t check_space(::pilo::i32_t neosz)
                 {
                     if (_dynamic == nullptr)
                     {
                         if (neosz > TV_SIZE)
                         {
-                            _dynamic = (TA_ELEMOBJ*) PMF_HEAP_MALLOC(neosz);
+                            _dynamic = (TA_ELEMOBJ*) PMF_HEAP_MALLOC(neosz * sizeof(value_type));
                             for (::pilo::i32_t i = 0; i < TV_SIZE; i++)
                             {
                                 _dynamic[i] = _fixed[i];
@@ -249,7 +300,7 @@ namespace pilo
                     {
                         if (neosz > _dynamic_capacity)
                         {
-                            TA_ELEMOBJ* p = (TA_ELEMOBJ*) PMF_HEAP_MALLOC(neosz*sizeof(TA_ELEMOBJ));
+                            TA_ELEMOBJ* p = (TA_ELEMOBJ*) PMF_HEAP_MALLOC(neosz*sizeof(value_type));
                             for (::pilo::i32_t i = 0; i < TV_SIZE; i++)
                             {
                                 p[i] = _dynamic[i];
@@ -323,6 +374,27 @@ namespace pilo
                     }
                 }
 
+                ::pilo::err_t append(value_type&& value)
+                {
+                    if (capacity() <= size())
+                    {
+                        this->check_more_space(1);
+                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                    }
+                    this->begin()[this->size()] = value
+                        return PILO_OK;
+                }
+
+                ::pilo::err_t append(const value_type& value)
+                {
+                    if (capacity() <= size())
+                    {
+                        this->check_more_space(1);
+                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                    }
+                    this->begin()[this->size()] = value
+                        return PILO_OK;
+                }
 
                 ::pilo::i32_t capacity() const
                 {
@@ -479,7 +551,7 @@ namespace pilo
                     ::pilo::i32_t delta = neosz - this->space_available();
                     if (delta > 0)
                     {
-                        ::pilo::i32_t nsz = this->space_available() + delta;
+                        ::pilo::i32_t nsz = this->capacity() + delta;
                         return check_space(nsz);
                     }
                     return PILO_OK;
@@ -489,7 +561,7 @@ namespace pilo
                 {                    
                     if (neosz > _capacity)
                     {
-                        value_type* ptr = (value_type*) PMF_HEAP_MALLOC(neosz);
+                        value_type* ptr = (value_type*) PMF_HEAP_MALLOC(neosz * sizeof(value_type));
                         if (ptr == nullptr)
                         {
                             return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
@@ -558,7 +630,8 @@ namespace pilo
 
                 ::pilo::i32_t space_available() const
                 {
-                    return _capacity - _data_size;
+                    ::pilo::i32_t diff = _capacity - _data_size;                    
+                    return diff >= 0 ? diff : 0;
                 }
 
                 ::pilo::err_t set_size(::pilo::i32_t sz)
@@ -599,7 +672,7 @@ namespace pilo
                 }
 
 
-                ::pilo::err_t set(::pilo::i32_t idx, value_type&& value)
+                ::pilo::err_t set_value(::pilo::i32_t idx, value_type&& value)
                 {
                     if (_ptr == nullptr || _capacity <= idx)
                     {
@@ -609,7 +682,7 @@ namespace pilo
                     return PILO_OK;
                 }
 
-                ::pilo::err_t set(::pilo::i32_t idx, const value_type& value)
+                ::pilo::err_t set_value(::pilo::i32_t idx, const value_type& value)
                 {
                     if (_ptr == nullptr || _capacity <= idx)
                     {
@@ -618,6 +691,28 @@ namespace pilo
                     _ptr[idx] = value;
                     return PILO_OK;
                 }
+
+                ::pilo::err_t append(value_type&& value)
+                {
+                    if (_ptr == nullptr || _capacity <= _data_size)
+                    {
+                        this->check_more_space(1);
+                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                    }
+                    _ptr[this->size()] = value;
+                    return PILO_OK;
+                }
+                ::pilo::err_t append(const value_type& value)
+                {
+                    if (_ptr == nullptr || _capacity <= _data_size)
+                    {
+                        this->check_more_space(1);
+                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                    }
+                    _ptr[this->size()] = value;
+                    return PILO_OK;
+                }
+
 
 
             private:
@@ -721,6 +816,17 @@ namespace pilo
                     return this->at(idx);
                 }
 
+                ::pilo::err_t check_more_space(::pilo::i32_t neosz)
+                {
+                    ::pilo::i32_t delta = neosz - this->space_available();
+                    if (delta > 0)
+                    {
+                        ::pilo::i32_t nsz = this->capacity() + delta;
+                        return check_space(nsz);
+                    }
+                    return PILO_OK;
+                }
+
                 ::pilo::i32_t check_space(::pilo::i32_t new_sz)
                 {
                     if (new_sz > _capacity)
@@ -785,6 +891,7 @@ namespace pilo
                         return ::pilo::make_core_error(PES_ELEM, PEP_ARR_IDX_OOB);
                     }
                     _data_size = sz;
+                    return PILO_OK;
                 }
 
                 ::pilo::err_t add_size(::pilo::i32_t sz)
@@ -811,13 +918,34 @@ namespace pilo
                     return false;
                 }
 
-                ::pilo::err_t set(::pilo::i32_t idx, value_type&& value)
+                ::pilo::err_t set_value(::pilo::i32_t idx, value_type&& value)
                 {
                     if (_ptr == nullptr || _capacity <= idx)
                     {
                         return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
                     }
                     _ptr[idx] = value;
+                    return PILO_OK;
+                }
+
+                ::pilo::err_t append(value_type&& value)
+                {
+                    if (_ptr == nullptr || _capacity <= _data_size)
+                    {
+                        this->check_more_space(1);
+                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                    }
+                    _ptr[this->size()] = value;
+                    return PILO_OK;
+                }
+                ::pilo::err_t append(const value_type& value)
+                {
+                    if (_ptr == nullptr || _capacity <= _data_size)
+                    {
+                        this->check_more_space(1);
+                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                    }
+                    _ptr[this->size()] = value;
                     return PILO_OK;
                 }
 
