@@ -312,7 +312,7 @@ namespace pilo
                         }
                     }
                     return 0;
-                }
+                } 
 
                 TA_ELEMOBJ* begin()
                 {

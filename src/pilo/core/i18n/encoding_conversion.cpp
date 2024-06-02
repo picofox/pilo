@@ -191,9 +191,9 @@ namespace pilo {
 
 #else
                 ::pilo::i32_t ret = _iconv_convert_any_to_any_fixed(
-                    PMS_OS_UNICODE_NAME, "utf-8",
+                    "utf-8",PMS_OS_UNICODE_NAME,
                     (char*)buffer.ptr(), (buffer.space_available() - (1 + extra)) * sizeof(wchar_t),
-                    (const char*)src, src_len * sizeof(wchar_t)
+                    src, src_len
                 );
                 if (ret > 0)
                 {
@@ -210,9 +210,9 @@ namespace pilo {
                 }
                 buffer.check_more_space(max_need_capa);
                 ret = _iconv_convert_any_to_any_fixed(
-                    PMS_OS_UNICODE_NAME, "utf-8",
+                    "utf-8", PMS_OS_UNICODE_NAME,
                     (char*)buffer.ptr(), (buffer.space_available() - (1 + extra)) * sizeof(wchar_t),
-                    (const char*)src, src_len * sizeof(wchar_t)
+                    src, src_len
                 );
                 if (ret > 0)
                 {
