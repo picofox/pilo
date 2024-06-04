@@ -1070,7 +1070,7 @@ namespace pilo
 
                 while (true)
                 {
-                    err = _s_read_link_posix(dbuf, sbuf.begin());
+                    err = _s_read_link_posix(&dbuf, sbuf.begin());
                     if (err != PILO_OK)
                         return err;
                     
