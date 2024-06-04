@@ -1074,8 +1074,8 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
                     
-                    struct stat stBuff;
-                    if (stat(dbuf.begin(), &stBuff) != 0)
+                    struct ::stat stBuff;
+                    if (::stat(dbuf.begin(), &stBuff) != 0)
                     {
                         node_type = path::node_type_na;
                         if (errno == ENOENT) {
@@ -1131,7 +1131,7 @@ namespace pilo
                     path_len = (::pilo::pathlen_t)tmplen;
                 }
                 ::pilo::err_t err = PILO_OK;
-                struct stat stBuff;
+                struct ::stat stBuff;
                 if (path_type_hint == path::local_fs_path)
                 {
                     if (::stat(p, &stBuff) != 0) 
