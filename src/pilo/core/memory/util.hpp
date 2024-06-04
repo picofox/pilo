@@ -209,6 +209,16 @@ namespace pilo
                     return capacity() - _data_size;
                 }
 
+                ::pilo::i32_t more_space_available(::pilo::i32_t more_space) const
+                {
+                    ::pilo::i32_t diff = capacity() - _data_size;
+                    if (diff <= more_space)
+                    {
+                        return 0;
+                    }
+                    return diff - more_space;
+                }
+
                 ::pilo::err_t set_size(::pilo::i32_t sz)
                 {
                     if (sz < 0 || sz > this->capacity())
@@ -417,6 +427,16 @@ namespace pilo
                 ::pilo::i32_t space_available() const
                 {
                     return capacity() - _data_size;
+                }
+
+                ::pilo::i32_t more_space_available(::pilo::i32_t more_space) const
+                {
+                    ::pilo::i32_t diff = capacity() - _data_size;
+                    if (diff <= more_space)
+                    {
+                        return 0;
+                    }
+                    return diff - more_space;
                 }
 
                 ::pilo::err_t set_size(::pilo::i32_t sz)
@@ -892,6 +912,16 @@ namespace pilo
                 ::pilo::i32_t space_available() const
                 {
                     return _capacity - _data_size;
+                }
+
+                ::pilo::i32_t more_space_available(::pilo::i32_t more_space) const
+                {
+                    ::pilo::i32_t diff = _capacity - _data_size;
+                    if (diff <= more_space)
+                    {
+                        return 0;
+                    }
+                    return diff - more_space;
                 }
 
                 ::pilo::err_t set_size(::pilo::i32_t sz)
