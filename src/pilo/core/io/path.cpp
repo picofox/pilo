@@ -1059,7 +1059,6 @@ namespace pilo
             {
                 char sbb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
                 ::pilo::char_buffer_t sbuf(sbb, sizeof(sbb), 0 ,false);
-                ::pilo::char_buffer_t sbuf(sbb, sizeof(sbb), 0 ,false);
                 char dbb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
                 ::pilo::char_buffer_t dbuf(dbb, sizeof(dbb), 0, false);
                 ::pilo::err_t err = PILO_OK;
