@@ -812,7 +812,7 @@ namespace pilo
                 char* strRet = nullptr;
                 if (buffer.more_space_available(extra_space+1) > 0)
                 {
-                    strRet = getcwd(buffer.begin(), buffer.more_space_available(extra_space+1))
+                    strRet = getcwd(buffer.begin(), buffer.more_space_available(extra_space + 1));
                 }
                 if (strRet == nullptr && errno != ERANGE)
                 {
