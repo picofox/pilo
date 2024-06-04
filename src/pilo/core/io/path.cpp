@@ -816,13 +816,13 @@ namespace pilo
                 }
                 if (strRet == nullptr && errno != ERANGE)
                 {
-                    return nullptr;
+                    return ::pilo::make_core_error(PES_GETCWD, PEP_RDFAIL);
                 }
                 if (strRet == nullptr)
                 {
                     strRet = getcwd(nullptr, 0);
                     if (strRet == nullptr)
-                        return nullptr;
+                        return ::pilo::make_core_error(PES_GETCWD, PEP_RDFAIL);
                 }
                 ret_size = PMF_STRING_LENGTH_A(strRet);
                 if (extra_space > 0)
@@ -831,7 +831,7 @@ namespace pilo
                     if (str_ret_2 == nullptr)
                     {
                         PMF_HEAP_FREE(strRet);
-                        return nullptr;
+                        return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
                     }
                     buffer.reset(str_ret_2, ret_size + 1 + extra_space, ret_size, true);
                 }
