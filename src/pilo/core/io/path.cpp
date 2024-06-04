@@ -1058,9 +1058,10 @@ namespace pilo
             static ::pilo::err_t _s_read_link_recursively_posix(::pilo::i8_t& node_type, ::pilo::char_buffer_t* dst, const char* src)
             {
                 char sbb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
-                ::pilo::char_buffer_t sbuf(bb, sizeof(bb), 0 ,false);
+                ::pilo::char_buffer_t sbuf(sbb, sizeof(sbb), 0 ,false);
+                ::pilo::char_buffer_t sbuf(sbb, sizeof(sbb), 0 ,false);
                 char dbb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
-                ::pilo::char_buffer_t dbuf(bb, sizeof(bb), 0, false);
+                ::pilo::char_buffer_t dbuf(dbb, sizeof(dbb), 0, false);
                 ::pilo::err_t err = PILO_OK;
 
                 ::pilo::pathlen_t src_len = (::pilo::pathlen_t) ::pilo::core::string::character_count(src);
@@ -1075,7 +1076,7 @@ namespace pilo
                         return err;
                     
                     struct stat stBuff;
-                    if (::stat(p, &stBuff) != 0)
+                    if (::stat(dbuf.begin(), &stBuff) != 0)
                     {
                         node_type = path::node_type_na;
                         if (errno == ENOENT) {
