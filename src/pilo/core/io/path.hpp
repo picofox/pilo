@@ -135,48 +135,7 @@ namespace pilo
                     src_buffer.add_size(1);
                     src_buffer.append(0);
                     return PILO_OK;
-                }
-
-
-                template<typename TA_CHAR>
-                static ::pilo::err_t split_paths(const TA_CHAR* pathstr, ::pilo::pathlen_t path_len
-                    , ::pilo::core::memory::object_array_adapter<::pilo::pathlen_t> & indices)
-                {
-                    bool end_with_sep = false;
-                    ::pilo::i8_t abs_type = path::absolute_type(pathstr, &end_with_sep, path_len);
-                    if (abs_type == path::path_type_na)
-                    {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
-                    }
-
-                    if (path_len == path::unknow_length)
-                    {
-                        path_len = (::pilo::pathlen_t)  ::pilo::core::string::character_count(pathstr);
-                    }
-
-                    ::pilo::i32_t cnt = (::pilo::i32_t) ::pilo::core::string::cstring_ch_count(pathstr, 0, path_len, PMI_PATH_SEP);
-                    cnt++;
-                    parts.check_space(cnt);
-
-                    TA_CHAR* beg_ptr = ::pilo::core::string::find_char(pathstr, (::pilo::i64_t)path_len, PMI_PATH_SEP);
-                    if (beg_ptr == nullptr)
-                    {
-                        indices.set(0, path_len);
-                        return PILO_OK;
-                    }
-
-                    if (abs_type == path::absolute)
-                    {
-#ifdef WINDOWS
-                        beg_ptr = pathstr + 7;
-#else
-                        beg_ptr = path + 1;
-#endif
-                    }
-
-
-                    return PILO_OK;
-                }
+                }               
 
                 static ::pilo::err_t validate_path(::pilo::char_buffer_t* buffer, const char* path, ::pilo::i64_t len, ::pilo::pathlen_t extra, ::pilo::i8_t & fs_type, bool & isabs, predefined_pilo_dir_enum rel_to_abs_basis);
                 static ::pilo::err_t get_cwd(::pilo::char_buffer_t& buffer,  ::pilo::i32_t endsep_mode, ::pilo::pathlen_t extra_space = 0);
