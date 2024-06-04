@@ -809,7 +809,11 @@ namespace pilo
 
 
 #           else
-                char* strRet = getcwd(buffer, cc_buffer - extra_space);
+                char* strRet = nullptr;
+                if (buffer.more_space_available() > 0)
+                {
+                    strRet = getcwd(buffer.begin(), buffer.more_space_available())
+                }
                 if (strRet == nullptr && errno != ERANGE)
                 {
                     return nullptr;
@@ -829,6 +833,11 @@ namespace pilo
                         PMF_HEAP_FREE(strRet);
                         return nullptr;
                     }
+                    buffer.reset(str_ret_2, ret_size + 1 + extra_space, ret_size, true);
+                }
+                else
+                {
+                    buffer.reset(strRet, ret_size + 1, ret_size, true);
                 }
 
 #           endif

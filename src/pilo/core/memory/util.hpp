@@ -635,6 +635,16 @@ namespace pilo
                     return diff >= 0 ? diff : 0;
                 }
 
+                ::pilo::i32_t more_space_available(::pilo::i32_t more_space) const
+                {
+                    ::pilo::i32_t diff = _capacity - _data_size;
+                    if (diff <= more_space)
+                    {
+                        return 0;
+                    }
+                    return diff - more_space;
+                }
+
                 ::pilo::err_t set_size(::pilo::i32_t sz)
                 {
                     if (sz < 0 || sz > _capacity)
