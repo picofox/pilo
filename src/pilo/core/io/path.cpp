@@ -769,9 +769,9 @@ namespace pilo
 
 
             pilo::err_t path::get_cwd(::pilo::char_buffer_t& buffer, ::pilo::i32_t endsep_mode, ::pilo::pathlen_t extra_space)
-            {                 
-#           ifdef  WINDOWS
+            { 
                 ::pilo::err_t err = PILO_OK;
+#           ifdef  WINDOWS
                 ::pilo::pathlen_t szMesured = 0;
                 ::pilo::pathlen_t szFinal = 0;
                 ::pilo::core::memory::object_array<wchar_t, MAX_PATH> tmp_wbuff;                
@@ -850,7 +850,7 @@ namespace pilo
                     err = path::string_remove_endsep_inplace(buffer);
                 }
 
-                return PILO_OK;
+                return err;
             }
 
 #           ifdef  WINDOWS
