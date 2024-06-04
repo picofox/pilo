@@ -381,7 +381,7 @@ namespace pilo
                         this->check_more_space(1);
                         return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
                     }
-                    this->begin()[this->size()] = value
+                    this->begin()[this->size()] = value;
                         return PILO_OK;
                 }
 
@@ -392,7 +392,7 @@ namespace pilo
                         this->check_more_space(1);
                         return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
                     }
-                    this->begin()[this->size()] = value
+                    this->begin()[this->size()] = value;
                         return PILO_OK;
                 }
 
