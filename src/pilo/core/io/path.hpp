@@ -590,8 +590,8 @@ namespace pilo
 
                 protected:
                     char*    _m_pathstr_ptr;
-                    ::pilo::pathlen_t       _m_capacity;
                     ::pilo::pathlen_t       _m_length;
+                    ::pilo::pathlen_t       _m_capacity;                    
                     ::pilo::pathlen_t       _m_lastpart_start_pos;
                     ::pilo::u8_t            _m_ext_name_len;
                     ::pilo::i8_t            _m_type;
