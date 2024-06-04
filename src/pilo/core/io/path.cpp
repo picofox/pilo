@@ -809,7 +809,7 @@ namespace pilo
 
 
 #           else
-                strRet = getcwd(buffer, cc_buffer - extra_space);
+                char* strRet = getcwd(buffer, cc_buffer - extra_space);
                 if (strRet == nullptr && errno != ERANGE)
                 {
                     return nullptr;
