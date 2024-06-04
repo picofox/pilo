@@ -1075,7 +1075,7 @@ namespace pilo
                         return err;
                     
                     struct stat stBuff;
-                    if (::stat(dbuf.begin(), &stBuff) != 0)
+                    if (stat(dbuf.begin(), &stBuff) != 0)
                     {
                         node_type = path::node_type_na;
                         if (errno == ENOENT) {
