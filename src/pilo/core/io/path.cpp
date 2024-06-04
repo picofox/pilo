@@ -824,7 +824,7 @@ namespace pilo
                     if (strRet == nullptr)
                         return ::pilo::make_core_error(PES_GETCWD, PEP_RDFAIL);
                 }
-                ret_size = PMF_STRING_LENGTH_A(strRet);
+                ::pilo::i32_t ret_size = (::pilo::i32_t) PMF_STRING_LENGTH_A(strRet);
                 if (extra_space > 0)
                 {
                     char* str_ret_2 = (char*)PMF_HEAP_REALLOC(strRet, ret_size + 1 + extra_space);
