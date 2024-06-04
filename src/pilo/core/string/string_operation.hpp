@@ -1935,7 +1935,7 @@ namespace pilo
                     sep_len = (::pilo::i32_t) ::pilo::core::string::character_count(sep);
                 }
                 ::pilo::i32_t csize = 0;
-                TA_RAC::const_iterator cit = rac.cbegin();
+                typename TA_RAC::const_iterator cit = rac.cbegin();
                 for (; cit != rac.cend(); cit++)
                 {
                     csize += (::pilo::i32_t) (*cit)->length;
