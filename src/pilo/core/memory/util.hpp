@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <wchar.h>
+#include <cstring>
 
 namespace pilo
 {
