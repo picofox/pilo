@@ -810,9 +810,9 @@ namespace pilo
 
 #           else
                 char* strRet = nullptr;
-                if (buffer.more_space_available(extra_space) > 0)
+                if (buffer.more_space_available(extra_space+1) > 0)
                 {
-                    strRet = getcwd(buffer.begin(), buffer.more_space_available())
+                    strRet = getcwd(buffer.begin(), buffer.more_space_available(extra_space+1))
                 }
                 if (strRet == nullptr && errno != ERANGE)
                 {
