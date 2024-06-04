@@ -151,7 +151,7 @@ namespace pilo
 
                     if (path_len == path::unknow_length)
                     {
-                        path_len = (::pilo::pathlen_t)  ::pilo::core::string::character_count(path_cstr);
+                        path_len = (::pilo::pathlen_t)  ::pilo::core::string::character_count(pathstr);
                     }
 
                     ::pilo::i32_t cnt = (::pilo::i32_t) ::pilo::core::string::cstring_ch_count(pathstr, 0, path_len, PMI_PATH_SEP);
