@@ -222,7 +222,7 @@ namespace pilo
                 ::pilo::err_t add_size(::pilo::i32_t sz)
                 {
                     ::pilo::i32_t ret = _data_size + sz;
-                    if (ret < 0 || ret > _capacity)
+                    if (ret < 0 || ret > capacity())
                     {
                         PMC_ASSERT(false);
                         return ::pilo::make_core_error(PES_ELEM, PEP_ARR_IDX_OOB);
