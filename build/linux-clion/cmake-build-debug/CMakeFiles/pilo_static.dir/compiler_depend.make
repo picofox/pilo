@@ -1142,6 +1142,7 @@ CMakeFiles/pilo_static.dir/home/fox/git_repo/pilo/src/pilo/core/io/path.cpp.o: /
   /home/fox/git_repo/pilo/src/pilo/core/memory/compactable_memory_pool.hpp \
   /home/fox/git_repo/pilo/src/pilo/core/threading/dummy_mutex.hpp \
   /home/fox/git_repo/pilo/src/pilo/core/memory/compactable_autoreset_object_pool.hpp \
+  /home/fox/git_repo/pilo/src/pilo/core/pattern/resource_cleaner.hpp \
   /home/fox/git_repo/pilo/src/pilo/core/algorithm/find.hpp \
   /home/fox/git_repo/pilo/src/pilo/core/io/formatted_io.hpp \
   /home/fox/git_repo/pilo/src/pilo/core/memory/bits_operation.hpp \
@@ -1286,6 +1287,7 @@ CMakeFiles/pilo_static.dir/home/fox/git_repo/pilo/src/pilo/core/io/path.cpp.o: /
   /usr/include/c++/11/utility \
   /usr/include/c++/11/vector \
   /usr/include/ctype.h \
+  /usr/include/dirent.h \
   /usr/include/endian.h \
   /usr/include/errno.h \
   /usr/include/fcntl.h \
@@ -1328,6 +1330,8 @@ CMakeFiles/pilo_static.dir/home/fox/git_repo/pilo/src/pilo/core/io/path.cpp.o: /
   /usr/include/x86_64-linux-gnu/bits/byteswap.h \
   /usr/include/x86_64-linux-gnu/bits/confname.h \
   /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
+  /usr/include/x86_64-linux-gnu/bits/dirent.h \
+  /usr/include/x86_64-linux-gnu/bits/dirent_ext.h \
   /usr/include/x86_64-linux-gnu/bits/endian.h \
   /usr/include/x86_64-linux-gnu/bits/endianness.h \
   /usr/include/x86_64-linux-gnu/bits/environments.h \
@@ -1477,6 +1481,8 @@ CMakeFiles/pilo_static.dir/home/fox/git_repo/pilo/src/pilo/core/io/path.cpp.o: /
 /home/fox/git_repo/pilo/src/pilo/core/stat/system_information.hpp:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/syslimits.h:
+
+/home/fox/git_repo/pilo/src/pilo/core/pattern/resource_cleaner.hpp:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h:
 
@@ -1812,6 +1818,8 @@ CMakeFiles/pilo_static.dir/home/fox/git_repo/pilo/src/pilo/core/io/path.cpp.o: /
 
 /usr/include/asm-generic/errno-base.h:
 
+/usr/include/x86_64-linux-gnu/bits/dirent_ext.h:
+
 /home/fox/git_repo/pilo/src/pilo/core/io/formatted_io.hpp:
 
 /usr/include/c++/11/atomic:
@@ -1881,6 +1889,8 @@ CMakeFiles/pilo_static.dir/home/fox/git_repo/pilo/src/pilo/core/io/path.cpp.o: /
 /usr/include/asm-generic/sockios.h:
 
 /usr/include/stdio.h:
+
+/usr/include/x86_64-linux-gnu/bits/dirent.h:
 
 /usr/include/x86_64-linux-gnu/asm/types.h:
 
@@ -1965,6 +1975,8 @@ CMakeFiles/pilo_static.dir/home/fox/git_repo/pilo/src/pilo/core/io/path.cpp.o: /
 /usr/include/c++/11/debug/assertions.h:
 
 /usr/include/c++/11/debug/debug.h:
+
+/usr/include/dirent.h:
 
 /usr/include/c++/11/exception:
 

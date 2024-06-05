@@ -246,6 +246,7 @@ CMakeFiles/pilo_static.dir/home/fox/git_repo/pilo/src/pilo/core/io/path.cpp.o: \
  /home/fox/git_repo/pilo/src/pilo/core/io/../memory/../memory/../memory/../memory/fixed_memory_piece.hpp \
  /home/fox/git_repo/pilo/src/pilo/core/io/../memory/../memory/../memory/memory_pool_allocator_interface.hpp \
  /home/fox/git_repo/pilo/src/pilo/core/io/../i18n/encoding_conversion.hpp \
+ /home/fox/git_repo/pilo/src/pilo/core/io/../pattern/resource_cleaner.hpp \
  /usr/include/c++/11/vector /usr/include/c++/11/bits/stl_vector.h \
  /usr/include/c++/11/bits/stl_bvector.h \
  /usr/include/c++/11/bits/vector.tcc \

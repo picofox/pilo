@@ -1753,7 +1753,7 @@ namespace pilo
                         }
                     }                    
                 }
-                ::FindClose(handle);
+
                 return PILO_OK;
             }
 
