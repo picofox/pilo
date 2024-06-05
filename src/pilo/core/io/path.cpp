@@ -1729,10 +1729,6 @@ namespace pilo
                         continue;
                     }
 
-
-
-
-
                 } // endof while
 
 
