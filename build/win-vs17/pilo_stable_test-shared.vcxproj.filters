@@ -13,6 +13,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\container\case_trivil_concurrent_queue_basic.cpp">
       <Filter>pilo_stable_test\core\container</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\i18n\case_utf8_unicode.cpp">
+      <Filter>pilo_stable_test\core\i18n</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\io\case_path.cpp">
       <Filter>pilo_stable_test\core\io</Filter>
     </ClCompile>
@@ -37,6 +40,9 @@
     </Filter>
     <Filter Include="pilo_stable_test\core\container">
       <UniqueIdentifier>{D2D30207-8D71-39A6-96B3-30FD18D036DC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo_stable_test\core\i18n">
+      <UniqueIdentifier>{F30F30BB-9ACA-3EC3-A7AE-DCA46EDAACCF}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo_stable_test\core\io">
       <UniqueIdentifier>{A7D9E5C6-9433-3D9B-B252-E909BAAB4997}</UniqueIdentifier>
