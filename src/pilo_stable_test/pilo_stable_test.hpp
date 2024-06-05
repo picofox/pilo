@@ -24,8 +24,12 @@ namespace pilo
 
 			namespace io
 			{
-				void tttt();
 				int case_path_creation(::pilo::core::testing::stable_test_case* p_case);
+			}
+
+			namespace i18n
+			{
+				int case_utf8_unicode(::pilo::core::testing::stable_test_case* p_case);
 			}
 		}
 	}
