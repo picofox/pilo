@@ -5,3 +5,11 @@ build/win-vs17/*
 !build/win-vs17/*.vcxproj
 !build/win-vs17/*.filters
 !build/win-vs17/libpilo.sln
+output/
+build/linux-gcc/*
+!
+build/linux-gcc/CMakeLists.txt
+output/
+build/linux-clion/*
+!
+build/linux-clion/CMakeLists.txt
