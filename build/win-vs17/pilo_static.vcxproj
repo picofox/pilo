@@ -401,6 +401,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\auto_array.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrent_queue.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrentqueue_internal_debug.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\singly_linked_selflist.hpp" />
@@ -439,6 +440,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\util.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\event_manager.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\function_dispatcher.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\resource_cleaner.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\singleton.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\context.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type.hpp" />

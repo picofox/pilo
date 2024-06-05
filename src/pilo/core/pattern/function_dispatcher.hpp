@@ -55,6 +55,11 @@ namespace pilo
                     return _handlers[index];
                 }
 
+                bool exist(::pilo::i32_t index) const
+                {
+                    return (_handlers[index] != nullptr);
+                }
+
             private:
                 std::function<T>   _handlers[TA_SIZE];
             };

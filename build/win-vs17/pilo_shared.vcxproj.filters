@@ -141,6 +141,9 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp">
       <Filter>pilo\core\algorithm</Filter>
     </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\auto_array.hpp">
+      <Filter>pilo\core\container</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrent_queue.hpp">
       <Filter>pilo\core\container</Filter>
     </ClInclude>
@@ -253,6 +256,9 @@
       <Filter>pilo\core\pattern</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\function_dispatcher.hpp">
+      <Filter>pilo\core\pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\resource_cleaner.hpp">
       <Filter>pilo\core\pattern</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\singleton.hpp">

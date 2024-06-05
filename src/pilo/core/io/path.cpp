@@ -2,6 +2,7 @@
 #include "../i18n/encoding_conversion.hpp"
 #include "../memory/util.hpp"
 #include "../string/string_operation.hpp"
+#include "../pattern/resource_cleaner.hpp"
 #include <vector>
 
 #ifdef WINDOWS
@@ -1607,6 +1608,7 @@ namespace pilo
                 ::pilo::i32_t base_len = (::pilo::i32_t)wbuffer.size() + 1;
                 ::pilo::core::string::n_concatenate_inplace(wbuffer.begin(), wbuffer.size(), L"\\*.*", 4);
                 wbuffer.set_size(base_len);
+                ::pilo::core::pattern::resource_cleaner<1> rcc;    
 
                 WIN32_FIND_DATAW  findData;
                 HANDLE  handle = FindFirstFileW(wbuffer.begin(), &findData);
@@ -1614,6 +1616,15 @@ namespace pilo
                 {
                     return ::pilo::make_core_error(PES_DIR, PEP_RDFAIL);
                 }
+                rcc.push(
+                    [](void* ptr, void* ) {
+                        HANDLE h = (HANDLE)ptr;
+                        ::FindClose(h);
+                        return PILO_OK;
+                    }
+                    , (void*) handle
+                    , nullptr
+                );
                 do
                 {
                     if (::pilo::core::string::strict_compare(findData.cFileName, 0, L".", 0, -1) == 0
@@ -1629,13 +1640,11 @@ namespace pilo
                     err = ::pilo::core::i18n::os_unicode_to_utf8(dir_buf, wbuffer.begin(), (::pilo::i32_t)sublen);
                     if (err != PILO_OK)
                     {
-                        ::FindClose(handle);
                         return err;
                     }
                     path sub_p(dir_buf.begin(), dir_buf.size());
                     if (sub_p.invalid())
                     {
-                        ::FindClose(handle);
                         return ::pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
                     }
                     if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
@@ -1643,7 +1652,6 @@ namespace pilo
                         err = _dfs_travel_path(l_idx + 1, &sub_p, handler, ctx, ignore_err, flags);
                         if (err != PILO_OK)
                         {
-                            ::FindClose(handle);
                             return err;
                         }
                     }
@@ -1683,7 +1691,6 @@ namespace pilo
                                 err = _dfs_travel_path(l_idx + 1, &sub_tmp_target, handler, ctx, ignore_err, flags);
                                 if (err != PILO_OK)
                                 {
-                                    ::FindClose(handle);
                                     return err;
                                 }
                             }
@@ -1699,7 +1706,6 @@ namespace pilo
                                 }
                                 if (err != PILO_OK)
                                 {
-                                    ::FindClose(handle);
                                     return err;
                                 }
                             }                            
@@ -1741,7 +1747,6 @@ namespace pilo
                         {
                             if (!ignore_err)
                             {
-                                ::FindClose(handle);
                                 return err;
                             }
                                 

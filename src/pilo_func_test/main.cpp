@@ -17,6 +17,8 @@
 #include "pilo/error.hpp"
 #include "pilo/tlv.hpp"
 
+#include "pilo/core/pattern/resource_cleaner.hpp"
+
 
 using namespace ::pilo::core::testing;
 
