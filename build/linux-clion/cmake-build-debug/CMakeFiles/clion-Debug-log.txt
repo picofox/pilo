@@ -1,0 +1,11 @@
+/snap/clion/277/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -S /home/fox/git_repo/pilo/build/linux-clion -B /home/fox/git_repo/pilo/build/linux-clion/cmake-build-debug
+Current OS Type Name is Linux
+Project Dir is -> </home/fox/git_repo/pilo>
+CMake Source Dir is -> </home/fox/git_repo/pilo/build/linux-clion>
+PFC_NAME is -> <linux-clion>
+PILO_PROJECT_DIR is -> </home/fox/git_repo/pilo>
+PILO_OUTPUT_DIR is -> </home/fox/git_repo/pilo/output/linux-clion/pilo>
+LIBRARY_OUTPUT_PATH is -> </home/fox/git_repo/pilo/output/linux-clion/pilo/lib>
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/fox/git_repo/pilo/build/linux-clion/cmake-build-debug

@@ -453,7 +453,7 @@ namespace pilo
 
     
     template<typename T>
-    void set_if_ptr_is_not_null(T* ptr, T && value)
+    void set_if_ptr_is_not_null(T* ptr, const T & value)
     {
         if (ptr != nullptr)
             *ptr = value;

@@ -1,0 +1,123 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "libpilo",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "pilo_func_test-shared::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pilo_func_test-shared-Debug-9108db916eff5ddb182f.json",
+					"name" : "pilo_func_test-shared",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pilo_func_test-static::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pilo_func_test-static-Debug-60220a38238e74a3ec3a.json",
+					"name" : "pilo_func_test-static",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pilo_performance_test-shared::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pilo_performance_test-shared-Debug-7eed95054da032fd944a.json",
+					"name" : "pilo_performance_test-shared",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pilo_performance_test-static::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pilo_performance_test-static-Debug-e41e203d5b4bd2e72527.json",
+					"name" : "pilo_performance_test-static",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pilo_shared::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pilo_shared-Debug-585a4edd7b08666c2194.json",
+					"name" : "pilo_shared",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pilo_stable_test-shared::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pilo_stable_test-shared-Debug-e39925494cfee7e624c9.json",
+					"name" : "pilo_stable_test-shared",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pilo_stable_test-static::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pilo_stable_test-static-Debug-70c86c7805f9248d1d74.json",
+					"name" : "pilo_stable_test-static",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pilo_static::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pilo_static-Debug-48acab8e4500e9cca57e.json",
+					"name" : "pilo_static",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/fox/git_repo/pilo/build/linux-clion/cmake-build-debug",
+		"source" : "/home/fox/git_repo/pilo/build/linux-clion"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

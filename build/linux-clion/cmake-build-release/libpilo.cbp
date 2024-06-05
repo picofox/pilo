@@ -1,0 +1,1245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="libpilo"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_static">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/lib/libpilo-static-release.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src/pilo/external/mysqlclient/8.0.19/include"/>
+					<Add directory="/home/fox/git_repo/pilo/src/pilo"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_static"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_static/fast">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/lib/libpilo-static-release.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src/pilo/external/mysqlclient/8.0.19/include"/>
+					<Add directory="/home/fox/git_repo/pilo/src/pilo"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_static/fast"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_shared">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/lib/libpilo-shared-release.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src/pilo/external/mysqlclient/8.0.19/include"/>
+					<Add directory="/home/fox/git_repo/pilo/src/pilo"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_shared"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_shared/fast">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/lib/libpilo-shared-release.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src/pilo/external/mysqlclient/8.0.19/include"/>
+					<Add directory="/home/fox/git_repo/pilo/src/pilo"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_shared/fast"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_func_test-static">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_func_test-static-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_func_test-static"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_func_test-static/fast">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_func_test-static-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_func_test-static/fast"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_func_test-shared">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_func_test-shared-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_func_test-shared"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_func_test-shared/fast">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_func_test-shared-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_func_test-shared/fast"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_stable_test-static">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_stable_test-static-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_stable_test-static"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_stable_test-static/fast">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_stable_test-static-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_stable_test-static/fast"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_stable_test-shared">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_stable_test-shared-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_stable_test-shared"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_stable_test-shared/fast">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_stable_test-shared-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_stable_test-shared/fast"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_performance_test-static">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_performance_test-static-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_performance_test-static"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_performance_test-static/fast">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_performance_test-static-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_performance_test-static/fast"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_performance_test-shared">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_performance_test-shared-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_performance_test-shared"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pilo_performance_test-shared/fast">
+				<Option output="/home/fox/git_repo/pilo/output/linux-clion/pilo/bin/pilo_performance_test-shared-release" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLINUX"/>
+					<Add directory="/home/fox/git_repo/pilo/src"/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 pilo_performance_test-shared/fast"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j2 -f &quot;/home/fox/git_repo/pilo/build/linux-clion/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/algorithm/find.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/algorithm/minmax.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/container/concurrent_queue.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/container/concurrentqueue_internal_debug.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/container/singly_linked_selflist.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/container/trivil_concurrent_queue.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/crypto/base64_codec.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/crypto/base64_codec.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/crypto/codec_interface.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/datetime/datetime.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/datetime/datetime.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/datetime/stop_watch.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/datetime/timestamp.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/i18n/encoding_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/i18n/encoding_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/io/formatted_io.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/io/formatted_io.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/io/path.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/io/path.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/abstract_byte_buffer.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/autoreset_object_pool.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/bits_operation.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/bits_operation.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/byte_allocator_recorder.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/byte_buffer_interface.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/byte_buffer_interface.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/compactable_autoreset_object_pool.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/compactable_dynamic_memory_pool.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/compactable_memory_pool.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/compactable_object_pool.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/default_portable_object_pool.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/dynamic_memory_piece.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/dynamic_memory_pool.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/fixed_byte_buffer.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/fixed_memory_piece.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/linked_byte_buffer.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/memory_allocator_interface.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/memory_pool.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/memory_pool_allocator_interface.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/o1l31c16_header.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/object_pool.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/serializable_header_interface.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/serializable_interface.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/std_memory_allocator.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/memory/util.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/pattern/event_manager.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/pattern/function_dispatcher.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/pattern/singleton.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/process/context.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/process/context.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_bool_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_bool_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_bytes_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_bytes_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_deleter.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_deleter.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_deque.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_deque.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_f32_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_f32_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_f64_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_f64_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_factory.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_factory.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_i16_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_i16_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_i32_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_i32_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_i64_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_i64_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_i8_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_i8_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_map_comparation.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_map_comparation.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_map_creation.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_map_creation.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_str_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_str_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_tlv_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_tlv_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_u16_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_u16_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_u32_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_u32_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_u64_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_u64_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_u8_conversion.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/rtti/wired_type_u8_conversion.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/stat/pool_object_stat_info.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/stat/system_information.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/stat/system_information.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/string/constants.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/string/fixed_width_line_formater.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/string/fixed_width_line_formater.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/string/string_operation.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/string/string_operation.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/case_utils.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/case_utils.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/fixsized_sample_object.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/func_test_case.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/func_test_case.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/func_test_suite.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/func_test_suite.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/inner_sample_data.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/inner_sample_data.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/large_sample_object.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/large_sample_object.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/performance_test_case.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/performance_test_case.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/performance_test_suite.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/performance_test_suite.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/sample_object.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/small_sample_object.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/stable_test_case.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/stable_test_case.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/stable_test_suite.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/testing/stable_test_suite.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/threading/auto_join_thread.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/threading/dummy_mutex.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/threading/dummy_read_write_lock.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/threading/exclusive_mutex_guard.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/threading/native_mutex.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/threading/order_awared_mutex_adaptor.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/threading/read_write_mutex.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/threading/read_write_mutex.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/threading/shared_mutex_guard.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/core/threading/spin_mutex.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/error.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/error.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/allocators.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/cursorstreamwrapper.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/document.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/encodedstream.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/encodings.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/error/en.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/error/error.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/filereadstream.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/filewritestream.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/fwd.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/biginteger.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/clzll.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/diyfp.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/dtoa.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/ieee754.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/itoa.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/meta.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/pow10.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/regex.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/stack.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/strfunc.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/strtod.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/internal/swap.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/istreamwrapper.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/memorybuffer.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/memorystream.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/msinttypes/inttypes.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/msinttypes/stdint.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/ostreamwrapper.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/pointer.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/prettywriter.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/rapidjson.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/reader.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/schema.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/stream.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/stringbuffer.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/uri.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidjson/include/rapidjson/writer.h">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidxml/rapidxml.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidxml/rapidxml_iterators.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidxml/rapidxml_print.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/external/rapidxml/rapidxml_utils.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/os_headers.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/pilo.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/pilo.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/platform.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/preprocessor.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/tlv.cpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/tlv.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo/types.hpp">
+			<Option target="pilo_static"/>
+			<Option target="pilo_shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_func_test/case_tlv_basic.cpp">
+			<Option target="pilo_func_test-static"/>
+			<Option target="pilo_func_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_func_test/core/crypto/case_base64.cpp">
+			<Option target="pilo_func_test-static"/>
+			<Option target="pilo_func_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_func_test/core/io/case_path_basic.cpp">
+			<Option target="pilo_func_test-static"/>
+			<Option target="pilo_func_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_func_test/core/memory/case_fixed_byte_buffer.cpp">
+			<Option target="pilo_func_test-static"/>
+			<Option target="pilo_func_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_func_test/core/memory/case_linked_byte_buffer.cpp">
+			<Option target="pilo_func_test-static"/>
+			<Option target="pilo_func_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_func_test/core/rtti/case_map_compare.cpp">
+			<Option target="pilo_func_test-static"/>
+			<Option target="pilo_func_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_func_test/core/rtti/case_wired_deque.cpp">
+			<Option target="pilo_func_test-static"/>
+			<Option target="pilo_func_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_func_test/core/string/case_basic.cpp">
+			<Option target="pilo_func_test-static"/>
+			<Option target="pilo_func_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_func_test/main.cpp">
+			<Option target="pilo_func_test-static"/>
+			<Option target="pilo_func_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_func_test/pilo_func_test.hpp">
+			<Option target="pilo_func_test-static"/>
+			<Option target="pilo_func_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_performance_test/core/container/case_concurrent_queue_pivot.cpp">
+			<Option target="pilo_performance_test-static"/>
+			<Option target="pilo_performance_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_performance_test/core/memory/case_linked_byte_buffer_pivot.cpp">
+			<Option target="pilo_performance_test-static"/>
+			<Option target="pilo_performance_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_performance_test/main.cpp">
+			<Option target="pilo_performance_test-static"/>
+			<Option target="pilo_performance_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_performance_test/pilo_performance_test.hpp">
+			<Option target="pilo_performance_test-static"/>
+			<Option target="pilo_performance_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_stable_test/case_tlv_alloc_clone_compare.cpp">
+			<Option target="pilo_stable_test-static"/>
+			<Option target="pilo_stable_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_stable_test/case_tlv_serialization.cpp">
+			<Option target="pilo_stable_test-static"/>
+			<Option target="pilo_stable_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_stable_test/core/container/case_concurrent_queue_basic.cpp">
+			<Option target="pilo_stable_test-static"/>
+			<Option target="pilo_stable_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_stable_test/core/container/case_trivil_concurrent_queue_basic.cpp">
+			<Option target="pilo_stable_test-static"/>
+			<Option target="pilo_stable_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_stable_test/core/io/case_path.cpp">
+			<Option target="pilo_stable_test-static"/>
+			<Option target="pilo_stable_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_stable_test/main.cpp">
+			<Option target="pilo_stable_test-static"/>
+			<Option target="pilo_stable_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/src/pilo_stable_test/pilo_stable_test.hpp">
+			<Option target="pilo_stable_test-static"/>
+			<Option target="pilo_stable_test-shared"/>
+		</Unit>
+		<Unit filename="/home/fox/git_repo/pilo/build/linux-clion/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

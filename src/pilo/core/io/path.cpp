@@ -13,7 +13,8 @@
 
 #else 
 #define PMI_PATH_PREF_ABS_LEN (0)
-
+#include <sys/stat.h>
+#include <dirent.h>
 #endif
 
 namespace pilo
@@ -1074,8 +1075,8 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
                     
-                    struct ::stat stBuff;
-                    if (::stat(dbuf.begin(), &stBuff) != 0)
+                    struct stat stBuff = {0};
+                    if (stat(dbuf.begin(), &stBuff) != 0)
                     {
                         node_type = path::node_type_na;
                         if (errno == ENOENT) {
@@ -1131,10 +1132,10 @@ namespace pilo
                     path_len = (::pilo::pathlen_t)tmplen;
                 }
                 ::pilo::err_t err = PILO_OK;
-                struct ::stat stBuff;
+                struct stat stBuff = {0};
                 if (path_type_hint == path::local_fs_path)
                 {
-                    if (::stat(p, &stBuff) != 0) 
+                    if (::stat(p, &stBuff) != 0)
                     {
                         node_type = path::node_type_na;
                         if (errno == ENOENT) {                            
@@ -1151,7 +1152,7 @@ namespace pilo
                         if (buffer != nullptr)
                         {
                             ::pilo::i8_t tgt_node_type = path::node_type_na;
-                            err = _s_read_link_recursively_posix(tgt_node_type, *buf, p);
+                            err = _s_read_link_recursively_posix(tgt_node_type, buffer, p);
                             if (err != PILO_OK)
                                 return err;
                             ::pilo::set_if_ptr_is_not_null<::pilo::i8_t>(target_node_type, tgt_node_type);
@@ -1202,11 +1203,11 @@ namespace pilo
                 }
 #else
                 std::string d(dirpath, (size_t)path_len);
-                int result = mkdir(dirpath.c_str(), 0755);
+                int result = mkdir(dirpath, 0755);
                 if (result != 0)
                 {
                     ::pilo::i8_t node_type = path::node_type_na;
-                    err = path::get_path_node_type(dirpath, path_len, path::local_fs_path, node_type, nullptr, nullptr);
+                    ::pilo::err_t err = path::get_path_node_type(dirpath, path_len, path::local_fs_path, node_type, nullptr, nullptr);
                     if (err != PILO_OK)
                         return err;
                     if (node_type == path::fs_node_type_dir)
@@ -1435,7 +1436,7 @@ namespace pilo
                     return ::pilo::make_core_error(PES_DIR, PEP_DEL_FAILED);
                 }
 #else
-                const char* p = pth;
+                const char* p = dirpath;
                 ::pilo::core::memory::object_array<char, PMI_STCPARAM_PATH_DEFAULT_LENGTH> src;
                 if (path_len != path::unknow_length)
                 {
@@ -1709,7 +1710,7 @@ namespace pilo
 
 #else
                 DIR* pDir = nullptr;
-                struct dirent* dir_result_ptr = NULL;
+                struct dirent* dir_result_ptr = nullptr;
                 if ((pDir = ::opendir(p->fullpath())) == nullptr)
                 {
                     return ::pilo::make_core_error(PES_DIR, PEP_OPEN_FAILED);
