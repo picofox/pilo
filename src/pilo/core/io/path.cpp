@@ -403,6 +403,7 @@ namespace pilo
             ::pilo::err_t path::append(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir_enum rel_to_abs_basis)
             {
                 if (p == nullptr) return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+
                 if (len == path::unknow_length)
                     len = ::pilo::core::string::character_count(p);
                 if (len < 1)
@@ -455,7 +456,7 @@ namespace pilo
 #else
                         if (buffer.size() == 0)
                         {
-                            this->_m_lastpart_start_pos = 0;
+                            this->_m_lastpart_start_pos = -1;
                         }
 #endif //  WINDOWS
                     }
