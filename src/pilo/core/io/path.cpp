@@ -458,10 +458,21 @@ namespace pilo
                 if (path_str == nullptr) return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL); 
 
                 ::pilo::i64_t test_len = ::pilo::core::string::character_count(path_str);
+#ifdef WINDOWS
                 if (test_len < 1 || path_str_len < 1)
                 {
                     return ::pilo::make_core_error(PES_PATH_STR, PEP_IS_EMPTY);
                 }
+#else
+                if (test_len < 1 || path_str_len < 1 || *path_str == 0)
+                {
+                    buffer->check_space(extra+1);
+                    buffer->set_value(0, 0);
+                    buffer->set_size(0);
+                    return PILO_OK;
+                }
+
+#endif
                 
                 if (path_str_len == path::unknow_length)
                 {
@@ -471,6 +482,17 @@ namespace pilo
                 {
                     return ::pilo::make_core_error(PES_PATH_STR, PEP_TOO_LARGE);
                 }
+
+#ifdef WINDOWS
+#else
+                if (path_str_len == 1 || path_str[0] == '/')
+                {
+                    buffer->check_more_space(extra+1);
+                    buffer->set_value(0, 0);
+                    return PILO_OK;
+                }
+
+#endif
 
                 ::pilo::core::memory::object_array<char, 64> tmp_path;
                 ::pilo::i8_t abs_type = path::absolute_type(path_str, nullptr, (::pilo::pathlen_t) path_str_len);

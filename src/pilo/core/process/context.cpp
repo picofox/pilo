@@ -115,7 +115,7 @@ namespace pilo
 
 
                 std::string si = startup_info();                
-                printf(si.c_str());
+                printf("%s\n",si.c_str());
 
                 return PILO_OK;
             }
