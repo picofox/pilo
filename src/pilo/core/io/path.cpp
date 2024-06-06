@@ -89,41 +89,12 @@ namespace pilo
                 if (err != PILO_OK)
                 {
                     return err;
-                }
-
-                const char* filename_sep = ::pilo::core::string::rfind_char(buffer.begin(), buffer.size(), PMI_PATH_SEP);
-                if (filename_sep == nullptr)
-                {
-                    this->_m_lastpart_start_pos = 0;
-                }
-                else
-                {
-                    this->_m_lastpart_start_pos = (::pilo::pathlen_t)(filename_sep - buffer.begin() + 1);
-
-                    if (isabs)
-                    {
-#ifdef  WINDOWS
-                        if (buffer.size() == 6)
-                        {
-                            this->_m_lastpart_start_pos = 0;
-                        }
-#else
-                        if (buffer.size() == 0)
-                        {
-                            this->_m_lastpart_start_pos = 0;
-                        }
-#endif //  WINDOWS
-                    }
-
-                }
+                }                
 
                 ::pilo::i32_t tmp_capa = buffer.size() + 1 + extra;
                 if (this->_m_pathstr_ptr != nullptr && this->_m_capacity < tmp_capa)
                 {
-                    PMF_HEAP_FREE(this->_m_pathstr_ptr);
-                    this->_m_pathstr_ptr = nullptr;
-                    this->_m_pathstr_ptr = 0;
-                    this->_m_length = 0;
+                    this->reset();
                 }
 
                 if (this->_m_pathstr_ptr == nullptr)
@@ -145,7 +116,6 @@ namespace pilo
                             return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
                         ::pilo::core::string::n_copyz(this->_m_pathstr_ptr, this->_m_capacity, buffer.begin(), buffer.size());
                         this->_m_capacity = (::pilo::pathlen_t) tmp_capa;
-
                     }
                 }
                 else //pathstr_ptr is notnull
@@ -157,10 +127,37 @@ namespace pilo
                     ::pilo::core::string::n_copyz(this->_m_pathstr_ptr, this->_m_capacity, buffer.begin(), buffer.size());
                     this->_m_capacity = (::pilo::pathlen_t)tmp_capa;
                 }
-                
 
+                this->_m_ext_name_len = path::invalid_ext_length;
+                this->_m_lastpart_start_pos = 0;
                 this->_m_length = (::pilo::pathlen_t)buffer.size();
                 this->_m_type = fs_type;
+
+                const char* filename_sep = ::pilo::core::string::rfind_char(this->_m_pathstr_ptr, this->_m_length, PMI_PATH_SEP);
+                if (filename_sep == nullptr)
+                {
+                    this->_m_lastpart_start_pos = 0;
+                }
+                else
+                {
+                    this->_m_lastpart_start_pos = (::pilo::pathlen_t)(filename_sep - _m_pathstr_ptr + 1);
+
+                    if (isabs)
+                    {
+#ifdef  WINDOWS
+                        if (this->_m_length == 6)
+                        {
+                            this->_m_lastpart_start_pos = 0;
+                        }
+#else
+                        if (this->_m_length == 0)
+                        {
+                            this->_m_lastpart_start_pos = -1;
+                        }
+#endif //  WINDOWS
+                    }
+
+                }
                 
                 for (::pilo::pathlen_t i = this->_m_length - 1; i > 0; i--)
                 {
@@ -1739,7 +1736,6 @@ namespace pilo
                             }
                             if (err != PILO_OK)
                             {
-                                ::FindClose(handle);
                                 return err;
                             }
                         }
@@ -1814,7 +1810,6 @@ namespace pilo
                         }
                     }                    
                 }
-                ::FindClose(handle);
                 return PILO_OK;
             }
 

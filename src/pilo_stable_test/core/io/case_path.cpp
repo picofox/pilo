@@ -228,7 +228,7 @@ namespace pilo
 						{
 							return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_ABORTED), "abort on loop %lld", i);
 						}
-
+						p_case->inc_print_progress();
 					}
 
 					p_case->set_result(PILO_OK);

@@ -734,7 +734,7 @@ namespace pilo
                 }
                 else
                 {
-                    return ::strncmp(str0 + +begin_pos_0, str1 + +begin_pos_1, length);
+                    return ::strncmp(str0 + begin_pos_0, str1 + begin_pos_1, length);
                 }
             }
 
