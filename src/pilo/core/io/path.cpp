@@ -521,7 +521,8 @@ namespace pilo
 
 #ifdef WINDOWS
 #else
-                if (path_str_len == 1 || path_str[0] == '/')
+
+                if ( (path_str_len == 1) && (path_str[0] == '/'))
                 {
                     buffer->check_more_space(extra+1);
                     buffer->set_value(0, 0);
