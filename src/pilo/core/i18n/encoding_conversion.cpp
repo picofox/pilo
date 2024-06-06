@@ -144,6 +144,7 @@ namespace pilo {
                 }
                 else if (*src == 0 || src_len == 0)
                 {
+                    buffer.check_more_space((1 + extra) * 4);
                     return PILO_OK;
                 }
 

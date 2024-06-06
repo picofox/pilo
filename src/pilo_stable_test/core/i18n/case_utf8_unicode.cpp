@@ -52,17 +52,17 @@ namespace pilo
 						::pilo::i32_t clen = (::pilo::i32_t) ::pilo::core::string::character_count(s_test_cmp_strs[i]);
 						if (clen != wbuf.size())
 						{
-							return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "conv %d-[%s] utf-u16 inv-size", i, s_test_strs[i], clen , wbuf.size());
+							return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "conv %d-[%s] utf-u16 inv-size %d %d", i, s_test_strs[i], clen , wbuf.size());
 						}
 
 						if (0 != ::pilo::core::string::strict_compare(s_test_cmp_strs[i], 0, wbuf.begin(), 0, -1))
 						{
-							return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "conv %d-[%s] content", i);
+							return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "conv %d-[%s] content", i, s_test_strs[i]);
 						}
 						
 						if (wbuf.space_available() < 32+1)
 						{
-							return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "conv %d-[%s] extra", i);
+							return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "conv %d-[%s] extra", i, s_test_strs[i]);
 						}
 
 						wbuf.clear();

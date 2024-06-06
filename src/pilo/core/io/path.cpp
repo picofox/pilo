@@ -81,12 +81,11 @@ namespace pilo
             {
                 if (p == nullptr) return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
                 bool isabs = false;
-                this->clear();
-                ::pilo::char_buffer_t buffer(this->_m_pathstr_ptr, this->_m_capacity, 0,  true);
-
+                char sb[1] = { 0 };
+                ::pilo::char_buffer_t buffer(sb, sizeof(sb), 0, false);
                 ::pilo::i8_t fs_type = ::pilo::core::io::path::path_type_na;                
                 ::pilo::err_t err = validate_path(&buffer, p, len, extra, fs_type, isabs, rel_to_abs_basis);
-                buffer.set_adopt(false);
+
                 if (err != PILO_OK)
                 {
                     return err;
@@ -118,8 +117,48 @@ namespace pilo
 
                 }
 
-                this->_m_pathstr_ptr = buffer.begin();
-                this->_m_capacity = (::pilo::pathlen_t)buffer.capacity();
+                ::pilo::i32_t tmp_capa = buffer.size() + 1 + extra;
+                if (this->_m_pathstr_ptr != nullptr && this->_m_capacity < tmp_capa)
+                {
+                    PMF_HEAP_FREE(this->_m_pathstr_ptr);
+                    this->_m_pathstr_ptr = nullptr;
+                    this->_m_pathstr_ptr = 0;
+                    this->_m_length = 0;
+                }
+
+                if (this->_m_pathstr_ptr == nullptr)
+                {
+                    if (buffer.is_dynamic())
+                    {
+                        this->_m_pathstr_ptr = buffer.begin();
+                        this->_m_capacity = (::pilo::pathlen_t)buffer.capacity();
+                        buffer.set_adopt(false);
+                    }
+                    else
+                    {
+                        if (tmp_capa < 0 || tmp_capa > path::length_max)
+                        {
+                            return ::pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
+                        }
+                        this->_m_pathstr_ptr = (char*)PMF_HEAP_MALLOC(tmp_capa);
+                        if (this->_m_pathstr_ptr == nullptr)
+                            return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                        ::pilo::core::string::n_copyz(this->_m_pathstr_ptr, this->_m_capacity, buffer.begin(), buffer.size());
+                        this->_m_capacity = (::pilo::pathlen_t) tmp_capa;
+
+                    }
+                }
+                else //pathstr_ptr is notnull
+                {
+                    if (tmp_capa < 0 || tmp_capa > path::length_max)
+                    {
+                        return ::pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
+                    }
+                    ::pilo::core::string::n_copyz(this->_m_pathstr_ptr, this->_m_capacity, buffer.begin(), buffer.size());
+                    this->_m_capacity = (::pilo::pathlen_t)tmp_capa;
+                }
+                
+
                 this->_m_length = (::pilo::pathlen_t)buffer.size();
                 this->_m_type = fs_type;
                 
@@ -1639,7 +1678,7 @@ namespace pilo
                     return ::pilo::make_core_error(PES_DIR, PEP_RDFAIL);
                 }
                 rcc.push(
-                    [](void* ptr, void* ctx) {
+                    [](void* ptr, void* ) {
                         HANDLE h = (HANDLE)ptr;
                         ::FindClose(h);
                         return PILO_OK;
