@@ -1617,7 +1617,7 @@ namespace pilo
                     return ::pilo::make_core_error(PES_DIR, PEP_RDFAIL);
                 }
                 rcc.push(
-                    [](void* ptr, void* ) {
+                    [](void* ptr, void* ctx) {
                         HANDLE h = (HANDLE)ptr;
                         ::FindClose(h);
                         return PILO_OK;
@@ -1729,6 +1729,10 @@ namespace pilo
                         continue;
                     }
 
+
+
+
+
                 } // endof while
 
 
@@ -1749,7 +1753,7 @@ namespace pilo
                         }
                     }                    
                 }
-
+                ::FindClose(handle);
                 return PILO_OK;
             }
 
