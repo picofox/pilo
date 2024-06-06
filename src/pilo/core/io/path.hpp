@@ -178,7 +178,15 @@ namespace pilo
                         return path::path_type_na;
                     }
 
-                    if (path_cstr[length - 1] == PMI_PATH_SEP)
+#ifdef WINDOWS
+#else
+                    if (length < 1)
+                    {
+                        return  path::absolute;
+                    }
+#endif
+
+                    if (path_cstr[0] == PMI_PATH_SEP)
                     {
                         ::pilo::set_if_ptr_is_not_null(end_with_sep, true);
                     }

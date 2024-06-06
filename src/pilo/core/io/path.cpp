@@ -823,6 +823,14 @@ namespace pilo
                 
                 
 #else
+                fs_type = ::pilo::core::io::path::local_fs_path;
+                if (isabs)
+                {
+                    if (tmp_path.size() < 2)
+                    {
+                        return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
+                    }
+                }
 
 #endif
 
