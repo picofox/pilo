@@ -714,8 +714,7 @@ namespace pilo {
             }
 #else
 
-            ::pilo::err_t
-            path::validate_path(::pilo::char_buffer_t *buffer, const char *path_str, ::pilo::i64_t path_str_len,
+            ::pilo::err_t path::validate_path(::pilo::char_buffer_t *buffer, const char *path_str, ::pilo::i64_t path_str_len,
                                 ::pilo::pathlen_t extra, ::pilo::i8_t &fs_type, bool &isabs,
                                 predefined_pilo_dir_enum rel_to_abs_basis) {
                 if (buffer == nullptr)
