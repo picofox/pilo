@@ -1,5 +1,5 @@
-﻿#ifndef __pilo_io_path_hpp_
-#define __pilo_io_path_hpp_
+﻿#ifndef _pilo_io_path_hpp_
+#define _pilo_io_path_hpp_
 
 #include <string>
 #include "../../pilo.hpp"

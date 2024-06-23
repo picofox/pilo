@@ -31,7 +31,6 @@ void load_cases(func_test_suite* suite);
 //    return ((unsigned long long)hi << 32) | lo;
 //}
 
-
 int main(int argc, char * argv[])
 {
 	PMC_UNUSED(argc);
@@ -48,8 +47,8 @@ int main(int argc, char * argv[])
 	std::string mrep;
 	std::cout << ::pilo::core::memory::linked_byte_buffer< 4096, 1024, true>::buffer_node::to_string() << std::endl;
 	std::cout << ::pilo::core::testing::inner_sample_data::to_string() << std::endl;
-	getchar();
 
+	getchar();
 	return 0;
 }
 
