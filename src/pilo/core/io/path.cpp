@@ -1260,12 +1260,20 @@ namespace pilo {
                     }
                     else
                     {
-                        PMC_ASSERT(false);
+                        return pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
                     }
                 }
 #else
-                std::string d(dirpath, (size_t) path_len);
-                int result = mkdir(dirpath, 0755);
+                int result = 0;
+                if (path_len == ::pilo::core::io::path::unknow_length)
+                {
+                    result = mkdir(dirpath, 0755);
+                }
+                else
+                {
+                    std::string d(dirpath, (size_t) path_len);
+                    result = mkdir(d.c_str(), 0755);
+                }
                 if (result != 0) {
                     ::pilo::i8_t node_type = path::node_type_na;
                     ::pilo::err_t err = path::get_path_node_type(dirpath, path_len, path::local_fs_path, node_type,
@@ -1275,11 +1283,10 @@ namespace pilo {
                     if (node_type == path::fs_node_type_dir) {
                         return PILO_OK;
                     } else {
-
+                        return pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
                     }
                 }
 #endif
-
                 return PILO_OK;
             }
 
@@ -1335,13 +1342,48 @@ namespace pilo {
                 }
                 CloseHandle(fh);
 #else
-
+                int fd = 0;
+                if (path_len == ::pilo::core::io::path::unknow_length)
+                {
+                    fd = open(filepath, O_CREAT | O_EXCL |O_RDWR, 0644);
+                }
+                else
+                {
+                    std::string d(filepath, (size_t) path_len);
+                    fd = open(d.c_str(), O_CREAT | O_EXCL| O_RDWR, 0644);
+                }
+                if (fd != -1) {
+                    close(fd);
+                } else {
+                    if (! delete_exist) {
+                        if (errno == EEXIST) {
+                            return ::pilo::make_core_error(PES_FILE, PEP_EXIST);
+                        } else {
+                            return ::pilo::make_core_error(PES_FILE, PEP_CREATE_FAILED);
+                        }
+                    } else {
+                        ::pilo::err_t  err = remove_fs_node(path::node_type_na, filepath, path_len, true);
+                        if (err != PILO_OK)
+                            return err;
+                        if (path_len == ::pilo::core::io::path::unknow_length)
+                        {
+                            fd = open(filepath, O_CREAT | O_EXCL |O_RDWR, 0644);
+                        }
+                        else
+                        {
+                            std::string d(filepath, (size_t) path_len);
+                            fd = open(d.c_str(), O_CREAT | O_EXCL| O_RDWR, 0644);
+                        }
+                        if (fd != -1) {
+                            close(fd);
+                        } else {
+                            return ::pilo::make_core_error(PES_FILE, PEP_CREATE_FAILED);
+                        }
+                    }
+                }
 
 #endif
-
-
                 return PILO_OK;
-
             }
 
             ::pilo::err_t path::remove_fs_node(::pilo::i8_t fs_node_type, const char *pth, ::pilo::pathlen_t path_len,
