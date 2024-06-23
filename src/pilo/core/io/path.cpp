@@ -710,8 +710,11 @@ namespace pilo {
                     buffer->check_space(tmp_path.size() + 1);
                     ::pilo::core::string::n_copyz(buffer->begin(), buffer->capacity(), tmp_path.begin(), tmp_path.size());
                     buffer->set_size(tmp_path.size());
-                }           
-            }
+                }          
+
+                return PILO_OK;
+            } //end of func
+
 #else
 
             ::pilo::err_t path::validate_path(::pilo::char_buffer_t *buffer, const char *path_str, ::pilo::i64_t path_str_len,

@@ -23,7 +23,7 @@ namespace pilo
         namespace io
         {   
             class path
-                : public ::pilo::core::memory::portable_compactable_autoreset_object_pool<path, PMI_STC_PARAM_PATH_STEP_SIZE, ::pilo::core::threading::native_mutex>
+                : public ::pilo::core::memory::portable_compactable_autoreset_object_pool<::pilo::core::io::path, PMI_STC_PARAM_PATH_STEP_SIZE, ::pilo::core::threading::native_mutex>
             {
             public:       
                 typedef ::pilo::err_t(*iter_path_part_func_t)(const path* p, ::pilo::pathlen_t len, ::pilo::i32_t idx, bool is_last, void* ctx);
