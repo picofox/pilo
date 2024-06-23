@@ -1312,35 +1312,34 @@ namespace pilo {
                     CREATE_NEW, 
                     FILE_ATTRIBUTE_NORMAL,
                     NULL);
-                if (fh == INVALID_HANDLE_VALUE)
-                {
-                    if (! delete_exist)
-                    {
-                        return ::pilo::make_core_error(PES_FILE, PEP_CREATE_FAILED);
-                    }
-                    DWORD e = ::GetLastError();
-                    if (ERROR_FILE_EXISTS != e)
-                    {
-                        return ::pilo::make_core_error(PES_FILE, PEP_CREATE_FAILED);
-                    }
+                if (fh != INVALID_HANDLE_VALUE) {
+                    CloseHandle(fh);
 
-                    err = remove_fs_node(path::node_type_na, filepath, path_len, true);
-                    if (err != PILO_OK)
-                        return err;
-
-                    fh = CreateFileW(buffer.begin(),
-                        GENERIC_WRITE,
-                        FILE_SHARE_WRITE,
-                        NULL,
-                        CREATE_NEW,
-                        FILE_ATTRIBUTE_NORMAL,
-                        NULL);
-                    if (fh == INVALID_HANDLE_VALUE)
-                    {
-                        return ::pilo::make_core_error(PES_FILE, PEP_CREATE_FAILED);
+                } else {
+                    if (!delete_exist) {
+                        if (errno == EEXIST) {
+                            return ::pilo::make_core_error(PES_FILE, PEP_EXIST);
+                        } else {
+                            return ::pilo::make_core_error(PES_FILE, PEP_CREATE_FAILED);
+                        }
+                    } else {
+                        err = remove_fs_node(path::node_type_na, filepath, path_len, true);
+                        if (err != PILO_OK)
+                            return err;
+                        fh = CreateFileW(buffer.begin(),
+                            GENERIC_WRITE,
+                            FILE_SHARE_WRITE,
+                            NULL,
+                            CREATE_NEW,
+                            FILE_ATTRIBUTE_NORMAL,
+                            NULL);
+                        if (fh != INVALID_HANDLE_VALUE) {
+                            CloseHandle(fh);
+                        } else {
+                            return ::pilo::make_core_error(PES_FILE, PEP_CREATE_FAILED);
+                        }
                     }
                 }
-                CloseHandle(fh);
 #else
                 int fd = 0;
                 if (path_len == ::pilo::core::io::path::unknow_length)
