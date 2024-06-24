@@ -1385,9 +1385,8 @@ namespace pilo {
                 return PILO_OK;
             }
 
-            ::pilo::err_t path::remove_fs_node(::pilo::i8_t fs_node_type, const char *pth, ::pilo::pathlen_t path_len,
-                                               bool is_force) {
-                PMC_UNUSED(is_force);
+            ::pilo::err_t path::remove_fs_node(::pilo::i8_t fs_node_type, const char *pth, ::pilo::pathlen_t path_len) 
+            {
                 ::pilo::err_t err = PILO_OK;
                 if (fs_node_type == path::path_type_na) {
                     err = path::get_path_node_type(pth, path_len, path::local_fs_path, fs_node_type, nullptr, nullptr);
@@ -1410,27 +1409,27 @@ namespace pilo {
                 }
             }
 
-            ::pilo::err_t path::remove_fs_node(::pilo::i8_t fs_node_type, const path *p, bool is_force) {
-                return remove_fs_node(fs_node_type, p->fullpath(), p->length(), is_force);
+            ::pilo::err_t path::remove_fs_node(::pilo::i8_t fs_node_type, const path *p) {
+                return remove_fs_node(fs_node_type, p->fullpath(), p->length());
             }
 
             ::pilo::err_t
-            path::remove_fs_node(::pilo::i8_t fs_node_type, const char *path_str, ::pilo::pathlen_t path_len,
-                                 bool is_force, bool follow_link) {
+            path::remove_fs_node(::pilo::i8_t fs_node_type, const char *path_str, ::pilo::pathlen_t path_len,bool follow_link) 
+            {
                 if (follow_link)
-                    return remove_fs_node_follow_link(fs_node_type, path_str, path_len, is_force);
+                    return remove_fs_node_follow_link(fs_node_type, path_str, path_len);
                 else
-                    return remove_fs_node(fs_node_type, path_str, path_len, is_force);
+                    return remove_fs_node(fs_node_type, path_str, path_len);
             }
 
             ::pilo::err_t
-            path::remove_fs_node(::pilo::i8_t fs_node_type, const path *p, bool is_force, bool follow_link) {
-                return remove_fs_node(fs_node_type, p->fullpath(), p->length(), is_force, follow_link);
+            path::remove_fs_node(::pilo::i8_t fs_node_type, const path *p,  bool follow_link) {
+                return remove_fs_node(fs_node_type, p->fullpath(), p->length(), follow_link);
             }
 
             ::pilo::err_t
-            path::remove_fs_node_follow_link(::pilo::i8_t fs_node_type, const char *pth, ::pilo::pathlen_t path_len,
-                                             bool is_force) {
+            path::remove_fs_node_follow_link(::pilo::i8_t fs_node_type, const char *pth, ::pilo::pathlen_t path_len) 
+            {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::i8_t target_node_type = path::node_type_na;
                 char target_path_buffer[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = {0};
@@ -1452,7 +1451,7 @@ namespace pilo {
                     return path::remove_file(pth, path_len);
                 } else if (fs_node_type == path::fs_node_type_lnk) {//could be very danger, inf loop
                     return remove_fs_node_follow_link(path::fs_node_type_lnk, target_path.begin(),
-                                                      (::pilo::pathlen_t) target_path.size(), is_force);
+                                                      (::pilo::pathlen_t) target_path.size());
                 } else {
                     return ::pilo::make_core_error(PES_FILE, PEP_TYPE_MISMATCH);
                 }

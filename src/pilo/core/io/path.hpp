@@ -144,12 +144,12 @@ namespace pilo
                 static ::pilo::err_t touch_file(const char* dirpath, ::pilo::pathlen_t path_len, bool delete_exist);
                 static const path* parse_path(const path* src, path* tmp, ::pilo::i8_t& target_type);
 
-                static ::pilo::err_t remove_fs_node(::pilo::i8_t fs_node_type, const char* dirpath, ::pilo::pathlen_t path_len, bool is_force);
-                static ::pilo::err_t remove_fs_node(::pilo::i8_t fs_node_type, const path* p,  bool is_force);
-                static ::pilo::err_t remove_fs_node(::pilo::i8_t fs_node_type, const char* dirpath, ::pilo::pathlen_t path_len, bool is_force, bool follow_link);
-                static ::pilo::err_t remove_fs_node(::pilo::i8_t fs_node_type, const path* p,  bool is_force, bool follow_link);
+                static ::pilo::err_t remove_fs_node(::pilo::i8_t fs_node_type, const char* dirpath, ::pilo::pathlen_t path_len);
+                static ::pilo::err_t remove_fs_node(::pilo::i8_t fs_node_type, const path* p);
+                static ::pilo::err_t remove_fs_node(::pilo::i8_t fs_node_type, const char* dirpath, ::pilo::pathlen_t path_len, bool follow_link);
+                static ::pilo::err_t remove_fs_node(::pilo::i8_t fs_node_type, const path* p, bool follow_link);
 
-                static ::pilo::err_t remove_fs_node_follow_link(::pilo::i8_t fs_node_type,  const char* dirpath, ::pilo::pathlen_t path_len, bool is_force);
+                static ::pilo::err_t remove_fs_node_follow_link(::pilo::i8_t fs_node_type,  const char* dirpath, ::pilo::pathlen_t path_len);
                 static ::pilo::err_t remove_dir_recursively(const char* dirpath, ::pilo::pathlen_t path_len, bool content_only, bool follow_link);
                 static ::pilo::err_t remove_dir(const char* dirpath, ::pilo::pathlen_t path_len);
                 static ::pilo::err_t remove_file(const char* dirpath, ::pilo::pathlen_t path_len);
