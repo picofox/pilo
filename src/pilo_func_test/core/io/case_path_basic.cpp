@@ -350,7 +350,6 @@ namespace pilo
 
 
 #else
-
 					err = p0.set("f:");
 					if (err != PILO_OK)
 					{

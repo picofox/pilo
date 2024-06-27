@@ -10,7 +10,6 @@ namespace pilo
     {
         namespace process
         {
-
             static void s_on_exit(void)
             {
                 printf("pilo on exit, finanlizing.....\n");
@@ -31,6 +30,7 @@ namespace pilo
 
             std::string context::startup_info() const
             {
+                char buffer[48] = {0};
                 std::stringstream ss;
                 ::pilo::core::string::fixed_width_line_formater formater;
 
@@ -38,6 +38,11 @@ namespace pilo
                 formater.add_meta_field(56, PMI_FIXED_WIDTH_LINE_FMT_LEFT_ALIGH, "Info");
 
                 formater.format_header(ss);
+                formater.format_field(ss, (::pilo::i64_t) 0, (const char*) "PILO Version:");
+                ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "%u.%u.%u.%s"
+                                                         , major_version(), minor_version(), revision(), stage_cstr());
+                formater.format_field(ss, 1, (const char *)buffer);
+                ss << std::endl;
 
                 formater.format_field(ss, (::pilo::i64_t) 0, (const char*) "Executable");
                 formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_dir_enum::exe).fullpath());

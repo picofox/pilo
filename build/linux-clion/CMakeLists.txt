@@ -73,8 +73,8 @@ add_custom_command(TARGET pilo_static POST_BUILD
         COMMAND cp -R ${PILO_LIBSRC_DIR}/* ${PILO_OUTPUT_DIR}/include/pilo
         COMMAND find ${PILO_OUTPUT_DIR}/include/pilo -type f -name "*.cpp" -delete
 )
-add_custom_command(TARGET pilo_shared PRE_BUILD
-        COMMAND rm -f ${PILO_OUTPUT_DIR}/lib/libpilo-shared-debug.a
+add_custom_command(TARGET pilo_static PRE_BUILD
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/lib/libpilo-shared-release.a
         COMMAND rm -f ${PILO_OUTPUT_DIR}/lib/libpilo-shared-release.a
 )
 add_custom_command(TARGET pilo_shared POST_BUILD

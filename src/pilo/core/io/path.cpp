@@ -720,7 +720,6 @@ namespace pilo {
                                 ::pilo::pathlen_t extra, ::pilo::i8_t &fs_type, bool &isabs,
                                 predefined_pilo_dir_enum rel_to_abs_basis)
            {
-                printf("version 12");
                 if (buffer == nullptr)
                     return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
                 fs_type = ::pilo::core::io::path::path_type_na;

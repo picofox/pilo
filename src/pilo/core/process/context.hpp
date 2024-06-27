@@ -26,11 +26,35 @@ namespace pilo
                 };                
 
             public:
+                const static ::pilo::u32_t s_pilo_version = PMF_MAKE_U32_BY_BYTES_BE(1,0,4,0);
                 context();
                 ~context();
                 ::pilo::core::stat::pool_object_stat_manager& pool_object_stat_mgr() { return _pool_object_stat_mgr;}
                 ::pilo::i32_t initialize();
                 void finalize();
+                inline ::pilo::u32_t version() const
+                {
+                    return s_pilo_version;
+                }
+                inline ::pilo::u8_t major_version() const
+                {
+                    return PMF_EXTRACT_BYTE(s_pilo_version, 3);
+                }
+                inline ::pilo::u8_t minor_version() const
+                {
+                    return PMF_EXTRACT_BYTE(s_pilo_version, 2);
+                }
+                inline ::pilo::u8_t revision() const
+                {
+                    return PMF_EXTRACT_BYTE(s_pilo_version, 1);
+                }
+                inline const char* stage_cstr() const
+                {
+                    const static char* cst_parr[] = {"base", "alpha", "beta", "RC", "release"};
+                    ::pilo::u8_t i = PMF_EXTRACT_BYTE(s_pilo_version, 0);
+                    return cst_parr[i];
+                }
+
                 inline const ::pilo::core::io::path& cwd(bool update = false)
                 {
                     if (update)
@@ -95,7 +119,7 @@ namespace pilo
 
                 std::string startup_info() const;
 
-            private:                
+            private:
                 ::pilo::core::io::path _proc_paths[(int)::pilo::predefined_pilo_dir_enum::count];
 
 
