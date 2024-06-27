@@ -358,15 +358,14 @@ namespace pilo
 
 
 #else
-<<<<<<< HEAD
-=======
+
 					err = p0.set("目录1/../../目录2/目录3/目录4");
 					if (err != PILO_OK)
 					return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "set long (目录1/../../目录2/目录3/目录4) path");
 					if ((vret = ::pilo::core::testing::validate_path(&p0, "目录1/../../目录2/目录3/目录4", (::pilo::pathlen_t)::pilo::core::string::character_count("目录1/../../目录2/目录3/目录4"), "目录4", nullptr, "目录1/../../目录2/目录3", "目录4", ::pilo::core::io::path::relative)) != 0)
 					return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed chn dir path %d", vret);
 
->>>>>>> e640111c00413ef146fcd3dfea5d98fa81b0ab6e
+
 					err = p0.set("f:");
 					if (err != PILO_OK)
 					{
