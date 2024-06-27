@@ -141,7 +141,7 @@ namespace pilo {
 
                 }
 
-                if (this->_m_length > 1)
+                if (this->_m_length > 0)
                 {
                     for (::pilo::pathlen_t i = this->_m_length - 1; i > 0; i--) {
                         if (this->_m_pathstr_ptr[i] == PMI_PATH_SEP) {
