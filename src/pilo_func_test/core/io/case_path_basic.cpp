@@ -220,7 +220,13 @@ namespace pilo
 
 					err = p0.set("../../../dir0/dir1/ddd.txt", ::pilo::predefined_pilo_dir_enum::cwd);
 					if (err != PILO_OK)
-						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed ddd");					
+						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed ddd");
+
+                    err = p0.set("目录1/../../目录2/目录3/目录4");
+                    if (err != PILO_OK)
+                        return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "set long (目录1/../../目录2/目录3/目录4) path");
+                    if ((vret = ::pilo::core::testing::validate_path(&p0, "目录1/../../目录2/目录3/目录4", (::pilo::pathlen_t)::pilo::core::string::character_count("目录1/../../目录2/目录3/目录4"), "目录4", nullptr, "目录1/../../目录2/目录3", "目录4", ::pilo::core::io::path::relative)) != 0)
+                        return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed chn dir path %d", vret);
 
 					//p0.forward_iterate([](const ::pilo::core::io::path* p, ::pilo::pathlen_t len, ::pilo::i32_t, bool is_last, void*) {
 					//	std::string part(p->fullpath(), len);
@@ -345,31 +351,51 @@ namespace pilo
 
 #else
 
-
 					err = p0.set("f:");
-					if (err == PILO_OK)
+					if (err != PILO_OK)
 					{
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed !f:");
 					}
+                    if (err != PILO_OK)
+                        return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f:");
+                    if ((vret = ::pilo::core::testing::validate_path(&p0, "f:", 2, "f:", nullptr, nullptr, "f:", ::pilo::core::io::path::relative)) != 0)
+                        return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f: %d", vret);
 
 					err = p0.set("a/");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a/");
-					if ((vret = ::pilo::core::testing::validate_path(&p0, "a", 1, nullptr, nullptr, "a", "a", ::pilo::core::io::path::relative)) != 0)
+					if ((vret = ::pilo::core::testing::validate_path(&p0, "a", 1, "a", nullptr, nullptr, "a", ::pilo::core::io::path::relative)) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed f: %d", vret);
 
 					err = p0.set("/a/b/c/d/e.txt");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed /a/b/c/d/e.txt");
-					if ((vret = ::pilo::core::testing::validate_path(&p0, "/a/b/c/d/e.txt", 14, "e.txt", "txt", "/a/b/c/d", "e", ::pilo::core::io::path::relative)) != 0)
+					if ((vret = ::pilo::core::testing::validate_path(&p0, "/a/b/c/d/e.txt", 14, "e.txt", "txt", "/a/b/c/d", "e", ::pilo::core::io::path::absolute)) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed /a/b/c/d/e.txt %d", vret);
 
-					err = p0.set("/a/////b/////c////d/e.txt");
+                    err = p0.set("a/b/c/d/e.txt");
+                    if (err != PILO_OK)
+                        return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed a/b/c/d/e.txt");
+                    if ((vret = ::pilo::core::testing::validate_path(&p0, "a/b/c/d/e.txt", 13, "e.txt", "txt", "a/b/c/d", "e", ::pilo::core::io::path::relative)) != 0)
+                        return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed /a/b/c/d/e.txt %d", vret);
+
+                    err = p0.set("/a/////b/////c////d/e.txt");
 					if (err != PILO_OK)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed /a/b/c/d/e.txt");
-					if ((vret = ::pilo::core::testing::validate_path(&p0, "/a/b/c/d/e.txt", 14, "e.txt", "txt", "/a/b/c/d", "e", ::pilo::core::io::path::relative)) != 0)
+					if ((vret = ::pilo::core::testing::validate_path(&p0, "/a/b/c/d/e.txt", 14, "e.txt", "txt", "/a/b/c/d", "e", ::pilo::core::io::path::absolute)) != 0)
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed /a/b/c/d/e.txt %d", vret);
 
+                    err = p0.set("/目录1/目录2/目录3/目录_del/目录_del/../../目录4/目录5/目录_del3/../目录6");
+                    if (err != PILO_OK)
+                        return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "set long chn path");
+                    if ((vret = ::pilo::core::testing::validate_path(&p0, "/目录1/目录2/目录3/目录4/目录5/目录6", (::pilo::pathlen_t)::pilo::core::string::character_count("/目录1/目录2/目录3/目录4/目录5/目录6"), "目录6", nullptr, "/目录1/目录2/目录3/目录4/目录5", "目录6", ::pilo::core::io::path::absolute)) != 0)
+                        return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed chn dir path %d", vret);
+
+                    err = p0.set("目录1/目录2/目录3/目录_del/目录_del/../../目录4/目录5/目录_del3/../目录6");
+                    if (err != PILO_OK)
+                        return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "set long chn path");
+                    if ((vret = ::pilo::core::testing::validate_path(&p0, "目录1/目录2/目录3/目录4/目录5/目录6", (::pilo::pathlen_t)::pilo::core::string::character_count("目录1/目录2/目录3/目录4/目录5/目录6"), "目录6", nullptr, "目录1/目录2/目录3/目录4/目录5", "目录6", ::pilo::core::io::path::relative)) != 0)
+                        return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed chn dir path %d", vret);
 #endif
 
 					p_case->set_result(PILO_OK);

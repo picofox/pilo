@@ -64,15 +64,21 @@ set_target_properties(pilo_static PROPERTIES
 
 set(PILO_LIBPILO_INCLUDE_DIR ${PILO_OUTPUT_DIR}/include)
 set(PILO_LIBPILO_LIB_DIR ${PILO_OUTPUT_DIR}/lib)
-
-
+add_custom_command(TARGET pilo_static PRE_BUILD
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/lib/libpilo-static-debug.a
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/lib/libpilo-static-release.a
+)
 add_custom_command(TARGET pilo_static POST_BUILD
         COMMAND mkdir -p ${PILO_OUTPUT_DIR}/include/pilo
         COMMAND cp -R ${PILO_LIBSRC_DIR}/* ${PILO_OUTPUT_DIR}/include/pilo
         COMMAND find ${PILO_OUTPUT_DIR}/include/pilo -type f -name "*.cpp" -delete
 )
+add_custom_command(TARGET pilo_shared PRE_BUILD
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/lib/libpilo-shared-debug.a
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/lib/libpilo-shared-release.a
+)
 add_custom_command(TARGET pilo_shared POST_BUILD
-        COMMAND mkdir -p ${PILO_OUTPUT_DIR}/include/pilos
+        COMMAND mkdir -p ${PILO_OUTPUT_DIR}/include/pilo
         COMMAND cp -R ${PILO_LIBSRC_DIR}/* ${PILO_OUTPUT_DIR}/include/pilo
         COMMAND find ${PILO_OUTPUT_DIR}/include/pilo -type f -name "*.cpp" -delete
 )
@@ -95,14 +101,13 @@ target_link_libraries(pilo_func_test-static PUBLIC "pthread" "dl")
 target_link_libraries(pilo_func_test-static PUBLIC debug "pilo-static-debug" optimized "pilo-static-release")
 target_link_directories(pilo_func_test-static PUBLIC ${PILO_OUTPUT_LIB_DIR})
 add_dependencies(pilo_func_test-static pilo_static)
-
 set_target_properties(pilo_func_test-static PROPERTIES
     COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
     COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
 )
-
-
-
+add_custom_command(TARGET pilo_func_test-static PRE_BUILD
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_func_test-static*
+)
 
 add_executable(pilo_func_test-shared ${PILOFUNC_TEST_CPPS} ${PILOFUNC_TEST_PPS} ${PILOFUNC_TEST_HS})
 set_target_properties(pilo_func_test-shared PROPERTIES OUTPUT_NAME "pilo_func_test-shared")
@@ -118,7 +123,9 @@ set_target_properties(pilo_func_test-shared PROPERTIES
     COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
     COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
 )
-
+add_custom_command(TARGET pilo_func_test-static PRE_BUILD
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_func_test-shared*
+)
 # for stable-test
 set(PILO_STABLE_DIR "${PILO_PROJECT_DIR}/src/pilo_stable_test")
 file(GLOB_RECURSE PILOSTABLE_TEST_CPPS ${PILO_STABLE_DIR}/*.cpp)
@@ -136,10 +143,12 @@ target_link_libraries(pilo_stable_test-static PUBLIC "pthread" "dl")
 target_link_libraries(pilo_stable_test-static PUBLIC debug "pilo-static-debug" optimized "pilo-static-release")
 target_link_directories(pilo_stable_test-static PUBLIC ${PILO_OUTPUT_LIB_DIR})
 add_dependencies(pilo_stable_test-static pilo_static)
-
 set_target_properties(pilo_stable_test-static PROPERTIES
     COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
     COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+)
+add_custom_command(TARGET pilo_stable_test-static PRE_BUILD
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_stable_test-static*
 )
 
 add_executable(pilo_stable_test-shared ${PILOSTABLE_TEST_CPPS} ${PILOSTABLE_TEST_PPS} ${PILOSTABLE_TEST_HS})
@@ -155,6 +164,9 @@ add_dependencies(pilo_stable_test-shared pilo_shared)
 set_target_properties(pilo_stable_test-shared PROPERTIES
     COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
     COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+)
+add_custom_command(TARGET pilo_stable_test-shared PRE_BUILD
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_stable_test-shared*
 )
 
 # for performance-test
@@ -174,10 +186,12 @@ target_link_libraries(pilo_performance_test-static PUBLIC "pthread" "dl")
 target_link_libraries(pilo_performance_test-static PUBLIC debug "pilo-static-debug" optimized "pilo-static-release")
 target_link_directories(pilo_performance_test-static PUBLIC ${PILO_OUTPUT_LIB_DIR})
 add_dependencies(pilo_performance_test-static pilo_static)
-
 set_target_properties(pilo_performance_test-static PROPERTIES
     COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
     COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+)
+add_custom_command(TARGET pilo_performance_test-static PRE_BUILD
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_performance_test-static*
 )
 
 
@@ -195,4 +209,7 @@ add_dependencies(pilo_performance_test-shared pilo_shared)
 set_target_properties(pilo_performance_test-shared PROPERTIES
     COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
     COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+)
+add_custom_command(TARGET pilo_performance_test-shared PRE_BUILD
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_performance_test-shared*
 )
