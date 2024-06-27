@@ -100,8 +100,7 @@ namespace pilo {
                                                       buffer.size());
                         this->_m_capacity = (::pilo::pathlen_t) tmp_capa;
                     }
-                } else //pathstr_ptr is notnull
-                {
+                } else {
                     if (tmp_capa < 0 || tmp_capa > path::length_max) {
                         return ::pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
                     }
@@ -707,9 +706,49 @@ namespace pilo {
                         }
                     }
 
-                    buffer->check_space(tmp_path.size() + 1);
-                    ::pilo::core::string::n_copyz(buffer->begin(), buffer->capacity(), tmp_path.begin(), tmp_path.size());
-                    buffer->set_size(tmp_path.size());
+                    ::pilo::i32_t pcnt = (::pilo::i32_t) ::pilo::core::string::cstring_ch_count(tmp_path.begin(), 0, tmp_path.size(), PMI_PATH_SEP);
+                    if (pcnt > 0 && ::pilo::core::string::find_substring(tmp_path.begin(), "..", tmp_path.size()))
+                    {
+                        ::pilo::core::memory::object_array<::pilo::cstr_ref<char>, 1> parts;
+                        parts.check_space(pcnt + 1); 
+                        ::pilo::i64_t nparts = ::pilo::core::string::split_fixed(tmp_path.begin(), tmp_path.size()
+                            , "\\", 1, parts.begin(), parts.capacity(), false, true, false, false);
+                        if (nparts < 2)
+                        {
+                            PMC_ASSERT(false);
+                            return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
+                        }
+                        std::vector<::pilo::cstr_ref<char>*> vec;
+                        vec.push_back(&parts.at((int)0));
+                        for (::pilo::i64_t j = 1; j < nparts; j++)
+                        {
+                            //printf(" -> [%s]\n", parts.at((int)j).to_string().c_str());
+                            if (parts.at((int)j).length == 2 && parts.at((int)j).ptr[0] == '.' && parts.at((int)j).ptr[1] == '.')
+                            {
+                                if (vec.size() > 1)
+                                    vec.pop_back();
+                                else
+                                {
+                                    buffer->check_space(tmp_path.size() + 1);
+                                    ::pilo::core::string::n_copyz(buffer->begin(), buffer->capacity(), tmp_path.begin(), tmp_path.size());
+                                    buffer->set_size(tmp_path.size());
+                                    return PILO_OK;
+                                }
+                            }
+                            else
+                            {
+                                vec.push_back(&parts.at((int)j));
+                            }
+
+                        }
+                        ::pilo::core::string::concatenate_rac(buffer, vec, "\\", 1);
+                    }
+                    else
+                    {
+                        buffer->check_space(tmp_path.size() + 1);
+                        ::pilo::core::string::n_copyz(buffer->begin(), buffer->capacity(), tmp_path.begin(), tmp_path.size());
+                        buffer->set_size(tmp_path.size());
+                    }                    
                 }          
 
                 return PILO_OK;
