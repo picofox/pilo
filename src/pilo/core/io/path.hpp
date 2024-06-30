@@ -546,6 +546,24 @@ namespace pilo
                         return PILO_OK;
                     }
 
+                    inline ::pilo::err_t remove_last()
+                    {
+                        if (this->invalid() || this->is_root()) {
+                            return ::pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
+                        }
+                        char * s = (char *) ::pilo::core::string::rfind_char(this->_m_pathstr_ptr, (::pilo::i64_t) this->_m_length, PMI_PATH_SEP);
+                        if (s == nullptr)
+                            return ::pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
+                        this->_m_length = (::pilo::pathlen_t) (s - this->_m_pathstr_ptr);
+                        *s = 0;
+                        _m_lastpart_start_pos = path::unknow_length;
+                        _m_ext_name_len = path::invalid_ext_length;
+                        _calc_remain_members(this->absolute_type() == ::pilo::core::io::path::absolute);
+
+                        return PILO_OK;
+                    }
+
+
                     inline void reset()
                     {
                         if (_m_pathstr_ptr != nullptr)
@@ -595,6 +613,42 @@ namespace pilo
                 protected:
                     static ::pilo::err_t _dfs_travel_path(::pilo::i32_t l_idx, const path* p, traval_fs_node_func_t handler, void* ctx, bool ignore_err, ::pilo::u32_t flags);
                     static const path* _parse_path(const path* src, path* tmp, ::pilo::i8_t& target_type);
+                    inline void _calc_remain_members(bool isabs)
+                    {
+                        this->_m_ext_name_len = path::invalid_ext_length;
+                        this->_m_lastpart_start_pos = 0;
+                        const char *filename_sep = ::pilo::core::string::rfind_char(this->_m_pathstr_ptr, this->_m_length,
+                                                                                    PMI_PATH_SEP);
+                        if (filename_sep == nullptr) {
+                            this->_m_lastpart_start_pos = 0;
+                        } else {
+                            this->_m_lastpart_start_pos = (::pilo::pathlen_t) (filename_sep - _m_pathstr_ptr + 1);
+                            if (isabs) {
+#ifdef  WINDOWS
+                                if (this->_m_length == 6) {
+                                    this->_m_lastpart_start_pos = 0;
+                                }
+#else
+                                if (this->_m_length == 0) {
+                                    this->_m_lastpart_start_pos = -1;
+                                }
+#endif //  WINDOWS
+                            }
+                        }
+
+                        if (this->_m_length > 0)
+                        {
+                            for (::pilo::pathlen_t i = this->_m_length - 1; i > 0; i--) {
+                                if (this->_m_pathstr_ptr[i] == PMI_PATH_SEP) {
+                                    break;
+                                } else if (this->_m_pathstr_ptr[i] == '.') {
+                                    if (i > 1 && this->_m_pathstr_ptr[i - 1] != PMI_PATH_SEP) {
+                                        this->_m_ext_name_len = (::pilo::u8_t) (this->_m_length - i - 1);
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                 protected:
                     char*    _m_pathstr_ptr;

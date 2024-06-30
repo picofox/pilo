@@ -43,9 +43,12 @@
 #define PMF_LO_U8_OF_16(w)            ((unsigned byte)(((unsigned long)(w)) & 0xff))
 #define PMF_HI_U8_OF_16(w)           ((unsigned byte)((((unsigned long)(w)) >> 8) & 0xff))
 
+#define PMF_MAKE_U32_BY_U16S_BE(b0,b1) (((unsigned int)(b0) << 16) | (b1))
+#define PMF_MAKE_U32_BY_U16S_NE(b0,b1) (((unsigned int)(b1) << 16) | (b0))
 #define PMF_MAKE_U32_BY_BYTES_BE(b0,b1,b2,b3) (((unsigned int)(b0) << 24) | ((unsigned int)(b1) << 16) | ((unsigned int)(b2) << 8) | (b3))
 #define PMF_MAKE_U32_BY_BYTES_LE(b0,b1,b2,b3) (((unsigned int)(b3) << 24) | ((unsigned int)(b2) << 16) | ((unsigned int)(b1) << 8) | (b0))
-#define PMF_EXTRACT_BYTE(var, index) ((unsigned char)((var >> (index * 8)) & 0xFF))
+#define PMF_EXTRACT_U8(var, index) ((unsigned char)((var >> (index * 8)) & 0xFF))
+#define PMF_EXTRACT_U16(var, index) ((unsigned short)((var >> (index * 16)) & 0xFFFF))
 
 #define PMI_INVALID_PTR			(void*)(~0)
 

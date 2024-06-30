@@ -26,7 +26,7 @@ namespace pilo
                 };                
 
             public:
-                const static ::pilo::u32_t s_pilo_version = PMF_MAKE_U32_BY_BYTES_BE(1,0,7,0);
+                const static ::pilo::u32_t s_pilo_version = PMF_MAKE_U32_BY_BYTES_BE(1,0,22,0);
                 context();
                 ~context();
                 ::pilo::core::stat::pool_object_stat_manager& pool_object_stat_mgr() { return _pool_object_stat_mgr;}
@@ -38,20 +38,20 @@ namespace pilo
                 }
                 inline ::pilo::u8_t major_version() const
                 {
-                    return PMF_EXTRACT_BYTE(s_pilo_version, 3);
+                    return PMF_EXTRACT_U8(s_pilo_version, 3);
                 }
                 inline ::pilo::u8_t minor_version() const
                 {
-                    return PMF_EXTRACT_BYTE(s_pilo_version, 2);
+                    return PMF_EXTRACT_U8(s_pilo_version, 2);
                 }
                 inline ::pilo::u8_t revision() const
                 {
-                    return PMF_EXTRACT_BYTE(s_pilo_version, 1);
+                    return PMF_EXTRACT_U8(s_pilo_version, 1);
                 }
                 inline const char* stage_cstr() const
                 {
                     const static char* cst_parr[] = {"base", "alpha", "beta", "RC", "release"};
-                    ::pilo::u8_t i = PMF_EXTRACT_BYTE(s_pilo_version, 0);
+                    ::pilo::u8_t i = PMF_EXTRACT_U8(s_pilo_version, 0);
                     return cst_parr[i];
                 }
 

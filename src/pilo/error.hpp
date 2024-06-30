@@ -111,4 +111,24 @@ namespace pilo
     ::pilo::i32_t is_ok_or_err_type(::pilo::err_t err, ::pilo::i32_t predict);
 }
 
+
+
+#define MK_ERR(s,p) (((::pilo::err_t )(s) << 16) | ((::pilo::u16_t) p))
+#define MK_PERR(p)  (((::pilo::err_t )(0) << 16) | ((::pilo::u16_t) p))
+#define EX_OSERR(e)  (::pilo::os_error_number_t )((unsigned short)((e >> (16)) & 0xFFFF))
+#define EX_PERR(e)  (::pilo::err_t)((unsigned short)((e >> (0)) & 0xFFFF))
+#define IS_ERR(e, perr, oserr)  (perr == EX_PERR(e) && oserr == EX_OSERR(e))
+#define IS_PERR(e, perr) (perr == EX_PERR(e))
+#define IS_SERR(e, oserr) (oserr == EX_OSERR(e)
+
+namespace pilo
+{
+    __inline ::pilo::err_t make_err(::pilo::err_t perr)
+    {
+        ::pilo::os_error_number_t oserr = get_os_last_error();
+        return MK_ERR(oserr, perr);
+    }
+
+}
+
 #endif //__pilo_error_hpp_

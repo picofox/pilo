@@ -20,7 +20,6 @@ namespace pilo
 		{
 			namespace io
 			{
-
 				char_buffer_t test()
 				{
 					char tb[1] = { 0 };
@@ -34,7 +33,7 @@ namespace pilo
 				{
 					pilo::err_t err = PILO_OK;
 					::pilo::core::io::path rt("test_fs\\cdh", ::pilo::core::io::path::unknow_length, 0, ::pilo::predefined_pilo_dir_enum::tmp);
-					err = rt.remove(false, false);
+                    err = rt.remove(false, false);
 					if (err != PILO_OK)
 					{
 						return err;
@@ -171,6 +170,26 @@ namespace pilo
 					return PILO_OK;
 				}
 
+#ifdef WINDIWS
+#else
+//                void test_linux_fs_single_func()
+//                {
+//                    ::pilo::err_t  err = MK_ERR(101, 21015);
+//                    err = make_err(10001);
+//                    ::pilo::u16_t serr = EX_OSERR(err);
+//                    ::pilo::u16_t perr = EX_PERR(err);
+//
+//                    ::pilo::core::io::path lnk2 = PILO_CONTEXT->tmp_path(false);
+//                    lnk2.append("t1/s1.lnk");
+//                    ::pilo::i8_t node_type = 0;
+//                    ::pilo::core::io::path target;
+//                    ::pilo::i8_t typ = lnk2.get_fs_info(&node_type, &target);
+//
+//                    printf("%d\n", typ);
+//
+//                }
+#endif
+
 				int case_path_basic(::pilo::core::testing::func_test_case* p_case)
 				{
 					::pilo::core::io::path p0;
@@ -188,7 +207,6 @@ namespace pilo
 					::pilo::err_t err = p0.set("|");
 					if (err == PILO_OK)					
 						return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "p0 val failed |");
-					
 
 					err = p0.set("ab");
 					if (err != PILO_OK)

@@ -51,7 +51,6 @@ namespace pilo
     typedef CONDITION_VARIABLE      os_event_handle_t;
     typedef CRITICAL_SECTION        os_cs_handle_t;
 
-
 #else
     typedef void* thread_routine_return_t;
     typedef int                     os_socket_t;
@@ -62,7 +61,6 @@ namespace pilo
     typedef pthread_t               os_thread_id_t;
     typedef pthread_cond_t          os_event_handle_t;
     typedef pthread_mutex_t         os_cs_handle_t;
-
 #endif
 
     template <size_t n> struct __regtype__ { typedef int int_r; typedef unsigned int uint_r; };
