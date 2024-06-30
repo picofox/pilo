@@ -1471,6 +1471,7 @@ namespace pilo {
                 return PILO_OK;
             }
 
+
             ::pilo::err_t path::remove_fs_node(::pilo::i8_t fs_node_type, const char *pth, ::pilo::pathlen_t path_len) 
             {
                 ::pilo::err_t err = PILO_OK;
