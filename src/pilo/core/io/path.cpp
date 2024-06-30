@@ -378,8 +378,10 @@ namespace pilo {
                 ::pilo::core::string::n_copyz(tbuf.begin(), tbuf.capacity(), buffer.begin(), buffer.size());
                 ::pilo::core::string::n_concatenate_inplace(tbuf.ptr(), tbuf.space_available(), p, len);
                 tbuf.set_size(buffer.size() + (::pilo::i32_t) len);
+                buffer.set_size(0);
                 ::pilo::err_t err = validate_path(&buffer, tbuf.begin(), tbuf.size(), extra, fs_type, isabs,
                                                   rel_to_abs_basis);
+
                 buffer.set_adopt(false);
                 this->_m_pathstr_ptr = buffer.begin();
                 if (err != PILO_OK) {
@@ -1000,15 +1002,18 @@ namespace pilo {
                 if (strRet == nullptr && errno != ERANGE) {
                     return ::pilo::make_core_error(PES_GETCWD, PEP_RDFAIL);
                 }
-                ::pilo::i32_t ret_size = (::pilo::i32_t) ::pilo::core::string::character_count(strRet);
+                ::pilo::i32_t ret_size = 0;
                 if (strRet != nullptr) {
+                    ret_size = (::pilo::i32_t) ::pilo::core::string::character_count(strRet);
                     buffer.add_size(ret_size);
                 } else {
                     strRet = getcwd(nullptr, 0);
+                    ret_size = (::pilo::i32_t) ::pilo::core::string::character_count(strRet);
                     if (strRet == nullptr)
                         return ::pilo::make_core_error(PES_GETCWD, PEP_RDFAIL);
                     buffer.check_more_space(extra_space + 1 + ret_size);
                     ::pilo::core::string::n_copyz(buffer.ptr(), buffer.space_available(), strRet, ret_size);
+                    buffer.add_size(ret_size);
                 }
 
 #           endif
@@ -1189,32 +1194,40 @@ namespace pilo {
 #else
 
 
-            static ::pilo::err_t _s_read_link_posix(::pilo::char_buffer_t *dst, const char *src) {
-                ::pilo::i32_t avail = dst->space_available();
-                ssize_t tmp_ret = readlink(src, dst->ptr(), avail);
-                if (tmp_ret < 0) {
-                    return ::pilo::make_core_error(PES_SYMLINK, PEP_RDFAIL);
-                }
-                if ((::pilo::i32_t) tmp_ret < avail) {
-                    dst->add_size(tmp_ret);
-                    return PILO_OK;
-                }
+            static ::pilo::err_t _s_read_link_posix(::pilo::char_buffer_t *dst, const char *src)
+            {
+                char tbb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = {0};
+                ::pilo::char_buffer_t tbuf(tbb, sizeof(tbb), 0, false);
+                ::pilo::core::io::path tmp_path(src);
+                ::pilo::err_t  err = PILO_OK;
+                int allocated = 0;
 
-                do {
-                    dst->check_more_space(64);
-                    avail = dst->space_available();
-                    tmp_ret = readlink(src, dst->ptr(), avail);
-                    if (tmp_ret < 0) {
+                while (true) {
+                    ssize_t tmp_ret = readlink(src, dst->begin(), dst->capacity());
+                    if (tmp_ret == -1) {
                         return ::pilo::make_core_error(PES_SYMLINK, PEP_RDFAIL);
-                    }
-                    if ((::pilo::i32_t) tmp_ret < avail) {
-                        dst->add_size(tmp_ret);
+                    } else if (tmp_ret == dst->capacity()) {
+                        if (allocated >= PMI_PATH_MAX) {
+                            return ::pilo::make_core_error(PES_SYMLINK, PEP_RDFAIL);
+                        }
+                        dst->check_more_space(64);
+                        allocated += 64;
+                    } else {
+                        dst->set_value((::pilo::i32_t) tmp_ret, 0);
+                        dst->set_size((::pilo::i32_t) tmp_ret);
+                        err = tmp_path.remove_last();
+                        if (err != PILO_OK)
+                            return ::pilo::make_core_error(PES_FILE_ATTR, PEP_RDFAIL);
+                        err = tmp_path.append(dst->begin());
+                        if (err != PILO_OK)
+                            return ::pilo::make_core_error(PES_FILE_ATTR, PEP_RDFAIL);
+                        dst->check_space(tmp_path.length() + 1);
+                        ::pilo::core::string::n_copyz(dst->begin(), dst->capacity(), tmp_path.fullpath(), tmp_path.length());
+                        dst->set_size(tmp_path.length());
                         return PILO_OK;
                     }
-
-                } while (dst->space_available() <= PMI_PATH_MAX);
-
-                return ::pilo::make_core_error(PES_SYMLINK, PEP_TOO_LARGE);;
+                }
+                return ::pilo::make_core_error(PES_SYMLINK, PEP_RDFAIL);
             }
 
             static ::pilo::err_t
@@ -1236,7 +1249,7 @@ namespace pilo {
                         return err;
 
                     struct stat stBuff = {0};
-                    if (stat(dbuf.begin(), &stBuff) != 0) {
+                    if (::lstat(dbuf.begin(), &stBuff) != 0) {
                         node_type = path::node_type_na;
                         if (errno == ENOENT) {
                             return ::pilo::make_core_error(PES_FILE, PEP_NOT_EXIST);
@@ -1290,7 +1303,7 @@ namespace pilo {
                 ::pilo::err_t err = PILO_OK;
                 struct stat stBuff = {0};
                 if (path_type_hint == path::local_fs_path) {
-                    if (::stat(ptr_path_cstr, &stBuff) != 0) {
+                    if (::lstat(ptr_path_cstr, &stBuff) != 0) {
                         node_type = path::node_type_na;
                         if (errno == ENOENT) {
                             return ::pilo::make_core_error(PES_FILE, PEP_NOT_EXIST);
@@ -1880,12 +1893,14 @@ namespace pilo {
                         return ::pilo::make_core_error(PES_DIR , PEP_IS_NULL );
                     }
                     sub_p.clear();
-                    sub_p.set(p->fullpath(),(::pilo::i64_t) p->length(), dir_result_ptr->d_reclen + 2);
-                    sub_p.append(dir_result_ptr->d_name, dir_result_ptr->d_reclen);
+                    ::pilo::pathlen_t tmp_plen = (::pilo::pathlen_t) ::pilo::core::string::character_count(dir_result_ptr->d_name);
+                    sub_p.set(p->fullpath(),(::pilo::i64_t) p->length(), tmp_plen + 2);
+                    sub_p.append(dir_result_ptr->d_name, tmp_plen);
                     if (sub_p.invalid())
                     {
                         return ::pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
                     }
+                    //printf("path -> <%s> \n", sub_p.fullpath());
                     if (dir_result_ptr->d_type == DT_DIR) {
                         err = _dfs_travel_path(l_idx + 1, &sub_p, handler, ctx, ignore_err, flags);
                         if (err != PILO_OK)
