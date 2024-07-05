@@ -124,24 +124,24 @@ namespace pilo
         if (oserr != nullptr) *oserr = ex_oserr(err);
     }
 
-    _inline bool is_err(::pilo::err_t err, ::pilo::err_t perr, ::pilo::os_error_number_t oserr)
+    __inline bool is_err(::pilo::err_t err, ::pilo::err_t perr, ::pilo::os_error_number_t oserr)
     {
         return (perr == ex_perr(err) && oserr == ex_oserr(err));
     }
 
-    _inline ::pilo::i32_t is_ok_perr(::pilo::err_t err, ::pilo::err_t perr)
+    __inline ::pilo::i32_t is_ok_perr(::pilo::err_t err, ::pilo::err_t perr)
     {
         if (err == PILO_OK) return 0;
         else if (perr == ex_perr(err)) return 1;
         return -1;
     }
 
-    _inline bool is_perr(::pilo::err_t err, ::pilo::err_t perr)
+    __inline bool is_perr(::pilo::err_t err, ::pilo::err_t perr)
     {
         return (perr == ex_perr(err));
     }
 
-    _inline bool is_oserr(::pilo::err_t err, ::pilo::os_error_number_t oserr)
+    __inline bool is_oserr(::pilo::err_t err, ::pilo::os_error_number_t oserr)
     {
         return (oserr == ex_oserr(err));
     }
