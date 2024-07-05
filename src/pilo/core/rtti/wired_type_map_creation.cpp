@@ -15,24 +15,24 @@ namespace pilo
 			static handle_map_create_func_type stc_handle_create_func[::pilo::core::rtti::wired_type::key_type_count][::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
 				{
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
 				},
 				{//i8
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr; },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr; },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i8_t, ::pilo::i8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i8_t, ::pilo::u8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i8_t, ::pilo::i16_t>();  },
@@ -49,7 +49,7 @@ namespace pilo
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i8_t, ::pilo::tlv*>();  },
 				},
 				{//u8
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u8_t, ::pilo::i8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u8_t, ::pilo::u8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u8_t, ::pilo::i16_t>();  },
@@ -66,7 +66,7 @@ namespace pilo
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u8_t, ::pilo::tlv*>();  },
 				},
 				{//i16
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i16_t, ::pilo::i8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i16_t, ::pilo::u8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i16_t, ::pilo::i16_t>();  },
@@ -83,7 +83,7 @@ namespace pilo
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i16_t, ::pilo::tlv*>();  },
 				},
 				{//u16
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u16_t, ::pilo::i8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u16_t, ::pilo::u8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u16_t, ::pilo::i16_t>();  },
@@ -100,7 +100,7 @@ namespace pilo
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u16_t, ::pilo::tlv*>();  },
 				},
 				{//i32
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i32_t, ::pilo::i8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i32_t, ::pilo::u8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i32_t, ::pilo::i16_t>();  },
@@ -117,7 +117,7 @@ namespace pilo
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::i32_t, ::pilo::tlv*>();  },
 				},
 				{//u32
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr; },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr; },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u32_t, ::pilo::i8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u32_t, ::pilo::u8_t>();  },
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u32_t, ::pilo::i16_t>();  },
@@ -134,7 +134,7 @@ namespace pilo
 					[](::pilo::err_t* ) -> char* {  return (char*) new std::map<::pilo::u32_t, ::pilo::tlv*>();  },
 				},
 				{//i64
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
 					[](::pilo::err_t*) -> char* {  return (char*) new std::map<::pilo::i64_t, ::pilo::i8_t>();  },
 					[](::pilo::err_t*) -> char* {  return (char*) new std::map<::pilo::i64_t, ::pilo::u8_t>();  },
 					[](::pilo::err_t*) -> char* {  return (char*) new std::map<::pilo::i64_t, ::pilo::i16_t>();  },
@@ -151,7 +151,7 @@ namespace pilo
 					[](::pilo::err_t*) -> char* {  return (char*) new std::map<::pilo::i64_t, ::pilo::tlv*>();  },
 				},
 				{//u64
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
 					[](::pilo::err_t*) -> char* {  return (char*) new std::map<::pilo::u64_t, ::pilo::i8_t>();  },
 					[](::pilo::err_t*) -> char* {  return (char*) new std::map<::pilo::u64_t, ::pilo::u8_t>();  },
 					[](::pilo::err_t*) -> char* {  return (char*) new std::map<::pilo::u64_t, ::pilo::i16_t>();  },
@@ -168,7 +168,7 @@ namespace pilo
 					[](::pilo::err_t*) -> char* {  return (char*) new std::map<::pilo::u64_t, ::pilo::tlv*>();  },
 				},
 				{//str
-					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); return nullptr;  },
+					[](::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_INV_PARAM_DT); return nullptr;  },
 					[](::pilo::err_t*) -> char* {  return (char*) new std::map<std::string, ::pilo::i8_t>();  },
 					[](::pilo::err_t*) -> char* {  return (char*) new std::map<std::string, ::pilo::u8_t>();  },
 					[](::pilo::err_t*) -> char* {  return (char*) new std::map<std::string, ::pilo::i16_t>();  },
@@ -191,24 +191,24 @@ namespace pilo
 			static handle_map_delete_func_type stc_handle_map_delete_func[::pilo::core::rtti::wired_type::key_type_count][::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
 				{
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				},
 				{//i8
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i8_t, ::pilo::i8_t>((std::map<::pilo::i8_t, ::pilo::i8_t>*)map_char_ptr); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i8_t, ::pilo::u8_t>((std::map<::pilo::i8_t, ::pilo::u8_t>*)map_char_ptr);  },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i8_t, ::pilo::i16_t>((std::map<::pilo::i8_t, ::pilo::i16_t>*)map_char_ptr);  },
@@ -225,7 +225,7 @@ namespace pilo
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i8_t>((std::map<::pilo::i8_t, ::pilo::tlv*>*)map_char_ptr);  },
 				},
 				{//u8
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u8_t, ::pilo::i8_t>((std::map<::pilo::u8_t, ::pilo::i8_t>*)map_char_ptr); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u8_t, ::pilo::u8_t>((std::map<::pilo::u8_t, ::pilo::u8_t>*)map_char_ptr);  },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u8_t, ::pilo::i16_t>((std::map<::pilo::u8_t, ::pilo::i16_t>*)map_char_ptr);  },
@@ -242,7 +242,7 @@ namespace pilo
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u8_t>((std::map<::pilo::u8_t, ::pilo::tlv*>*)map_char_ptr);  },
 				},
 				{//i16
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i16_t, ::pilo::i8_t>((std::map<::pilo::i16_t, ::pilo::i8_t>*)map_char_ptr); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i16_t, ::pilo::u8_t>((std::map<::pilo::i16_t, ::pilo::u8_t>*)map_char_ptr);  },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i16_t, ::pilo::i16_t>((std::map<::pilo::i16_t, ::pilo::i16_t>*)map_char_ptr);  },
@@ -259,7 +259,7 @@ namespace pilo
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i16_t>((std::map<::pilo::i16_t, ::pilo::tlv*>*)map_char_ptr);  },
 				},
 				{//u16
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u16_t, ::pilo::i8_t>((std::map<::pilo::u16_t, ::pilo::i8_t>*)map_char_ptr); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u16_t, ::pilo::u8_t>((std::map<::pilo::u16_t, ::pilo::u8_t>*)map_char_ptr);  },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u16_t, ::pilo::i16_t>((std::map<::pilo::u16_t, ::pilo::i16_t>*)map_char_ptr);  },
@@ -276,7 +276,7 @@ namespace pilo
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u16_t>((std::map<::pilo::u16_t, ::pilo::tlv*>*)map_char_ptr);  },
 				},
 				{//i32
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i32_t, ::pilo::i8_t>((std::map<::pilo::i32_t, ::pilo::i8_t>*)map_char_ptr); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i32_t, ::pilo::u8_t>((std::map<::pilo::i32_t, ::pilo::u8_t>*)map_char_ptr);  },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i32_t, ::pilo::i16_t>((std::map<::pilo::i32_t, ::pilo::i16_t>*)map_char_ptr);  },
@@ -293,7 +293,7 @@ namespace pilo
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i32_t>((std::map<::pilo::i32_t, ::pilo::tlv*>*)map_char_ptr);  },
 				},
 				{//u32
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u32_t, ::pilo::i8_t>((std::map<::pilo::u32_t, ::pilo::i8_t>*)map_char_ptr); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u32_t, ::pilo::u8_t>((std::map<::pilo::u32_t, ::pilo::u8_t>*)map_char_ptr);  },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u32_t, ::pilo::i16_t>((std::map<::pilo::u32_t, ::pilo::i16_t>*)map_char_ptr);  },
@@ -310,7 +310,7 @@ namespace pilo
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u32_t>((std::map<::pilo::u32_t, ::pilo::tlv*>*)map_char_ptr);  },
 				},
 				{//i64
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i64_t, ::pilo::i8_t>((std::map<::pilo::i64_t, ::pilo::i8_t>*)map_char_ptr); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i64_t, ::pilo::u8_t>((std::map<::pilo::i64_t, ::pilo::u8_t>*)map_char_ptr);  },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i64_t, ::pilo::i16_t>((std::map<::pilo::i64_t, ::pilo::i16_t>*)map_char_ptr);  },
@@ -327,7 +327,7 @@ namespace pilo
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::i64_t>((std::map<::pilo::i64_t, ::pilo::tlv*>*)map_char_ptr);  },
 				},
 				{//u64
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u64_t, ::pilo::i8_t>((std::map<::pilo::u64_t, ::pilo::i8_t>*)map_char_ptr); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u64_t, ::pilo::u8_t>((std::map<::pilo::u64_t, ::pilo::u8_t>*)map_char_ptr);  },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u64_t, ::pilo::i16_t>((std::map<::pilo::u64_t, ::pilo::i16_t>*)map_char_ptr);  },
@@ -344,7 +344,7 @@ namespace pilo
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<::pilo::u64_t>((std::map<::pilo::u64_t, ::pilo::tlv*>*)map_char_ptr);  },
 				},
 				{//str
-					[](char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); },
+					[](char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<std::string, ::pilo::i8_t>((std::map<std::string, ::pilo::i8_t>*)map_char_ptr); },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<std::string, ::pilo::u8_t>((std::map<std::string, ::pilo::u8_t>*)map_char_ptr);  },
 					[](char* map_char_ptr) -> ::pilo::err_t {  return delete_map<std::string, ::pilo::i16_t>((std::map<std::string, ::pilo::i16_t>*)map_char_ptr);  },
@@ -370,24 +370,24 @@ namespace pilo
 			static handle_map_clone_func_type stc_handle_map_clone_func[::pilo::core::rtti::wired_type::key_type_count][::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
 				{
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
-					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
+					[](char*, ::pilo::err_t* err) -> char* { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
 				},
 				{//i8
-					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
+					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i8_t, ::pilo::i8_t>((std::map<::pilo::i8_t, ::pilo::i8_t>*)map_char_ptr, err); },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i8_t, ::pilo::u8_t>((std::map<::pilo::i8_t, ::pilo::u8_t>*)map_char_ptr, err);  },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i8_t, ::pilo::i16_t>((std::map<::pilo::i8_t, ::pilo::i16_t>*)map_char_ptr, err);  },
@@ -404,7 +404,7 @@ namespace pilo
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i8_t>((std::map<::pilo::i8_t, ::pilo::tlv*>*)map_char_ptr, err);  },
 				},
 				{//u8
-					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
+					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u8_t, ::pilo::i8_t>((std::map<::pilo::u8_t, ::pilo::i8_t>*)map_char_ptr, err); },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u8_t, ::pilo::u8_t>((std::map<::pilo::u8_t, ::pilo::u8_t>*)map_char_ptr, err);  },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u8_t, ::pilo::i16_t>((std::map<::pilo::u8_t, ::pilo::i16_t>*)map_char_ptr, err);  },
@@ -421,7 +421,7 @@ namespace pilo
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u8_t>((std::map<::pilo::u8_t, ::pilo::tlv*>*)map_char_ptr, err);  },
 				},
 				{//i16
-					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
+					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i16_t, ::pilo::i8_t>((std::map<::pilo::i16_t, ::pilo::i8_t>*)map_char_ptr, err); },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i16_t, ::pilo::u8_t>((std::map<::pilo::i16_t, ::pilo::u8_t>*)map_char_ptr, err);  },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i16_t, ::pilo::i16_t>((std::map<::pilo::i16_t, ::pilo::i16_t>*)map_char_ptr, err);  },
@@ -438,7 +438,7 @@ namespace pilo
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i16_t>((std::map<::pilo::i16_t, ::pilo::tlv*>*)map_char_ptr, err);  },
 				},
 				{//u16
-					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
+					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u16_t, ::pilo::i8_t>((std::map<::pilo::u16_t, ::pilo::i8_t>*)map_char_ptr, err); },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u16_t, ::pilo::u8_t>((std::map<::pilo::u16_t, ::pilo::u8_t>*)map_char_ptr, err);  },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u16_t, ::pilo::i16_t>((std::map<::pilo::u16_t, ::pilo::i16_t>*)map_char_ptr, err);  },
@@ -455,7 +455,7 @@ namespace pilo
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u16_t>((std::map<::pilo::u16_t, ::pilo::tlv*>*)map_char_ptr, err);  },
 				},
 				{//i32
-					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
+					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i32_t, ::pilo::i8_t>((std::map<::pilo::i32_t, ::pilo::i8_t>*)map_char_ptr, err); },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i32_t, ::pilo::u8_t>((std::map<::pilo::i32_t, ::pilo::u8_t>*)map_char_ptr, err);  },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i32_t, ::pilo::i16_t>((std::map<::pilo::i32_t, ::pilo::i16_t>*)map_char_ptr, err);  },
@@ -472,7 +472,7 @@ namespace pilo
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i32_t>((std::map<::pilo::i32_t, ::pilo::tlv*>*)map_char_ptr, err);  },
 				},
 				{//u32
-					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
+					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u32_t, ::pilo::i8_t>((std::map<::pilo::u32_t, ::pilo::i8_t>*)map_char_ptr, err); },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u32_t, ::pilo::u8_t>((std::map<::pilo::u32_t, ::pilo::u8_t>*)map_char_ptr, err);  },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u32_t, ::pilo::i16_t>((std::map<::pilo::u32_t, ::pilo::i16_t>*)map_char_ptr, err);  },
@@ -489,7 +489,7 @@ namespace pilo
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u32_t>((std::map<::pilo::u32_t, ::pilo::tlv*>*)map_char_ptr, err);  },
 				},
 				{//i64
-					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
+					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i64_t, ::pilo::i8_t>((std::map<::pilo::i64_t, ::pilo::i8_t>*)map_char_ptr, err); },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i64_t, ::pilo::u8_t>((std::map<::pilo::i64_t, ::pilo::u8_t>*)map_char_ptr, err);  },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i64_t, ::pilo::i16_t>((std::map<::pilo::i64_t, ::pilo::i16_t>*)map_char_ptr, err);  },
@@ -506,7 +506,7 @@ namespace pilo
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::i64_t>((std::map<::pilo::i64_t, ::pilo::tlv*>*)map_char_ptr, err);  },
 				},
 				{//u64
-					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
+					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u64_t, ::pilo::i8_t>((std::map<::pilo::u64_t, ::pilo::i8_t>*)map_char_ptr, err); },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u64_t, ::pilo::u8_t>((std::map<::pilo::u64_t, ::pilo::u8_t>*)map_char_ptr, err);  },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u64_t, ::pilo::i16_t>((std::map<::pilo::u64_t, ::pilo::i16_t>*)map_char_ptr, err);  },
@@ -523,7 +523,7 @@ namespace pilo
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<::pilo::u64_t>((std::map<::pilo::u64_t, ::pilo::tlv*>*)map_char_ptr, err);  },
 				},
 				{//str
-					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
+					[](char* , ::pilo::err_t * err) -> char * { if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<std::string, ::pilo::i8_t>((std::map<std::string, ::pilo::i8_t>*)map_char_ptr, err); },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<std::string, ::pilo::u8_t>((std::map<std::string, ::pilo::u8_t>*)map_char_ptr, err);  },
 					[](char* map_char_ptr, ::pilo::err_t * err) -> char * {  return  (char*) clone_map<std::string, ::pilo::i16_t>((std::map<std::string, ::pilo::i16_t>*)map_char_ptr, err);  },
@@ -548,7 +548,7 @@ namespace pilo
 				if (kt >= ::pilo::core::rtti::wired_type::key_type_count)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+						*err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
 					return nullptr;
 				}
 
@@ -564,7 +564,7 @@ namespace pilo
 			{
 				if (kt >= ::pilo::core::rtti::wired_type::key_type_count)
 				{
-					return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+					return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
 				}
 
 				if (vt >= ::pilo::core::rtti::wired_type::value_type_intrincs_count)
@@ -581,7 +581,7 @@ namespace pilo
 				if (kt >= ::pilo::core::rtti::wired_type::key_type_count)
 				{
 					if (err != nullptr) 
-						*err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+						*err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
 					return nullptr;
 				}
 

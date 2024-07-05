@@ -87,12 +87,12 @@ namespace pilo
                 {
                     if (cbf == nullptr)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                        return ::pilo::mk_perr(PERR_NULL_PARAM);
                     }
 
                     if (_size >= _items.max_size())
                     {
-                        return ::pilo::make_core_error(PES_ELEM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr( PERR_VAL_TOO_LARGE);
                     }
                     rc_item ri(cbf, ptr, ctx);
                     _items[_size] = std::move(ri);

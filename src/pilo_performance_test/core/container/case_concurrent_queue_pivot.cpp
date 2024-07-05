@@ -38,7 +38,7 @@ namespace pilo
 						{
 							break;
 						}
-						else if (p_case->result() != ::pilo::make_core_error(PES_RC, PEP_RETRY, 0))
+						else if (p_case->result() != ::pilo::mk_perr(PERR_RETRY))
 						{
 							break;
 						}
@@ -64,7 +64,7 @@ namespace pilo
 						}
 						else
 						{
-							p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED, 0));
+							p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 							break;
 						}
 
@@ -91,7 +91,7 @@ namespace pilo
 						{
 							break;
 						}
-						else if (p_case->result() != ::pilo::make_core_error(PES_RC, PEP_RETRY, 0))
+						else if (p_case->result() != ::pilo::mk_perr(PERR_RETRY))
 						{
 							break;
 						}
@@ -108,7 +108,7 @@ namespace pilo
 							}
 							else
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED, 0));
+								p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 								break;
 							}
 						}
@@ -156,12 +156,12 @@ namespace pilo
 						consumers[i].join();
 					}
 
-					if (p_case->result() == ::pilo::make_core_error(PES_RC, PEP_RETRY, 0))
+					if (p_case->result() == ::pilo::mk_perr(PERR_RETRY))
 					{
 						if (p_case->out_trans_count() != p_case->target_trans_count())
 						{
-							p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED, 0));
-							return ::pilo::make_core_error(PES_OP, PEP_ABORTED, 0);
+							p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
+							return ::pilo::mk_perr(PERR_USER_CANCEL);
 						}
 						p_case->set_result(PILO_OK);
 					} 
@@ -202,7 +202,7 @@ namespace pilo
 						}
 						else
 						{
-							p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED, 0));
+							p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 							return;
 						}
 						::pilo::i64_t tmp_diff = ::pilo::core::datetime::timestamp_nano_steady() - tmp_beg;
@@ -213,7 +213,7 @@ namespace pilo
 						{
 							if (!obj.validate())
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED, 0));
+								p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 								return;
 							}
 							else 
@@ -265,11 +265,11 @@ namespace pilo
 
 					if (p_case->out_trans_count() != p_case->target_trans_count())
 					{
-						p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED, 0));
-						return ::pilo::make_core_error(PES_OP, PEP_ABORTED, 0);
+						p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
+						return ::pilo::mk_perr(PERR_USER_CANCEL);
 					}
 
-					if (p_case->result() == ::pilo::make_core_error(PES_RC, PEP_RETRY, 0))
+					if (p_case->result() == ::pilo::mk_perr(PERR_RETRY))
 					{
 						p_case->set_result(PILO_OK);
 					}

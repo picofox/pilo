@@ -97,63 +97,63 @@ namespace pilo
 
 					if (byte_buffer->write_bool(this->_is_server) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 1);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 					if (byte_buffer->write_uint32(this->_thread_no) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 2);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 					if (byte_buffer->write_uint64(this->_id) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 3);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 					if (byte_buffer->write_int8(this->_i8v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 4);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 					if (byte_buffer->write_uint8(this->_u8v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 5);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 					if (byte_buffer->write_int16(this->_i16v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 6);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 
 					if (byte_buffer->write_uint16(this->_u16v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 7);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 					if (byte_buffer->write_int32(this->_i32v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 8);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 					if (byte_buffer->write_int64(this->_i64v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 9);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 					if (byte_buffer->write_float32(this->_f32v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 10);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 					if (byte_buffer->write_float64(this->_f64v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 11);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 					if (byte_buffer->write_raw_bytes(this->_padding, 0, SIZE-43) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 11);
+						return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
 					}
 
 					if (header != nullptr)
@@ -184,57 +184,57 @@ namespace pilo
 
 					if (byte_buffer->read_bool(this->_is_server) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 1);
+						return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 					}
 
 					if (byte_buffer->read_uint32(this->_thread_no) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 2);
+						return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 					}
 
 					if (byte_buffer->read_uint64(this->_id) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 3);
+						return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 					}
 
 					if (byte_buffer->read_int8(this->_i8v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 4);
+						return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 					}
 
 					if (byte_buffer->read_uint8(this->_u8v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 5);
+						return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 					}
 
 					if (byte_buffer->read_int16(this->_i16v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 6);
+						return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 					}
 
 					if (byte_buffer->read_uint16(this->_u16v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 7);
+						return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 					}
 
 					if (byte_buffer->read_int32(this->_i32v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 8);
+						return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 					}
 
 					if (byte_buffer->read_int64(this->_i64v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 9);
+						return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 					}
 
 					if (byte_buffer->read_float32(this->_f32v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 10);
+						return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 					}
 
 					if (byte_buffer->read_float64(this->_f64v) != PILO_OK)
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 11);
+						return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 					}
 
 					byte_buffer->read_raw_bytes(this->_padding, SIZE-43, 0, SIZE - 43, ret);

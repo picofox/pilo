@@ -129,7 +129,7 @@ namespace pilo
                     }
                     else
                     {
-                        return ::pilo::make_core_error(PES_OP, PEP_NOSENSE, 0);
+                        return ::pilo::mk_perr(PERR_NOOP);
                     }
                 }                
 

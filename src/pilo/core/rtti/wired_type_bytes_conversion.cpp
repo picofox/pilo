@@ -13,7 +13,7 @@ namespace pilo
 				char* ret = (char*)PMF_HEAP_MALLOC(need_capa);
 				if (ret == nullptr)
 				{
-					*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+					*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 					return nullptr;
 				}
 				::pilo::core::string::number_to_string(ret, need_capa, nv);
@@ -28,7 +28,7 @@ namespace pilo
 					ret = (char*)PMF_HEAP_MALLOC(5);
 					if (ret == nullptr)
 					{
-						*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 						return nullptr;
 					}
 					::pilo::core::string::n_copyz(ret, 5, "true", 4);
@@ -38,7 +38,7 @@ namespace pilo
 					ret = (char*)PMF_HEAP_MALLOC(6);
 					if (ret == nullptr)
 					{
-						*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 						return nullptr;
 					}
 					::pilo::core::string::n_copyz(ret, 6, "false", 5);					
@@ -101,7 +101,7 @@ namespace pilo
 					char* ret = (char*)PMF_HEAP_MALLOC(len);
 					if (ret == nullptr)
 					{
-						*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 						return nullptr;
 					}
 					memcpy(ret, v, len);
@@ -113,7 +113,7 @@ namespace pilo
 				if (v == nullptr)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+						*err = ::pilo::mk_perr(PERR_NULL_PARAM);
 					return nullptr;
 				}
 				return convert_to_bytes(v->c_str(), err, (::pilo::i32_t) v->size());
@@ -126,7 +126,7 @@ namespace pilo
 			{
 				if (v == nullptr)
 				{
-					if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_OK_WITH_INFO);
+					if (err != nullptr) *err = ::pilo::mk_perr(PERR_OK_WITH_INFO);
 					return nullptr;
 				}
 				else

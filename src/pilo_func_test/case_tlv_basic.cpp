@@ -19,7 +19,7 @@ namespace pilo
 			char errbuf[128] = { 0 };
 			if (tlv->value_type() != vt || tlv->wrapper_type() != wt)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TCASE, PEP_TYPE_MISMATCH));
+				p_case->set_result(::pilo::mk_perr(PERR_MIS_DATA_TYPE));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "internal vtype(%u) and wtype(%u) mismatch. should be %u %u\n"
 					, tlv->value_type(), tlv->wrapper_type()
 					, vt, wt);
@@ -28,21 +28,21 @@ namespace pilo
 			}
 			if (tlv->size() != sz)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TCASE, PEP_LEN_INV));
+				p_case->set_result(::pilo::mk_perr(PERR_INV_LEN));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "size (%d) invalid should be (%d)\n", tlv->size(), sz);
 				p_case->set_desc(errbuf);
 				return false;
 			}
 			if (tlv->category_id() != ism)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TCASE, PEP_INC_DATA));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "category_id (%d) invalid should be (%d)\n", tlv->category_id(), ism);
 				p_case->set_desc(errbuf);
 				return false;
 			}
 			if (tlv->key_type() != kt)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TCASE, PEP_INC_DATA));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "key_type (%d) invalid should be (%d)\n", tlv->key_type(), kt);
 				p_case->set_desc(errbuf);
 				return false;
@@ -62,7 +62,7 @@ namespace pilo
 			
 			if (tlv_0->valid())
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_VALID));
+				p_case->set_result(::pilo::mk_perr(PERR_NO_OVERWRITING));
 				p_case->set_desc("initial state should be invalid.");
 				return PILO_OK;
 			}
@@ -71,7 +71,7 @@ namespace pilo
 			::pilo::i8_t i8v = tlv_0->as_i8(&err);
 			if (err != PILO_OK || i8v != 127)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 127 i64 as i8 failed %d", i8v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -80,8 +80,8 @@ namespace pilo
 			tlv_0->set((::pilo::u64_t)256);			
 			if (tlv_0->value_type() != ::pilo::core::rtti::wired_type::key_type_u64)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH));
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "expect %d type but got %d type %s", ::pilo::core::rtti::wired_type::value_type_u64 ,tlv_0->value_type(), ::pilo::str_error(err).c_str());
+				p_case->set_result(::pilo::mk_perr(PERR_MIS_DATA_TYPE));
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "expect %d type but got %d type %s", ::pilo::core::rtti::wired_type::value_type_u64 ,tlv_0->value_type(), ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -90,7 +90,7 @@ namespace pilo
 			::pilo::i16_t i16v = tlv_0->as_i16(&err);
 			if (err != PILO_OK || i16v != PILO_INT16_MAX)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get %d i64 as i16 failed %d", PILO_INT16_MAX, i16v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -99,7 +99,7 @@ namespace pilo
 			i16v = tlv_0->as_i16(&err);
 			if (err != PILO_OK || i16v != PILO_INT16_MIN)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get %d i64 as i16 failed %d", PILO_INT16_MIN, i16v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -112,7 +112,7 @@ namespace pilo
 			::pilo::u16_t u16v = tlv_0->as_u16(&err);
 			if (err != PILO_OK || u16v != PILO_UINT16_MAX)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get %d i64 as u16 failed %d", PILO_UINT16_MAX, u16v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -120,8 +120,8 @@ namespace pilo
 			
 			if (tlv_0->value_type() != ::pilo::core::rtti::wired_type::value_type_i64)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH));
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "expect %d type but got %d type %s", ::pilo::core::rtti::wired_type::value_type_u64, tlv_0->value_type(), ::pilo::str_error(err).c_str());
+				p_case->set_result(::pilo::mk_perr(PERR_MIS_DATA_TYPE));
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "expect %d type but got %d type %s", ::pilo::core::rtti::wired_type::value_type_u64, tlv_0->value_type(), ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -130,7 +130,7 @@ namespace pilo
 			::pilo::i32_t i32v = tlv_0->as_i32(&err);
 			if (err != PILO_OK || i32v != PILO_INT32_MAX)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get %d i64 as i32 failed %d", PILO_INT32_MAX, i32v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -139,7 +139,7 @@ namespace pilo
 			i32v = tlv_0->as_i32(&err);
 			if (err != PILO_OK || i32v != PILO_INT32_MIN)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get %d i64 as i32 failed %d", PILO_INT32_MIN, i32v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -151,7 +151,7 @@ namespace pilo
 			::pilo::u32_t u32v = tlv_0->as_u32(&err);
 			if (err != PILO_OK || u32v != PILO_UINT32_MAX)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get %d i64 as u32 failed %d", PILO_UINT32_MAX, u32v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -159,8 +159,8 @@ namespace pilo
 			
 			if (tlv_0->value_type() != ::pilo::core::rtti::wired_type::value_type_i64)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH));
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "expect %d type but got %d type %s", ::pilo::core::rtti::wired_type::value_type_u64, tlv_0->value_type(), ::pilo::str_error(err).c_str());
+				p_case->set_result(::pilo::mk_perr(PERR_MIS_DATA_TYPE));
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "expect %d type but got %d type %s", ::pilo::core::rtti::wired_type::value_type_u64, tlv_0->value_type(), ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -169,7 +169,7 @@ namespace pilo
 			::pilo::i64_t i64v = tlv_0->as_i64(&err);
 			if (err != PILO_OK || i64v != PILO_INT64_MAX)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get %lld i64 as i64 failed %d", PILO_INT64_MAX, i64v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -178,7 +178,7 @@ namespace pilo
 			i64v = tlv_0->as_i64(&err);
 			if (err != PILO_OK || i64v != PILO_INT64_MIN)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get %lld i64 as i64 failed %d", PILO_INT64_MAX, i64v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -188,7 +188,7 @@ namespace pilo
 			::pilo::u64_t u64v = tlv_0->as_u64(&err);
 			if (err != PILO_OK || u64v != PILO_UINT64_MAX)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get %lld i64 as u64 failed %d", PILO_UINT64_MAX, u64v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -199,7 +199,7 @@ namespace pilo
 			i8v = tlv_0->as_i8(&err);
 			if (err != PILO_OK || i8v != 3)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 3.14 f32 as i8 failed %d",  i8v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -208,7 +208,7 @@ namespace pilo
 			::pilo::u8_t u8v = tlv_0->as_u8(&err);
 			if (err != PILO_OK || u8v != 3)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 3.14 f32 as u8 failed %d", u8v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -218,7 +218,7 @@ namespace pilo
 			i16v = tlv_0->as_i16(&err);
 			if (err != PILO_OK || i16v != 30000)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 30000.14 f32 as i16 failed %d",  i16v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -227,7 +227,7 @@ namespace pilo
 			u16v = tlv_0->as_u16(&err);
 			if (err != PILO_OK || u16v != 30000)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 30000.14 f32 as i16 failed %d", u16v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -237,7 +237,7 @@ namespace pilo
 			i32v = tlv_0->as_i32(&err);
 			if (err != PILO_OK || i32v != 200001)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 200001.14 f32 as i32 failed %d", i32v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -246,7 +246,7 @@ namespace pilo
 			u32v = tlv_0->as_u32(&err);
 			if (err != PILO_OK || u32v != 200001)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 200001.14 f32 as i32 failed %d", u32v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -256,7 +256,7 @@ namespace pilo
 			i64v = tlv_0->as_i64(&err);
 			if (err != PILO_OK || i64v != 200001)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 200001.14 f32 as i64 failed %d", i64v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -265,7 +265,7 @@ namespace pilo
 			u64v = tlv_0->as_u64(&err);
 			if (err != PILO_OK || u64v != 200001)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 200001.14 f32 as i64 failed %d", u64v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -275,7 +275,7 @@ namespace pilo
 			i8v = tlv_0->as_i8(&err);
 			if (err != PILO_OK || i8v != 2)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 2.71 f64 as i8 failed %d", PILO_UINT64_MAX, i8v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -284,7 +284,7 @@ namespace pilo
 			u8v = tlv_0->as_u8(&err);
 			if (err != PILO_OK || u8v != 2)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 3.14 f64 as u8 failed %d", PILO_UINT64_MAX, u8v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -294,7 +294,7 @@ namespace pilo
 			i16v = tlv_0->as_i16(&err);
 			if (err != PILO_OK || i16v != 30000)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 30000.14 f64 as i16 failed %d", i16v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -303,7 +303,7 @@ namespace pilo
 			u16v = tlv_0->as_u16(&err);
 			if (err != PILO_OK || u16v != 30000)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 30000.14 f64 as i16 failed %d", u16v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -313,7 +313,7 @@ namespace pilo
 			i32v = tlv_0->as_i32(&err);
 			if (err != PILO_OK || i32v != 200001)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 200001.14 f64 as i32 failed %d", i32v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -322,7 +322,7 @@ namespace pilo
 			u32v = tlv_0->as_u32(&err);
 			if (err != PILO_OK || u32v != 200001)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 200001.14 f64 as i32 failed %d", u32v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -332,7 +332,7 @@ namespace pilo
 			i64v = tlv_0->as_i64(&err);
 			if (err != PILO_OK || i64v != 123456789)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 123456789.1234 f64 as i64 failed %d", i64v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -341,7 +341,7 @@ namespace pilo
 			u64v = tlv_0->as_u64(&err);
 			if (err != PILO_OK || u64v != 123456789)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_INVALID));
+				p_case->set_result(::pilo::mk_perr(PERR_INC_DATA));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get 123456789.1234 f64 as i64 failed %d", u64v);
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -360,7 +360,7 @@ namespace pilo
 
 			if (tlv_0->valid())
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_VALID));
+				p_case->set_result(::pilo::mk_perr(PERR_NO_OVERWRITING));
 				p_case->set_desc("initial state should be invalid.");
 				return PILO_OK;
 			}
@@ -369,8 +369,8 @@ namespace pilo
 			::pilo::i8_t i8v = tlv_0->as_i8(&err);
 			if (err != PILO_OK || i8v != 123)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 123 as i8 failed %d err:%s",i8v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 123 as i8 failed %d err:%s",i8v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -379,8 +379,8 @@ namespace pilo
 			i8v = tlv_0->as_i8(&err);
 			if (err != PILO_OK || i8v != -123)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -123 as i8 failed %d err:%s", i8v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -123 as i8 failed %d err:%s", i8v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -389,8 +389,8 @@ namespace pilo
 			::pilo::u8_t u8v = tlv_0->as_u8(&err);
 			if (err != PILO_OK || u8v != 255)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 123 as u8 failed %d err:%s", u8v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 123 as u8 failed %d err:%s", u8v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -399,8 +399,8 @@ namespace pilo
 			::pilo::i16_t i16v = tlv_0->as_i16(&err);
 			if (err != PILO_OK || i16v != -32768)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -32768 as i16 failed %d err:%s", i16v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -32768 as i16 failed %d err:%s", i16v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -409,8 +409,8 @@ namespace pilo
 			i16v = tlv_0->as_i16(&err);
 			if (err != PILO_OK || i16v != 32767)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 32767 as i16 failed %d err:%s", i16v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 32767 as i16 failed %d err:%s", i16v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -419,8 +419,8 @@ namespace pilo
 			::pilo::u16_t u16v = tlv_0->as_u16(&err);
 			if (err != PILO_OK || u16v != 65535)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 65535 as i16 failed %d err:%s", u16v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 65535 as i16 failed %d err:%s", u16v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -429,8 +429,8 @@ namespace pilo
 			::pilo::i32_t i32v = tlv_0->as_i32(&err);
 			if (err != PILO_OK || i32v != PILO_INT32_MIN)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -2147483648 as i32 failed %d err:%s", i32v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -2147483648 as i32 failed %d err:%s", i32v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -439,8 +439,8 @@ namespace pilo
 			i32v = tlv_0->as_i32(&err);
 			if (err != PILO_OK || i32v != PILO_INT32_MAX)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 2147483647 as i32 failed %d err:%s", i32v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 2147483647 as i32 failed %d err:%s", i32v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -449,8 +449,8 @@ namespace pilo
 			::pilo::u32_t u32v = tlv_0->as_u32(&err);
 			if (err != PILO_OK || u32v != PILO_UINT32_MAX)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 4294967295 as u32 failed %d err:%s", u32v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 4294967295 as u32 failed %d err:%s", u32v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -459,8 +459,8 @@ namespace pilo
 			::pilo::i64_t i64v = tlv_0->as_i64(&err);
 			if (err != PILO_OK || i64v != PILO_INT64_MIN)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -9223372036854775808 as i64 failed %lld err:%s", i64v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -9223372036854775808 as i64 failed %lld err:%s", i64v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -469,8 +469,8 @@ namespace pilo
 			i64v = tlv_0->as_i64(&err);
 			if (err != PILO_OK || i64v != PILO_INT64_MAX)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 9223372036854775807 as i64 failed %lld err:%s", i64v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 9223372036854775807 as i64 failed %lld err:%s", i64v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -479,8 +479,8 @@ namespace pilo
 			std::string s = tlv_0->as_str(&err);
 			if (err != PILO_OK || s != "9223372036854775807")
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 9223372036854775807 as str failed %s err:%s", s.c_str(), ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str 9223372036854775807 as str failed %s err:%s", s.c_str(), ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -488,8 +488,8 @@ namespace pilo
 			s = tlv_0->as_str(&err);
 			if (err != PILO_OK || s != "-123")
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -123 as str failed %s err:%s", s.c_str(), ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -123 as str failed %s err:%s", s.c_str(), ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -497,8 +497,8 @@ namespace pilo
 			s = tlv_0->as_str(&err, "%02x");
 			if (err != PILO_OK || s != "85")
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -123 as str failed %s err:%s", s.c_str(), ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -123 as str failed %s err:%s", s.c_str(), ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -507,8 +507,8 @@ namespace pilo
 			s = tlv_0->as_str(&err);
 			if (err != PILO_OK || s != "-11223")
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -11223 as str failed %s err:%s", s.c_str(), ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -11223 as str failed %s err:%s", s.c_str(), ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -516,8 +516,8 @@ namespace pilo
 			s = tlv_0->as_str(&err, "%04hx");
 			if (err != PILO_OK || s != "d429")
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -11223 as str failed %s err:%s", s.c_str(), ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get str -11223 as str failed %s err:%s", s.c_str(), ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -536,7 +536,7 @@ namespace pilo
 
 			if (tlv_0->valid())
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_VALID));
+				p_case->set_result(::pilo::mk_perr(PERR_NO_OVERWRITING));
 				p_case->set_desc("initial state should be invalid.");
 				return PILO_OK;
 			}
@@ -545,16 +545,16 @@ namespace pilo
 			::pilo::f32_t f32v = tlv_0->as_f32(&err);
 			if (err != PILO_OK || f32v != -23)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i8_t 23 as f32 failed %f err:%s", f32v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i8_t 23 as f32 failed %f err:%s", f32v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
 			::pilo::f64_t f64v = tlv_0->as_f64(&err);
 			if (err != PILO_OK || f32v != -23)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i8_t 23 as f64 failed %f err:%s", f64v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i8_t 23 as f64 failed %f err:%s", f64v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -563,16 +563,16 @@ namespace pilo
 			f32v = tlv_0->as_f32(&err);
 			if (err != PILO_OK || f32v != 125)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i8_t 23 as f32 failed %f err:%s", f32v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i8_t 23 as f32 failed %f err:%s", f32v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
 			f64v = tlv_0->as_f64(&err);
 			if (err != PILO_OK || f32v != 125)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i8_t 23 as f64 failed %f err:%s", f64v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i8_t 23 as f64 failed %f err:%s", f64v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -581,16 +581,16 @@ namespace pilo
 			f32v = tlv_0->as_f32(&err);
 			if (err != PILO_OK || f32v != -22113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i16_t -22113 as f32 failed %f err:%s", f32v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i16_t -22113 as f32 failed %f err:%s", f32v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
 			f64v = tlv_0->as_f64(&err);
 			if (err != PILO_OK || f32v != -22113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i16_t -22113 as f64 failed %f err:%s", f64v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i16_t -22113 as f64 failed %f err:%s", f64v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -599,16 +599,16 @@ namespace pilo
 			f32v = tlv_0->as_f32(&err);
 			if (err != PILO_OK || f32v != 62113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u16_t 62113 as f32 failed %f err:%s", f32v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u16_t 62113 as f32 failed %f err:%s", f32v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
 			f64v = tlv_0->as_f64(&err);
 			if (err != PILO_OK || f32v != 62113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u16_t 62113 as f64 failed %f err:%s", f64v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u16_t 62113 as f64 failed %f err:%s", f64v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -617,16 +617,16 @@ namespace pilo
 			f32v = tlv_0->as_f32(&err);
 			if (err != PILO_OK || f32v != -8222113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i32_t -8222113 as f32 failed %f err:%s", f32v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i32_t -8222113 as f32 failed %f err:%s", f32v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
 			f64v = tlv_0->as_f64(&err);
 			if (err != PILO_OK || f32v != -8222113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i32_t -8222113 as f64 failed %f err:%s", f64v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i32_t -8222113 as f64 failed %f err:%s", f64v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -635,16 +635,16 @@ namespace pilo
 			f32v = tlv_0->as_f32(&err);
 			if (err != PILO_OK || f32v != 8222113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u32_t 8222113 as f32 failed %f err:%s", f32v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u32_t 8222113 as f32 failed %f err:%s", f32v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
 			f64v = tlv_0->as_f64(&err);
 			if (err != PILO_OK || f32v != 8222113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u32_t 8222113 as f64 failed %f err:%s", f64v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u32_t 8222113 as f64 failed %f err:%s", f64v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -653,16 +653,16 @@ namespace pilo
 			f32v = tlv_0->as_f32(&err);
 			if (err != PILO_OK || f32v != -8222113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i64_t -8222113 as f32 failed %f err:%s", f32v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i64_t -8222113 as f32 failed %f err:%s", f32v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
 			f64v = tlv_0->as_f64(&err);
 			if (err != PILO_OK || f32v != -8222113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i64_t -8222113 as f64 failed %f err:%s", f64v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get i64_t -8222113 as f64 failed %f err:%s", f64v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -671,16 +671,16 @@ namespace pilo
 			f32v = tlv_0->as_f32(&err);
 			if (err != PILO_OK || f32v != 8222113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u64_t 8222113 as f32 failed %f err:%s", f32v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u64_t 8222113 as f32 failed %f err:%s", f32v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
 			f64v = tlv_0->as_f64(&err);
 			if (err != PILO_OK || f32v != 8222113)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
-				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u64_t 8222113 as f64 failed %f err:%s", f64v, ::pilo::str_error(err).c_str());
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
+				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "get u64_t 8222113 as f64 failed %f err:%s", f64v, ::pilo::str_err(err).c_str());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
@@ -701,7 +701,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_VALID));
+				p_case->set_result(::pilo::mk_perr(PERR_NO_OVERWRITING));
 				p_case->set_desc("initial state should be invalid.");
 				return PILO_OK;
 			}
@@ -714,7 +714,7 @@ namespace pilo
 			tlv->set(vec);
 			if (err != PILO_OK)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "make a array of string type tlv failed");
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -735,7 +735,7 @@ namespace pilo
 			std::string ret_str = tlv->get<std::string>((::pilo::i32_t)2, &err);
 			if (ret_str != "fox2b")
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));;
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "val str failed");
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -744,7 +744,7 @@ namespace pilo
 			ret_str = tlv->get<std::string>((::pilo::i32_t)3, &err);
 			if (ret_str != "fox2.5")
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));;
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "val str failed");
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -766,7 +766,7 @@ namespace pilo
 			err = tlv->set(vec2);			
 			if (err != PILO_OK)
 			{
-				p_case->set_result(err != PILO_OK ? err : ::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED));;
+				p_case->set_result(err != PILO_OK ? err : ::pilo::mk_perr(PERR_TESTCASE_FAIL));;
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "make a array of tlv type tlv failed");
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -792,7 +792,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_VALID));
+				p_case->set_result(::pilo::mk_perr(PERR_NO_OVERWRITING));
 				p_case->set_desc("initial state should be invalid.");
 				return PILO_OK;
 			}
@@ -815,7 +815,7 @@ namespace pilo
 
 			if (tlv->size() != 8)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));	
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));	
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "bool arr size invalid should be %d, actual %d", 8, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -826,7 +826,7 @@ namespace pilo
 			{
 				if (tlv->get<bool>(i, &err) != cv)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 2));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "bool arr element %d validate failed", i);
 					p_case->set_desc(errbuf);
 					return PILO_OK;
@@ -839,7 +839,7 @@ namespace pilo
 	
 			if (tlv->size() != 6)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "bool arr size invalid should be %d, actual %d", 6, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -850,7 +850,7 @@ namespace pilo
 			{
 				if (tlv->get<bool>(i, &err) != cv)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 2));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "bool arr element %d validate failed", i);
 					p_case->set_desc(errbuf);
 					return PILO_OK;
@@ -861,7 +861,7 @@ namespace pilo
 			tlv->wrapper_clear(true);
 			if (tlv->size() != 0)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "bool arr size invalid should be %d, actual %d", 0, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -882,7 +882,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_VALID));
+				p_case->set_result(::pilo::mk_perr(PERR_NO_OVERWRITING));
 				p_case->set_desc("initial state should be invalid.");
 				return PILO_OK;
 			}
@@ -901,7 +901,7 @@ namespace pilo
 
 			if (tlv->size() != 256)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "i8 arr size invalid should be %d, actual %d", 256, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -911,7 +911,7 @@ namespace pilo
 			{
 				if (tlv->get<::pilo::i8_t>(i+128, &err) != i)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 2));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "i8 arr element %d validate failed", i);
 					p_case->set_desc(errbuf);
 					return PILO_OK;
@@ -921,7 +921,7 @@ namespace pilo
 			tlv->wrapper_clear(false);
 			if (tlv->size() != 0)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "i8 arr size invalid should be %d, actual %d", 0, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -936,7 +936,7 @@ namespace pilo
 			{
 				if (tlv->get<::pilo::i8_t>(i, &err) != 127 - i)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 2));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "i8 arr element %d validate failed", i);
 					p_case->set_desc(errbuf);
 					return PILO_OK;
@@ -959,7 +959,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_VALID));
+				p_case->set_result(::pilo::mk_perr(PERR_NO_OVERWRITING));
 				p_case->set_desc("initial state should be invalid.");
 				return PILO_OK;
 			}
@@ -978,7 +978,7 @@ namespace pilo
 
 			if (tlv->size() != 256)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "u8 arr size invalid should be %d, actual %d", 256, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -988,7 +988,7 @@ namespace pilo
 			{
 				if (tlv->get<::pilo::u8_t>(i, &err) != i)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 2));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "u8 arr element %d validate failed", i);
 					p_case->set_desc(errbuf);
 					return PILO_OK;
@@ -998,7 +998,7 @@ namespace pilo
 			tlv->wrapper_clear(false);
 			if (tlv->size() != 0)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "u8 arr size invalid should be %d, actual %d", 0, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -1013,7 +1013,7 @@ namespace pilo
 			{
 				if (tlv->get<::pilo::u8_t>(i, &err) != 255- i)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 2));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "u8 arr element %d validate failed", i);
 					p_case->set_desc(errbuf);
 					return PILO_OK;
@@ -1036,7 +1036,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_VALID));
+				p_case->set_result(::pilo::mk_perr(PERR_NO_OVERWRITING));
 				p_case->set_desc("initial state should be invalid.");
 				return PILO_OK;
 			}
@@ -1055,7 +1055,7 @@ namespace pilo
 
 			if (tlv->size() != 65536)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "i16 arr size invalid should be %d, actual %d", 65535, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -1065,7 +1065,7 @@ namespace pilo
 			{
 				if (tlv->get<::pilo::i16_t>(i + 32768, &err) != i)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 2));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "i16 arr element %d validate failed", i);
 					p_case->set_desc(errbuf);
 					return PILO_OK;
@@ -1075,7 +1075,7 @@ namespace pilo
 			tlv->wrapper_clear(false);
 			if (tlv->size() != 0)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "i16 arr size invalid should be %d, actual %d", 0, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -1090,7 +1090,7 @@ namespace pilo
 			{
 				if (tlv->get<::pilo::i16_t>(i, &err) != 32767 - i)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 2));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "i16 arr element %d validate failed", i);
 					p_case->set_desc(errbuf);
 					return PILO_OK;
@@ -1113,7 +1113,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_VALID));
+				p_case->set_result(::pilo::mk_perr(PERR_NO_OVERWRITING));
 				p_case->set_desc("initial state should be invalid.");
 				return PILO_OK;
 			}
@@ -1132,7 +1132,7 @@ namespace pilo
 
 			if (tlv->size() != 65536)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "u16 arr size invalid should be %d, actual %d", 256, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -1142,7 +1142,7 @@ namespace pilo
 			{
 				if (tlv->get<::pilo::u16_t>(i, &err) != i)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 2));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "u16 arr element %d validate failed", i);
 					p_case->set_desc(errbuf);
 					return PILO_OK;
@@ -1152,7 +1152,7 @@ namespace pilo
 			tlv->wrapper_clear(false);
 			if (tlv->size() != 0)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "u16 arr size invalid should be %d, actual %d", 0, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -1167,7 +1167,7 @@ namespace pilo
 			{
 				if (tlv->get<::pilo::u16_t>(i, &err) != 65535 - i)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 2));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "u16 arr element %d validate failed", i);
 					p_case->set_desc(errbuf);
 					return PILO_OK;
@@ -1190,7 +1190,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_VALID));
+				p_case->set_result(::pilo::mk_perr(PERR_NO_OVERWRITING));
 				p_case->set_desc("initial state should be invalid.");
 				return PILO_OK;
 			}
@@ -1209,7 +1209,7 @@ namespace pilo
 			}
 			if (tlv->size() != 10002)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "i32 arr size invalid should be %d, actual %d", 256, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -1224,7 +1224,7 @@ namespace pilo
 			{
 				if (tlv->get<::pilo::i32_t>(i, &err) != (i -2) * 100000)
 				{
-					p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "i32 arr check %d element failed should be %d", i, i - 2 * 100000);
+					p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "i32 arr check %d element failed should be %d", i, i - 2 * 100000);
 				}				
 			}
 
@@ -1243,7 +1243,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_VALID));
+				p_case->set_result(::pilo::mk_perr(PERR_NO_OVERWRITING));
 				p_case->set_desc("initial state should be invalid.");
 				return PILO_OK;
 			}
@@ -1262,7 +1262,7 @@ namespace pilo
 			}
 			if (tlv->size() != 10002)
 			{
-				p_case->set_result(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1));
+				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 				::pilo::core::io::string_formated_output(errbuf, sizeof(errbuf), "u32 arr size invalid should be %d, actual %d", 10002, tlv->size());
 				p_case->set_desc(errbuf);
 				return PILO_OK;
@@ -1277,7 +1277,7 @@ namespace pilo
 			{
 				if (tlv->get<::pilo::u32_t>(i, &err) != (i - 2) * 200000)
 				{
-					p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "u32 arr check %d element failed should be %d", i, i - 2 * 100000);
+					p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "u32 arr check %d element failed should be %d", i, i - 2 * 100000);
 				}
 			}
 
@@ -1296,7 +1296,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_VALID), "initial state should be invalid.");
+				return p_case->error(::pilo::mk_perr(PERR_NO_OVERWRITING), "initial state should be invalid.");
 			}
 
 			err = tlv->set_array_type(::pilo::core::rtti::wired_type::value_type_i64);
@@ -1309,14 +1309,14 @@ namespace pilo
 
 			if (tlv->size() != (size_t) c_cnt)
 			{
-				return p_case->error(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1), "i64 arr size invalid should be %d, actual %d", 256, tlv->size());
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "i64 arr size invalid should be %d, actual %d", 256, tlv->size());
 			}
 
 			for (::pilo::i32_t i = 0; i < c_cnt; i++)
 			{
 				if (tlv->get<::pilo::i64_t>(i, &err) != i)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "i64 arr check %d element failed should be %d", i, i - 2 * 100000);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "i64 arr check %d element failed should be %d", i, i - 2 * 100000);
 				}
 			}
 
@@ -1334,7 +1334,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_VALID), "initial state should be invalid.");
+				return p_case->error(::pilo::mk_perr(PERR_NO_OVERWRITING), "initial state should be invalid.");
 			}
 
 			err = tlv->set_array_type(::pilo::core::rtti::wired_type::value_type_u64);
@@ -1349,7 +1349,7 @@ namespace pilo
 			}
 			if (tlv->size() != 10002)
 			{
-				return p_case->error(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1), "u64 arr size invalid should be %d, actual %d", 256, tlv->size());
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "u64 arr size invalid should be %d, actual %d", 256, tlv->size());
 			}
 
 			if (tlv->get<::pilo::u64_t>(0, &err) != 0)
@@ -1366,7 +1366,7 @@ namespace pilo
 			{
 				if (tlv->get<::pilo::u64_t>(i, &err) != (::pilo::u64_t)( ((::pilo::u64_t)i - 2) * 100000000))
 				{
-					p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "u64 arr check %d element failed should be %d", i, i - 2 * 100000);
+					p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "u64 arr check %d element failed should be %d", i, i - 2 * 100000);
 				}
 			}
 
@@ -1384,7 +1384,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_VALID), "initial state should be invalid.");
+				return p_case->error(::pilo::mk_perr(PERR_NO_OVERWRITING), "initial state should be invalid.");
 			}
 
 			err = tlv->set_array_type(::pilo::core::rtti::wired_type::value_type_f32);
@@ -1396,14 +1396,14 @@ namespace pilo
 			}
 			if (tlv->size() != 10000)
 			{
-				return p_case->error(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1), "f32 arr size invalid should be %d, actual %d", 10000, tlv->size());
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "f32 arr size invalid should be %d, actual %d", 10000, tlv->size());
 			}
 
 			for (::pilo::i32_t i = 0; i < 10000; i++)
 			{
 				if (tlv->get<::pilo::f32_t>(i, &err) != i * 10000.f)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "f32 arr check %d element failed should be %f", i, i * 10000);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "f32 arr check %d element failed should be %f", i, i * 10000);
 				}
 			}
 
@@ -1414,14 +1414,14 @@ namespace pilo
 			}
 			if (tlv->size() != 10000)
 			{
-				return p_case->error(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1), "f32 arr size invalid should be %d, actual %d", 10000, tlv->size());
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "f32 arr size invalid should be %d, actual %d", 10000, tlv->size());
 			}
 
 			for (::pilo::i32_t i = 0; i < 10000; i++)
 			{
 				if (tlv->get<::pilo::f32_t>(i, &err) != 99990000.f - i * 10000.f)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "f32 arr check %d element failed should be %f", i, 99990000.f - i * 10000.f);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "f32 arr check %d element failed should be %f", i, 99990000.f - i * 10000.f);
 				}
 			}
 
@@ -1440,7 +1440,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_VALID), "initial state should be invalid.");
+				return p_case->error(::pilo::mk_perr(PERR_NO_OVERWRITING), "initial state should be invalid.");
 			}
 
 			err = tlv->set_array_type(::pilo::core::rtti::wired_type::value_type_f64);
@@ -1452,14 +1452,14 @@ namespace pilo
 			}
 			if (tlv->size() != 10000)
 			{
-				return p_case->error(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1), "f64 arr size invalid should be %d, actual %d", 10000, tlv->size());
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "f64 arr size invalid should be %d, actual %d", 10000, tlv->size());
 			}
 
 			for (::pilo::i32_t i = 0; i < 10000; i++)
 			{
 				if (tlv->get<::pilo::f64_t>(i, &err) != i * 10000.f)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "f64 arr check %d element failed should be %f", i, i * 10000);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "f64 arr check %d element failed should be %f", i, i * 10000);
 				}
 			}
 
@@ -1470,14 +1470,14 @@ namespace pilo
 			}
 			if (tlv->size() != 10000)
 			{
-				return p_case->error(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1), "f64 arr size invalid should be %d, actual %d", 10000, tlv->size());
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "f64 arr size invalid should be %d, actual %d", 10000, tlv->size());
 			}
 
 			for (::pilo::i32_t i = 0; i < 10000; i++)
 			{
 				if (tlv->get<::pilo::f64_t>(i, &err) != 99990000.f - i * 10000.f)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "f64 arr check %d element failed should be %f", i, 99990000.f - i * 10000.f);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "f64 arr check %d element failed should be %f", i, 99990000.f - i * 10000.f);
 				}
 			}
 
@@ -1496,7 +1496,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_VALID), "initial state should be invalid.");
+				return p_case->error(::pilo::mk_perr(PERR_NO_OVERWRITING), "initial state should be invalid.");
 			}
 
 			err = tlv->set_array_type(::pilo::core::rtti::wired_type::value_type_str);
@@ -1510,7 +1510,7 @@ namespace pilo
 			}
 			if (tlv->size() != 10000)
 			{
-				return p_case->error(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1), "f64 arr size invalid should be %d, actual %d", 10000, tlv->size());
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "f64 arr size invalid should be %d, actual %d", 10000, tlv->size());
 			}
 			
 			for (::pilo::i32_t i = 0; i < 10000; i++)
@@ -1519,7 +1519,7 @@ namespace pilo
 				std::string ele = tlv->get<std::string>(i, &err);
 				if (memcmp(ele.c_str(), strbuff, ::pilo::core::string::character_count(strbuff) + 1) != 0)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "str arr check %d element failed get %s should be %s", i, ele.c_str(), strbuff);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "str arr check %d element failed get %s should be %s", i, ele.c_str(), strbuff);
 				}
 
 				tlv->push_back(strbuff);
@@ -1533,7 +1533,7 @@ namespace pilo
 			}
 			if (tlv->size() != 10000)
 			{
-				return p_case->error(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1), "f64 arr size invalid should be %d, actual %d", 10000, tlv->size());
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "f64 arr size invalid should be %d, actual %d", 10000, tlv->size());
 			}
 			int v = 0;
 			for (::pilo::i32_t i = 9999; i >= 0; i--)
@@ -1543,7 +1543,7 @@ namespace pilo
 				
 				if (memcmp(ele.c_str(), strbuff, 128) != 0)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "str arr check %d element failed get %s should be %s", i, ele.c_str(), strbuff);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "str arr check %d element failed get %s should be %s", i, ele.c_str(), strbuff);
 				}
 			}
 
@@ -1563,7 +1563,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_VALID), "initial state should be invalid.");
+				return p_case->error(::pilo::mk_perr(PERR_NO_OVERWRITING), "initial state should be invalid.");
 			}
 
 			err = tlv->set_array_type(::pilo::core::rtti::wired_type::value_type_bytes);
@@ -1577,7 +1577,7 @@ namespace pilo
 			}
 			if (tlv->size() != 10000)
 			{
-				return p_case->error(::pilo::make_core_error(PES_OP, PEP_VDT_FAILED, 1), "bytes arr size invalid should be %d, actual %d", 10000, tlv->size());
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "bytes arr size invalid should be %d, actual %d", 10000, tlv->size());
 			}
 
 			for (::pilo::i32_t i = 0; i < 10000; i++)
@@ -1586,7 +1586,7 @@ namespace pilo
 				char* ele = tlv->get<char*>(i, &err);
 				if (memcmp(ele, strbuff, ::pilo::core::string::character_count(strbuff) + 1) != 0)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "bytes arr check %d element failed get %s should be %s", i, ele, strbuff);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "bytes arr check %d element failed get %s should be %s", i, ele, strbuff);
 				}
 			}
 
@@ -1602,7 +1602,7 @@ namespace pilo
 				memset(strbuff, i % 255, 128);
 				if (memcmp(ele, strbuff, 128) != 0)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "bytes arr check %d element failed", i);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "bytes arr check %d element failed", i);
 				}
 			}
 
@@ -1762,42 +1762,42 @@ namespace pilo
 			tlvp0->get("character.attr.borned[0]", u8v);
 			if (u8v != 30)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[0] should be 30");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[0] should be 30");
 			}
 			::pilo::i16_t i16v = 0;
 			t = tlvp0->set("character.attr.borned[]", (::pilo::i16_t)-32768, err);
 			tlvp0->get("character.attr.borned[1]", i16v);
 			if (i16v != -32768)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[1] should be 30");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[1] should be 30");
 			}
 			::pilo::i32_t i32v = 0;
 			t = tlvp0->set("character.attr.borned[2]", (::pilo::i32_t)PILO_INT32_MAX, err);
 			tlvp0->get("character.attr.borned[2]", i32v);
 			if (i32v != PILO_INT32_MAX)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[2] should be 30");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[2] should be 30");
 			}
 			::pilo::i64_t i64v = 0;
 			t = tlvp0->set("character.attr.borned[3]", (::pilo::i64_t)PILO_INT64_MAX, err);
 			tlvp0->get("character.attr.borned[3]", i64v);
 			if (i64v != PILO_INT64_MAX)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[3] should be PILO_INT64_MAX");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[3] should be PILO_INT64_MAX");
 			}
 			::pilo::f64_t f64v = 0;
 			t = tlvp0->set("character.attr.borned[4]", (::pilo::f64_t)3.14, err);
 			tlvp0->get("character.attr.borned[4]", f64v);
 			if (f64v != 3.14)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[4] should be 3.14");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[4] should be 3.14");
 			}
 			::pilo::f32_t f32v = 0;
 			t = tlvp0->set("character.attr.borned[5]", (::pilo::f32_t)2.71f, err);
 			tlvp0->get("character.attr.borned[5]", f32v);
 			if (f32v != 2.71f)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[5] should be 3.14");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[5] should be 3.14");
 			}
 			char* charv = nullptr;
 			::pilo::i32_t rlen = 0;
@@ -1805,7 +1805,7 @@ namespace pilo
 			tlvp0->get("character.attr.borned[6]", charv, &rlen);
 			if (::pilo::core::string::strict_compare(charv, 0, "hello this is fox", 0, -1) != 0 )
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[6] should be 3.14");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[6] should be 3.14");
 			}
 
 			std::string str;
@@ -1813,14 +1813,14 @@ namespace pilo
 			tlvp0->get("character.attr.borned[7]", str);
 			if (::pilo::core::string::strict_compare(str.c_str(), 0, "0123456789", 0, 10) != 0)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[7]");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[7]");
 			}
 
 			std::deque<::pilo::i32_t> passive_deq{0,1,2,3,4,5,6,7,8,9};
 			t = tlvp0->set("character.attr.borned[7]", passive_deq, err);
 			if (t != nullptr || err == PILO_OK)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[7] exist should not be set");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[7] exist should not be set");
 			}
 			t = tlvp0->set("character.attr.borned[8]", passive_deq, err);
 			std::deque<::pilo::i32_t> passive_deq_ret;
@@ -1851,7 +1851,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_VALID), "initial state should be invalid.");
+				return p_case->error(::pilo::mk_perr(PERR_NO_OVERWRITING), "initial state should be invalid.");
 			}
 
 			err = tlv->set_array_type(::pilo::core::rtti::wired_type::value_type_tlv);
@@ -1886,7 +1886,7 @@ namespace pilo
 			if (p_case->check_error(err, PILO_OK, "as_bytes failed")) return PILO_OK;
 			if (bytes_v_1 == nullptr || rlen != 5 || ::pilo::core::string::strict_compare(bytes_v_1,0, "01234",0, 5) != 0)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "elem 1 value failed");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "elem 1 value failed");
 			}
 			rtlv = tlv->get<::pilo::tlv*>(2, &err);
 			if (rtlv->value_type() != ::pilo::core::rtti::wired_type::value_type_str)
@@ -1896,14 +1896,14 @@ namespace pilo
 			std::string str_v_2 = rtlv->as_str(&err, nullptr);
 			if (::pilo::core::string::strict_compare(str_v_2.c_str(), 0, "nihao2",0, 7) != 0)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "elem 1 value failed");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "elem 1 value failed");
 			}
 
 			::pilo::tlv* bool_arr_tlv = tlv->push_back_array_element<bool>({ false, true, false, true }, &err);		
 			if (p_case->check_error(err, PILO_OK, "push_back_array_element")) return PILO_OK;
 			if (bool_arr_tlv == nullptr)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "elem bool_arr_tlv value failed");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "elem bool_arr_tlv value failed");
 			}
 			bool_arr_tlv->push_back(false);
 
@@ -1928,7 +1928,7 @@ namespace pilo
 
 			if (tlv->valid())
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_VALID), "initial state should be invalid.");
+				return p_case->error(::pilo::mk_perr(PERR_NO_OVERWRITING), "initial state should be invalid.");
 			}
 			
 			err = tlv->set_array_type(::pilo::core::rtti::wired_type::value_type_tlv);
@@ -1950,7 +1950,7 @@ namespace pilo
 			if (p_case->check_error(err, PILO_OK, "push_back_array_element")) return PILO_OK;
 			if (bool_arr_tlv == nullptr)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "elem bool_arr_tlv value failed");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "elem bool_arr_tlv value failed");
 			}
 			bool_arr_tlv->push_back(false);
 			//5
@@ -1967,19 +1967,19 @@ namespace pilo
 			auto saved_tlv = tlv->clone_shared();
 			if (saved_tlv == nullptr)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_CLONE_FAILED), "clone failed");
+				return p_case->error(::pilo::mk_perr(PERR_OBJECT_CLONE_FAIL), "clone failed");
 			}
 
 			std::string jsonstr0 = saved_tlv->to_string();
 			std::string jsonstr1 = saved_tlv->to_string();
 			if (jsonstr0 != jsonstr1)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "j clone validation failed.");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "j clone validation failed.");
 			}
 
 			if (! saved_tlv->equals_to(tlv.get()))
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "clone validation failed.");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "clone validation failed.");
 			}
 
 

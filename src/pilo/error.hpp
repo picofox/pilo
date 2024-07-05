@@ -6,129 +6,149 @@
 
 #define PILO_OK  (0)
 
-#define PEL_NONE            (0)
-#define PEL_CORE            (1)
-#define PEL_FRK             (2)
-#define PEL_APP             (3)
-#define PEL_COUNT           (4)
+#define PERR_OK                 (0)
+#define PERR_OK_WITH_INFO       (1)
+#define PERR_NOOP               (2)
+#define PERR_NULL_PARAM         (3)
+#define PERR_INVALID_PARAM      (4)
+#define PERR_PARAM_OOR          (5)
+#define PERR_PARAM_OOR_U        (6)
+#define PERR_PARAM_OOR_L        (7)
+#define PERR_NULL_PTR           (8)
+#define PERR_INSUF_HEAP         (9)
 
-#define PES_NONE            (0)
-#define PES_OP              (1)
-#define PES_MEM             (2)
-#define PES_PTR             (3)
-#define PES_PARAM           (4)
-#define PES_RC              (5)
-#define PES_OBJ             (6)
-#define PES_BUFFER          (7)
-#define PES_MSG             (8)
-#define PES_VAL             (9)
-#define PES_TLV             (10)
-#define PES_TCASE           (11)
-#define PES_TLV_INT         (12)
-#define PES_TLV_INTARR      (13)
-#define PES_ELEM            (14)
-#define PES_CONT            (15)
-#define PES_WK_TYPE          (16)
-#define PES_WV_TYPE          (17)
-#define PES_GETCWD          (18)
-#define PES_FILE_ATTR       (19)
-#define PES_SYMLINK        (20)
-#define PES_TEXT           (21)
-#define PES_PATH_STR            (22)
-#define PES_DIR              (23)
-#define PES_FILE              (24)
-#define PES_COUNT           (25)
+#define PERR_FAIL_ALLOC         (10)
+#define PERR_MIS_DATA_TYPE      (11)  
+#define PERR_FILE_CREAET_FAIL   (12)
+#define PERR_FILE_DEL_FAIL      (13)
+#define PERR_FILE_RENAME_FAIL   (14)
+#define PERR_FILE_COPY_FAIL     (15)
+#define PERR_IO_CREATE_FAIL     (16)
+#define PERR_IO_INIT_FAIL       (17)
+#define PERR_IO_FINA_FAIL       (18)
+#define PERR_IO_OPEN_FAIL       (19)
 
+#define PERR_IO_CLOSE_FAIL      (20)
+#define PERR_IO_READ_FAIL       (21)
+#define PERR_IO_WRITE_FAIL      (22)
+#define PERR_IO_CTRL_FAIL       (23)
+#define PERR_IO_SYNC_FAIL       (24)
+#define PERR_EXIST              (25)
+#define PERR_NON_EXIST          (26)       
+#define PERR_NULL_PATH          (27)
+#define PERR_INVALID_PATH       (28)
+#define PERR_PATHSTR_OOL        (29)
 
+#define PERR_FSNODE_EXIST       (30)
+#define PERR_FSNODE_NON_EXIST   (31)
+#define PERR_LEN_TOO_SAMLL      (32)
+#define PERR_LEN_TOO_LARGE      (33)
+#define PERR_LEN_IS_ZERO        (34)
+#define PERR_DIR_CREAET_FAIL    (35)
+#define PERR_DIR_DEL_FAIL       (36)
+#define PERR_DIR_RENAME_FAIL    (37)
+#define PERR_DIR_COPY_FAIL      (38)
+#define PERR_FSNODE_LINK_FAIL   (39)
 
-#define PEP_OK              (0)
-#define PEP_OK_WITH_INFO    (1)
-#define PEP_NOSENSE         (2)
-#define PEP_IS_NULL         (3)
-#define PEP_IS_EMPTY        (4)
-#define PEP_IS_INVALID      (5)
-#define PEP_NOT_EXIST       (6)
-#define PEP_NOT_DUP         (7)
-#define PEP_RETRY           (8)
-#define PEP_UNSUPPORT       (9)
-#define PEP_DISABLED        (10)
-#define PEP_ABORTED         (11)
-#define PEP_CANCELED        (12)
-#define PEP_RDFAIL          (13)
-#define PEP_WRFAIL          (14)
-#define PEP_OFF_INV         (15)
-#define PEP_TOO_SMALL       (16)
-#define PEP_TOO_LARGE       (17)
-#define PEP_INF_LOOP        (18)
-#define PEP_LEN_INV         (19)
-#define PEP_INC_LEN         (20)
-#define PEP_PART_DATA       (21)
-#define PEP_INSUFF          (22)
-#define PEP_INC_DATA        (23)
-#define PEP_IS_VALID        (24)
-#define PEP_TYPE_MISMATCH   (25)
-#define PEP_VDT_FAILED      (26)
-#define PEP_ARR_IDX_OOB     (27)
-#define PEP_WIRED_TYPE_CONV_FAILED  (28)
-#define PEP_CLONE_FAILED    (29)
-#define PEP_EXIST           (30)
-#define PEP_INV_CHARS       (31)
-#define PEP_INCOMP          (32)
-#define PEP_ICONV_FAILED    (33)
-#define PEP_FMT_FATAL       (34)   
-#define PEP_CREATE_FAILED   (35)
-#define PEP_DEL_FAILED      (36)  
-#define PEP_FS_LINK_FAILED  (37)  
-#define PEP_OPEN_FAILED     (38)
-#define PEP_COUNT           (39)
+#define PERR_GET_PATH_FAIL      (40)
+#define PERR_DIR_TRAVAL_FAIL    (41)
+#define PERR_NO_OVERWRITING     (42)
+#define PERR_INV_PARAM_DT       (43)
+#define PERR_ICONV_FAIL         (44)
+#define PERR_RD_PARTIAL_DATA    (45)
+#define PERR_WR_PARTIAL_DATA    (46)
+#define PERR_IDX_TOO_OOB        (47)
+#define PERR_IDX_TOO_SMALL      (48)
+#define PERR_IDX_TOO_LARGE      (49)
 
+#define PERR_OP_UNSUPPORT       (50)
+#define PERR_VAL_TOO_SAMLL      (51)
+#define PERR_VAL_TOO_LARGE      (52)
+#define PERR_INC_DATA           (53)
+#define PERR_OBJECT_CLONE_FAIL  (54)
+#define PERR_VAL_EMPTY          (55)
+#define PERR_RETRY              (56)
+#define PERR_USER_CANCEL        (57)
+#define PERR_TESTCASE_FAIL      (58)
+#define PERR_INV_KEY_TYPE       (59)
 
+#define PERR_INV_VAL_TYPE       (60)
+#define PERR_INV_OBJECT         (61)
+#define PERR_INF_LOOP           (62)
+#define PERR_OFF_TOO_SAMLL      (63)
+#define PERR_OFF_TOO_LARGE      (64)
+#define PERR_OFF_IS_ZERO        (65)
+#define PERR_INV_OFF            (66)
+#define PERR_INV_LEN            (67)
 
 namespace pilo
 {
-    typedef i32_t err_t;  
-
-    os_error_number_t get_os_last_error();
- 
-    const char* cstr_os_error(char* buffer, ::pilo::i64_t cc_buffer, ::pilo::os_error_number_t os_err);
-
-    err_t make_error(::pilo::i32_t layer, ::pilo::i32_t subject, ::pilo::i32_t predict, ::pilo::i32_t number = 0, os_error_number_t * os_err = nullptr);
-    err_t make_core_error(::pilo::i32_t subject, ::pilo::i32_t predict, ::pilo::i32_t number = 0, os_error_number_t* os_err = nullptr);
-
-    bool ex_error(err_t err, ::pilo::i32_t* layer, ::pilo::i32_t* subject, ::pilo::i32_t* predict, ::pilo::i32_t* number, os_error_number_t* os_err);
-
-    const char* cstr_error(err_t err, char * buffer, ::pilo::i64_t buffer_capacity, const char* prefix = nullptr);
-
-    std::string str_error(err_t err, const char* prefix = nullptr);
-
-    ::pilo::i32_t ex_err_layer(err_t err);
-    ::pilo::i32_t ex_err_subject(err_t err);
-    ::pilo::i32_t ex_err_prediction(err_t err);
-    ::pilo::i32_t ex_err_number(err_t err);
-
-    bool is_err_sub_and_type(::pilo::err_t err, ::pilo::i32_t subject, ::pilo::i32_t predict);
-    bool is_no_err(::pilo::err_t err);
-    ::pilo::i32_t is_ok_or_err_type(::pilo::err_t err, ::pilo::i32_t predict);
-}
-
-
-
-#define MK_ERR(s,p) (((::pilo::err_t )(s) << 16) | ((::pilo::u16_t) p))
-#define MK_PERR(p)  (((::pilo::err_t )(0) << 16) | ((::pilo::u16_t) p))
-#define EX_OSERR(e)  (::pilo::os_error_number_t )((unsigned short)((e >> (16)) & 0xFFFF))
-#define EX_PERR(e)  (::pilo::err_t)((unsigned short)((e >> (0)) & 0xFFFF))
-#define IS_ERR(e, perr, oserr)  (perr == EX_PERR(e) && oserr == EX_OSERR(e))
-#define IS_PERR(e, perr) (perr == EX_PERR(e))
-#define IS_SERR(e, oserr) (oserr == EX_OSERR(e)
-
-namespace pilo
-{
-    __inline ::pilo::err_t make_err(::pilo::err_t perr)
+    __inline os_error_number_t get_os_last_err()
     {
-        ::pilo::os_error_number_t oserr = get_os_last_error();
-        return MK_ERR(oserr, perr);
+#ifdef WINDOWS
+        return GetLastError();
+#else
+        return errno;
+#endif
     }
 
+    __inline ::pilo::err_t mk_err(::pilo::err_t perr)
+    {
+        ::pilo::os_error_number_t oserr = get_os_last_err();
+        return (((::pilo::err_t)(oserr) << 16) | ((::pilo::u16_t)perr));
+    }
+
+    __inline ::pilo::err_t mk_err(::pilo::err_t perr, ::pilo::os_error_number_t oserr)
+    {
+        return (((::pilo::err_t)(oserr) << 16) | ((::pilo::u16_t)perr));
+    }
+
+    __inline ::pilo::err_t mk_perr(::pilo::err_t perr)
+    {
+        return (((::pilo::err_t)(0) << 16) | ((::pilo::u16_t)perr));
+    }
+
+    __inline ::pilo::os_error_number_t ex_oserr(::pilo::err_t err)
+    {
+        return (::pilo::os_error_number_t)((unsigned short)((err >> (16)) & 0xFFFF));
+    }
+
+    __inline ::pilo::err_t ex_perr(::pilo::err_t err)
+    {
+        return (::pilo::err_t)((unsigned short)((err >> (0)) & 0xFFFF));
+    }
+
+    __inline void ex_err(::pilo::err_t err, ::pilo::err_t* perr, ::pilo::os_error_number_t* oserr)
+    {
+        if (perr != nullptr) *perr = ex_perr(err);
+        if (oserr != nullptr) *oserr = ex_oserr(err);
+    }
+
+    _inline bool is_err(::pilo::err_t err, ::pilo::err_t perr, ::pilo::os_error_number_t oserr)
+    {
+        return (perr == ex_perr(err) && oserr == ex_oserr(err));
+    }
+
+    _inline ::pilo::i32_t is_ok_perr(::pilo::err_t err, ::pilo::err_t perr)
+    {
+        if (err == PILO_OK) return 0;
+        else if (perr == ex_perr(err)) return 1;
+        return -1;
+    }
+
+    _inline bool is_perr(::pilo::err_t err, ::pilo::err_t perr)
+    {
+        return (perr == ex_perr(err));
+    }
+
+    _inline bool is_oserr(::pilo::err_t err, ::pilo::os_error_number_t oserr)
+    {
+        return (oserr == ex_oserr(err));
+    }
+    const char* cstr_err_digest(err_t err, char* buffer, ::pilo::i64_t buffer_capacity, const char* prefix);
+    const char* cstr_err_verbose(err_t err, char* buffer, ::pilo::i64_t buffer_capacity, const char* prefix);
+    const char* cstr_err(err_t err, char* buffer, ::pilo::i64_t buffer_capacity, const char* prefix = nullptr, bool verbose = false);
+    std::string str_err(err_t err, const char* prefix = nullptr, bool verbose = false);
 }
 
 #endif //__pilo_error_hpp_

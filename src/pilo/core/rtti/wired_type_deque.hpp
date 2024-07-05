@@ -46,7 +46,7 @@ namespace pilo
 				std::deque<TA_VALUE>* rac = new std::deque<TA_VALUE>;
 				if (rac == nullptr)
 				{
-					::pilo::set_if_ptr_is_not_null(errp, ::pilo::make_core_error(PES_MEM, PEP_INSUFF));
+					::pilo::set_if_ptr_is_not_null(errp, ::pilo::mk_perr( PERR_INSUF_HEAP));
 					return nullptr;
 				}
 				for (TA_VALUE val : list)
@@ -69,7 +69,7 @@ namespace pilo
 				if (cloned_deque == nullptr)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 					destroy_deque((std::deque<TA_VALUE>**) &cloned_deque);
 					return nullptr;
 				}

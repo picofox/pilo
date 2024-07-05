@@ -54,7 +54,7 @@ namespace pilo
                         {
                             return _updater(key_code, this);
                         }
-                        return ::pilo::make_core_error(PES_ELEM, PEP_NOT_EXIST);
+                        return ::pilo::mk_perr( PERR_NON_EXIST);
                     }
                     inline void to_string(pool_object_key_code key_code, std::stringstream& ss) const
                     {
@@ -90,7 +90,7 @@ namespace pilo
                     std::map<pool_object_key_code, stat_item>::const_iterator cit = _items.find(key_code);
                     if (cit != _items.cend())
                     {
-                        return ::pilo::make_core_error(PES_ELEM, PEP_EXIST);
+                        return ::pilo::mk_perr(PERR_EXIST);
                     }
                     _items.insert(std::pair<pool_object_key_code, stat_item>(key_code, si));
                     return PILO_OK;
@@ -104,7 +104,7 @@ namespace pilo
                         _items.erase(cit);
                         return PILO_OK;
                     }
-                    return ::pilo::make_core_error(PES_ELEM, PEP_NOT_EXIST);
+                    return ::pilo::mk_perr( PERR_NON_EXIST);
                 }
 
                 const stat_item& get(pool_object_key_code key_code, bool update) 

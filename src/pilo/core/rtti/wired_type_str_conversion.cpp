@@ -80,7 +80,7 @@ namespace pilo
 				if (v == nullptr)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+						*err = ::pilo::mk_perr(PERR_NULL_PARAM);
 					return std::string("");
 				}
 				return std::string(*v);
@@ -93,7 +93,7 @@ namespace pilo
 			{
 				if (v == nullptr)
 				{
-					if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_OK_WITH_INFO);
+					if (err != nullptr) *err = ::pilo::mk_perr(PERR_OK_WITH_INFO);
 					return std::string("");
 				}
 				else

@@ -45,11 +45,11 @@ namespace pilo {
             ::pilo::err_t os_unicode_to_utf8(::pilo::char_buffer_t& buffer, const wchar_t* src, ::pilo::i32_t src_len, ::pilo::i32_t extra)
             {
                 if (extra < 0)
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                    return ::pilo::mk_perr(PERR_INVALID_PARAM);
 
                 if (src == nullptr || src_len < 0)
                 {
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                    return ::pilo::mk_perr(PERR_INVALID_PARAM);
                 }
                 else if (*src == 0 || src_len == 0)
                 {
@@ -87,7 +87,7 @@ namespace pilo {
                 ::pilo::i32_t cal_len = WideCharToMultiByte(CP_UTF8, 0, src, src_len, nullptr, 0, nullptr, nullptr);
                 if (cal_len <= 0)
                 {
-                    return ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                    return ::pilo::mk_perr(PERR_ICONV_FAIL);
                 }
                 buffer.check_more_space(cal_len + 1 + extra);
                 ret = WideCharToMultiByte(CP_UTF8, 0, src, src_len, buffer.ptr(), cal_len+1, nullptr, nullptr);
@@ -114,7 +114,7 @@ namespace pilo {
                 {
                     if (buffer.capacity() < max_need_capa)
                     {
-                        return ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                        return ::pilo::mk_perr(PERR_ICONV_FAIL);
                     }
                 }
                 buffer.check_more_space(max_need_capa);
@@ -130,17 +130,17 @@ namespace pilo {
                     return PILO_OK;
                 }                
 #endif         
-                return ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED, 1);
+                return ::pilo::mk_perr(PERR_ICONV_FAIL);
 
             }
 
             ::pilo::err_t utf8_to_os_unicode(::pilo::wchar_buffer_t& buffer, const char* src, ::pilo::i32_t src_len, ::pilo::i32_t extra)
             {
                 if (extra < 0)
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                    return ::pilo::mk_perr(PERR_INVALID_PARAM);
                 if (src == nullptr || src_len < 0)
                 {
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                    return ::pilo::mk_perr(PERR_INVALID_PARAM);
                 }
                 else if (*src == 0 || src_len == 0)
                 {
@@ -179,7 +179,7 @@ namespace pilo {
                 ::pilo::i32_t cal_len = MultiByteToWideChar(CP_UTF8, 0, src, src_len, nullptr, 0);
                 if (cal_len <= 0)
                 {
-                    return ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                    return ::pilo::mk_perr(PERR_ICONV_FAIL);
                 }
                 buffer.check_more_space((cal_len + 1 + extra) * sizeof(wchar_t));
                 ret = MultiByteToWideChar(CP_UTF8, 0, src, src_len, buffer.ptr(), cal_len + 1);
@@ -206,7 +206,7 @@ namespace pilo {
                 {
                     if (buffer.capacity() < max_need_capa)
                     {
-                        return ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                        return ::pilo::mk_perr(PERR_ICONV_FAIL);
                     }
                 }
                 buffer.check_more_space(max_need_capa);
@@ -222,7 +222,7 @@ namespace pilo {
                     return PILO_OK;
                 }
 #endif         
-                return ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED, 1);
+                return ::pilo::mk_perr(PERR_ICONV_FAIL);
 
 
 
@@ -231,11 +231,11 @@ namespace pilo {
             ::pilo::err_t utf8_to_ansi(::pilo::char_buffer_t& buffer, const char* src, ::pilo::i32_t src_len, ::pilo::i32_t extra)
             {
                 if (extra < 0)
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                    return ::pilo::mk_perr(PERR_INVALID_PARAM);
 
                 if (src == nullptr || src_len < 0)
                 {
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                    return ::pilo::mk_perr(PERR_INVALID_PARAM);
                 }
                 else if (*src == 0 || src_len == 0)
                 {
@@ -265,7 +265,7 @@ namespace pilo {
                 int ret = MultiByteToWideChar(CP_UTF8, 0, src, src_len, wbuf.begin(), dwUnicodeLen);
                 if (ret <= 0)
                 {
-                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                    ::pilo::mk_perr(PERR_ICONV_FAIL);
                 }
                 wbuf.begin()[ret] = 0;
                 wbuf.set_size(ret);
@@ -275,7 +275,7 @@ namespace pilo {
                 ret = WideCharToMultiByte(CP_ACP, 0, (const wchar_t*)wbuf.begin(), wbuf.size(), buffer.ptr(), len + 1, NULL, NULL);
                 if (ret <= 0)
                 {
-                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                    ::pilo::mk_perr(PERR_ICONV_FAIL);
                 }
                 buffer.add_size(ret);
                 buffer.append(0);
@@ -301,7 +301,7 @@ namespace pilo {
                 );
                 if (ret <= 0)
                 {
-                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                    ::pilo::mk_perr(PERR_ICONV_FAIL);
                 }
                 buffer.add_size((::pilo::i32_t)ret);
                 buffer.append(0);
@@ -314,11 +314,11 @@ namespace pilo {
             ::pilo::err_t ansi_to_utf8(::pilo::char_buffer_t& buffer, const char* src, ::pilo::i32_t src_len, ::pilo::i32_t extra)
             {
                 if (extra < 0)
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                    return ::pilo::mk_perr(PERR_INVALID_PARAM);
 
                 if (src == nullptr || src_len < 0)
                 {
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                    return ::pilo::mk_perr(PERR_INVALID_PARAM);
                 }
                 else if (*src == 0 || src_len == 0)
                 {
@@ -337,7 +337,7 @@ namespace pilo {
                 int ret = MultiByteToWideChar(CP_ACP, 0, src, src_len, wbuf.begin(), dwUnicodeLen);
                 if (ret <= 0)
                 {
-                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                    ::pilo::mk_perr(PERR_ICONV_FAIL);
                 }
                 wbuf.begin()[ret] = 0;
                 wbuf.set_size(ret);
@@ -347,7 +347,7 @@ namespace pilo {
                 ret = WideCharToMultiByte(CP_UTF8, 0, (const wchar_t*)wbuf.begin(), wbuf.size(), buffer.ptr(), len + 1, NULL, NULL);
                 if (ret <= 0)
                 {
-                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                    ::pilo::mk_perr(PERR_ICONV_FAIL);
                 }
                 buffer.add_size(len);
                 buffer.append(0);
@@ -372,7 +372,7 @@ namespace pilo {
                 );
                 if (ret <= 0)
                 {
-                    ::pilo::make_core_error(PES_TEXT, PEP_ICONV_FAILED);
+                    ::pilo::mk_perr(PERR_ICONV_FAIL);
                 }
                 buffer.add_size((::pilo::i32_t)ret);
                 buffer.append(0);

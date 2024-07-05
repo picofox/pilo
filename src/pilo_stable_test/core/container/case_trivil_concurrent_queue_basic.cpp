@@ -39,7 +39,7 @@ namespace pilo
 						{
 							return;
 						}
-						else if (p_case->result() != ::pilo::make_core_error(PES_RC, PEP_RETRY, 0))
+						else if (p_case->result() != ::pilo::mk_perr(PERR_RETRY))
 						{
 							return;
 						}
@@ -66,7 +66,7 @@ namespace pilo
 						}
 						else
 						{
-							p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED, 0));
+							p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 							return;
 						}
 
@@ -89,7 +89,7 @@ namespace pilo
 						{
 							return;
 						}
-						else if (p_case->result() != ::pilo::make_core_error(PES_RC, PEP_RETRY, 0))
+						else if (p_case->result() != ::pilo::mk_perr(PERR_RETRY))
 						{
 							return;
 						}
@@ -106,7 +106,7 @@ namespace pilo
 							}
 							else
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED, 0));
+								p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 								return;
 							}
 						}

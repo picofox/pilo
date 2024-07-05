@@ -44,15 +44,15 @@ namespace pilo
 
 				if (byte_buffer->write_int32(this->_seq) != PILO_OK)
 				{
-					return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 1);
+					return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 				}
 				if (byte_buffer->write_string(this->_name) != PILO_OK)
 				{
-					return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 2);
+					return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 				}
 				if (byte_buffer->write_float32(this->_sal) != PILO_OK)
 				{
-					return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 3);
+					return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 				}
 
 				if (header != nullptr)
@@ -84,15 +84,15 @@ namespace pilo
 
 				if (byte_buffer->read_int32(this->_seq) != PILO_OK)
 				{
-					return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 1);
+					return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 				}
 				if (byte_buffer->read_string(this->_name) != PILO_OK)
 				{
-					return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 2);
+					return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 				}
 				if (byte_buffer->read_float32(this->_sal) != PILO_OK)
 				{
-					return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 3);
+					return ::pilo::mk_perr( PERR_IO_READ_FAIL);
 				}
 
 

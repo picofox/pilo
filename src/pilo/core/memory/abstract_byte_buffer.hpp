@@ -252,7 +252,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -309,7 +309,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -367,7 +367,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {

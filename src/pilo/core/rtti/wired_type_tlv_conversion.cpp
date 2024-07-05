@@ -14,7 +14,7 @@ namespace pilo
                 ::pilo::tlv* t = ::pilo::tlv::allocate_single(v);
                 if (t == nullptr)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                    if (err != nullptr) *err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                     return nullptr;
                 }
                 return t;
@@ -81,7 +81,7 @@ namespace pilo
                 if (t == nullptr)
                 {
                     if (err != nullptr)
-                        *err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                        *err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                 }
                     
                 return t;
@@ -93,9 +93,9 @@ namespace pilo
                 if (t == nullptr)
                 {
                     if (err != nullptr)
-                        *err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                        *err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                 }
-                if (err != nullptr) *err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                if (err != nullptr) *err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                 return nullptr;
             }
 
@@ -108,7 +108,7 @@ namespace pilo
                     t->set(v);
                     return t;
                 }
-                if (err != nullptr) *err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                if (err != nullptr) *err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                 return nullptr;
             }
 
@@ -116,7 +116,7 @@ namespace pilo
             {
                 if (v == nullptr)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_NULL_PARAM);
                     return nullptr;
                 }                    
                 else
@@ -124,7 +124,7 @@ namespace pilo
                     ::pilo::tlv* ret = v->clone();
                     if (ret == nullptr)
                     {
-                        if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                        if (err != nullptr) *err = ::pilo::mk_perr(PERR_NULL_PARAM);
                         return nullptr;
                     }
                     return ret;

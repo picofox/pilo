@@ -109,7 +109,7 @@ namespace pilo
                     if (capacity() <= size())
                     {
                         this->check_more_space(1);
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     this->begin()[this->size()] = value;
                     return PILO_OK;
@@ -120,7 +120,7 @@ namespace pilo
                     if (capacity() <= size())
                     {
                         this->check_more_space(1);
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     this->begin()[this->size()] = value;
                         return PILO_OK;
@@ -224,7 +224,7 @@ namespace pilo
                     if (sz < 0 || sz > this->capacity())
                     {
                         PMC_ASSERT(false);
-                        return ::pilo::make_core_error(PES_ELEM, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _data_size = sz;
                     return PILO_OK;
@@ -236,7 +236,7 @@ namespace pilo
                     if (ret < 0 || ret > capacity())
                     {
                         PMC_ASSERT(false);
-                        return ::pilo::make_core_error(PES_ELEM, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
 
                     _data_size += sz;
@@ -390,7 +390,7 @@ namespace pilo
                     if (capacity() <= size())
                     {
                         this->check_more_space(1);
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     this->begin()[this->size()] = value;
                         return PILO_OK;
@@ -401,7 +401,7 @@ namespace pilo
                     if (capacity() <= size())
                     {
                         this->check_more_space(1);
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     this->begin()[this->size()] = value;
                         return PILO_OK;
@@ -444,7 +444,7 @@ namespace pilo
                     if (sz < 0 || sz > this->capacity())
                     {
                         PMC_ASSERT(false);
-                        return ::pilo::make_core_error(PES_ELEM, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _data_size = sz;
                     return PILO_OK;
@@ -456,7 +456,7 @@ namespace pilo
                     if (ret < 0 || ret > capacity())
                     {
                         PMC_ASSERT(false);
-                        return ::pilo::make_core_error(PES_ELEM, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
 
                     _data_size += sz;
@@ -590,7 +590,7 @@ namespace pilo
                         value_type* ptr = (value_type*) PMF_HEAP_MALLOC(neosz * sizeof(value_type));
                         if (ptr == nullptr)
                         {
-                            return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                            return ::pilo::mk_perr( PERR_INSUF_HEAP);
                         }
                         memcpy(ptr, _ptr, _capacity * sizeof(value_type));
                         if (_ptr != nullptr && _is_dynamic)
@@ -675,7 +675,7 @@ namespace pilo
                     if (sz < 0 || sz > _capacity)
                     {
                         PMC_ASSERT(false);
-                        return ::pilo::make_core_error(PES_ELEM, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _data_size = sz;
                     return PILO_OK;
@@ -687,7 +687,7 @@ namespace pilo
                     if (ret < 0 || ret > _capacity)
                     {
                         PMC_ASSERT(false);
-                        return ::pilo::make_core_error(PES_ELEM, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
 
                     _data_size += sz;
@@ -712,7 +712,7 @@ namespace pilo
                 {
                     if (_ptr == nullptr || _capacity <= idx)
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _ptr[idx] = value;
                     return PILO_OK;
@@ -722,7 +722,7 @@ namespace pilo
                 {
                     if (_ptr == nullptr || _capacity <= idx)
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _ptr[idx] = value;
                     return PILO_OK;
@@ -733,7 +733,7 @@ namespace pilo
                     if (_ptr == nullptr || _capacity <= _data_size)
                     {
                         this->check_more_space(1);
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _ptr[this->size()] = value;
                     return PILO_OK;
@@ -743,7 +743,7 @@ namespace pilo
                     if (_ptr == nullptr || _capacity <= _data_size)
                     {
                         this->check_more_space(1);
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _ptr[this->size()] = value;
                     return PILO_OK;
@@ -939,7 +939,7 @@ namespace pilo
                     if (sz < 0 || sz > _capacity)
                     {
                         PMC_ASSERT(false);
-                        return ::pilo::make_core_error(PES_ELEM, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _data_size = sz;
                     return PILO_OK;
@@ -951,7 +951,7 @@ namespace pilo
                     if (ret < 0 || ret > _capacity)
                     {
                         PMC_ASSERT(false);
-                        return ::pilo::make_core_error(PES_ELEM, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _data_size += sz;
                     return PILO_OK;
@@ -973,7 +973,7 @@ namespace pilo
                 {
                     if (_ptr == nullptr || _capacity <= idx)
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _ptr[idx] = value;
                     return PILO_OK;
@@ -984,7 +984,7 @@ namespace pilo
                     if (_ptr == nullptr || _capacity <= _data_size)
                     {
                         this->check_more_space(1);
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _ptr[this->size()] = value;
                     return PILO_OK;
@@ -994,7 +994,7 @@ namespace pilo
                     if (_ptr == nullptr || _capacity <= _data_size)
                     {
                         this->check_more_space(1);
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_ARR_IDX_OOB);
+                        return ::pilo::mk_perr( PERR_IDX_TOO_OOB);
                     }
                     _ptr[this->size()] = value;
                     return PILO_OK;

@@ -77,7 +77,7 @@ namespace pilo
 				::pilo::err_t set_single_type(::pilo::u16_t value_type)
 				{
 					if (this->wrapper_type() > ::pilo::core::rtti::wired_type::wrapper_single )
-						return ::pilo::make_core_error(PES_TLV, PEP_IS_VALID);
+						return ::pilo::mk_perr(PERR_NO_OVERWRITING);
 					else if (this->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_single)
 					{
 						if (_value_type != value_type)
@@ -91,7 +91,7 @@ namespace pilo
 					}
 					else
 					{
-						return ::pilo::make_core_error(PES_ELEM, PEP_TYPE_MISMATCH);
+						return ::pilo::mk_perr( PERR_MIS_DATA_TYPE);
 					}
 					return PILO_OK;
 				}

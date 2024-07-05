@@ -32,24 +32,24 @@ namespace pilo
 				auto orig_tlv = ::pilo::core::testing::create_random_array_tlv(4);
 				if (orig_tlv == nullptr)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_NULL), "%s create orig tlv failed", name);
+					return p_case->error(::pilo::mk_perr(PERR_NULL_PTR), "%s create orig tlv failed", name);
 				}
 
 				clone_tlvs[i] = orig_tlv->clone();
 				if (orig_tlv == nullptr)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_NULL), "%s clone orig tlv failed", name);
+					return p_case->error(::pilo::mk_perr(PERR_NULL_PTR), "%s clone orig tlv failed", name);
 				}
 
 				if (! orig_tlv->equals_to(clone_tlvs[i]))
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_NULL), "%s validate cloned tlv failed", name);
+					return p_case->error(::pilo::mk_perr(PERR_NULL_PTR), "%s validate cloned tlv failed", name);
 				}
 
 				err = clone_tlvs[i]->serialize(nullptr, &bb);
 				if (err != PILO_OK)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_NULL), "%s serialize tlv failed", name);
+					return p_case->error(::pilo::mk_perr(PERR_NULL_PTR), "%s serialize tlv failed", name);
 				}			
 
 				::pilo::tlv::deallocate(orig_tlv);				
@@ -62,7 +62,7 @@ namespace pilo
 				err = des_tlv->deserialize(nullptr, &bb);
 				if (err != PILO_OK)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_NULL), "%s serialize tlv failed", name);
+					return p_case->error(::pilo::mk_perr(PERR_NULL_PTR), "%s serialize tlv failed", name);
 				}
 
 				::pilo::tlv::deallocate(des_tlv);
@@ -73,7 +73,7 @@ namespace pilo
 
 			if (bb.read_available() != 0)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_NULL), "%s buffer remain %lld", name, bb.read_available());
+				return p_case->error(::pilo::mk_perr(PERR_NULL_PTR), "%s buffer remain %lld", name, bb.read_available());
 			}
 
 			return PILO_OK;
@@ -93,42 +93,42 @@ namespace pilo
 			tlvp0->get("character.attr.borned[0]", u8v);
 			if (u8v != 30)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[0] should be 30");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[0] should be 30");
 			}
 			::pilo::i16_t i16v = 0;
 			t = tlvp0->set("character.attr.borned[]", (::pilo::i16_t)-32768, err);
 			tlvp0->get("character.attr.borned[1]", i16v);
 			if (i16v != -32768)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[1] should be 30");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[1] should be 30");
 			}
 			::pilo::i32_t i32v = 0;
 			t = tlvp0->set("character.attr.borned[2]", (::pilo::i32_t)PILO_INT32_MAX, err);
 			tlvp0->get("character.attr.borned[2]", i32v);
 			if (i32v != PILO_INT32_MAX)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[2] should be 30");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[2] should be 30");
 			}
 			::pilo::i64_t i64v = 0;
 			t = tlvp0->set("character.attr.borned[3]", (::pilo::i64_t)PILO_INT64_MAX, err);
 			tlvp0->get("character.attr.borned[3]", i64v);
 			if (i64v != PILO_INT64_MAX)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[3] should be PILO_INT64_MAX");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[3] should be PILO_INT64_MAX");
 			}
 			::pilo::f64_t f64v = 0;
 			t = tlvp0->set("character.attr.borned[4]", (::pilo::f64_t)3.14, err);
 			tlvp0->get("character.attr.borned[4]", f64v);
 			if (f64v != 3.14)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[4] should be 3.14");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[4] should be 3.14");
 			}
 			::pilo::f32_t f32v = 0;
 			t = tlvp0->set("character.attr.borned[5]", (::pilo::f32_t)2.71f, err);
 			tlvp0->get("character.attr.borned[5]", f32v);
 			if (f32v != 2.71f)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[5] should be 3.14");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[5] should be 3.14");
 			}
 			char* charv = nullptr;
 			::pilo::i32_t rlen = 0;
@@ -136,7 +136,7 @@ namespace pilo
 			tlvp0->get("character.attr.borned[6]", charv, &rlen);
 			if (::pilo::core::string::strict_compare(charv, 0, "hello this is fox", 0, -1) != 0)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[6] should be 3.14");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[6] should be 3.14");
 			}
 
 			std::string str;
@@ -144,14 +144,14 @@ namespace pilo
 			tlvp0->get("character.attr.borned[7]", str);
 			if (::pilo::core::string::strict_compare(str.c_str(), 0, "0123456789", 0, 10) != 0)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[7]");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[7]");
 			}
 
 			std::deque<::pilo::i32_t> passive_deq{ 0,1,2,3,4,5,6,7,8,9 };
 			t = tlvp0->set("character.attr.borned[7]", passive_deq, err);
 			if (t != nullptr || err == PILO_OK)
 			{
-				return p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "character.attr.borned[7] exist should not be set");
+				return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "character.attr.borned[7] exist should not be set");
 			}
 			t = tlvp0->set("character.attr.borned[8]", passive_deq, err);
 			std::deque<::pilo::i32_t> passive_deq_ret;

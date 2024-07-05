@@ -11,7 +11,7 @@ namespace pilo
 		{
 			stable_test_case::stable_test_case(::pilo::i32_t idx, const char* name, case_function_type case_func, void* arg,  ::pilo::i64_t n_trans, ::pilo::i64_t n_secs)
 				:_index(idx), _name(name), _func(case_func), _arg(arg),  _target_trans_count(n_trans), _target_persist_millisecs(n_secs), _prog_count(0)
-				,  _result(::pilo::make_core_error(PES_OP, PEP_NOSENSE, 0)), _trans_count(0), _begin_ts(-1), _persist_milli_seconds(0), _desc("")
+				,  _result(::pilo::mk_perr(PERR_NOOP)), _trans_count(0), _begin_ts(-1), _persist_milli_seconds(0), _desc("")
 			{
 				if (_target_persist_millisecs < 1)
 					_target_persist_millisecs = LLONG_MAX;
@@ -31,7 +31,7 @@ namespace pilo
 				_name.clear();				
 				_func = nullptr;
 				_arg = nullptr;
-				_result = ::pilo::make_core_error(PES_OP, PEP_NOSENSE, 0);
+				_result = ::pilo::mk_perr(PERR_NOOP);
 				_trans_count = 0;
 				_persist_milli_seconds = 0;
 				_desc.clear();
@@ -56,7 +56,7 @@ namespace pilo
 					_persist_milli_seconds = ::pilo::core::datetime::timestamp_milli_steady() - beg;					
 					return PILO_OK;
 				}
-				return ::pilo::make_core_error(PES_OBJ, PEP_IS_INVALID, 0);
+				return ::pilo::mk_perr(PERR_INV_OBJECT);
 
 			}
 
@@ -64,12 +64,12 @@ namespace pilo
 			{
 				if (_persist_milli_seconds == -1)
 				{
-					return ::pilo::make_core_error(PES_RC, PEP_RETRY, 0);
+					return ::pilo::mk_perr(PERR_RETRY);
 				}
 
 				if (_result != PILO_OK)
 				{
-					return ::pilo::make_core_error(PES_OP, PEP_ABORTED, 0);
+					return ::pilo::mk_perr(PERR_USER_CANCEL);
 				}
 				else
 				{

@@ -15,7 +15,7 @@ namespace pilo
 			typedef bool(*handle_deque_compare_func_type)(const char* a, const char* b, ::pilo::err_t* err);
 			static handle_deque_compare_func_type stc_handle_deque_compare_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
+				[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
 				[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return deque_equals((const std::deque<::pilo::i8_t>*) a_data, (const std::deque<::pilo::i8_t>*) b_data, err); },//1
 				[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return deque_equals((const std::deque<::pilo::u8_t>*) a_data, (const std::deque<::pilo::u8_t>*) b_data, err); },//2
 				[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return deque_equals((const std::deque<::pilo::i16_t>*) a_data, (const std::deque<::pilo::i16_t>*) b_data, err); },//3
@@ -36,7 +36,7 @@ namespace pilo
 			typedef char* (*handle_deque_clone_func_type)(char* deque_char_ptr, ::pilo::err_t* err);
 			static handle_deque_clone_func_type stc_handle_deque_clone_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char*, ::pilo::err_t* err) -> char* {if (err != nullptr) *err = ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH); return nullptr; },
+				[](char*, ::pilo::err_t* err) -> char* {if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE); return nullptr; },
 				[](char* deque_char_ptr, ::pilo::err_t* err) -> char* { return (char*)clone_deque((std::deque<::pilo::i8_t>*) deque_char_ptr, err); },
 				[](char* deque_char_ptr, ::pilo::err_t* err) -> char* { return (char*)clone_deque((std::deque<::pilo::u8_t>*) deque_char_ptr, err); },
 				[](char* deque_char_ptr, ::pilo::err_t* err) -> char* { return (char*)clone_deque((std::deque<::pilo::i16_t>*) deque_char_ptr, err); },
@@ -57,7 +57,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handle_deque_delete_func_type)(char** deque_char_pptr);
 			static handle_deque_delete_func_type stc_handle_deque_delete_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char**) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char**) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char** deque_char_pptr) -> ::pilo::err_t	{ destroy_deque((std::deque<::pilo::i8_t>**) deque_char_pptr);return PILO_OK;}, //i8
 				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::u8_t>**) deque_char_pptr); return PILO_OK; }, //u8 2
 				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::i16_t>**) deque_char_pptr); return PILO_OK; }, //i16 3
@@ -153,13 +153,13 @@ namespace pilo
 					data = (char*) new std::deque<char*>();
 				else
 				{
-					::pilo::set_if_ptr_is_not_null(err, ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH));
+					::pilo::set_if_ptr_is_not_null(err, ::pilo::mk_perr(PERR_MIS_DATA_TYPE));
 					return nullptr;
 				}
 
 				if (data == nullptr)
 				{
-					::pilo::set_if_ptr_is_not_null(err, ::pilo::make_core_error(PES_MEM, PEP_INSUFF));
+					::pilo::set_if_ptr_is_not_null(err, ::pilo::mk_perr( PERR_INSUF_HEAP));
 					return nullptr;
 				}
 				
@@ -173,7 +173,7 @@ namespace pilo
 				std::deque<char*>* deq = new std::deque<char*>;
 				if (deq == nullptr)
 				{
-					::pilo::set_if_ptr_is_not_null(errp, ::pilo::make_core_error(PES_MEM, PEP_INSUFF));
+					::pilo::set_if_ptr_is_not_null(errp, ::pilo::mk_perr( PERR_INSUF_HEAP));
 					return nullptr;
 				}
 				char* tmp = nullptr;
@@ -202,7 +202,7 @@ namespace pilo
 				std::deque<char*>* deq = new std::deque<char*>;
 				if (deq == nullptr)
 				{
-					::pilo::set_if_ptr_is_not_null(errp, ::pilo::make_core_error(PES_MEM, PEP_INSUFF));
+					::pilo::set_if_ptr_is_not_null(errp, ::pilo::mk_perr( PERR_INSUF_HEAP));
 					return nullptr;
 				}
 				char* tmp = nullptr;
@@ -238,7 +238,7 @@ namespace pilo
 				std::deque<::pilo::tlv*>* deq = new std::deque<::pilo::tlv*>;
 				if (deq == nullptr)
 				{
-					::pilo::set_if_ptr_is_not_null(errp, ::pilo::make_core_error(PES_MEM, PEP_INSUFF));
+					::pilo::set_if_ptr_is_not_null(errp, ::pilo::mk_perr( PERR_INSUF_HEAP));
 					return nullptr;
 				}
 				::pilo::tlv* tmp = nullptr;
@@ -276,7 +276,7 @@ namespace pilo
 				if (cloned_deque == nullptr)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 					return nullptr;
 				}
 
@@ -293,7 +293,7 @@ namespace pilo
 						if (tmp_ptr == nullptr)
 						{
 							if (err != nullptr)
-								*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+								*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 							destroy_deque((std::deque<char*>**) & cloned_deque);
 							return nullptr;
 						}
@@ -311,7 +311,7 @@ namespace pilo
 				if (cloned_deque == nullptr)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 					return nullptr;
 				}
 
@@ -328,7 +328,7 @@ namespace pilo
 						if (tmp_ptr == nullptr)
 						{
 							if (err != nullptr)
-								*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+								*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 							destroy_deque((std::deque<char*>**) & cloned_deque);
 							return nullptr;
 						}
@@ -346,7 +346,7 @@ namespace pilo
 				if (cloned_deque == nullptr)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 					return nullptr;
 				}
 
@@ -363,7 +363,7 @@ namespace pilo
 						if (cloned_tlv == nullptr)
 						{
 							if (err != nullptr)
-								*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+								*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 							destroy_deque((std::deque<::pilo::tlv*>**) &cloned_deque);
 							return nullptr;
 						}
@@ -579,7 +579,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_i8_func_type)(char* dq, ::pilo::i8_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_i8_func_type stc_handler_deque_pushback_i8_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::i8_t, ::pilo::i32_t , bool ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::i8_t, ::pilo::i32_t , bool ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::i8_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_back(value);
@@ -639,7 +639,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(8);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 8, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
@@ -656,7 +656,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 						return PILO_OK;
 					
@@ -672,7 +672,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_i8_func[vt](dq, value, len, adopt);
 			}
@@ -680,7 +680,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_u8_func_type)(char* dq, ::pilo::u8_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_u8_func_type stc_handler_deque_pushback_u8_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::u8_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::u8_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::u8_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_back((::pilo::i8_t)value);
@@ -740,7 +740,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(8);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 8, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
@@ -757,7 +757,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 						return PILO_OK;
 
@@ -770,7 +770,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_u8_func[vt](dq, value, len, adopt);
 			}
@@ -779,7 +779,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_i16_func_type)(char* dq, ::pilo::i16_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_i16_func_type stc_handler_deque_pushback_i16_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::i16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::i16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::i16_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_back((::pilo::i8_t)value);
@@ -839,7 +839,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
@@ -856,7 +856,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 						return PILO_OK;
 
@@ -869,7 +869,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_i16_func[vt](dq, value, len, adopt);
 			}
@@ -877,7 +877,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_u16_func_type)(char* dq, ::pilo::u16_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_u16_func_type stc_handler_deque_pushback_u16_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::u16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::u16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::u16_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_back((::pilo::i8_t)value);
@@ -937,7 +937,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
@@ -954,7 +954,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 						return PILO_OK;
 
@@ -967,7 +967,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_u16_func[vt](dq, value, len, adopt);
 			}
@@ -976,7 +976,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_i32_func_type)(char* dq, ::pilo::i32_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_i32_func_type stc_handler_deque_pushback_i32_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::i32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::i32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::i32_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_back((::pilo::i8_t)value);
@@ -1036,7 +1036,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
@@ -1053,7 +1053,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 						return PILO_OK;
 
@@ -1066,7 +1066,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_i32_func[vt](dq, value, len, adopt);
 			}
@@ -1075,7 +1075,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_u32_func_type)(char* dq, ::pilo::u32_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_u32_func_type stc_handler_deque_pushback_u32_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::u32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::u32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::u32_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_back((::pilo::i8_t)value);
@@ -1135,7 +1135,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
@@ -1152,7 +1152,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 						return PILO_OK;
 
@@ -1165,7 +1165,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_u32_func[vt](dq, value, len, adopt);
 			}
@@ -1174,7 +1174,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_i64_func_type)(char* dq, ::pilo::i64_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_i64_func_type stc_handler_deque_pushback_i64_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::i64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::i64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::i64_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_back((::pilo::i8_t)value);
@@ -1234,7 +1234,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
@@ -1251,7 +1251,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 						return PILO_OK;
 
@@ -1264,7 +1264,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_i64_func[vt](dq, value, len, adopt);
 			}
@@ -1272,7 +1272,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_u64_func_type)(char* dq, ::pilo::u64_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_u64_func_type stc_handler_deque_pushback_u64_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::u64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::u64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::u64_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_back((::pilo::i8_t)value);
@@ -1332,7 +1332,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
@@ -1349,7 +1349,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 						return PILO_OK;
 
@@ -1362,7 +1362,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_u64_func[vt](dq, value, len, adopt);
 			}
@@ -1371,7 +1371,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_bool_func_type)(char* dq, bool, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_bool_func_type stc_handler_deque_pushback_bool_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , bool, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , bool, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, bool value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_back((::pilo::i8_t)value);
@@ -1435,7 +1435,7 @@ namespace pilo
 					else					
 						ret = ::pilo::core::string::duplicate("false", 5);					
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
 				},//12
@@ -1452,7 +1452,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 						return PILO_OK;
 
@@ -1465,7 +1465,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_bool_func[vt](dq, value, len, adopt);
 			}
@@ -1474,7 +1474,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_f32_func_type)(char* dq, ::pilo::f32_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_f32_func_type stc_handler_deque_pushback_f32_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::f32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::f32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::f32_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_back((::pilo::i8_t)value);
@@ -1534,7 +1534,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
@@ -1551,7 +1551,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 						return PILO_OK;
 
@@ -1564,7 +1564,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_f32_func[vt](dq, value, len, adopt);
 			}
@@ -1572,7 +1572,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_f64_func_type)(char* dq, ::pilo::f64_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_f64_func_type stc_handler_deque_pushback_f64_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::f64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::f64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::f64_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_back((::pilo::i8_t)value);
@@ -1632,7 +1632,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
@@ -1649,7 +1649,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 						return PILO_OK;
 
@@ -1662,7 +1662,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_f64_func[vt](dq, value, len, adopt);
 			}
@@ -1670,7 +1670,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_ccharptr_func_type)(char* dq, const char*, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_ccharptr_func_type stc_handler_deque_pushback_ccharptr_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , const char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , const char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, const char* value, ::pilo::i32_t len, bool) -> ::pilo::err_t
 				{
 					::pilo::i32_t v = 0;
@@ -1802,7 +1802,7 @@ namespace pilo
 					{
 						char* ret = ::pilo::core::string::duplicate(value, len);
 						if (ret == nullptr)
-							return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+							return ::pilo::mk_perr( PERR_INSUF_HEAP);
 						reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					}
 					return PILO_OK;
@@ -1826,7 +1826,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value, len, false, false);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 					return PILO_OK;
 
@@ -1839,7 +1839,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_ccharptr_func[vt](dq, value, len, adopt);				
 			}
@@ -1848,7 +1848,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_stdstr_func_type)(char* dq, const std::string&, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_stdstr_func_type stc_handler_deque_pushback_stdstr_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , const std::string &, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , const std::string &, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, const std::string & value, ::pilo::i32_t len, bool) -> ::pilo::err_t
 				{
 					::pilo::i32_t v = 0;
@@ -1974,7 +1974,7 @@ namespace pilo
 				{
 					char* ret = ::pilo::core::string::duplicate(value.c_str(), value.size());
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_back(ret);
 					return PILO_OK;
 				},//12
@@ -1987,7 +1987,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(t);
 					return PILO_OK;
 
@@ -2000,7 +2000,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_stdstr_func[vt](dq, value, len, adopt);
 			}
@@ -2009,7 +2009,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushback_tlv_func_type)(char* dq, ::pilo::tlv*, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushback_tlv_func_type stc_handler_deque_pushback_tlv_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::tlv*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::tlv*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::tlv* value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					::pilo::err_t err = PILO_OK;
@@ -2148,7 +2148,7 @@ namespace pilo
 							::pilo::tlv* dupped = value->clone();
 							if (dupped == nullptr)
 							{
-								return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+								return ::pilo::mk_perr( PERR_INSUF_HEAP);
 							}
 							reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_back(dupped);
 						}
@@ -2163,7 +2163,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushback_tlv_func[vt](dq, value, len, adopt);
 			}
@@ -2173,7 +2173,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_i8_func_type)(char* dq, ::pilo::i8_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_i8_func_type stc_handler_deque_pushfront_i8_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::i8_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::i8_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::i8_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_front(value);
@@ -2233,7 +2233,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(8);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 8, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
@@ -2250,7 +2250,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 						return PILO_OK;
 
@@ -2266,7 +2266,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_i8_func[vt](dq, value, len, adopt);
 			}
@@ -2274,7 +2274,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_u8_func_type)(char* dq, ::pilo::u8_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_u8_func_type stc_handler_deque_pushfront_u8_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::u8_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::u8_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::u8_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_front((::pilo::i8_t)value);
@@ -2334,7 +2334,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(8);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 8, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
@@ -2351,7 +2351,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 						return PILO_OK;
 
@@ -2364,7 +2364,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_u8_func[vt](dq, value, len, adopt);
 			}
@@ -2373,7 +2373,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_i16_func_type)(char* dq, ::pilo::i16_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_i16_func_type stc_handler_deque_pushfront_i16_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::i16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::i16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::i16_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_front((::pilo::i8_t)value);
@@ -2433,7 +2433,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
@@ -2450,7 +2450,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 						return PILO_OK;
 
@@ -2463,7 +2463,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_i16_func[vt](dq, value, len, adopt);
 			}
@@ -2471,7 +2471,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_u16_func_type)(char* dq, ::pilo::u16_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_u16_func_type stc_handler_deque_pushfront_u16_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::u16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::u16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::u16_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_front((::pilo::i8_t)value);
@@ -2531,7 +2531,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
@@ -2548,7 +2548,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 						return PILO_OK;
 
@@ -2561,7 +2561,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_u16_func[vt](dq, value, len, adopt);
 			}
@@ -2570,7 +2570,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_i32_func_type)(char* dq, ::pilo::i32_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_i32_func_type stc_handler_deque_pushfront_i32_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::i32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::i32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::i32_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_front((::pilo::i8_t)value);
@@ -2630,7 +2630,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
@@ -2647,7 +2647,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 						return PILO_OK;
 
@@ -2660,7 +2660,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_i32_func[vt](dq, value, len, adopt);
 			}
@@ -2669,7 +2669,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_u32_func_type)(char* dq, ::pilo::u32_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_u32_func_type stc_handler_deque_pushfront_u32_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::u32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::u32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::u32_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_front((::pilo::i8_t)value);
@@ -2729,7 +2729,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
@@ -2746,7 +2746,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 						return PILO_OK;
 
@@ -2759,7 +2759,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_u32_func[vt](dq, value, len, adopt);
 			}
@@ -2768,7 +2768,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_i64_func_type)(char* dq, ::pilo::i64_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_i64_func_type stc_handler_deque_pushfront_i64_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::i64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::i64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::i64_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_front((::pilo::i8_t)value);
@@ -2828,7 +2828,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
@@ -2845,7 +2845,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 						return PILO_OK;
 
@@ -2858,7 +2858,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_i64_func[vt](dq, value, len, adopt);
 			}
@@ -2866,7 +2866,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_u64_func_type)(char* dq, ::pilo::u64_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_u64_func_type stc_handler_deque_pushfront_u64_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::u64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::u64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::u64_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_front((::pilo::i8_t)value);
@@ -2926,7 +2926,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
@@ -2943,7 +2943,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 						return PILO_OK;
 
@@ -2956,7 +2956,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_u64_func[vt](dq, value, len, adopt);
 			}
@@ -2965,7 +2965,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_bool_func_type)(char* dq, bool, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_bool_func_type stc_handler_deque_pushfront_bool_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , bool, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , bool, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, bool value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_front((::pilo::i8_t)value);
@@ -3029,7 +3029,7 @@ namespace pilo
 					else
 						ret = ::pilo::core::string::duplicate("false", 5);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
 				},//12
@@ -3046,7 +3046,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 						return PILO_OK;
 
@@ -3059,7 +3059,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_bool_func[vt](dq, value, len, adopt);
 			}
@@ -3068,7 +3068,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_f32_func_type)(char* dq, ::pilo::f32_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_f32_func_type stc_handler_deque_pushfront_f32_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::f32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::f32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::f32_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_front((::pilo::i8_t)value);
@@ -3128,7 +3128,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
@@ -3145,7 +3145,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 						return PILO_OK;
 
@@ -3158,7 +3158,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_f32_func[vt](dq, value, len, adopt);
 			}
@@ -3166,7 +3166,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_f64_func_type)(char* dq, ::pilo::f64_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_f64_func_type stc_handler_deque_pushfront_f64_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::f64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::f64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::f64_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->push_front((::pilo::i8_t)value);
@@ -3226,7 +3226,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
@@ -3243,7 +3243,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 						return PILO_OK;
 
@@ -3256,7 +3256,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_f64_func[vt](dq, value, len, adopt);
 			}
@@ -3264,7 +3264,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_ccharptr_func_type)(char* dq, const char*, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_ccharptr_func_type stc_handler_deque_pushfront_ccharptr_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , const char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , const char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, const char* value, ::pilo::i32_t len, bool) -> ::pilo::err_t
 				{
 					::pilo::i32_t v = 0;
@@ -3396,7 +3396,7 @@ namespace pilo
 					{
 						char* ret = ::pilo::core::string::duplicate(value, len);
 						if (ret == nullptr)
-							return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+							return ::pilo::mk_perr( PERR_INSUF_HEAP);
 						reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					}
 					return PILO_OK;
@@ -3420,7 +3420,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value, len, false, false);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 					return PILO_OK;
 
@@ -3433,7 +3433,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_ccharptr_func[vt](dq, value, len, adopt);
 			}
@@ -3442,7 +3442,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_stdstr_func_type)(char* dq, const std::string&, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_stdstr_func_type stc_handler_deque_pushfront_stdstr_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , const std::string&, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , const std::string&, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, const std::string& value, ::pilo::i32_t len, bool) -> ::pilo::err_t
 				{
 					::pilo::i32_t v = 0;
@@ -3568,7 +3568,7 @@ namespace pilo
 				{
 					char* ret = ::pilo::core::string::duplicate(value.c_str(), value.size());
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<char*>*>(dq)->push_front(ret);
 					return PILO_OK;
 				},//12
@@ -3581,7 +3581,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(t);
 					return PILO_OK;
 
@@ -3594,7 +3594,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_stdstr_func[vt](dq, value, len, adopt);
 			}
@@ -3603,7 +3603,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_pushfront_tlv_func_type)(char* dq, ::pilo::tlv*, ::pilo::i32_t len, bool adopt);
 			static handler_deque_pushfront_tlv_func_type stc_handler_deque_pushfront_tlv_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](char* , ::pilo::tlv*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](char* , ::pilo::tlv*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](char* dq, ::pilo::tlv* value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					::pilo::err_t err = PILO_OK;
@@ -3742,7 +3742,7 @@ namespace pilo
 							::pilo::tlv* dupped = value->clone();
 							if (dupped == nullptr)
 							{
-								return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+								return ::pilo::mk_perr( PERR_INSUF_HEAP);
 							}
 							reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->push_front(dupped);
 						}
@@ -3757,7 +3757,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_pushfront_tlv_func[vt](dq, value, len, adopt);
 			}
@@ -3766,7 +3766,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_i8_func_type)(::pilo::i64_t idx, char* dq, ::pilo::i8_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_i8_func_type stc_handler_deque_insert_i8_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , ::pilo::i8_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , ::pilo::i8_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, ::pilo::i8_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->begin() + static_cast<std::deque<::pilo::i8_t>::size_type>(idx),value);
@@ -3826,7 +3826,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(8);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 8, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
@@ -3843,7 +3843,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 						return PILO_OK;
 
@@ -3856,7 +3856,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_i8_func[vt](idx, dq, value, len, adopt);
 			}
@@ -3864,7 +3864,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_u8_func_type)(::pilo::i64_t idx, char* dq, ::pilo::u8_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_u8_func_type stc_handler_deque_insert_u8_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , ::pilo::u8_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , ::pilo::u8_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, ::pilo::u8_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->begin() + static_cast<std::deque<::pilo::i8_t>::size_type>(idx),(::pilo::i8_t)value);
@@ -3924,7 +3924,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(8);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 8, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
@@ -3941,7 +3941,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 						return PILO_OK;
 
@@ -3954,7 +3954,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_u8_func[vt](idx, dq, value, len, adopt);
 			}
@@ -3962,7 +3962,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_i16_func_type)(::pilo::i64_t idx, char* dq, ::pilo::i16_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_i16_func_type stc_handler_deque_insert_i16_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , ::pilo::i16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , ::pilo::i16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, ::pilo::i16_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->begin() + static_cast<std::deque<::pilo::i8_t>::size_type>(idx),(::pilo::u8_t)value);
@@ -4022,7 +4022,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
@@ -4039,7 +4039,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 						return PILO_OK;
 
@@ -4052,7 +4052,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_i16_func[vt](idx, dq, value, len, adopt);
 			}
@@ -4060,7 +4060,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_u16_func_type)(::pilo::i64_t idx, char* dq, ::pilo::u16_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_u16_func_type stc_handler_deque_insert_u16_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , ::pilo::u16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , ::pilo::u16_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, ::pilo::u16_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->begin() + static_cast<std::deque<::pilo::i8_t>::size_type>(idx),(::pilo::u8_t)value);
@@ -4120,7 +4120,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
@@ -4137,7 +4137,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 						return PILO_OK;
 
@@ -4150,7 +4150,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_u16_func[vt](idx, dq, value, len, adopt);
 			}
@@ -4158,7 +4158,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_i32_func_type)(::pilo::i64_t idx, char* dq, ::pilo::i32_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_i32_func_type stc_handler_deque_insert_i32_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , ::pilo::i32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , ::pilo::i32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, ::pilo::i32_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->begin() + static_cast<std::deque<::pilo::i8_t>::size_type>(idx),(::pilo::u8_t)value);
@@ -4218,7 +4218,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
@@ -4235,7 +4235,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 						return PILO_OK;
 
@@ -4248,7 +4248,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_i32_func[vt](idx, dq, value, len, adopt);
 			}
@@ -4256,7 +4256,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_u32_func_type)(::pilo::i64_t idx, char* dq, ::pilo::u32_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_u32_func_type stc_handler_deque_insert_u32_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , ::pilo::u32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , ::pilo::u32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, ::pilo::u32_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->begin() + static_cast<std::deque<::pilo::i8_t>::size_type>(idx),(::pilo::u8_t)value);
@@ -4316,7 +4316,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(16);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 16, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
@@ -4333,7 +4333,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 						return PILO_OK;
 
@@ -4346,7 +4346,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_u32_func[vt](idx, dq, value, len, adopt);
 			}
@@ -4354,7 +4354,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_i64_func_type)(::pilo::i64_t idx, char* dq, ::pilo::i64_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_i64_func_type stc_handler_deque_insert_i64_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , ::pilo::i64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , ::pilo::i64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, ::pilo::i64_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->begin() + static_cast<std::deque<::pilo::i8_t>::size_type>(idx),(::pilo::u8_t)value);
@@ -4414,7 +4414,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
@@ -4431,7 +4431,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 						return PILO_OK;
 
@@ -4444,7 +4444,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_i64_func[vt](idx, dq, value, len, adopt);
 			}
@@ -4452,7 +4452,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_u64_func_type)(::pilo::i64_t idx, char* dq, ::pilo::u64_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_u64_func_type stc_handler_deque_insert_u64_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , ::pilo::u64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , ::pilo::u64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, ::pilo::u64_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->begin() + static_cast<std::deque<::pilo::i8_t>::size_type>(idx),(::pilo::u8_t)value);
@@ -4512,7 +4512,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
@@ -4529,7 +4529,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 						return PILO_OK;
 
@@ -4542,7 +4542,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_u64_func[vt](idx, dq, value, len, adopt);
 			}
@@ -4551,7 +4551,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_bool_func_type)(::pilo::i64_t idx, char* dq, bool, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_bool_func_type stc_handler_deque_insert_bool_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , bool, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , bool, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, bool value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->begin() + static_cast<std::deque<::pilo::i8_t>::size_type>(idx), (::pilo::i8_t)value);
@@ -4615,7 +4615,7 @@ namespace pilo
 					else
 						ret = ::pilo::core::string::duplicate("false", 5);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
 				},//12
@@ -4632,7 +4632,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 					return PILO_OK;
 
@@ -4645,7 +4645,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_bool_func[vt](idx, dq, value, len, adopt);
 			}
@@ -4653,7 +4653,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_f32_func_type)(::pilo::i64_t idx, char* dq, ::pilo::f32_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_f32_func_type stc_handler_deque_insert_f32_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , ::pilo::f32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , ::pilo::f32_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, ::pilo::f32_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->begin() + static_cast<std::deque<::pilo::i8_t>::size_type>(idx),(::pilo::u8_t)value);
@@ -4713,7 +4713,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
@@ -4729,7 +4729,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 						return PILO_OK;
 
@@ -4742,7 +4742,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_f32_func[vt](idx, dq, value, len, adopt);
 			}
@@ -4750,7 +4750,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_f64_func_type)(::pilo::i64_t idx, char* dq, ::pilo::f64_t, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_f64_func_type stc_handler_deque_insert_f64_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , ::pilo::f64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , ::pilo::f64_t, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, ::pilo::f64_t value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::i8_t>*>(dq)->begin() + static_cast<std::deque<::pilo::i8_t>::size_type>(idx),(::pilo::u8_t)value);
@@ -4810,7 +4810,7 @@ namespace pilo
 				{
 					char* ret = (char*)PMF_HEAP_MALLOC(32);
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					::pilo::core::string::number_to_string(ret, 32, value);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
@@ -4826,7 +4826,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 						return PILO_OK;
 
@@ -4839,7 +4839,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_f64_func[vt](idx, dq, value, len, adopt);
 			}
@@ -4849,7 +4849,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_ccharptr_func_type)(::pilo::i64_t idx, char* dq, const char*, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_ccharptr_func_type stc_handler_deque_insert_ccharptr_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , const char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , const char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, const char* value, ::pilo::i32_t len, bool) -> ::pilo::err_t
 				{
 					::pilo::i32_t v = 0;
@@ -4981,7 +4981,7 @@ namespace pilo
 					{
 						char* ret = ::pilo::core::string::duplicate(value, len);
 						if (ret == nullptr)
-							return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+							return ::pilo::mk_perr( PERR_INSUF_HEAP);
 						reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					}
 					return PILO_OK;
@@ -5006,7 +5006,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value, len, false, false);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 
 					return PILO_OK;
@@ -5020,7 +5020,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_ccharptr_func[vt](idx, dq, value, len, adopt);
 			}
@@ -5028,7 +5028,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_stdstr_func_type)(::pilo::i64_t idx, char* dq, const std::string&, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_stdstr_func_type stc_handler_deque_insert_stdstr_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , const std::string&, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , const std::string&, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, const std::string& value, ::pilo::i32_t len, bool) -> ::pilo::err_t
 				{
 					::pilo::i32_t v = 0;
@@ -5155,7 +5155,7 @@ namespace pilo
 				{
 					char* ret = ::pilo::core::string::duplicate(value.c_str(), value.size());
 					if (ret == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<char*>*>(dq)->insert(reinterpret_cast<std::deque<char*>*>(dq)->begin() + static_cast<std::deque<char*>::size_type>(idx), (char*)ret);
 					return PILO_OK;
 				},//12
@@ -5168,7 +5168,7 @@ namespace pilo
 				{
 					::pilo::tlv* t = ::pilo::tlv::allocate_single(value);
 					if (t == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), t);
 					return PILO_OK;
 
@@ -5181,7 +5181,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_stdstr_func[vt](idx, dq, value, len, adopt);
 			}
@@ -5189,7 +5189,7 @@ namespace pilo
 			typedef ::pilo::err_t(*handler_deque_insert_tlv_func_type)(::pilo::i64_t idx, char* dq, ::pilo::tlv*, ::pilo::i32_t len, bool adopt);
 			static handler_deque_insert_tlv_func_type stc_handler_deque_insert_tlv_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				[](::pilo::i64_t, char* , ::pilo::tlv*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_CONT, PEP_TYPE_MISMATCH);  },
+				[](::pilo::i64_t, char* , ::pilo::tlv*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
 				[](::pilo::i64_t idx, char* dq, ::pilo::tlv* value, ::pilo::i32_t , bool) -> ::pilo::err_t
 				{
 					::pilo::err_t err = PILO_OK;
@@ -5331,7 +5331,7 @@ namespace pilo
 							::pilo::tlv* dupped = value->clone();
 							if (dupped == nullptr)
 							{
-								return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+								return ::pilo::mk_perr( PERR_INSUF_HEAP);
 							}
 							reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->insert(reinterpret_cast<std::deque<::pilo::tlv*>*>(dq)->begin() + static_cast<std::deque<::pilo::tlv*>::size_type>(idx), dupped);
 						}
@@ -5347,7 +5347,7 @@ namespace pilo
 				if (vt >= wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+					return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 				}
 				return stc_handler_deque_insert_tlv_func[vt](idx, dq, value, len, adopt);
 			}

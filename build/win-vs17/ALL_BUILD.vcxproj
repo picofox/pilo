@@ -173,29 +173,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="D:\projects\git_repo\libpilo\build\win-vs17\pilo_func_test-shared.vcxproj">
-      <Project>{1ED9A72F-F093-3D1F-94FE-B6CD4F3D17A9}</Project>
-      <Name>pilo_func_test-shared</Name>
-    </ProjectReference>
     <ProjectReference Include="D:\projects\git_repo\libpilo\build\win-vs17\pilo_func_test-static.vcxproj">
       <Project>{1F163FD8-6592-3F43-AD6A-1025064D4072}</Project>
       <Name>pilo_func_test-static</Name>
     </ProjectReference>
-    <ProjectReference Include="D:\projects\git_repo\libpilo\build\win-vs17\pilo_performance_test-shared.vcxproj">
-      <Project>{851877C2-21FB-343F-B654-B47CD26A7EAE}</Project>
-      <Name>pilo_performance_test-shared</Name>
-    </ProjectReference>
     <ProjectReference Include="D:\projects\git_repo\libpilo\build\win-vs17\pilo_performance_test-static.vcxproj">
       <Project>{F92BC60C-CD0E-3BF4-A963-0B15AA70E6C3}</Project>
       <Name>pilo_performance_test-static</Name>
-    </ProjectReference>
-    <ProjectReference Include="D:\projects\git_repo\libpilo\build\win-vs17\pilo_shared.vcxproj">
-      <Project>{4FDC0DD6-C634-3FB3-B4E9-BFC11FC81C4B}</Project>
-      <Name>pilo_shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="D:\projects\git_repo\libpilo\build\win-vs17\pilo_stable_test-shared.vcxproj">
-      <Project>{64A118E7-EAE3-346B-8ED0-F102821498CB}</Project>
-      <Name>pilo_stable_test-shared</Name>
     </ProjectReference>
     <ProjectReference Include="D:\projects\git_repo\libpilo\build\win-vs17\pilo_stable_test-static.vcxproj">
       <Project>{DA809B49-4CA8-36E3-B621-D6B1AEDBE385}</Project>

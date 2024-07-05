@@ -40,6 +40,7 @@
 namespace pilo 
 {
 
+	
 #if defined(WIN32) || defined(WINDOWS)
     typedef unsigned                thread_routine_return_t;
     typedef SOCKET                  os_socket_t;
@@ -101,7 +102,7 @@ namespace pilo
     //typedef int_r                           i64_t;
     typedef time_t                          tsec_t;
     typedef ::pilo::u16_t                   pathlen_t;
-
+	typedef i32_t err_t;
 
 
 	template <typename CHAR_T>

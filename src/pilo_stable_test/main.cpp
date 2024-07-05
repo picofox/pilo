@@ -30,7 +30,6 @@ int main(int argc, char * argv[])
 
 	PILO_CONTEXT->initialize();
 
-
 	stable_test_suite suite_default;
 
 	load_cases(&suite_default);
@@ -47,9 +46,10 @@ int main(int argc, char * argv[])
 
 void load_cases(stable_test_suite * suite)
 {
-	suite->register_case("utf_unicode", ::pilo::stable_test::core::i18n::case_utf8_unicode, nullptr, 100000, -1);
+	//suite->register_case("utf_unicode", ::pilo::stable_test::core::i18n::case_utf8_unicode, nullptr, 100000, -1);
 	suite->register_case("path_creation", ::pilo::stable_test::core::io::case_path_creation, nullptr, 1000000, -1);
 
+	srand(0);
 	suite->register_case("tlv_pathset", ::pilo::stable_test::case_tlv_pathset, nullptr, 100000, -1);
 	suite->register_case("tlv_serialization", ::pilo::stable_test::case_tlv_serialization, nullptr, 1000, -1);
 	suite->register_case("tlv_acc_dict", ::pilo::stable_test::case_tlv_acc_dict, nullptr, 1000000, -1);

@@ -90,7 +90,7 @@ namespace pilo
                     int i = 0;
                     if (src_buffer.invalid())
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                        return ::pilo::mk_perr(PERR_NULL_PARAM);
                     }
 
                     for (i = src_buffer.size() - 1; i >= 0; i--)
@@ -121,7 +121,7 @@ namespace pilo
                 {
                     if (src_buffer.invalid())
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                        return ::pilo::mk_perr(PERR_NULL_PARAM);
                     }
 
                     ::pilo::err_t err = path::string_remove_endsep_inplace(src_buffer);
@@ -398,7 +398,7 @@ namespace pilo
                         else if (rel_to_abs_basis == predefined_pilo_dir_enum::cnf) return fill_with_cnf(extra);
                         else if (rel_to_abs_basis == predefined_pilo_dir_enum::log) return fill_with_log(extra);
                         else if (rel_to_abs_basis == predefined_pilo_dir_enum::tmp) return fill_with_tmp(extra);
-                        else return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);                        
+                        else return ::pilo::mk_perr(PERR_INVALID_PARAM);                        
                     }
 
 
@@ -501,7 +501,7 @@ namespace pilo
                         ::pilo::pathlen_t rlen = 0;
                         const char* p = basename(rlen);
                         if (p == nullptr)
-                            return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
+                            return ::pilo::mk_perr(PERR_INVALID_PATH);
                         ret.check_space(rlen + 1);
                         ::pilo::core::string::n_copyz(ret.ptr(), ret.space_available(), p, rlen);
                         ret.set_size(rlen);
@@ -539,7 +539,7 @@ namespace pilo
                         ::pilo::pathlen_t rlen = 0;
                         const char* p = parentpath(rlen);
                         if (p == nullptr)
-                            return ::pilo::make_core_error(PES_PATH_STR, PEP_FMT_FATAL);
+                            return ::pilo::mk_perr(PERR_INVALID_PATH);
                         ret.check_space(rlen + 1);
                         ::pilo::core::string::n_copyz(ret.ptr(), ret.space_available(), p, rlen);
                         ret.set_size(rlen);
@@ -549,11 +549,11 @@ namespace pilo
                     inline ::pilo::err_t remove_last()
                     {
                         if (this->invalid() || this->is_root()) {
-                            return ::pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
+                            return ::pilo::mk_perr(PERR_NULL_PARAM);
                         }
                         char * s = (char *) ::pilo::core::string::rfind_char(this->_m_pathstr_ptr, (::pilo::i64_t) this->_m_length, PMI_PATH_SEP);
                         if (s == nullptr)
-                            return ::pilo::make_core_error(PES_PATH_STR, PEP_IS_INVALID);
+                            return ::pilo::mk_perr(PERR_NULL_PARAM);
                         this->_m_length = (::pilo::pathlen_t) (s - this->_m_pathstr_ptr);
                         *s = 0;
                         _m_lastpart_start_pos = path::unknow_length;

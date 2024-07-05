@@ -40,7 +40,7 @@ namespace pilo
 			{
 				if (v <PILO_INT32_MIN || v > PILO_INT32_MAX)
 				{
-					if (err != nullptr) { *err = ::pilo::make_core_error(PES_PARAM, PEP_OK_WITH_INFO); }
+					if (err != nullptr) { *err = ::pilo::mk_perr(PERR_OK_WITH_INFO); }
 				}
 				return (::pilo::i32_t)v;
 			}
@@ -48,7 +48,7 @@ namespace pilo
 			{
 				if (v > PILO_INT32_MAX)
 				{
-					if (err != nullptr) { *err = ::pilo::make_core_error(PES_PARAM, PEP_OK_WITH_INFO); }
+					if (err != nullptr) { *err = ::pilo::mk_perr(PERR_OK_WITH_INFO); }
 				}
 				return (::pilo::i32_t)v;
 			}
@@ -56,7 +56,7 @@ namespace pilo
 			{
 				if (v <PILO_INT32_MIN || v > PILO_INT32_MAX)
 				{
-					if (err != nullptr) { *err = ::pilo::make_core_error(PES_PARAM, PEP_OK_WITH_INFO); }
+					if (err != nullptr) { *err = ::pilo::mk_perr(PERR_OK_WITH_INFO); }
 				}
 				return (::pilo::i32_t)v;
 			}
@@ -64,7 +64,7 @@ namespace pilo
 			{
 				if (v <PILO_INT32_MIN || v > PILO_INT32_MAX)
 				{
-					if (err != nullptr) { *err = ::pilo::make_core_error(PES_PARAM, PEP_OK_WITH_INFO); }
+					if (err != nullptr) { *err = ::pilo::mk_perr(PERR_OK_WITH_INFO); }
 				} 
 				return (::pilo::i32_t)v;
 			}
@@ -99,7 +99,7 @@ namespace pilo
 			{
 				if (v == nullptr)
 				{
-					if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_OK_WITH_INFO);
+					if (err != nullptr) *err = ::pilo::mk_perr(PERR_OK_WITH_INFO);
 					return 0;
 				}
 				else

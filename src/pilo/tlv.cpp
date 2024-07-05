@@ -28,7 +28,7 @@ namespace pilo
 
         if (key_type == ::pilo::core::rtti::wired_type::key_type_na || vt == ::pilo::core::rtti::wired_type::value_type_na)
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+            return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
         }
         else
         {
@@ -51,7 +51,7 @@ namespace pilo
         }
         else
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+            return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
         }
 
         return PILO_OK;
@@ -63,11 +63,11 @@ namespace pilo
         std::stringstream& ss = *(std::stringstream*)ctx;
         if (vt != ::pilo::core::rtti::wired_type::value_type_bytes)
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+            return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
         }
         if (key_type == ::pilo::core::rtti::wired_type::key_type_na || vt == ::pilo::core::rtti::wired_type::value_type_na)
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+            return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
         }
         else
         {
@@ -97,7 +97,7 @@ namespace pilo
         std::stringstream& ss = *(std::stringstream*)ctx;
         if (key_type == ::pilo::core::rtti::wired_type::key_type_na || vt == ::pilo::core::rtti::wired_type::value_type_na)
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+            return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
         }
         else
         {
@@ -109,7 +109,7 @@ namespace pilo
 
         if (vt != ::pilo::core::rtti::wired_type::value_type_tlv)
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+            return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
         }
 
         if (value == nullptr)
@@ -127,7 +127,7 @@ namespace pilo
         PMC_UNUSED(func_id);
         std::map<TA_KEY, TA_VALUE>* map_ptr = (std::map<TA_KEY, TA_VALUE>*) t->daynamic_data();
         PMC_ASSERT(map_ptr != nullptr);
-        if (map_ptr == nullptr) return ::pilo::make_core_error(PES_PTR, PEP_IS_NULL);
+        if (map_ptr == nullptr) return ::pilo::mk_perr(PERR_NULL_PTR);
         if (total_cnt != nullptr)
             *total_cnt = map_ptr->size();
         ::pilo::i64_t cnt = 0;
@@ -150,7 +150,7 @@ namespace pilo
             }
             else
             {
-                return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                return ::pilo::mk_perr(PERR_INVALID_PARAM);
             }
 
             cnt++;
@@ -165,7 +165,7 @@ namespace pilo
     {        
         std::map<TA_KEY, char*>* map_ptr = (std::map<TA_KEY, char*>*) t->daynamic_data();
         PMC_ASSERT(map_ptr != nullptr);
-        if (map_ptr == nullptr) return ::pilo::make_core_error(PES_PTR, PEP_IS_NULL);
+        if (map_ptr == nullptr) return ::pilo::mk_perr(PERR_NULL_PTR);
         if (total_cnt != nullptr)
             *total_cnt = map_ptr->size();
         ::pilo::i64_t cnt = 0;
@@ -188,7 +188,7 @@ namespace pilo
             }
             else
             {
-                return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                return ::pilo::mk_perr(PERR_INVALID_PARAM);
             }
             cnt++;
         }
@@ -202,7 +202,7 @@ namespace pilo
     {
         std::map<TA_KEY, ::pilo::tlv*>* map_ptr = (std::map<TA_KEY, ::pilo::tlv*>*) t->daynamic_data();
         PMC_ASSERT(map_ptr != nullptr);
-        if (map_ptr == nullptr) return ::pilo::make_core_error(PES_PTR, PEP_IS_NULL);
+        if (map_ptr == nullptr) return ::pilo::mk_perr(PERR_NULL_PTR);
         if (total_cnt != nullptr)
             *total_cnt = map_ptr->size();
         ::pilo::i64_t cnt = 0;
@@ -225,7 +225,7 @@ namespace pilo
             }
             else
             {
-                return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                return ::pilo::mk_perr(PERR_INVALID_PARAM);
             }
             cnt++;
         }
@@ -248,7 +248,7 @@ namespace pilo
             _dynamic_data = ::pilo::core::string::duplicate("", 0);
             if (_dynamic_data == nullptr)
             {
-                return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                return ::pilo::mk_perr( PERR_INSUF_HEAP);
             }
             _size = 1;
         }
@@ -270,7 +270,7 @@ namespace pilo
                 _dynamic_data = (char*)PMF_HEAP_MALLOC(len + 1);
                 if (_dynamic_data == nullptr)
                 {
-                    return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                    return ::pilo::mk_perr( PERR_INSUF_HEAP);
                 }
                 ::pilo::core::string::n_copy(_dynamic_data, len + 1, str, len);
                 _size = len + 1;
@@ -307,20 +307,20 @@ namespace pilo
     static ::pilo::core::pattern::function_dispatcher<::pilo::err_t(const ::pilo::tlv*, ::pilo::core::memory::byte_buffer_interface*), ::pilo::core::rtti::wired_type::value_type_intrincs_count> stc_single_serialzer_dispatcher
     (
         [](const ::pilo::tlv* , ::pilo::core::memory::byte_buffer_interface* ) -> ::pilo::err_t { return PILO_OK; },//0
-        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_int8(t->int8()) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; },//1
-        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_uint8(t->uint8()) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; },//2
-        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_int16(t->int16()) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; },//3
-        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_uint16(t->uint16()) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; },//4
-        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_int32(t->int32()) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; },//5
-        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_uint32(t->uint32()) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; },  //6     
-        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_int64(t->int64()) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; },//7
-        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_uint64(t->uint64()) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; },//8
-        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_uint8(t->uint8()) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; },//9
-        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_float32(t->float32()) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; },//10
-        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_float64(t->float64()) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; },//11
+        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_int8(t->int8()) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; },//1
+        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_uint8(t->uint8()) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; },//2
+        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_int16(t->int16()) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; },//3
+        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_uint16(t->uint16()) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; },//4
+        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_int32(t->int32()) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; },//5
+        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_uint32(t->uint32()) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; },  //6     
+        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_int64(t->int64()) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; },//7
+        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_uint64(t->uint64()) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; },//8
+        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_uint8(t->uint8()) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; },//9
+        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_float32(t->float32()) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; },//10
+        [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t { if (bb->write_float64(t->float64()) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; },//11
         [](const ::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) -> ::pilo::err_t {
             if (bb->write_bytes(t->daynamic_data(), 0,  t->size()) != PILO_OK) {
-                return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); 
+                return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); 
             }
             return PILO_OK;
         },//12        
@@ -331,20 +331,20 @@ namespace pilo
                 if (p->size() == 0)
                 {
                     if (bb->write_int32(0) != PILO_OK) {
-                        return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL);
+                        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
                     }
                 }
                 else
                 {
                     if (bb->write_bytes(p->c_str(), 0, p->size()) != PILO_OK) {
-                        return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL);
+                        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
                     }
                 }                
             }
             else
             {
                 if (bb->write_int32(-1) != PILO_OK) {
-                    return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); 
+                    return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); 
                 }
             }            
             return PILO_OK;
@@ -353,24 +353,24 @@ namespace pilo
     );
 
     ::pilo::err_t single_tlv_deserialize_na(::pilo::tlv*, ::pilo::core::memory::byte_buffer_interface*) { return PILO_OK;  }
-    ::pilo::err_t single_tlv_deserialize_i8(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_int8(t->_i8) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; }
-    ::pilo::err_t single_tlv_deserialize_u8(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_uint8(t->_u8) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; }//2
-    ::pilo::err_t single_tlv_deserialize_i16(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_int16(t->_i16) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; }//3
-    ::pilo::err_t single_tlv_deserialize_u16(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_uint16(t->_u16) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; }//4
-    ::pilo::err_t single_tlv_deserialize_i32(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_int32(t->_i32) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; }//5
-    ::pilo::err_t single_tlv_deserialize_u32(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_uint32(t->_u32) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; }  //6     
-    ::pilo::err_t single_tlv_deserialize_i64(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_int64(t->_i64) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; }//7
-    ::pilo::err_t single_tlv_deserialize_u64(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_uint64(t->_u64) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; }//8
-    ::pilo::err_t single_tlv_deserialize_bool(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_uint8(t->_u8) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; }//9
-    ::pilo::err_t single_tlv_deserialize_f32(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_float32(t->_f32) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; }//10
-    ::pilo::err_t single_tlv_deserialize_f64(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb)  { if (bb->read_float64(t->_f64) != PILO_OK) { return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL); } return PILO_OK; }//11
+    ::pilo::err_t single_tlv_deserialize_i8(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_int8(t->_i8) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; }
+    ::pilo::err_t single_tlv_deserialize_u8(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_uint8(t->_u8) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; }//2
+    ::pilo::err_t single_tlv_deserialize_i16(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_int16(t->_i16) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; }//3
+    ::pilo::err_t single_tlv_deserialize_u16(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_uint16(t->_u16) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; }//4
+    ::pilo::err_t single_tlv_deserialize_i32(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_int32(t->_i32) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; }//5
+    ::pilo::err_t single_tlv_deserialize_u32(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_uint32(t->_u32) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; }  //6     
+    ::pilo::err_t single_tlv_deserialize_i64(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_int64(t->_i64) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; }//7
+    ::pilo::err_t single_tlv_deserialize_u64(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_uint64(t->_u64) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; }//8
+    ::pilo::err_t single_tlv_deserialize_bool(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_uint8(t->_u8) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; }//9
+    ::pilo::err_t single_tlv_deserialize_f32(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb) { if (bb->read_float32(t->_f32) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; }//10
+    ::pilo::err_t single_tlv_deserialize_f64(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb)  { if (bb->read_float64(t->_f64) != PILO_OK) { return ::pilo::mk_perr(PERR_IO_WRITE_FAIL); } return PILO_OK; }//11
     ::pilo::err_t single_tlv_deserialize_bytes(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb)//12
     {
         ::pilo::err_t err = PILO_OK;
         ::pilo::i64_t sz = 0;
         char* pdata = bb->read_bytes(nullptr, 0, 0, sz, err);
         if (err != PILO_OK) {
-            return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL);
+            return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
         }
         return t->set_bytes(pdata, (::pilo::i32_t)sz, true);
     }
@@ -380,7 +380,7 @@ namespace pilo
         ::pilo::i64_t sz = 0;
         char* pdata = bb->read_bytes(nullptr, 0, 0, sz, err);
         if (err != PILO_OK) {
-            return ::pilo::make_core_error(PES_TLV, PEP_WRFAIL);
+            return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
         }
         t->set_string(pdata, sz);
         if (pdata != nullptr)
@@ -400,24 +400,24 @@ namespace pilo
     typedef ::pilo::err_t(*handle_map_travel_func_type)(const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*, ::pilo::i64_t*, void*);
     static handle_map_travel_func_type stc_handle_map_travel_func[::pilo::core::rtti::wired_type::key_type_count][::pilo::core::rtti::wired_type::value_type_intrincs_count] = {
         {//0
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); },
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); }
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); }
         },
         {//1
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); }, //0
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); }, //0
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i8_t, ::pilo::i8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//1
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i8_t, ::pilo::u8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//2
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i8_t, ::pilo::i16_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//3
@@ -434,7 +434,7 @@ namespace pilo
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal_tlv<::pilo::i8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//14
         },
         {//2
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); }, //0
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); }, //0
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u8_t, ::pilo::i8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//1
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u8_t, ::pilo::u8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//2
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u8_t, ::pilo::i16_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//3
@@ -451,7 +451,7 @@ namespace pilo
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal_tlv<::pilo::u8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//14
         },
         {//3
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); }, //0
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); }, //0
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i16_t, ::pilo::i8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//1
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i16_t, ::pilo::u8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//2
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i16_t, ::pilo::i16_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//3
@@ -468,7 +468,7 @@ namespace pilo
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal_tlv<::pilo::i16_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//14
         },
         {//4
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); }, //0
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); }, //0
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u16_t, ::pilo::i8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//1
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u16_t, ::pilo::u8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//2
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u16_t, ::pilo::i16_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//3
@@ -485,7 +485,7 @@ namespace pilo
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal_tlv<::pilo::u16_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//14
         },
         {//5
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); }, //0
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); }, //0
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i32_t, ::pilo::i8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//1
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i32_t, ::pilo::u8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//2
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i32_t, ::pilo::i16_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//3
@@ -502,7 +502,7 @@ namespace pilo
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal_tlv<::pilo::i32_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//14
         },
         {//6
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); }, //0
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); }, //0
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u32_t, ::pilo::i8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//1
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u32_t, ::pilo::u8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//2
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u32_t, ::pilo::i16_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//3
@@ -519,7 +519,7 @@ namespace pilo
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal_tlv<::pilo::u32_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//14
         },
         {//7
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); }, //0
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); }, //0
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i64_t, ::pilo::i8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//1
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i64_t, ::pilo::u8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//2
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::i64_t, ::pilo::i16_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//3
@@ -536,7 +536,7 @@ namespace pilo
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal_tlv<::pilo::i64_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//14
         },
         {//8
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); }, //0
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); }, //0
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u64_t, ::pilo::i8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//1
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u64_t, ::pilo::u8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//2
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<::pilo::u64_t, ::pilo::i16_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//3
@@ -553,7 +553,7 @@ namespace pilo
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal_tlv<::pilo::u64_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//14
         },
         {//9
-            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH); }, //0
+            [](const ::pilo::tlv*, ::pilo::u16_t,  bool, ::pilo::i64_t*,::pilo::i64_t*, void* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); }, //0
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<std::string, ::pilo::i8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//1
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<std::string, ::pilo::u8_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//2
             [](const ::pilo::tlv* t, ::pilo::u16_t func_id,  bool ignore_error, ::pilo::i64_t* total_cnt, ::pilo::i64_t* travel_cnt, void* ctx) -> ::pilo::err_t { return internal_map_travelsal<std::string, ::pilo::i16_t>(t, func_id, ignore_error, total_cnt, travel_cnt, ctx); },//3
@@ -609,7 +609,7 @@ namespace pilo
                     _dynamic_data = (char*)PMF_HEAP_MALLOC(len + 1);
                     if (_dynamic_data == nullptr)
                     {
-                        return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                        return ::pilo::mk_perr( PERR_INSUF_HEAP);
                     }
                     memcpy(_dynamic_data, bs, len);
                     _size = len + 1;
@@ -629,7 +629,7 @@ namespace pilo
                     _dynamic_data = (char*)PMF_HEAP_MALLOC(len);
                     if (_dynamic_data == nullptr)
                     {
-                        return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                        return ::pilo::mk_perr( PERR_INSUF_HEAP);
                     }
                     memcpy(_dynamic_data, bs, len);
                     _size = len;
@@ -736,22 +736,22 @@ namespace pilo
 
         if (byte_buffer->read_int32(this->_size) != PILO_OK)
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_RDFAIL, 1);
+            return ::pilo::mk_perr(PERR_IO_READ_FAIL);
         }
         ::pilo::u8_t attr = 0;
         ::pilo::u8_t flags = 0;
         ::pilo::u16_t vtype = 0;
         if (byte_buffer->read_uint8(attr) != PILO_OK)
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_RDFAIL, 2);
+            return ::pilo::mk_perr(PERR_IO_READ_FAIL);
         }
         if (byte_buffer->read_uint8(flags) != PILO_OK)
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_RDFAIL, 3);
+            return ::pilo::mk_perr(PERR_IO_READ_FAIL);
         }
         if (byte_buffer->read_uint16(vtype) != PILO_OK)
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_RDFAIL, 4);
+            return ::pilo::mk_perr(PERR_IO_READ_FAIL);
         }
         _type.set(attr, flags, vtype);
 
@@ -799,12 +799,12 @@ namespace pilo
     {
         if (this->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_dict)
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+            return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
         }
 
         if (this->key_type() >= ::pilo::core::rtti::wired_type::key_type_count)
         {
-            return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+            return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
         }
 
         if (this->value_type() <= ::pilo::core::rtti::wired_type::value_type_tlv)
@@ -812,7 +812,7 @@ namespace pilo
             return stc_handle_map_travel_func[this->key_type()][this->value_type()](this, func_id, ignore_error, total_cnt, travel_cnt, ctx);
         }
 
-        return ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+        return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
     }
 
     ::pilo::err_t tlv::_to_string(std::stringstream& ss) const
@@ -1119,7 +1119,7 @@ namespace pilo
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_INC_DATA);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INC_DATA);
         return 0;
     }
 
@@ -1155,12 +1155,12 @@ namespace pilo
                 }
                 if (iv < PILO_INT8_MIN)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_SMALL);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_SAMLL);
                     return PILO_INT8_MIN;
                 }
                 else if (iv > PILO_INT8_MAX)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_LARGE);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_LARGE);
                     return PILO_INT8_MAX;
                 }
                 return (::pilo::i8_t)iv; 
@@ -1181,19 +1181,19 @@ namespace pilo
                 }
                 if (iv < PILO_INT8_MIN)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_SMALL);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_SAMLL);
                     return PILO_INT8_MIN;
                 }
                 else if (iv > PILO_INT8_MAX)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_LARGE);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_LARGE);
                     return PILO_INT8_MAX;
                 }
                 return (::pilo::i8_t)iv;
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_INC_DATA);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INC_DATA);
         return 0;
     }
 
@@ -1231,7 +1231,7 @@ namespace pilo
                 }
                 else if (iv > PILO_UINT8_MAX)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_LARGE);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_LARGE);
                     return PILO_INT8_MAX;
                 }
                 
@@ -1255,7 +1255,7 @@ namespace pilo
                 }
                 if (iv > PILO_UINT8_MAX)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_LARGE);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_LARGE);
                     return PILO_UINT8_MAX;
                 }
 
@@ -1263,7 +1263,7 @@ namespace pilo
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_INC_DATA);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INC_DATA);
         return 0;
     }
 
@@ -1302,12 +1302,12 @@ namespace pilo
                 }
                 if (iv < PILO_INT16_MIN)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_SMALL);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_SAMLL);
                     return PILO_INT16_MIN;
                 }
                 else if (iv > PILO_INT16_MAX)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_LARGE);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_LARGE);
                     return PILO_INT16_MAX;
                 }
                 
@@ -1330,12 +1330,12 @@ namespace pilo
                 }
                 if (iv < PILO_INT16_MIN)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_SMALL);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_SAMLL);
                     return PILO_INT16_MIN;
                 }
                 else if (iv > PILO_INT16_MAX)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_LARGE);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_LARGE);
                     return PILO_INT16_MAX;
                 }
 
@@ -1343,7 +1343,7 @@ namespace pilo
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_INC_DATA);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INC_DATA);
         return 0;
     }
 
@@ -1382,7 +1382,7 @@ namespace pilo
                 }
                 else if (iv > PILO_UINT16_MAX)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_LARGE);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_LARGE);
                     return PILO_INT16_MAX;
                 }
                 
@@ -1405,7 +1405,7 @@ namespace pilo
                 }
                 if (iv > PILO_UINT16_MAX)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_LARGE);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_LARGE);
                     return PILO_UINT16_MAX;
                 }
 
@@ -1413,7 +1413,7 @@ namespace pilo
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_INC_DATA);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INC_DATA);
         return 0;
     }
 
@@ -1468,12 +1468,12 @@ namespace pilo
                 }
                 if (iv < PILO_INT32_MIN)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_SMALL);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_SAMLL);
                     return PILO_INT32_MIN;
                 }
                 else if (iv > PILO_INT32_MAX)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_LARGE);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_LARGE);
                     return PILO_INT32_MAX;
                 }
 
@@ -1481,7 +1481,7 @@ namespace pilo
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_INC_DATA);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INC_DATA);
         return 0;
     }
 
@@ -1520,7 +1520,7 @@ namespace pilo
                 }
                 else if (iv > PILO_UINT32_MAX)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_LARGE);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_LARGE);
                     return PILO_INT32_MAX;
                 }
                 
@@ -1543,7 +1543,7 @@ namespace pilo
                 }
                 if (iv > PILO_UINT32_MAX)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_TOO_LARGE);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_VAL_TOO_LARGE);
                     return PILO_UINT32_MAX;
                 }
 
@@ -1551,7 +1551,7 @@ namespace pilo
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_INC_DATA);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INC_DATA);
         return 0;
     }
 
@@ -1581,7 +1581,7 @@ namespace pilo
             }
             else if (_type.value_type() == ::pilo::core::rtti::wired_type::value_type_bytes)
             {
-                if (err != nullptr) *err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+                if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
                 return 0;
             }
             else if (_type.value_type() == ::pilo::core::rtti::wired_type::value_type_str)
@@ -1616,7 +1616,7 @@ namespace pilo
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_INC_DATA);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INC_DATA);
         return 0;
     }
 
@@ -1676,7 +1676,7 @@ namespace pilo
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_INC_DATA);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INC_DATA);
         return 0;
     }
 
@@ -1773,7 +1773,7 @@ namespace pilo
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_INC_DATA);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INC_DATA);
         return 0;
     }
 
@@ -1857,7 +1857,7 @@ namespace pilo
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_VAL, PEP_INC_DATA);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INC_DATA);
         return 0;
     }
 
@@ -2037,12 +2037,12 @@ namespace pilo
             }
             else
             {
-                if (err != nullptr) *err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+                if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
                 return nullptr;
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
         return nullptr;
     }
 
@@ -2111,7 +2111,7 @@ namespace pilo
             }
             else
             {
-                if (err != nullptr) *err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+                if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
                 return nullptr;
             }
 
@@ -2119,7 +2119,7 @@ namespace pilo
             return buffer;
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
         return nullptr;
     }
 
@@ -2224,12 +2224,12 @@ namespace pilo
             }
             else
             {
-                if (err != nullptr) *err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+                if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
                 return nullptr;
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
         return nullptr;
     }
 
@@ -2244,7 +2244,7 @@ namespace pilo
             }
         }
 
-        if (err != nullptr) *err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+        if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
             return nullptr;        
     }
 
@@ -2267,13 +2267,13 @@ namespace pilo
     {
         if (this->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_single)
         {
-            if (err != nullptr) *err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+            if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
             return -1;
         }
 
         if (_dynamic_data == nullptr)
         {
-            if (err != nullptr) *err = ::pilo::make_core_error(PES_PTR, PEP_IS_NULL);
+            if (err != nullptr) *err = ::pilo::mk_perr(PERR_NULL_PTR);
             return -1;
         }
         else
@@ -2336,7 +2336,7 @@ namespace pilo
             }
             else
             {
-                if (err != nullptr) *err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+                if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
                 return -1;
             }
         }
@@ -2369,7 +2369,7 @@ namespace pilo
     //    ::pilo::i64_t pcnt = ::pilo::core::string::split_fixed(path, -1,  ".", 1, parts, PMF_COUNT_OF(parts), false, true, true, true);
     //    if (pcnt < 1)
     //    {
-    //        ::pilo::set_if_ptr_is_not_null<::pilo::err_t>(err, ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID));
+    //        ::pilo::set_if_ptr_is_not_null<::pilo::err_t>(err, ::pilo::mk_perr(PES_PARAM, PEP_IS_INVALID));
     //        return nullptr;
     //    }
 
@@ -2441,7 +2441,7 @@ namespace pilo
     {
         if (src_tlv == nullptr)
         {
-            return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+            return ::pilo::mk_perr(PERR_NULL_PARAM);
         }
 
         if (this->_dynamic_data == nullptr && src_tlv->_dynamic_data == nullptr)
@@ -2468,7 +2468,7 @@ namespace pilo
     {
         if (src_tlv == nullptr)
         {
-            return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+            return ::pilo::mk_perr(PERR_NULL_PARAM);
         }
 
         if (this->_dynamic_data == nullptr && src_tlv->_dynamic_data == nullptr)
