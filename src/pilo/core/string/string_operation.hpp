@@ -1272,14 +1272,14 @@ namespace pilo
 
 				if (cc_src_length + len >= cc_src_buffer)
 				{
-					return ::pilo::mk_perr( PERR_VAL_TOO_SAMLL, 0);
+					return ::pilo::mk_perr( PERR_VAL_TOO_SAMLL);
 				}
 
 				if (pos == len)
 				{
 					if (nullptr == ::pilo::core::string::n_concatenate_inplace(src, cc_src_buffer, str, len))
 					{
-						return ::pilo::mk_perr( PERR_VAL_TOO_SAMLL, 0);
+						return ::pilo::mk_perr( PERR_VAL_TOO_SAMLL);
 					}
 				}
 				else

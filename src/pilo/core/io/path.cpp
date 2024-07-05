@@ -1000,7 +1000,7 @@ namespace pilo {
                     strRet = getcwd(buffer.begin(), buffer.more_space_available(extra_space + 1));
                 }
                 if (strRet == nullptr && errno != ERANGE) {
-                    return ::pilo::mk_perr(PES_GETCWD, PERR_IO_READ_FAIL);
+                    return ::pilo::mk_perr(PERR_GET_PATH_FAIL);
                 }
                 ::pilo::i32_t ret_size = 0;
                 if (strRet != nullptr) {
@@ -1010,7 +1010,7 @@ namespace pilo {
                     strRet = getcwd(nullptr, 0);
                     ret_size = (::pilo::i32_t) ::pilo::core::string::character_count(strRet);
                     if (strRet == nullptr)
-                        return ::pilo::mk_perr(PES_GETCWD, PERR_IO_READ_FAIL);
+                        return ::pilo::mk_perr(PERR_GET_PATH_FAIL);
                     buffer.check_more_space(extra_space + 1 + ret_size);
                     ::pilo::core::string::n_copyz(buffer.ptr(), buffer.space_available(), strRet, ret_size);
                     buffer.add_size(ret_size);
@@ -1205,10 +1205,10 @@ namespace pilo {
                 while (true) {
                     ssize_t tmp_ret = readlink(src, dst->begin(), dst->capacity());
                     if (tmp_ret == -1) {
-                        return ::pilo::mk_perr(PES_SYMLINK, PERR_IO_READ_FAIL);
+                        return ::pilo::mk_perr(PERR_FSNODE_RDLINK_FAIL);
                     } else if (tmp_ret == dst->capacity()) {
                         if (allocated >= PMI_PATH_MAX) {
-                            return ::pilo::mk_perr(PES_SYMLINK, PERR_IO_READ_FAIL);
+                            return ::pilo::mk_perr(PERR_FSNODE_RDLINK_FAIL);
                         }
                         dst->check_more_space(64);
                         allocated += 64;
@@ -1217,17 +1217,17 @@ namespace pilo {
                         dst->set_size((::pilo::i32_t) tmp_ret);
                         err = tmp_path.remove_last();
                         if (err != PILO_OK)
-                            return ::pilo::mk_perr(PES_FILE_ATTR, PERR_IO_READ_FAIL);
+                            return ::pilo::mk_perr(PERR_IO_READ_FAIL);
                         err = tmp_path.append(dst->begin());
                         if (err != PILO_OK)
-                            return ::pilo::mk_perr(PES_FILE_ATTR, PERR_IO_READ_FAIL);
+                            return ::pilo::mk_perr(PERR_IO_READ_FAIL);
                         dst->check_space(tmp_path.length() + 1);
                         ::pilo::core::string::n_copyz(dst->begin(), dst->capacity(), tmp_path.fullpath(), tmp_path.length());
                         dst->set_size(tmp_path.length());
                         return PILO_OK;
                     }
                 }
-                return ::pilo::mk_perr(PES_SYMLINK, PERR_IO_READ_FAIL);
+                return ::pilo::mk_perr(PERR_FSNODE_RDLINK_FAIL);
             }
 
             static ::pilo::err_t
@@ -1254,7 +1254,7 @@ namespace pilo {
                         if (errno == ENOENT) {
                             return ::pilo::mk_perr( PERR_NON_EXIST);
                         }
-                        return ::pilo::mk_perr(PES_FILE_ATTR, PERR_IO_READ_FAIL);
+                        return ::pilo::mk_perr(PERR_FSNODE_RDLINK_FAIL);
                     }
                     if ((stBuff.st_mode & S_IFDIR) == S_IFDIR) {
                         node_type = path::fs_node_type_dir;
@@ -1292,7 +1292,7 @@ namespace pilo {
                 if (path_len < 0) {
                     ::pilo::i64_t tmplen = ::pilo::core::string::character_count(path_cstr);
                     if (tmplen >= path::length_max) {
-                        return ::pilo::mk_perr(, PERR_IDX_TOO_OOB);
+                        return ::pilo::mk_perr(PERR_IDX_TOO_OOB);
                     }
                     path_len = (::pilo::pathlen_t) tmplen;
                 } else {
@@ -1308,7 +1308,7 @@ namespace pilo {
                         if (errno == ENOENT) {
                             return ::pilo::mk_perr( PERR_NON_EXIST);
                         }
-                        return ::pilo::mk_perr(PES_FILE_ATTR, PERR_IO_READ_FAIL);
+                        return ::pilo::mk_perr(PERR_FSNODE_RDLINK_FAIL);
                     }
 
                     if ((stBuff.st_mode & S_IFDIR) == S_IFDIR)
@@ -1382,7 +1382,7 @@ namespace pilo {
                     if (node_type == path::fs_node_type_dir) {
                         return PILO_OK;
                     } else {
-                        return pilo::mk_perr( PEP_IS_INVALID);
+                        return pilo::mk_perr(PERR_INV_VAL_TYPE);
                     }
                 }
 #endif
@@ -1455,7 +1455,7 @@ namespace pilo {
                 } else {
                     if (! delete_exist) {
                         if (errno == EEXIST) {
-                            return ::pilo::mk_perr( PEP_EXIST);
+                            return ::pilo::mk_perr( PERR_FSNODE_EXIST);
                         } else {
                             return ::pilo::mk_perr( PERR_FILE_CREAET_FAIL);
                         }
@@ -1622,9 +1622,9 @@ namespace pilo {
                         return PILO_OK;
                     }
                     if (EEXIST == errno && ENOTEMPTY == errno) {
-                        return ::pilo::mk_perr(PES_DIR, PEP_EXIST);
+                        return ::pilo::mk_perr(PERR_FSNODE_EXIST);
                     }
-                    return ::pilo::mk_perr(PES_DIR, PEP_DEL_FAILED);
+                    return ::pilo::mk_perr(PERR_DIR_DEL_FAIL);
                 }
 #endif
                 return PILO_OK;
@@ -1871,7 +1871,7 @@ namespace pilo {
                 DIR *pDir = nullptr;
                 struct dirent *dir_result_ptr = nullptr;
                 if ((pDir = ::opendir(p->fullpath())) == nullptr) {
-                    return ::pilo::mk_perr(PES_DIR, PEP_OPEN_FAILED);
+                    return ::pilo::mk_perr(PERR_DIR_TRAVAL_FAIL);
                 }
                 ::pilo::core::pattern::resource_cleaner<1> rcc;
                 rcc.push(
@@ -1891,7 +1891,7 @@ namespace pilo {
                         continue;
                     }
                     if (dir_result_ptr->d_name == nullptr) {
-                        return ::pilo::mk_perr(PES_DIR , PERR_NULL_PTR );
+                        return ::pilo::mk_perr(PERR_NULL_PTR );
                     }
                     sub_p.clear();
                     ::pilo::pathlen_t tmp_plen = (::pilo::pathlen_t) ::pilo::core::string::character_count(dir_result_ptr->d_name);

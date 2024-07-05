@@ -80,6 +80,8 @@
 #define PERR_OFF_IS_ZERO        (65)
 #define PERR_INV_OFF            (66)
 #define PERR_INV_LEN            (67)
+#define PERR_FSNODE_RDLINK_FAIL (68)
+#define PERR_DIR_NOT_EMPTY      (69)
 
 namespace pilo
 {

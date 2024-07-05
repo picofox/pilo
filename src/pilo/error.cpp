@@ -32,7 +32,7 @@ namespace pilo
         , "empty value", "could retry", "user cancelled", "test case failed", "invalid key type"
 
         , "invalid value type", "invalid object", "infinit loop", "offset too small", "offset too large"
-        , "offset is zero", "invalid offset", "invalid length", "", ""
+        , "offset is zero", "invalid offset", "invalid length", "read file link failed", "dir not empty"
 
         , "", "", "", "", ""
         , "", "", "", "", ""
