@@ -244,7 +244,7 @@ namespace pilo
                     ::pilo::tlv* ret = ::pilo::tlv::allocate();
                     if (ret == nullptr)
                     {
-                        err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                        err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                         return nullptr;
 
                     }
@@ -311,7 +311,7 @@ namespace pilo
                     {
                         if (read_available() < (pilo::i64_t) len + 4)
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                             return nullptr;
                         }
 
@@ -326,7 +326,7 @@ namespace pilo
                             ret_arr = (bool*)PMF_HEAP_CALLOC(len + off, sizeof(bool));
                             if (ret_arr == nullptr)
                             {
-                                err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                                err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                                 return nullptr;
                             }
                             if (arr != nullptr && arr_cap > 0)
@@ -361,7 +361,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -401,7 +401,7 @@ namespace pilo
                     {
                         if (read_available() < (pilo::i64_t)len + 4)
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                             return nullptr;
                         }
 
@@ -428,7 +428,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -447,7 +447,7 @@ namespace pilo
                 {
                     if (arr == nullptr)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                        return ::pilo::mk_perr(PERR_NULL_PARAM);
                     }
 
                     ::pilo::i32_t cnt = 0;
@@ -491,7 +491,7 @@ namespace pilo
                     ::pilo::u16_t vt = ::pilo::core::rtti::to_wired_value_type<typename TA_CONTAINER::value_type>(nullptr);
                     if (vt >= ::pilo::core::rtti::wired_type::value_type_intrincs_count)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH);
+                        return ::pilo::mk_perr(PERR_INV_PARAM_DT);
                     }
 
                     err = this->write_uint16(vt);
@@ -527,7 +527,7 @@ namespace pilo
 
                     if (off + len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_LEN_INV);
+                        return ::pilo::mk_perr(PERR_LEN_TOO_LARGE);
                     }
                     ::pilo::i32_t count = (::pilo::i32_t)(off + len);
                     err = this->write_int32(count);
@@ -551,16 +551,16 @@ namespace pilo
                     ::pilo::u16_t vt = ::pilo::core::rtti::to_wired_value_type<typename TA_MAP::mapped_type>(nullptr);
                     if (kt == ::pilo::core::rtti::wired_type::key_type_na || kt >= ::pilo::core::rtti::wired_type::key_type_count)
                     {
-                        return ::pilo::make_core_error(PES_WK_TYPE, PEP_IS_INVALID);
+                        return ::pilo::mk_perr(PERR_INV_KEY_TYPE);
                     }
                     if (vt == ::pilo::core::rtti::wired_type::value_type_na)
                     {
-                        return ::pilo::make_core_error(PES_WV_TYPE, PEP_IS_INVALID);
+                        return ::pilo::mk_perr(PERR_INV_VAL_TYPE);
                     }
                     else if (vt >= ::pilo::core::rtti::wired_type::value_type_intrincs_count)
                     {
                         PMC_ASSERT(false);
-                        return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+                        return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
                     }
 
                     err = this->write_uint8(kt);
@@ -623,7 +623,7 @@ namespace pilo
 
                     if (off + len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_LEN_INV);
+                        return ::pilo::mk_perr(PERR_LEN_TOO_LARGE);
                     }
                     ::pilo::i32_t count = (::pilo::i32_t) (off + len);                    
                     err = this->write_int32(count);
@@ -664,7 +664,7 @@ namespace pilo
                     {
                         if (read_available() < (pilo::i64_t)len + 4)
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                             return nullptr;
                         }
 
@@ -691,7 +691,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -727,7 +727,7 @@ namespace pilo
                     {
                         if (read_available() < (pilo::i64_t)(len*sizeof(::pilo::f32_t)) + 4)
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                             return nullptr;
                         }
 
@@ -754,7 +754,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -791,7 +791,7 @@ namespace pilo
                     {
                         if (read_available() < (pilo::i64_t) (len*(sizeof(::pilo::f64_t)) + 4))
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                             return nullptr;
                         }
 
@@ -820,7 +820,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -856,7 +856,7 @@ namespace pilo
                     }
                     if (ind != 1)
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_INC_DATA);
+                        return ::pilo::mk_perr( PERR_INC_DATA);
                     }
 
                     err = this->readable_seek(::pilo::seek_whence_enum::current, 1, true, nullptr);
@@ -889,7 +889,7 @@ namespace pilo
                             return T::deserialise(nullptr, this);
                         else
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_INC_DATA);
+                            err = ::pilo::mk_perr( PERR_INC_DATA);
                             return nullptr;
                         }                            
                     }
@@ -934,7 +934,7 @@ namespace pilo
                             ret_arr = (T**)PMF_HEAP_CALLOC(len + off, sizeof(T*));
                             if (ret_arr == nullptr)
                             {
-                                err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                                err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                                 return nullptr;
                             }
                             if (off > 0)
@@ -952,7 +952,7 @@ namespace pilo
                                 ret_arr = (T**)PMF_HEAP_CALLOC(len + off, sizeof(T*));
                                 if (ret_arr == nullptr)
                                 {
-                                    err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                                    err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                                     return nullptr;
                                 }
                                 if (arr_cap > 0)
@@ -1010,7 +1010,7 @@ namespace pilo
 
                         if (read_available() < (pilo::i64_t)len + 4)
                         {
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            return ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                         }                    
                         err = this->readable_seek(::pilo::seek_whence_enum::current, 4, true, nullptr);
                         if (err != PILO_OK)
@@ -1020,14 +1020,14 @@ namespace pilo
 
                         if (arr == nullptr)
                         {
-                            return ::pilo::make_core_error(PES_MEM, PEP_TOO_SMALL);
+                            return ::pilo::mk_perr( PERR_VAL_TOO_SAMLL);
                         }
                         else
                         {
                             if (len > arr_cap - off)
                             {
                                 rlen = len;
-                                return ::pilo::make_core_error(PES_MEM, PEP_TOO_SMALL);
+                                return ::pilo::mk_perr( PERR_VAL_TOO_SAMLL);
                             }
                         }
 
@@ -1057,7 +1057,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -1087,7 +1087,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -1134,7 +1134,7 @@ namespace pilo
                     {
                         if (read_available() < (pilo::i64_t)(len*sizeof(::pilo::i64_t)) + 4)
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                             return nullptr;
                         }
 
@@ -1161,7 +1161,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -1197,7 +1197,7 @@ namespace pilo
                     {
                         if (read_available() < (pilo::i64_t)(len * sizeof(::pilo::i32_t) + 4))
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                             return nullptr;
                         }
 
@@ -1224,7 +1224,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -1260,7 +1260,7 @@ namespace pilo
                     {
                         if (read_available() < ((pilo::i64_t)(len * sizeof(::pilo::i16_t)) + 4))
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                             return nullptr;
                         }
 
@@ -1287,7 +1287,7 @@ namespace pilo
                     }
                     else if (len > PILO_INT32_MAX)
                     {
-                        return ::pilo::make_core_error(PES_PARAM, PEP_TOO_LARGE);
+                        return ::pilo::mk_perr(PERR_PARAM_OOR_U);
                     }
                     else if (len == 0)
                     {
@@ -1309,7 +1309,7 @@ namespace pilo
             {
                 if (arr == nullptr)
                 {
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                    return ::pilo::mk_perr(PERR_NULL_PARAM);
                 }
 
                 ::pilo::i32_t cnt = 0;
@@ -1342,7 +1342,7 @@ namespace pilo
             {
                 if (arr == nullptr)
                 {
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                    return ::pilo::mk_perr(PERR_NULL_PARAM);
                 }
 
                 ::pilo::i32_t cnt = 0;

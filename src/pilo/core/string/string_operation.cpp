@@ -781,7 +781,7 @@ namespace pilo
                 if (pc == nullptr)
                 {
                     v = 0;
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                    return ::pilo::mk_perr(PERR_NULL_PARAM);
                 }
 
                 if (len < 0)
@@ -809,7 +809,7 @@ namespace pilo
                 if (pc == nullptr)
                 {
                     v = 0;
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                    return ::pilo::mk_perr(PERR_NULL_PARAM);
                 }
 
                 if (len < 0)
@@ -856,7 +856,7 @@ namespace pilo
             ::pilo::err_t string_to_number(::pilo::f32_t& v, const char* pc, ::pilo::i64_t len)
             {
                 PMC_UNUSED(len);
-                if (pc == nullptr) return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                if (pc == nullptr) return ::pilo::mk_perr(PERR_NULL_PARAM);
                 v = (::pilo::f32_t) ::strtod(pc, NULL);
                 return PILO_OK;
             }
@@ -864,7 +864,7 @@ namespace pilo
             ::pilo::err_t string_to_number(::pilo::f64_t& v, const char* pc, ::pilo::i64_t len)
             {
                 PMC_UNUSED(len);
-                if (pc == nullptr) return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                if (pc == nullptr) return ::pilo::mk_perr(PERR_NULL_PARAM);
                 v = ::strtod(pc, NULL);
                 return PILO_OK;
             }
@@ -876,7 +876,7 @@ namespace pilo
                 if (pc == nullptr)
                 {
                     v = 0;
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                    return ::pilo::mk_perr(PERR_NULL_PARAM);
                 }
 
                 if (len < 0)
@@ -904,7 +904,7 @@ namespace pilo
                 if (pc == nullptr)
                 {
                     v = 0;
-                    return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                    return ::pilo::mk_perr(PERR_NULL_PARAM);
                 }
 
                 if (len < 0)
@@ -951,7 +951,7 @@ namespace pilo
             ::pilo::err_t string_to_number(::pilo::f32_t& v, const wchar_t* pc, ::pilo::i64_t len)
             {
                 PMC_UNUSED(len);
-                if (pc == nullptr) return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                if (pc == nullptr) return ::pilo::mk_perr(PERR_NULL_PARAM);
                 v = (::pilo::f32_t) ::wcstod(pc, NULL);
                 return PILO_OK;
             }
@@ -959,7 +959,7 @@ namespace pilo
             ::pilo::err_t string_to_number(::pilo::f64_t& v, const wchar_t* pc, ::pilo::i64_t len)
             {
                 PMC_UNUSED(len);
-                if (pc == nullptr) return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                if (pc == nullptr) return ::pilo::mk_perr(PERR_NULL_PARAM);
                 v = ::wcstod(pc, NULL);
                 return PILO_OK;
             }

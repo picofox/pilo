@@ -74,7 +74,7 @@ int win32_get_cpu_info(::pilo::i32_t& ncpus, ::pilo::i32_t& ncores, ::pilo::i32_
     ptr = buffer;
     if (ptr == NULL) 
     {
-        return ::pilo::make_core_error(PES_PTR, PEP_IS_NULL, 0);
+        return ::pilo::mk_perr(PERR_NULL_PTR);
     }
     while (byteOffset + sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION) <= returnLength)
     {

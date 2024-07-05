@@ -45,7 +45,7 @@ namespace pilo
 						}						
 						if (ret != PILO_OK)
 						{
-							p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED));
+							p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 							return;
 						}						
 					}
@@ -54,12 +54,12 @@ namespace pilo
 				static void consumer(::pilo::core::memory::byte_buffer_interface* bb, ::pilo::core::testing::func_test_case* p_case)
 				{
 					::pilo::err_t ret = PILO_OK;
-					::pilo::i32_t err_type = 0;
+					::pilo::i32_t ok = 0;
 					::pilo::core::memory::o1l31c16_header header;
 					for (;;)
 					{
-						err_type = ::pilo::is_ok_or_err_type(p_case->result(), PEP_RETRY);
-						if (err_type <= 0)
+						ok = ::pilo::is_ok_perr(p_case->result(), PERR_RETRY);
+						if (ok <= 0)
 						{
 							return;
 						}
@@ -77,19 +77,19 @@ namespace pilo
 						{
 							std::lock_guard<::pilo::core::threading::spin_mutex> guard(*(p_case->get_lock()));
 							ret = ::pilo::core::memory::o1l31c16_header::deserialise(header, bb);
-
-							err_type = ::pilo::is_ok_or_err_type(ret, PEP_RETRY);
-							if (err_type == 0)
+							ok = 0;
+							ok = ::pilo::is_ok_perr(ret, PERR_RETRY);
+							if (ok == 0)
 							{
 								obj = ::pilo::core::testing::large_sample_object::deserialise(&header, bb);
 								if (obj == nullptr)
 								{
-									p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_NULL));
+									p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 									return;
 								}
 								if (!obj->validate())
 								{
-									p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_INVALID));
+									p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 									return;
 								}
 
@@ -97,13 +97,8 @@ namespace pilo
 								obj = nullptr;
 
 								stc_count.fetch_add(1);
-							}
-							else if (err_type > 0)
-							{
-								//std::this_thread::yield();
-							}
-							else
-							{								
+							} else if (ok > 0) {
+							} else  {							
 								p_case->set_result(ret);
 								return;
 							}
@@ -200,7 +195,7 @@ namespace pilo
  						ser_time += (::pilo::core::datetime::timestamp_nano_steady() - b);
 						if (ret != PILO_OK)
 						{
-							p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED));
+							p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 							return PILO_OK;
 						}
 						
@@ -209,19 +204,20 @@ namespace pilo
 					for (::pilo::i64_t i = 0; i < test_count; i++)
 					{
 						::pilo::err_t ret = ::pilo::core::memory::o1l31c16_header::deserialise(header, &buffer);
-						::pilo::i32_t err_type = ::pilo::is_ok_or_err_type(ret, PEP_RETRY);
+						::pilo::i32_t ok = false;
+						ok = ::pilo::is_ok_perr(ret, PERR_RETRY);
 						::pilo::core::testing::large_sample_object* obj = nullptr;
-						if (err_type == 0)
+						if (ok==0)
 						{
 							obj = ::pilo::core::testing::large_sample_object::deserialise(&header, &buffer);
 							if (obj == nullptr)
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_NULL));
+								p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 								return PILO_OK;
 							}
 							if (!obj->validate())
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_INVALID));
+								p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 								return PILO_OK;
 							}
 							delete(obj);
@@ -261,7 +257,7 @@ namespace pilo
 						ser_time += (::pilo::core::datetime::timestamp_nano_steady() - b);
 						if (ret != PILO_OK)
 						{
-							p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED));
+							p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 							return PILO_OK;
 						}
 
@@ -270,19 +266,19 @@ namespace pilo
 					for (::pilo::i64_t i = 0; i < test_count; i++)
 					{
 						::pilo::err_t ret = ::pilo::core::memory::o1l31c16_header::deserialise(header, &buffer);
-						::pilo::i32_t err_type = ::pilo::is_ok_or_err_type(ret, PEP_RETRY);
+						::pilo::i32_t ok = ::pilo::is_ok_perr(ret, PERR_RETRY);
 						::pilo::core::testing::large_sample_object* obj = nullptr;
-						if (err_type == 0)
+						if (ok == 0)
 						{
 							obj = ::pilo::core::testing::large_sample_object::deserialise(&header, &buffer);
 							if (obj == nullptr)
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_NULL));
+								p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 								return PILO_OK;
 							}
 							if (!obj->validate())
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_INVALID));
+								p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 								return PILO_OK;
 							}
 							delete(obj);
@@ -322,25 +318,25 @@ namespace pilo
 						ser_time += (::pilo::core::datetime::timestamp_nano_steady() - b);
 						if (ret != PILO_OK)
 						{
-							p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED));
+							p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 							return PILO_OK;
 						}
 						
 
 						ret = ::pilo::core::memory::o1l31c16_header::deserialise(header, &buffer);
-						::pilo::i32_t err_type = ::pilo::is_ok_or_err_type(ret, PEP_RETRY);
+						::pilo::i32_t ok = ::pilo::is_ok_perr(ret, PERR_RETRY);
 						::pilo::core::testing::large_sample_object* obj = nullptr;
-						if (err_type == 0)
+						if (ok == 0)
 						{
 							obj = ::pilo::core::testing::large_sample_object::deserialise(&header, &buffer);
 							if (obj == nullptr)
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_NULL));
+								p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 								return PILO_OK;
 							}
 							if (!obj->validate())
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_INVALID));
+								p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 								return PILO_OK;
 							}
 							delete(obj);
@@ -370,7 +366,7 @@ namespace pilo
 					std::string err_info;
 					::pilo::core::memory::linked_byte_buffer<4096, 4096, false> buffer;
 					if (!buffer.validate(err_info, 0, 0, 0, 0))
-						return ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+						return ::pilo::mk_perr( PERR_INC_DATA);
 
 					::pilo::err_t err;
 					::pilo::i64_t orig_pos = 0;
@@ -378,21 +374,21 @@ namespace pilo
 					if (err != PILO_OK)
 						return err;
 					if (orig_pos != 0)
-						return  ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+						return  ::pilo::mk_perr( PERR_INV_OFF);
 					if (!buffer.validate(err_info, 408000, 0, 408000, 100))
-						return ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+						return ::pilo::mk_perr(PERR_INC_DATA);
 					err = buffer.writable_seek(::pilo::seek_whence_enum::begin, 0, false, &orig_pos);
 					if (err != PILO_OK)
 						return err;
 					if (orig_pos != 408000)
-						return  ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+						return  ::pilo::mk_perr( PERR_INV_OFF);
 					if (!buffer.validate(err_info, 408000, 0, 0, 100))
-						return ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+						return ::pilo::mk_perr(PERR_INC_DATA);
 					err = buffer.compact(::pilo::ioop_type_enum::write);
 					if (err != PILO_OK)
 						return err;
 					if (!buffer.validate(err_info, 0, 0, 0, 0))
-						return ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+						return ::pilo::mk_perr(PERR_INC_DATA);
 
 					err = buffer.writable_seek(::pilo::seek_whence_enum::current, 408000, false, &orig_pos);
 					if (err != PILO_OK)
@@ -401,24 +397,24 @@ namespace pilo
 					if (err != PILO_OK)
 						return err;
 					if (orig_pos != 0)
-						return  ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+						return  ::pilo::mk_perr( PERR_INV_OFF);
 					if (!buffer.validate(err_info, 408000, 204000, 204000, 100))
-						return ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+						return ::pilo::mk_perr( PERR_INC_DATA);
 					err = buffer.compact(::pilo::ioop_type_enum::read);
 					if (err != PILO_OK)
 						return err;
 					if (!buffer.validate(err_info, 204000, 0, 204000, 50))
-						return ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+						return ::pilo::mk_perr( PERR_INC_DATA);
 					err = buffer.readable_seek(::pilo::seek_whence_enum::current, 204000, false, &orig_pos);
 					if (err != PILO_OK)
 						return err;
 					if (orig_pos != 0)
-						return  ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+						return  ::pilo::mk_perr( PERR_INV_OFF);
 					err = buffer.compact(::pilo::ioop_type_enum::read);
 					if (err != PILO_OK)
 						return err;
 					if (!buffer.validate(err_info, 0, 0, 0, 0))
-						return ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+						return ::pilo::mk_perr( PERR_INC_DATA);
 
 
 					err = buffer.writable_seek(::pilo::seek_whence_enum::current, 408000, false, &orig_pos);
@@ -431,12 +427,12 @@ namespace pilo
 					if (err != PILO_OK)
 						return err;
 					if (orig_pos != 408000)
-						return  ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+						return  ::pilo::mk_perr( PERR_INV_OFF);
 					err = buffer.compact(::pilo::ioop_type_enum::read_write);
 					if (err != PILO_OK)
 						return err;
 					if (!buffer.validate(err_info, 0, 0, 0, 0))
-						return ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+						return ::pilo::mk_perr( PERR_INC_DATA);
 
 
 					p_case->set_result(PILO_OK);

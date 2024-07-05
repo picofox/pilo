@@ -69,7 +69,7 @@ namespace pilo
                 virtual ::pilo::err_t compact(::pilo::ioop_type_enum ioop)
                 {
                     PMC_UNUSED(ioop);
-                    return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+                    return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
                 }
 
                 virtual ::pilo::i64_t read_available() const
@@ -106,7 +106,7 @@ namespace pilo
                     {
                         if (off < 0 || off > this->_m_begin_pos + this->_m_length)
                         {
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+                            return ::pilo::mk_perr( PERR_INV_OFF);
                         }
                         off = off - this->_m_length; //convert to relative
                     }
@@ -114,12 +114,12 @@ namespace pilo
                     {
                         if (off < (0 - this->_m_begin_pos) || off > this->_m_length)
                         {
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+                            return ::pilo::mk_perr( PERR_INV_OFF);
                         }
                     }
                     else if (whence == ::pilo::seek_whence_enum::end)
                     {
-                        return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+                        return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
                     }
                     if (off == 0)
                         return PILO_OK;
@@ -137,13 +137,13 @@ namespace pilo
                     {
                         if (off < this->_m_begin_pos)
                         {
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+                            return ::pilo::mk_perr( PERR_INV_OFF);
                         }
                         off = off - this->_m_length - this->_m_begin_pos; //convert to relative
                     }
                     else if (whence == ::pilo::seek_whence_enum::end)
                     {
-                        return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+                        return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
                     }
                     if (off == 0)
                         return PILO_OK;
@@ -170,7 +170,7 @@ namespace pilo
                 {
                     if (read_length < 0)
                     {
-                        err = ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+                        err = ::pilo::mk_perr(PERR_INV_LEN);
                         return nullptr;
                     }
                     char* ret_buffer_ptr = dst_buffer;
@@ -182,7 +182,7 @@ namespace pilo
                             ret_buffer_ptr = (char*)PMF_HEAP_MALLOC(neo_sz);
                             if (ret_buffer_ptr == nullptr)
                             {
-                                err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                                err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                                 return nullptr;
                             }
 
@@ -206,14 +206,14 @@ namespace pilo
                 {
                     if (peek_length < 0)
                     {
-                        err = ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+                        err = ::pilo::mk_perr(PERR_INV_LEN);
                         return nullptr;
                     }
                     if (peek_length > 0)
                     {
                         if (dst_buffer_size - dst_pos < peek_length)
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_TOO_SMALL);
+                            err = ::pilo::mk_perr( PERR_VAL_TOO_SAMLL);
                             return nullptr;
                         }
                         memcpy(dst_buffer + dst_pos, this->_m_data + this->_m_begin_pos + peek_off, peek_length);
@@ -237,7 +237,7 @@ namespace pilo
                 {
                     if (write_len < 0)
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+                        return ::pilo::mk_perr(PERR_INV_LEN);
                     }
 
                     if (write_len > 0)
@@ -253,7 +253,7 @@ namespace pilo
                 {
                     if (write_len < 0)
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_IS_INVALID);
+                        return ::pilo::mk_perr(PERR_INV_LEN);
                     }
 
                     if (write_len > 0)
@@ -289,7 +289,7 @@ namespace pilo
                     }
                     if (this->read_available() < ((::pilo::i64_t)blen + 4))
                     {
-                        err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                        err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                         bytes_read = 0;
                         return nullptr;
                     }
@@ -322,7 +322,7 @@ namespace pilo
                     }
                     if (this->read_available() - peek_off < ((::pilo::i64_t)blen + 4))
                     {
-                        err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                        err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                         bytes_peeked = 0;
                         return nullptr;
                     }
@@ -353,7 +353,7 @@ namespace pilo
                     {
                         return this->write_raw_bytes(write_buffer, write_off, write_len);
                     }
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                    return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                 }
 
                 virtual ::pilo::err_t set_bytes(::pilo::i64_t buffer_off, const char* write_buffer, ::pilo::i64_t write_off, ::pilo::i64_t write_len)
@@ -363,7 +363,7 @@ namespace pilo
                     {
                         return this->set_raw_bytes(4 + buffer_off, write_buffer, write_off, write_len);
                     }
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                    return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                 }
 
                 virtual char* read_cstring(char* dst_buffer, ::pilo::i64_t dst_buffer_size, ::pilo::i64_t dst_pos, ::pilo::i64_t& str_len, ::pilo::err_t& err)
@@ -386,7 +386,7 @@ namespace pilo
                     }
                     if (this->read_available() < ((::pilo::i64_t)blen + 4))
                     {
-                        err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                        err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                         str_len = 0;
                         return nullptr;
                     }
@@ -419,7 +419,7 @@ namespace pilo
                     }
                     if (this->read_available() - peek_off < (blen + (::pilo::i64_t)sizeof(::pilo::i32_t)))
                     {
-                        err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                        err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                         str_peeked_len = 0;
                         return nullptr;
                     }
@@ -440,7 +440,7 @@ namespace pilo
                     if (str_len == -1)
                     {
                         if (value_type_cstr == nullptr)
-                            return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                            return ::pilo::mk_perr(PERR_NULL_PARAM);
                         str_len = ::pilo::core::string::character_count(value_type_cstr) - str_off;
                     }
 
@@ -471,7 +471,7 @@ namespace pilo
                                     }
                                 }
                             }
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                            return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                         }
                     }
 
@@ -480,7 +480,7 @@ namespace pilo
                         return PILO_OK;
                     }
 
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                    return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                 }
                 virtual ::pilo::err_t set_cstring(::pilo::i64_t buffer_off, const char* value_type_cstr, ::pilo::i64_t str_off, ::pilo::i64_t str_len)
                 {
@@ -488,7 +488,7 @@ namespace pilo
                     if (str_len == -1)
                     {
                         if (value_type_cstr == nullptr)
-                            return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                            return ::pilo::mk_perr(PERR_NULL_PARAM);
                         str_len = ::pilo::core::string::character_count(value_type_cstr) - str_off;
                     }
 
@@ -519,7 +519,7 @@ namespace pilo
                                     }
                                 }
                             }
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                            return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                         }
                     }
 
@@ -528,7 +528,7 @@ namespace pilo
                         return PILO_OK;
                     }
 
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                    return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                 }
 
                 virtual ::pilo::err_t read_string(std::string& str)
@@ -569,7 +569,7 @@ namespace pilo
                         }
                     }
 
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 0);
+                    return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                 }
                 virtual ::pilo::err_t peek_string(::pilo::i64_t peek_off, std::string& str)
                 {
@@ -611,7 +611,7 @@ namespace pilo
 
                     }
 
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 0);
+                    return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                 }
                 virtual ::pilo::err_t write_string(const std::string& str)
                 {

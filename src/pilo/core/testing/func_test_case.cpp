@@ -10,7 +10,7 @@ namespace pilo
 		namespace testing
 		{
 			func_test_case::func_test_case(::pilo::i32_t idx, const char* name, case_function_type case_func, void* arg)
-				:_index(idx), _name(name), _func(case_func), _arg(arg),  _result(::pilo::make_core_error(PES_OP, PEP_NOSENSE, 0)), _desc(""), _nano_sec_cost(-1)
+				:_index(idx), _name(name), _func(case_func), _arg(arg),  _result(::pilo::mk_perr(PERR_NOOP)), _desc(""), _nano_sec_cost(-1)
 			{
 
 			}
@@ -28,7 +28,7 @@ namespace pilo
 				_desc.clear();
 				_func = nullptr;
 				_arg = nullptr;
-				_result = ::pilo::make_core_error(PES_OP, PEP_NOSENSE, 0);
+				_result = ::pilo::mk_perr(PERR_NOOP);
 				_nano_sec_cost = -1;
 			}
 
@@ -45,23 +45,23 @@ namespace pilo
 			{
 				if (is_valid())
 				{
-					_result = ::pilo::make_core_error(PES_OP, PEP_RETRY, 0);
+					_result = ::pilo::mk_perr(PERR_RETRY);
 					std::chrono::steady_clock::time_point beg = std::chrono::steady_clock::now();					
 					if (_func(this) != PILO_OK) 
 					{
-						_result = ::pilo::make_core_error(PES_OP, PEP_ABORTED);
+						_result = ::pilo::mk_perr(PERR_USER_CANCEL);
 					}
 					::std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 					_nano_sec_cost = ::std::chrono::duration_cast<::std::chrono::duration<long long, std::nano>>(end - beg).count();
 
 					if (_desc.size() < 1 && _result.load() != PILO_OK)
 					{
-						_desc = ::pilo::str_error(_result.load(), "");
+						_desc = ::pilo::str_err(_result.load(), "");
 					}
 
 					return PILO_OK;
 				}
-				return ::pilo::make_core_error(PES_OBJ, PEP_IS_INVALID, 0);
+				return ::pilo::mk_perr(PERR_INV_OBJECT);
 
 			}
 
@@ -69,12 +69,12 @@ namespace pilo
 			{
 				if (_nano_sec_cost == -1)
 				{
-					return ::pilo::make_core_error(PES_RC, PEP_RETRY, 0);
+					return ::pilo::mk_perr(PERR_RETRY);
 				}
 
 				if (_result != PILO_OK)
 				{
-					return ::pilo::make_core_error(PES_OP, PEP_ABORTED, 0);
+					return ::pilo::mk_perr(PERR_USER_CANCEL);
 				}
 				else
 				{

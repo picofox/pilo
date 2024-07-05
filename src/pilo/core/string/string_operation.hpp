@@ -737,7 +737,7 @@ namespace pilo
 
 				if (ret == -1)
 				{
-                    return ::pilo::make_core_error(PES_OP, PEP_NOSENSE, 0);
+                    return ::pilo::mk_perr(PERR_NOOP);
 				}
 
 				if (ret == 1)
@@ -754,7 +754,7 @@ namespace pilo
 					}
 					else
 					{
-                        return ::pilo::make_core_error(PES_OP, PEP_NOSENSE, 0);
+                        return ::pilo::mk_perr(PERR_NOOP);
 					}
 				}
 				else if (ret == 4)
@@ -774,7 +774,7 @@ namespace pilo
 					}
 				}
 
-				return ::pilo::make_core_error(PES_OP, PEP_NOSENSE, 0);
+				return ::pilo::mk_perr(PERR_NOOP);
 			}
 
 
@@ -1115,7 +1115,7 @@ namespace pilo
 
 				if (src == nullptr)
 				{
-					return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+					return ::pilo::mk_perr(PERR_NULL_PARAM);
 				}
 
 				if (cc_src_length == -1)
@@ -1125,17 +1125,17 @@ namespace pilo
 
 				if (cc_src_buffer <= cc_src_length)
 				{
-					return ::pilo::make_core_error(PES_BUFFER, PEP_TOO_SMALL, 0);
+					return ::pilo::mk_perr( PERR_VAL_TOO_SAMLL);
 				}
 
 				if (replacement == nullptr)
 				{
-					return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+					return ::pilo::mk_perr(PERR_NULL_PARAM);
 				}
 
 				if (needle == nullptr || *needle == 0)
 				{
-					return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+					return ::pilo::mk_perr(PERR_NULL_PARAM);
 				}
 
 				if (::pilo::core::string::find_substring((CHAR_T*)replacement, needle, -1))
@@ -1144,7 +1144,7 @@ namespace pilo
 					{
 						*rcount = -1;
 					}
-					return ::pilo::make_core_error(PES_OP, PEP_INF_LOOP, 0);
+					return ::pilo::mk_perr(PERR_INF_LOOP);
 				}
 
 				cc_rep = ::pilo::core::string::character_count(replacement);
@@ -1179,7 +1179,7 @@ namespace pilo
 							{
 								*rcount = diff_count - 1;
 							}
-							return ::pilo::make_core_error(PES_BUFFER, PEP_TOO_SMALL, 0);
+							return ::pilo::mk_perr( PERR_VAL_TOO_SAMLL);
 						}
 						tmp_remains = cc_src_length - (found_str - src) - cc_needle;
 						cc_src_length += diff;
@@ -1243,7 +1243,7 @@ namespace pilo
 
 				if (src == nullptr)
 				{
-					return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+					return ::pilo::mk_perr(PERR_NULL_PARAM);
 				}
 
 				if (cc_src_length == -1)
@@ -1272,14 +1272,14 @@ namespace pilo
 
 				if (cc_src_length + len >= cc_src_buffer)
 				{
-					return ::pilo::make_core_error(PES_BUFFER, PEP_TOO_SMALL, 0);
+					return ::pilo::mk_perr( PERR_VAL_TOO_SAMLL, 0);
 				}
 
 				if (pos == len)
 				{
 					if (nullptr == ::pilo::core::string::n_concatenate_inplace(src, cc_src_buffer, str, len))
 					{
-						return ::pilo::make_core_error(PES_BUFFER, PEP_TOO_SMALL, 0);
+						return ::pilo::mk_perr( PERR_VAL_TOO_SAMLL, 0);
 					}
 				}
 				else
@@ -1840,7 +1840,7 @@ namespace pilo
                 if (v == nullptr)
                 {
                     if (err != nullptr)
-                        *err = ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                        *err = ::pilo::mk_perr(PERR_NULL_PARAM);
                     return std::string("");
                 }
                 else if (len < 0)

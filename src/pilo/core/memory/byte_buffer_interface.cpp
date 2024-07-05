@@ -100,7 +100,7 @@ namespace pilo
             typedef ::pilo::err_t(*handler_rac_bb_read_type)(::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t cnt);
             static handler_rac_bb_read_type s_handler_rac_bb_reader[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
             {
-                [](::pilo::core::memory::byte_buffer_interface* , char*, ::pilo::i32_t) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                [](::pilo::core::memory::byte_buffer_interface* , char*, ::pilo::i32_t) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                 [](::pilo::core::memory::byte_buffer_interface* bb, char* rac, ::pilo::i32_t cnt) -> ::pilo::err_t { return _s_read_then_put<::pilo::i8_t>(bb, rac, cnt); },//1
                 [](::pilo::core::memory::byte_buffer_interface* bb, char* rac, ::pilo::i32_t cnt) -> ::pilo::err_t { return _s_read_then_put<::pilo::u8_t>(bb, rac, cnt); },//2
                 [](::pilo::core::memory::byte_buffer_interface* bb, char* rac, ::pilo::i32_t cnt) -> ::pilo::err_t { return _s_read_then_put<::pilo::i16_t>(bb, rac, cnt); },//3
@@ -121,7 +121,7 @@ namespace pilo
             typedef ::pilo::err_t(*handler_rac_bb_write_type)(::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i64_t off, ::pilo::i64_t len);
             static handler_rac_bb_write_type s_handler_rac_bb_writer[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
             {
-                [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i64_t, ::pilo::i64_t) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i64_t, ::pilo::i64_t) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                 [](::pilo::core::memory::byte_buffer_interface* bb, char* arr, ::pilo::i64_t off, ::pilo::i64_t len) -> ::pilo::err_t { return bb->write_wired_rac<std::deque<::pilo::i8_t>>((std::deque<::pilo::i8_t>*)arr, off, len); },//1
                 [](::pilo::core::memory::byte_buffer_interface* bb, char* arr, ::pilo::i64_t off, ::pilo::i64_t len) -> ::pilo::err_t { return bb->write_wired_rac<std::deque<::pilo::u8_t>>((std::deque<::pilo::u8_t>*)arr, off, len); },//2
                 [](::pilo::core::memory::byte_buffer_interface* bb, char* arr, ::pilo::i64_t off, ::pilo::i64_t len) -> ::pilo::err_t { return bb->write_wired_rac<std::deque<::pilo::i16_t>>((std::deque<::pilo::i16_t>*)arr, off, len); },//3
@@ -142,24 +142,24 @@ namespace pilo
             static handler_map_bb_write_type s_handler_map_bb_writer[::pilo::core::rtti::wired_type::key_type_count][::pilo::core::rtti::wired_type::value_type_intrincs_count] =
             {
                 {
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char*) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                 },
                 {//i8
-                    [](::pilo::core::memory::byte_buffer_interface*, const char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, const char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i8_t, ::pilo::i8_t>>((std::map<::pilo::i8_t, ::pilo::i8_t>*) m);},
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i8_t, ::pilo::u8_t>>((std::map<::pilo::i8_t, ::pilo::u8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i8_t, ::pilo::i16_t>>((std::map<::pilo::i8_t, ::pilo::i16_t>*) m); },
@@ -176,7 +176,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i8_t, ::pilo::tlv*>>((std::map<::pilo::i8_t, ::pilo::tlv*>*) m); },
                 },
                 {//u8
-                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u8_t, ::pilo::i8_t>>((std::map<::pilo::u8_t, ::pilo::i8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u8_t, ::pilo::u8_t>>((std::map<::pilo::u8_t, ::pilo::u8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u8_t, ::pilo::i16_t>>((std::map<::pilo::u8_t, ::pilo::i16_t>*) m); },
@@ -193,7 +193,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u8_t, ::pilo::tlv*>>((std::map<::pilo::u8_t, ::pilo::tlv*>*) m); },
                 },
                 {//i16
-                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i16_t, ::pilo::i8_t>>((std::map<::pilo::i16_t, ::pilo::i8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i16_t, ::pilo::u8_t>>((std::map<::pilo::i16_t, ::pilo::u8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i16_t, ::pilo::i16_t>>((std::map<::pilo::i16_t, ::pilo::i16_t>*) m); },
@@ -210,7 +210,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i16_t, ::pilo::tlv*>>((std::map<::pilo::i16_t, ::pilo::tlv*>*) m); },
                 },
                 {//u16
-                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u16_t, ::pilo::i8_t>>((std::map<::pilo::u16_t, ::pilo::i8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u16_t, ::pilo::u8_t>>((std::map<::pilo::u16_t, ::pilo::u8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u16_t, ::pilo::i16_t>>((std::map<::pilo::u16_t, ::pilo::i16_t>*) m); },
@@ -227,7 +227,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u16_t, ::pilo::tlv*>>((std::map<::pilo::u16_t, ::pilo::tlv*>*) m); },
                 },
                 {//i32
-                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i32_t, ::pilo::i8_t>>((std::map<::pilo::i32_t, ::pilo::i8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i32_t, ::pilo::u8_t>>((std::map<::pilo::i32_t, ::pilo::u8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i32_t, ::pilo::i16_t>>((std::map<::pilo::i32_t, ::pilo::i16_t>*) m); },
@@ -244,7 +244,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i32_t, ::pilo::tlv*>>((std::map<::pilo::i32_t, ::pilo::tlv*>*) m); },
                 },
                 {//u32
-                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u32_t, ::pilo::i8_t>>((std::map<::pilo::u32_t, ::pilo::i8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u32_t, ::pilo::u8_t>>((std::map<::pilo::u32_t, ::pilo::u8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u32_t, ::pilo::i16_t>>((std::map<::pilo::u32_t, ::pilo::i16_t>*) m); },
@@ -261,7 +261,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u32_t, ::pilo::tlv*>>((std::map<::pilo::u32_t, ::pilo::tlv*>*) m); },
                 },
                 {//i64
-                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i64_t, ::pilo::i8_t>>((std::map<::pilo::i64_t, ::pilo::i8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i64_t, ::pilo::u8_t>>((std::map<::pilo::i64_t, ::pilo::u8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i64_t, ::pilo::i16_t>>((std::map<::pilo::i64_t, ::pilo::i16_t>*) m); },
@@ -278,7 +278,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::i64_t, ::pilo::tlv*>>((std::map<::pilo::i64_t, ::pilo::tlv*>*) m); },
                 },
                 {//u64
-                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u64_t, ::pilo::i8_t>>((std::map<::pilo::u64_t, ::pilo::i8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u64_t, ::pilo::u8_t>>((std::map<::pilo::u64_t, ::pilo::u8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u64_t, ::pilo::i16_t>>((std::map<::pilo::u64_t, ::pilo::i16_t>*) m); },
@@ -295,7 +295,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<::pilo::u64_t, ::pilo::tlv*>>((std::map<::pilo::u64_t, ::pilo::tlv*>*) m); },
                 },
                 {//std::string
-                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface* , const char* ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<std::string, ::pilo::i8_t>>((std::map<std::string, ::pilo::i8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<std::string, ::pilo::u8_t>>((std::map<std::string, ::pilo::u8_t>*) m); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, const char* m) -> ::pilo::err_t { return bb->write_wired_map<std::map<std::string, ::pilo::i16_t>>((std::map<std::string, ::pilo::i16_t>*) m); },
@@ -317,24 +317,24 @@ namespace pilo
             static handler_map_bb_read_type s_handler_map_bb_reader[::pilo::core::rtti::wired_type::key_type_count][::pilo::core::rtti::wired_type::value_type_intrincs_count] =
             {
                 {
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                 },
                 {//i8
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i8_t, ::pilo::i8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i8_t, ::pilo::u8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i8_t, ::pilo::i16_t>(bb, m, cnt, is_force); },
@@ -351,7 +351,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i8_t>(bb, (std::map<::pilo::i8_t, ::pilo::tlv*>*) m, cnt, is_force); },
                 },
                 {//u8
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u8_t, ::pilo::i8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u8_t, ::pilo::u8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u8_t, ::pilo::i16_t>(bb, m, cnt, is_force); },
@@ -368,7 +368,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u8_t>(bb, (std::map<::pilo::u8_t, ::pilo::tlv*>*) m, cnt, is_force); },
                 },
                 {//i16
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i16_t, ::pilo::i8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i16_t, ::pilo::u8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i16_t, ::pilo::i16_t>(bb, m, cnt, is_force); },
@@ -385,7 +385,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i16_t>(bb, (std::map<::pilo::i16_t, ::pilo::tlv*>*) m, cnt, is_force); },
                 },
                 {//u16
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u16_t, ::pilo::i8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u16_t, ::pilo::u8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u16_t, ::pilo::i16_t>(bb, m, cnt, is_force); },
@@ -402,7 +402,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u16_t>(bb, (std::map<::pilo::u16_t, ::pilo::tlv*>*) m, cnt, is_force); },
                 },
                 {//i32
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i32_t, ::pilo::i8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i32_t, ::pilo::u8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i32_t, ::pilo::i16_t>(bb, m, cnt, is_force); },
@@ -419,7 +419,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i32_t>(bb, (std::map<::pilo::i32_t, ::pilo::tlv*>*) m, cnt, is_force); },
                 },
                 {//u32
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u32_t, ::pilo::i8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u32_t, ::pilo::u8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u32_t, ::pilo::i16_t>(bb, m, cnt, is_force); },
@@ -436,7 +436,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u32_t>(bb, (std::map<::pilo::u32_t, ::pilo::tlv*>*) m, cnt, is_force); },
                 },
                 {//i64
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i64_t, ::pilo::i8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i64_t, ::pilo::u8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i64_t, ::pilo::i16_t>(bb, m, cnt, is_force); },
@@ -453,7 +453,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::i64_t>(bb, (std::map<::pilo::i64_t, ::pilo::tlv*>*) m, cnt, is_force); },
                 },
                 {//u64
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u64_t, ::pilo::i8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u64_t, ::pilo::u8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u64_t, ::pilo::i16_t>(bb, m, cnt, is_force); },
@@ -470,7 +470,7 @@ namespace pilo
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<::pilo::u64_t>(bb, (std::map<::pilo::u64_t, ::pilo::tlv*>*) m, cnt, is_force); },
                 },
                 {//str
-                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::make_core_error(PES_PARAM, PEP_TYPE_MISMATCH); },
+                    [](::pilo::core::memory::byte_buffer_interface*, char*, ::pilo::i32_t , bool) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_INV_PARAM_DT); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<std::string, ::pilo::i8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<std::string, ::pilo::u8_t>(bb, m, cnt, is_force); },
                     [](::pilo::core::memory::byte_buffer_interface* bb, char* m, ::pilo::i32_t cnt, bool is_force) -> ::pilo::err_t { return _s_map_read_then_put<std::string, ::pilo::i16_t>(bb, m, cnt, is_force); },
@@ -496,7 +496,7 @@ namespace pilo
                 ::pilo::err_t err = PILO_OK;
                 if (vt == ::pilo::core::rtti::wired_type::value_type_na)
                 {
-                    return ::pilo::make_core_error(PES_ELEM, PEP_TYPE_MISMATCH);
+                    return ::pilo::mk_perr( PERR_MIS_DATA_TYPE);
                 }
 
                 if (vt < ::pilo::core::rtti::wired_type::value_type_intrincs_count)
@@ -508,7 +508,7 @@ namespace pilo
                 else
                 {
                     PMC_ASSERT(false);
-                    return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+                    return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 
                 }
 
@@ -526,7 +526,7 @@ namespace pilo
 
                 if (vt == ::pilo::core::rtti::wired_type::value_type_na)
                 {
-                    err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+                    err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
                     return nullptr;
                 }
 
@@ -562,12 +562,12 @@ namespace pilo
             {
                 if (kt >= ::pilo::core::rtti::wired_type::key_type_count)
                 {
-                    return ::pilo::make_core_error(PES_WK_TYPE, PEP_IS_INVALID);
+                    return ::pilo::mk_perr(PERR_INV_KEY_TYPE);
                 }
 
                 if (vt == ::pilo::core::rtti::wired_type::value_type_na)
                 {
-                    return ::pilo::make_core_error(PES_WV_TYPE, PEP_IS_INVALID);
+                    return ::pilo::mk_perr(PERR_INV_VAL_TYPE);
                 }
 
                 if (vt < ::pilo::core::rtti::wired_type::value_type_intrincs_count)
@@ -577,7 +577,7 @@ namespace pilo
                 else
                 {
                     PMC_ASSERT(false);
-                    return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+                    return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
 
                 }                
             }

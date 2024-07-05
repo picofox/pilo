@@ -12,7 +12,7 @@ namespace pilo
 		{
 			performance_test_case::performance_test_case(::pilo::i32_t idx, const char* name, case_function_type case_func, void* arg,  ::pilo::i64_t n_trans, ::pilo::i64_t n_secs, ::pilo::i32_t concurrency, performance_test_case::score_function_type score_func)
 				:_index(idx), _name(name), _func(case_func), _arg(arg),  _target_trans_count(n_trans), _target_persist_millisecs(n_secs), _concurrency(concurrency), _score_func(score_func)
-				, _result(::pilo::make_core_error(PES_OP, PEP_NOSENSE, 0)), _in_trans_count(0), _out_trans_count(0), _in_bytes_count(0), _out_bytes_count(0), _in_milli_seconds(0), _out_milli_seconds(0)
+				, _result(::pilo::mk_perr(PERR_NOOP)), _in_trans_count(0), _out_trans_count(0), _in_bytes_count(0), _out_bytes_count(0), _in_milli_seconds(0), _out_milli_seconds(0)
 				, _persist_milli_seconds(0), _begin_ts(-1), _desc("")
 			{
 				if (_target_persist_millisecs < 1)
@@ -37,7 +37,7 @@ namespace pilo
 				_target_persist_millisecs = -1;
 				_concurrency = 1;
 				_score_func = nullptr;
-				_result = ::pilo::make_core_error(PES_OP, PEP_NOSENSE, 0);
+				_result = ::pilo::mk_perr(PERR_NOOP);
 				_in_trans_count = 0;
 				_out_bytes_count = 0;
 				_in_bytes_count = 0;
@@ -68,7 +68,7 @@ namespace pilo
 					_persist_milli_seconds = ::pilo::core::datetime::timestamp_milli_steady() - beg;					
 					return PILO_OK;
 				}
-				return ::pilo::make_core_error(PES_OBJ, PEP_IS_INVALID, 0);
+				return ::pilo::mk_perr(PERR_INV_OBJECT);
 
 			}
 
@@ -76,12 +76,12 @@ namespace pilo
 			{
 				if (_persist_milli_seconds == -1)
 				{
-					return ::pilo::make_core_error(PES_RC, PEP_RETRY, 0);
+					return ::pilo::mk_perr(PERR_RETRY);
 				}
 
 				if (_result != PILO_OK)
 				{
-					return ::pilo::make_core_error(PES_OP, PEP_ABORTED, 0);
+					return ::pilo::mk_perr(PERR_USER_CANCEL);
 				}
 				else
 				{

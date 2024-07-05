@@ -36,218 +36,218 @@
 
     if (byte_buffer->write_bool(this->_is_server) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 1);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_uint32(this->_thread_no) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 2);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_uint64(this->_id) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 3);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int8(this->_i8v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL ,4);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_uint8(this->_u8v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 5);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int16(this->_i16v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 6);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
         
 
     if (byte_buffer->write_uint16(this->_u16v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL ,7);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int32(this->_i32v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL ,8);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int64(this->_i64v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL ,9);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_float32(this->_f32v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL ,10);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }        
 
     if (byte_buffer->write_float64(this->_f64v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL ,11);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_cstring(this->_dcstr, 0, _PILO_TEST_DC_STR_LEN) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 12);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_cstring(this->_fcstr, 0, ::pilo::core::string::character_count(this->_fcstr)) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 13);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_bytes(this->_bin_data, 0, 37) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 14);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_bytes(this->_bin_data_fiexed, 0, 37) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 15);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_bool_array(this->_db_arr, 0, 11) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 16);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_bool_array(this->_fb_arr, 0, 11) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 17);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int8_array(this->_i8_d_arr, 0, 15) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 18);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int8_array(this->_i8_f_arr, 0, 15) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 19);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_uint8_array(this->_u8_d_arr, 0, 11) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 19);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_uint8_array(this->_u8_f_arr, 0, 11) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 20);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_float32_array(this->_f32_d_arr, 0, 11) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 21);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_float32_array(this->_f32_f_arr, 0, 11) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 22);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_float64_array(this->_f64_d_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 23);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_float64_array(this->_f64_f_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 24);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int64_array(this->_i64_d_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 25);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int64_array(this->_i64_f_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 26);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_uint64_array(this->_u64_d_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 27);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_uint64_array(this->_u64_f_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 28);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int32_array(this->_i32_d_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 29);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int32_array(this->_i32_f_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 30);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_uint32_array(this->_u32_d_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 31);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_uint32_array(this->_u32_f_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 32);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int16_array(this->_i16_d_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 33);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_int16_array(this->_i16_f_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 34);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_uint16_array(this->_u16_d_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 35);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_uint16_array(this->_u16_f_arr, 0, 10) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 36);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_object(&this->_inner_f) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 37);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_object(this->_inner_d) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 38);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_object(this->_inner_null) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 39);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_object_array(this->_inner_f_arr, 0, 7) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 40);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_object_ptr_array((const ::pilo::core::memory::serializable_interface**)this->_inner_d_arr, 0, 7) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 41);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (byte_buffer->write_object_ptr_array((const ::pilo::core::memory::serializable_interface**)this->_inner_d2_arr, 0, 7) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 42);
+        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
     }
 
     if (header != nullptr)
@@ -284,189 +284,189 @@
 
     if (byte_buffer->read_bool(this->_is_server) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 1);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     if (byte_buffer->read_uint32(this->_thread_no) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 2);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     if (byte_buffer->read_uint64(this->_id) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 3);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     if (byte_buffer->read_int8(this->_i8v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 4);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     if (byte_buffer->read_uint8(this->_u8v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 5);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     if (byte_buffer->read_int16(this->_i16v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 6);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     if (byte_buffer->read_uint16(this->_u16v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 7);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     if (byte_buffer->read_int32(this->_i32v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 8);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     if (byte_buffer->read_int64(this->_i64v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 9);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     if (byte_buffer->read_float32(this->_f32v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 10);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     if (byte_buffer->read_float64(this->_f64v) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 11);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     this->_dcstr = byte_buffer->read_cstring(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK) 
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 12);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_cstring(_fcstr,sizeof(_fcstr), 0, rlen, ret);
     if (ret != PILO_OK || _fcstr != rc_ptr) 
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 13);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_bin_data = byte_buffer->read_bytes(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 14);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_bytes(_bin_data_fiexed, sizeof(_bin_data_fiexed), 0, rlen, ret);
     if (ret != PILO_OK || _bin_data_fiexed != rc_ptr)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 15);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_db_arr = byte_buffer->read_bool_array(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 16);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_bool_array(_fb_arr, 11, 0, rlen, ret);
     if (ret != PILO_OK || rc_ptr != _fb_arr)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 17);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_i8_d_arr = byte_buffer->read_int8_array(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 18);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_int8_array(this->_i8_f_arr, 15, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 19);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_u8_d_arr = byte_buffer->read_uint8_array(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 11);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_uint8_array(this->_u8_f_arr, 11, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 20);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_f32_d_arr = byte_buffer->read_float32_array(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 21);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_float32_array(this->_f32_f_arr, 11, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 22);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_f64_d_arr = byte_buffer->read_float64_array(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 23);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_float64_array(this->_f64_f_arr, 10, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 24);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_i64_d_arr = byte_buffer->read_int64_array(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 25);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_int64_array(this->_i64_f_arr, 10, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 26);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_u64_d_arr = byte_buffer->read_uint64_array(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 27);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_uint64_array(this->_u64_f_arr, 10, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 28);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_i32_d_arr = byte_buffer->read_int32_array(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 29);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_int32_array(this->_i32_f_arr, 10, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 30);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_u32_d_arr = byte_buffer->read_uint32_array(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 31);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_uint32_array(this->_u32_f_arr, 10, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 32);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_i16_d_arr = byte_buffer->read_int16_array(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 33);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_int16_array(this->_i16_f_arr, 10, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 34);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_u16_d_arr = byte_buffer->read_uint16_array(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 35);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     rc_ptr = byte_buffer->read_uint16_array(this->_u16_f_arr, 10, 0, rlen, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 36);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     if (byte_buffer->read_object(&this->_inner_f) != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 37);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_inner_d = byte_buffer->read_object<::pilo::core::testing::inner_sample_data>(nullptr, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 38);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     this->_inner_null = byte_buffer->read_object<::pilo::core::testing::inner_sample_data>(nullptr, ret);
     if (ret != PILO_OK)
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 39);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
 
     if (byte_buffer->read_object_array<::pilo::core::testing::inner_sample_data>(this->_inner_f_arr, 7, 0, rlen) != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 40);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     byte_buffer->read_object_ptr_array<::pilo::core::testing::inner_sample_data>(this->_inner_d_arr, 7, 0, rlen, ret);
     if (ret != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 41);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
     this->_inner_d2_arr = byte_buffer->read_object_ptr_array<::pilo::core::testing::inner_sample_data>(nullptr, 0, 0, rlen, ret);
     if (ret != PILO_OK)
     {
-        return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 41);
+        return ::pilo::mk_perr(PERR_IO_READ_FAIL);
     }
 
 

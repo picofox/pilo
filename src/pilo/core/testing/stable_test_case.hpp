@@ -41,7 +41,7 @@ namespace pilo
 				}
 				inline void set_begin() 
 				{ 
-					_result = ::pilo::make_core_error(PES_RC, PEP_RETRY, 0);
+					_result = ::pilo::mk_perr(PERR_RETRY);
 					_begin_ts = ::pilo::core::datetime::timestamp_milli_steady(); 
 				}
 				inline bool timeout() const 

@@ -45,7 +45,7 @@ namespace pilo
 						char* a = (char*)s_create_testing_map<TA_KEY, TA_VALUE>(cnt, vbeg);
 						if (a == nullptr)
 						{
-							return p_case->error(::pilo::make_core_error(PES_MEM, PEP_INSUFF), "create map<%s> failed.", name);
+							return p_case->error(::pilo::mk_perr( PERR_INSUF_HEAP), "create map<%s> failed.", name);
 						}
 						aa.push_back(a);
 						err = lbb.write_wired_map(kt, vt, a);
@@ -60,13 +60,13 @@ namespace pilo
 						char* b = lbb.read_wired_map(err);
 						if (b == nullptr || err != PILO_OK)
 						{
-							return p_case->error(::pilo::make_core_error(PES_MEM, PEP_INSUFF), "read map<%s> failed ", name);
+							return p_case->error(::pilo::mk_perr( PERR_INSUF_HEAP), "read map<%s> failed ", name);
 						}
 
 						bool eq = ::pilo::core::rtti::map_equals(kt, vt, aa[i], b, &err);
 						if (!eq)
 						{
-							return p_case->error(::pilo::make_core_error(PES_MEM, PEP_INSUFF), "compare map<%s> failed ", name);
+							return p_case->error(::pilo::mk_perr( PERR_INSUF_HEAP), "compare map<%s> failed ", name);
 						}
 
 						::pilo::core::rtti::delete_map(kt, vt, b);
@@ -76,7 +76,7 @@ namespace pilo
 
 					if (lbb.read_available() != 0)
 					{
-						return p_case->error(::pilo::make_core_error(PES_MEM, PEP_INSUFF), "map<%s>, lbb not clean ", name);
+						return p_case->error(::pilo::mk_perr( PERR_INSUF_HEAP), "map<%s>, lbb not clean ", name);
 					}
 
 					return PILO_OK;
@@ -111,7 +111,7 @@ namespace pilo
 						char* a = (char*)s_create_testing_map<TA_VALUE>(cnt, vbeg);
 						if (a == nullptr)
 						{
-							return p_case->error(::pilo::make_core_error(PES_MEM, PEP_INSUFF), "create map<%s> failed.", name);
+							return p_case->error(::pilo::mk_perr( PERR_INSUF_HEAP), "create map<%s> failed.", name);
 						}
 						aa.push_back(a);
 						err = lbb.write_wired_map(::pilo::core::rtti::wired_type::key_type_str, vt, a);
@@ -126,13 +126,13 @@ namespace pilo
 						char* b = lbb.read_wired_map(err);
 						if (b == nullptr || err != PILO_OK)
 						{
-							return p_case->error(::pilo::make_core_error(PES_MEM, PEP_INSUFF), "read map<%s> failed ", name);
+							return p_case->error(::pilo::mk_perr( PERR_INSUF_HEAP), "read map<%s> failed ", name);
 						}
 
 						bool eq = ::pilo::core::rtti::map_equals(::pilo::core::rtti::wired_type::key_type_str, vt, aa[i], b, &err);
 						if (!eq)
 						{
-							return p_case->error(::pilo::make_core_error(PES_MEM, PEP_INSUFF), "compare map<%s> failed ", name);
+							return p_case->error(::pilo::mk_perr( PERR_INSUF_HEAP), "compare map<%s> failed ", name);
 						}
 
 						::pilo::core::rtti::delete_map(::pilo::core::rtti::wired_type::key_type_str, vt, b);
@@ -142,7 +142,7 @@ namespace pilo
 
 					if (lbb.read_available() != 0)
 					{
-						return p_case->error(::pilo::make_core_error(PES_MEM, PEP_INSUFF), "map<%s>, lbb not clean ", name);
+						return p_case->error(::pilo::mk_perr( PERR_INSUF_HEAP), "map<%s>, lbb not clean ", name);
 					}
 
 					return PILO_OK;
@@ -218,7 +218,7 @@ namespace pilo
 
 					if (!eq)
 					{
-						p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "map not eq");
+						p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "map not eq");
 						return 0;
 					}
 					err = ::pilo::core::rtti::delete_map(::pilo::core::rtti::wired_type::key_type_str, ::pilo::core::rtti::wired_type::value_type_i64, a);
@@ -239,7 +239,7 @@ namespace pilo
 						c = ::pilo::core::rtti::clone_map(::pilo::core::rtti::wired_type::key_type_str, ::pilo::core::rtti::wired_type::value_type_bytes, a, &err);
 						if (!::pilo::core::rtti::map_equals(::pilo::core::rtti::wired_type::key_type_str, ::pilo::core::rtti::wired_type::value_type_bytes, a,c, &err))
 						{
-							p_case->error(::pilo::make_core_error(PES_TCASE, PEP_VDT_FAILED), "cloned map not eq");
+							p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "cloned map not eq");
 							return 0;
 						}
 

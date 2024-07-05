@@ -85,7 +85,7 @@ namespace pilo
                         {
                             if (!this->_m_node_list.erase_after(pnode, &del_pnode))
                             {
-                                return ::pilo::make_core_error(PES_BUFFER, PEP_INC_DATA);
+                                return ::pilo::mk_perr( PERR_INC_DATA);
                             }
                             buffer_node::deallocate(del_pnode);
                             to_del_cnt--;
@@ -103,7 +103,7 @@ namespace pilo
                     {
                         if (off < 0 || off > this->_m_begin_pos + this->_m_length)
                         {
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+                            return ::pilo::mk_perr( PERR_INV_OFF);
                         }
                         off = off - this->_m_length; //convert to relative
                     }
@@ -111,19 +111,19 @@ namespace pilo
                     {
                         if (off < (0 - this->_m_begin_pos) || off > this->_m_length)
                         {
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+                            return ::pilo::mk_perr( PERR_INV_OFF);
                         }
                     }
                     else if (whence == ::pilo::seek_whence_enum::end)
                     {
-                        return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+                        return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
                     }
                     if (off == 0)
                         return PILO_OK;
 
                     if (this->_m_node_list.front() == nullptr)
                     {
-                        return ::pilo::make_core_error(PES_PTR, PEP_IS_NULL);
+                        return ::pilo::mk_perr(PERR_NULL_PTR);
                     }
 
                     this->_m_begin_pos = this->_m_begin_pos + off;
@@ -143,13 +143,13 @@ namespace pilo
                     {
                         if (off < this->_m_begin_pos)
                         {
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+                            return ::pilo::mk_perr( PERR_INV_OFF);
                         }
                         off = off - this->_m_length - this->_m_begin_pos; //convert to relative
                     }
                     else if (whence == ::pilo::seek_whence_enum::end)
                     {
-                        return ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT);
+                        return ::pilo::mk_perr(PERR_OP_UNSUPPORT);
                     }
                     if (off == 0)
                         return PILO_OK;
@@ -170,7 +170,7 @@ namespace pilo
                             next_node = this->_get_next_node(next_node);
                             if (next_node == nullptr)
                             {
-                                return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                                return ::pilo::mk_perr( PERR_INSUF_HEAP);
                             }
                             cnt--;
                         }
@@ -236,7 +236,7 @@ namespace pilo
                     {
                         if (_m_length < read_length)
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                             return dst_buffer;
                         }
                         if (dst_buffer == nullptr || dst_buffer_size - dst_pos < read_length)
@@ -245,7 +245,7 @@ namespace pilo
                             ret_buffer_ptr = (char*)PMF_HEAP_MALLOC(neo_sz);
                             if (ret_buffer_ptr == nullptr)
                             {
-                                err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                                err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                                 return nullptr;
                             }
 
@@ -273,7 +273,7 @@ namespace pilo
                             if (_m_node_list.front() == nullptr)
                             {
                                 PMF_FREE_IF_DIFF_ADDR(dst_buffer, ret_buffer_ptr);
-                                err = ::pilo::make_core_error(PES_BUFFER, PEP_INC_DATA);
+                                err = ::pilo::mk_perr( PERR_INC_DATA);
                                 return nullptr;
                             }
                             memcpy(ret_buffer_ptr + dst_pos + idx
@@ -299,7 +299,7 @@ namespace pilo
                             else if (read_length < 0)
                             {
                                 PMF_FREE_IF_DIFF_ADDR(dst_buffer, ret_buffer_ptr);
-                                err = ::pilo::make_core_error(PES_BUFFER, PEP_INC_LEN);
+                                err = ::pilo::mk_perr(PERR_LEN_TOO_SAMLL);
                                 return nullptr;
                             }
                             else if (read_length > piece_size())
@@ -321,7 +321,7 @@ namespace pilo
                     }
                     else
                     {
-                        err = ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                        err = ::pilo::mk_perr(PERR_INVALID_PARAM);
                         return nullptr;
                     }
                 }
@@ -335,13 +335,13 @@ namespace pilo
                         ::pilo::i64_t simu_length = this->_m_length - peek_off;
                         if (simu_begin_pos > this->_m_begin_pos + this->_m_length)
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                             return nullptr;
                         }
                         ::pilo::i64_t cur_trun_read_bytes = 0;
                         if (simu_length < peek_length)
                         {
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                            err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                             return nullptr;
                         }
 
@@ -351,7 +351,7 @@ namespace pilo
                             ret_buffer_ptr = (char*)PMF_HEAP_MALLOC(neo_sz);
                             if (ret_buffer_ptr == nullptr)
                             {
-                                err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                                err = ::pilo::mk_perr( PERR_INSUF_HEAP);
                                 return nullptr;
                             }
                             memcpy(ret_buffer_ptr, dst_buffer, dst_buffer_size);
@@ -363,7 +363,7 @@ namespace pilo
                         if (node == nullptr)
                         {
                             PMF_FREE_IF_DIFF_ADDR(dst_buffer, ret_buffer_ptr);
-                            err = ::pilo::make_core_error(PES_BUFFER, PEP_INC_DATA);
+                            err = ::pilo::mk_perr( PERR_INC_DATA);
                             return nullptr;
                         }
                         ::pilo::i64_t read_avail_cur_node = piece_size() - neo_begin_pos;
@@ -383,7 +383,7 @@ namespace pilo
                             else if (idx > peek_length)
                             {
                                 PMF_FREE_IF_DIFF_ADDR(dst_buffer, ret_buffer_ptr);
-                                err = ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+                                err = ::pilo::mk_perr( PERR_INV_OFF);
                                 return nullptr;
                             }
 
@@ -393,7 +393,7 @@ namespace pilo
                                 if (node == nullptr)
                                 {
                                     PMF_FREE_IF_DIFF_ADDR(dst_buffer, ret_buffer_ptr);
-                                    err = ::pilo::make_core_error(PES_BUFFER, PEP_INC_DATA);
+                                    err = ::pilo::mk_perr( PERR_INC_DATA);
                                     return nullptr;
                                 }
                                 neo_begin_pos = 0;
@@ -415,7 +415,7 @@ namespace pilo
                     }
                     else
                     {
-                        err = ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID);
+                        err = ::pilo::mk_perr(PERR_INVALID_PARAM);
                         return nullptr;
                     }
                 }
@@ -430,13 +430,13 @@ namespace pilo
                     PMC_ASSERT(_m_begin_pos < piece_size());
                     if (_m_begin_pos >= piece_size())
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+                        return ::pilo::mk_perr( PERR_INV_OFF);
                     }
                     ::pilo::i64_t begpos = 0;
                     buffer_node* next_node = this->_node_for_writing(begpos);
                     if (next_node == nullptr)
                     {
-                        return ::pilo::make_core_error(PES_PTR, PEP_IS_NULL);
+                        return ::pilo::mk_perr(PERR_NULL_PTR);
                     }
                     ::pilo::i64_t cur_turn_write = piece_size() - begpos;
                     this->_m_saved_node_for_writing = next_node;
@@ -456,7 +456,7 @@ namespace pilo
                             write_len -= cur_turn_write;
                             if (write_len < 0)
                             {
-                                return ::pilo::make_core_error(PES_BUFFER, PEP_LEN_INV);
+                                return ::pilo::mk_perr(PERR_LEN_TOO_SAMLL);
                             }
                             else if (write_len == 0)
                             {
@@ -466,7 +466,7 @@ namespace pilo
                             next_node = this->_get_next_node(next_node);
                             if (next_node == nullptr)
                             {
-                                return ::pilo::make_core_error(PES_PTR, PEP_IS_NULL);
+                                return ::pilo::mk_perr(PERR_NULL_PTR);
                             }
                             begpos = 0;
                             if (piece_size() < write_len)
@@ -489,13 +489,13 @@ namespace pilo
                     PMC_ASSERT(_m_begin_pos < piece_size());
                     if (_m_begin_pos >= piece_size())
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+                        return ::pilo::mk_perr( PERR_INV_OFF);
                     }
                     ::pilo::i64_t begpos = 0;
                     buffer_node* next_node = this->_node_for_writing(begpos);
                     if (next_node == nullptr)
                     {
-                        return ::pilo::make_core_error(PES_PTR, PEP_IS_NULL);
+                        return ::pilo::mk_perr(PERR_NULL_PTR);
                     }
                     ::pilo::i64_t cur_turn_write = piece_size() - begpos;
                     if (cur_turn_write >= write_len)
@@ -513,7 +513,7 @@ namespace pilo
                             write_len -= cur_turn_write;
                             if (write_len < 0)
                             {
-                                return ::pilo::make_core_error(PES_BUFFER, PEP_LEN_INV);
+                                return ::pilo::mk_perr(PERR_LEN_TOO_SAMLL);
                             }
                             else if (write_len == 0)
                             {
@@ -523,7 +523,7 @@ namespace pilo
                             next_node = this->_get_next_node(next_node);
                             if (next_node == nullptr)
                             {
-                                return ::pilo::make_core_error(PES_PTR, PEP_IS_NULL);
+                                return ::pilo::mk_perr(PERR_NULL_PTR);
                             }
                             begpos = 0;
                             if (piece_size() < write_len)
@@ -542,7 +542,7 @@ namespace pilo
                     buffer_node* node = this->_find_node(buffer_off, neo_off);
                     if (node == nullptr)
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+                        return ::pilo::mk_perr( PERR_INV_OFF);
                     }
 
                     return _set_raw_bytes_by_node(node, neo_off, write_buffer, write_off, write_len);
@@ -597,7 +597,7 @@ namespace pilo
                     }
                     if (this->read_available() < ((::pilo::i64_t)blen + 4))
                     {
-                        err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                        err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                         bytes_read = 0;
                         return nullptr;
                     }
@@ -630,7 +630,7 @@ namespace pilo
                     }
                     if (this->read_available() - peek_off < ((::pilo::i64_t)blen + 4))
                     {
-                        err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                        err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                         bytes_peeked = 0;
                         return nullptr;
                     }
@@ -661,7 +661,7 @@ namespace pilo
                     {
                         return this->write_raw_bytes(write_buffer, write_off, write_len);
                     }
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                    return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                 }
 
                 virtual ::pilo::err_t set_bytes(::pilo::i64_t buffer_off, const char* write_buffer, ::pilo::i64_t write_off, ::pilo::i64_t write_len)
@@ -671,7 +671,7 @@ namespace pilo
                     {
                         return this->set_raw_bytes(4 + buffer_off, write_buffer, write_off, write_len);
                     }
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                    return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                 }
 
                 virtual char* read_cstring(char* dst_buffer, ::pilo::i64_t dst_buffer_size, ::pilo::i64_t dst_pos, ::pilo::i64_t& str_len, ::pilo::err_t& err)
@@ -694,7 +694,7 @@ namespace pilo
                     }
                     if (this->read_available() < ((::pilo::i64_t)blen + 4))
                     {
-                        err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                        err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                         str_len = 0;
                         return nullptr;
                     }
@@ -727,7 +727,7 @@ namespace pilo
                     }
                     if (this->read_available() - peek_off < (blen + (::pilo::i64_t)sizeof(::pilo::i32_t)))
                     {
-                        err = ::pilo::make_core_error(PES_BUFFER, PEP_PART_DATA);
+                        err = ::pilo::mk_perr(PERR_RD_PARTIAL_DATA);
                         str_peeked_len = 0;
                         return nullptr;
                     }
@@ -748,7 +748,7 @@ namespace pilo
                     if (str_len == -1)
                     {
                         if (cstr == nullptr)
-                            return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                            return ::pilo::mk_perr(PERR_NULL_PARAM);
                         str_len = ::pilo::core::string::character_count(cstr) - str_off;
                     }
 
@@ -779,7 +779,7 @@ namespace pilo
                                     }
                                 }
                             }
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                            return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
                         
                     }
 
@@ -788,7 +788,7 @@ namespace pilo
                         return PILO_OK;
                     }
 
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                    return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
                 }
                 virtual ::pilo::err_t set_cstring(::pilo::i64_t buffer_off, const char* cstr, ::pilo::i64_t str_off, ::pilo::i64_t str_len)
                 {
@@ -796,7 +796,7 @@ namespace pilo
                     if (str_len == -1)
                     {
                         if (cstr == nullptr)
-                            return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL, 0);
+                            return ::pilo::mk_perr(PERR_NULL_PARAM);
                         str_len = ::pilo::core::string::character_count(cstr) - str_off;
                     }
 
@@ -827,7 +827,7 @@ namespace pilo
                                     }
                                 }
                             }
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                            return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
                         
                     }
 
@@ -836,7 +836,7 @@ namespace pilo
                         return PILO_OK;
                     }
 
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                    return ::pilo::mk_perr( PERR_IO_WRITE_FAIL);
                 }
 
                 virtual ::pilo::err_t read_string(std::string& str)
@@ -877,7 +877,7 @@ namespace pilo
                         }
                     }
 
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 0);
+                    return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                 }
                 virtual ::pilo::err_t peek_string(::pilo::i64_t peek_off, std::string& str)
                 {
@@ -919,7 +919,7 @@ namespace pilo
 
                     }
 
-                    return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL, 0);
+                    return ::pilo::mk_err( PERR_IO_READ_FAIL);
                 }
                 virtual ::pilo::err_t write_string(const std::string& str)
                 {
@@ -1005,7 +1005,7 @@ namespace pilo
                             length -= cur_turn_write_bytes;
                             if (length < 0)
                             {
-                                return ::pilo::make_core_error(PES_BUFFER, PEP_LEN_INV);
+                                return ::pilo::mk_perr(PERR_LEN_TOO_SAMLL);
                             }
                             else if (length == 0)
                             {
@@ -1014,7 +1014,7 @@ namespace pilo
 
                             if (node->m_next == nullptr)
                             {
-                                return ::pilo::make_core_error(PES_PTR, PEP_IS_NULL);
+                                return ::pilo::mk_perr(PERR_NULL_PTR);
                             }
 
                             node = this->_m_node_list.next(node);
@@ -1037,12 +1037,12 @@ namespace pilo
                         _m_capacity -= piece_size();
                         if (_m_begin_pos < 0)
                         {
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_OFF_INV);
+                            return ::pilo::mk_perr( PERR_INV_OFF);
                         }
                         return PILO_OK;
                     }
 
-                    return ::pilo::make_core_error(PES_PTR, PEP_IS_NULL, 0);
+                    return ::pilo::mk_perr(PERR_NULL_PTR);
                 }
 
                 

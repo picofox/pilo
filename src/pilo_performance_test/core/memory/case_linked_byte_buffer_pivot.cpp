@@ -52,7 +52,7 @@ namespace pilo
 						in_nano_cost_total += in_nano_cost;
 						if (ret != PILO_OK)
 						{
-							p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED));
+							p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 							p_case->inc_out_milli_seconds(current_prod_count);
 							return;
 						}
@@ -72,37 +72,36 @@ namespace pilo
 				static void consumer(::pilo::core::memory::byte_buffer_interface* bb, ::pilo::core::testing::performance_test_case* p_case)
 				{
 					::pilo::err_t ret = PILO_OK;
-					::pilo::i32_t err_type = 0;
+					::pilo::i32_t ok = 0;
 					::pilo::core::memory::o1l31c16_header header;
 					T* obj = nullptr;
 					::pilo::i64_t beg = 0;
 					for (;;)
 					{
-						err_type = ::pilo::is_ok_or_err_type(p_case->result(), PEP_RETRY);
-						if (err_type <= 0)
+						ok = ::pilo::is_ok_perr(p_case->result(), PERR_RETRY);
+						if (ok <= 0)
 						{
 							return;
 						}
-
 						
 						{
 							std::lock_guard<::pilo::core::testing::performance_test_case::lock_type> guard(p_case->get_lock());
 							beg = ::pilo::core::datetime::timestamp_milli_steady();
 							ret = ::pilo::core::memory::o1l31c16_header::deserialise(header, bb);							
-							err_type = ::pilo::is_ok_or_err_type(ret, PEP_RETRY);
-							if (err_type == 0)
+							ok = ::pilo::is_ok_perr(ret, PERR_RETRY);
+							if (ok==0)
 							{
 								obj = T::allocate();
 								obj->deserialize(&header, bb);
 								if (obj == nullptr)
 								{
-									p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_NULL));
+									p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 									return;
 								}
 								beg = ::pilo::core::datetime::timestamp_milli_steady() - beg;
 								if (!obj->validate())
 								{
-									p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_INVALID));
+									p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 									return;
 								}
 								p_case->inc_out_trans_count(1);
@@ -111,7 +110,7 @@ namespace pilo
 								T::deallocate(obj);
 								obj = nullptr;	
 							}
-							else if (err_type < 0)
+							else if (ok < 0)
 							{
 								p_case->set_result(ret);
 								return;
@@ -172,20 +171,20 @@ namespace pilo
 					{
 						out_millis = ::pilo::core::datetime::timestamp_nano_steady();
 						ret = ::pilo::core::memory::o1l31c16_header::deserialise(header, &buffer);
-						int err_type = ::pilo::is_ok_or_err_type(ret, PEP_RETRY);
-						if (err_type == 0)
+						::pilo::i32_t ok = ::pilo::is_ok_perr(ret, PERR_RETRY);
+						if (ok == 0)
 						{
 							pobj = TA_OBJ::allocate() ;
 							pobj->deserialize(&header, &buffer);
 							if (pobj == nullptr)
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_NULL));
+								p_case->set_result(::pilo::mk_perr(PERR_NULL_PTR));
 								return PILO_OK;
 							}
 							out_millis = ::pilo::core::datetime::timestamp_nano_steady() - out_millis;
 							if (!pobj->validate())
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_INVALID));
+								p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 								return PILO_OK;
 							}
 							out_cnt++;
@@ -195,7 +194,7 @@ namespace pilo
 							pobj = nullptr;
 
 						}
-						else if (err_type < 0)
+						else if(ok < 0)
 						{
 							p_case->set_result(ret);
 							return PILO_OK;

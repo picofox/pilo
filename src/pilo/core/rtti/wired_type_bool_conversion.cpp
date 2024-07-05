@@ -100,7 +100,7 @@ namespace pilo
 			{
 				if (v == nullptr)
 				{
-					if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_OK_WITH_INFO);
+					if (err != nullptr) *err = ::pilo::mk_perr(PERR_OK_WITH_INFO);
 					return 0;
 				}
 				else

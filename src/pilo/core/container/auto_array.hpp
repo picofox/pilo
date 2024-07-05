@@ -66,7 +66,7 @@ namespace pilo
                             catch (...)
                             {
                                 _dyn_data_ptr = _fixed_data;
-                                return ::pilo::make_core_error(PES_OP, PEP_CREATE_FAILED);
+                                return ::pilo::mk_perr(PERR_FILE_CREAET_FAIL);
                             }                          
                         }
                         //nothing to do with stack situation
@@ -80,7 +80,7 @@ namespace pilo
                                 T* tmp_data_ptr = new (std::nothrow) T[_size];
                                 if (tmp_data_ptr == nullptr)
                                 {
-                                    return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                                    return ::pilo::mk_perr( PERR_INSUF_HEAP);
                                 }
                                 for (size_type i = 0; i < _size; i++)
                                 {
@@ -93,7 +93,7 @@ namespace pilo
                             }
                             catch (...)
                             {
-                                return ::pilo::make_core_error(PES_OP, PEP_CREATE_FAILED);
+                                return ::pilo::mk_perr(PERR_FILE_CREAET_FAIL);
                             }                            
                         }  
                         //else no need to adjust

@@ -37,13 +37,13 @@ namespace pilo
 				if (p_case->check_error(err, PILO_OK, "derserialize %d arr failed", vt) != 0) return PILO_OK;
 				if (!der_tlv->equals_to(t))
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "validate empty %d arr failed",vt);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "validate empty %d arr failed",vt);
 				}
 				t->reset();
 				der_tlv->reset();
 
 				if (bb.read_available() != 0)
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "deserial %d arr err, remain data in buffer", vt);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "deserial %d arr err, remain data in buffer", vt);
 
 				err = t->init_by_array(list);
 				if (p_case->check_error(err, PILO_OK, "init %d arr failed", vt) != 0) return PILO_OK;
@@ -54,11 +54,11 @@ namespace pilo
 
 				if (!der_tlv->equals_to(t))
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "validate %d arr failed", vt);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "validate %d arr failed", vt);
 				}
 
 				if (bb.read_available() != 0)
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "deserial %d arr err, remain data in buffer", vt);
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "deserial %d arr err, remain data in buffer", vt);
 
 			}
 			return PILO_OK;
@@ -83,13 +83,13 @@ namespace pilo
 				if (p_case->check_error(err, PILO_OK, "derserialize  arr failed")) return PILO_OK;
 				if (!der_tlv->equals_to(t))
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "validate empty tlv arr failed");
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "validate empty tlv arr failed");
 				}
 				t->reset();
 				der_tlv->reset();
 
 				if (bb.read_available() != 0)
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "deserial tlv arr err, remain data in buffer");
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "deserial tlv arr err, remain data in buffer");
 				t->set_array_type(::pilo::core::rtti::wired_type::value_type_tlv);
 				for (::pilo::i32_t j = 0; j < tlv_cnt; j++)
 				{
@@ -108,11 +108,11 @@ namespace pilo
 
 				if (!der_tlv->equals_to(t))
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "validate tlv arr failed");
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "validate tlv arr failed");
 				}
 
 				if (bb.read_available() != 0)
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "deserial tlv arr err, remain data in buffer");
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "deserial tlv arr err, remain data in buffer");
 
 			}
 			return PILO_OK;
@@ -182,17 +182,17 @@ namespace pilo
 				::pilo::tlv* t = create_random_dict_tlv(::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_na, 3);
 				if (t == nullptr)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_NULL), "create dict tlv failed");
+					return p_case->error(::pilo::mk_perr(PERR_NULL_PTR), "create dict tlv failed");
 				}
 				::pilo::tlv* cloned_t = t->clone();
 				if (cloned_t == nullptr)
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_IS_NULL), "clone dict tlv failed");
+					return p_case->error(::pilo::mk_perr(PERR_NULL_PTR), "clone dict tlv failed");
 				}
 
 				if (!t->equals_to(cloned_t))
 				{
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "orig tlv and cloned tlv not equals");
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "orig tlv and cloned tlv not equals");
 				}
 
 				p_case->inc_print_progress();
@@ -213,37 +213,37 @@ namespace pilo
 				::pilo::tlv* t = create_random_single_tlv();
 				if (t == nullptr)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_NULL));
+					p_case->set_result(::pilo::mk_perr(PERR_NULL_PTR));
 					return PILO_OK;
 				}
 
 				::pilo::tlv* copied_t = t->clone();
 				if (t == nullptr)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_NULL));
+					p_case->set_result(::pilo::mk_perr(PERR_NULL_PTR));
 					return PILO_OK;
 				}
 
 				if (!t->equals_to(copied_t))
 				{
-					p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					return PILO_OK;
 				}		
 
 				::pilo::tlv* der_t = ::pilo::tlv::allocate();
 				if (t->serialize(nullptr, &bb) != PILO_OK)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					return PILO_OK;
 				}
 				if (der_t->deserialize(nullptr, &bb) != PILO_OK)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					return PILO_OK;
 				}
 				if (!t->equals_to(der_t))
 				{
-					p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					return PILO_OK;
 				}
 				
@@ -269,7 +269,7 @@ namespace pilo
 				::pilo::tlv* t = create_random_array_tlv(4);
 				if (t == nullptr)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_NULL));
+					p_case->set_result(::pilo::mk_perr(PERR_NULL_PTR));
 					return PILO_OK;
 				}
 
@@ -278,13 +278,13 @@ namespace pilo
 				::pilo::tlv* copied_t = t->clone();
 				if (t == nullptr)
 				{
-					p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_IS_NULL));
+					p_case->set_result(::pilo::mk_perr(PERR_NULL_PTR));
 					return PILO_OK;
 				}
 
 				if (! t->equals_to(copied_t))
 				{
-					p_case->set_result(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED));
+					p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
 					return PILO_OK;
 				}
 
@@ -299,7 +299,7 @@ namespace pilo
 					return PILO_OK;
 
 				if (bb.read_available() != 0)
-					return p_case->error(::pilo::make_core_error(PES_TLV, PEP_VDT_FAILED), "deserial tlv arr err, remain data in buffer");
+					return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "deserial tlv arr err, remain data in buffer");
 
 				p_case->inc_print_progress();
 				::pilo::tlv::deallocate(copied_t);

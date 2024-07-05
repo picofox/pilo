@@ -27,7 +27,7 @@ namespace pilo
 					{
 						::pilo::core::io::string_formated_output(errmsg_buffer, 1024, "Invalid split cnt %d : %d", cnt, 5);
 						p_case->set_desc(errmsg_buffer);
-						return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID, 0);
+						return ::pilo::mk_perr(PERR_INVALID_PARAM);
 					}
 
 					src = "id,name,job,salary,,address";
@@ -36,7 +36,7 @@ namespace pilo
 					{
 						::pilo::core::io::string_formated_output(errmsg_buffer, 1024, "Invalid split cnt %d : %d", cnt, 5);
 						p_case->set_desc(errmsg_buffer);
-						return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID, 0);
+						return ::pilo::mk_perr(PERR_INVALID_PARAM);
 					}
 
 					src = "id,name,job,salary,,address";
@@ -45,7 +45,7 @@ namespace pilo
 					{
 						::pilo::core::io::string_formated_output(errmsg_buffer, 1024, "Invalid split cnt %d : %d", cnt, 5);
 						p_case->set_desc(errmsg_buffer);
-						return ::pilo::make_core_error(PES_PARAM, PEP_IS_INVALID, 0);
+						return ::pilo::mk_perr(PERR_INVALID_PARAM);
 					}
 
 

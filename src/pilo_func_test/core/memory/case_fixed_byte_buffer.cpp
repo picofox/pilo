@@ -37,7 +37,7 @@ namespace pilo
  						ser_time += (::pilo::core::datetime::timestamp_nano_steady() - b);
 						if (ret != PILO_OK)
 						{
-							p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED));
+							p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 							return PILO_OK;
 						}
 						
@@ -46,25 +46,26 @@ namespace pilo
 					for (::pilo::i64_t i = 0; i < PILO_FBB_TEST_CNT_0; i++)
 					{
 						::pilo::err_t ret = ::pilo::core::memory::o1l31c16_header::deserialise(header, &buffer);
-						::pilo::i32_t err_type = ::pilo::is_ok_or_err_type(ret, PEP_RETRY);
+						::pilo::i32_t ok = ::pilo::is_ok_perr(ret, PERR_RETRY);
+
 						::pilo::core::testing::large_sample_object* obj = nullptr;
-						if (err_type == 0)
+						if (ok == 0)
 						{
 							obj = ::pilo::core::testing::large_sample_object::deserialise(&header, &buffer);
 							if (obj == nullptr)
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_NULL));
+								p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 								return PILO_OK;
 							}
 							if (!obj->validate())
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_INVALID));
+								p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 								return PILO_OK;
 							}
 							delete(obj);
 							obj = nullptr;
 						}
-						else
+						else if (ok < 0)
 						{
 							p_case->set_result(ret);
 							return PILO_OK;
@@ -97,7 +98,7 @@ namespace pilo
 						ser_time += (::pilo::core::datetime::timestamp_nano_steady() - b);
 						if (ret != PILO_OK)
 						{
-							p_case->set_result(::pilo::make_core_error(PES_OP, PEP_ABORTED));
+							p_case->set_result(::pilo::mk_perr(PERR_USER_CANCEL));
 							return PILO_OK;
 						}
 
@@ -106,25 +107,25 @@ namespace pilo
 					for (::pilo::i64_t i = 0; i < PILO_FBB_TEST_CNT_0; i++)
 					{
 						::pilo::err_t ret = ::pilo::core::memory::o1l31c16_header::deserialise(header, &buffer);
-						::pilo::i32_t err_type = ::pilo::is_ok_or_err_type(ret, PEP_RETRY);
+						::pilo::i32_t ok = ::pilo::is_ok_perr(ret, PERR_RETRY);
 						::pilo::core::testing::large_sample_object* obj = nullptr;
-						if (err_type == 0)
+						if (ok == 0)
 						{
 							obj = ::pilo::core::testing::large_sample_object::deserialise(&header, &buffer);
 							if (obj == nullptr)
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_NULL));
+								p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 								return PILO_OK;
 							}
 							if (!obj->validate())
 							{
-								p_case->set_result(::pilo::make_core_error(PES_OBJ, PEP_IS_INVALID));
+								p_case->set_result(::pilo::mk_perr(PERR_INV_OBJECT));
 								return PILO_OK;
 							}
 							delete(obj);
 							obj = nullptr;
 						}
-						else
+						else if (ok < 0)
 						{
 							p_case->set_result(ret);
 							return PILO_OK;

@@ -56,7 +56,7 @@ namespace pilo
             {
                 if (src == nullptr)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_NULL_PARAM);
                     return nullptr;
                 }
                 else if (src_len < 0)
@@ -71,7 +71,7 @@ namespace pilo
                     ret = (char*)PMF_HEAP_MALLOC(rlen +1);
                     if (ret == nullptr)
                     {
-                        if (err != nullptr) *err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                        if (err != nullptr) *err = ::pilo::mk_err(PERR_INSUF_HEAP);
                         return nullptr;
                     }
                     capa = rlen + 1;
@@ -114,7 +114,7 @@ namespace pilo
             {
                 if (src == nullptr)
                 {
-                    if (err != nullptr) *err = ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+                    if (err != nullptr) *err = ::pilo::mk_perr(PERR_NULL_PARAM);
                     return nullptr;
                 }
                 else if (src_len < 0)
@@ -135,7 +135,7 @@ namespace pilo
                     ret = (char*)PMF_HEAP_MALLOC(rlen + 1);
                     if (ret == nullptr)
                     {
-                        if (err != nullptr) *err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+                        if (err != nullptr) *err = ::pilo::mk_perr(PERR_INSUF_HEAP);
                         return nullptr;
                     }
                     capa = rlen + 1;

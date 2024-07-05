@@ -23,11 +23,11 @@ namespace pilo
                     {
                         if (byte_buffer->peek_uint32(0, header._m_o_len) != PILO_OK)
                         {
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL);
+                            return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                         }
                         if (byte_buffer->peek_uint16(4, header._m_command) != PILO_OK)
                         {
-                            return ::pilo::make_core_error(PES_BUFFER, PEP_RDFAIL);
+                            return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                         }
 
                         if (byte_buffer->read_available() >= header.body_length() + header.header_length())
@@ -36,7 +36,7 @@ namespace pilo
                         }
 
                     }
-                    return ::pilo::make_core_error(PES_OP, PEP_RETRY);
+                    return ::pilo::mk_perr(PERR_RETRY);
                 }
 
             public:
@@ -44,11 +44,11 @@ namespace pilo
                 {
                     if (byte_buffer->write_uint32_pc(0) != PILO_OK)
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                        return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                     }
                     if (byte_buffer->write_uint16(_m_command))
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_WRFAIL, 0);
+                        return ::pilo::mk_perr( PERR_IO_READ_FAIL);
                     }
 
                     
@@ -69,7 +69,7 @@ namespace pilo
                         return byte_buffer->readable_seek(::pilo::seek_whence_enum::current, this->header_length(), true, nullptr);
                     }
 
-                    return ::pilo::make_core_error(PES_OP, PEP_RETRY);
+                    return ::pilo::mk_perr(PERR_RETRY);
                 }
 
                 virtual ::pilo::err_t end_deserializing(byte_buffer_interface * byte_buffer, ::pilo::i64_t actual_read_bytes)
@@ -77,7 +77,7 @@ namespace pilo
                     PMC_UNUSED(byte_buffer);
                     if (actual_read_bytes != body_length())
                     {
-                        return ::pilo::make_core_error(PES_BUFFER, PEP_INC_LEN);
+                        return ::pilo::mk_perr(PERR_INV_LEN);
                     }
                     return PILO_OK;
                 }
@@ -100,7 +100,7 @@ namespace pilo
                         this->_m_o_len = ((::pilo::u32_t)this->gourp_type()) | (((::pilo::u32_t)body_len) & 0x7FFFFFFF);
                         return PILO_OK;
                     }
-                    return ::pilo::make_core_error(PES_MSG, PEP_TOO_LARGE);
+                    return ::pilo::mk_perr(PERR_LEN_TOO_LARGE);
                 }
 
                 virtual std::string to_string()

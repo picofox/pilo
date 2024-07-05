@@ -12,24 +12,24 @@ namespace pilo
 			static handle_map_compare_func_type stc_handle_compare_func[::pilo::core::rtti::wired_type::key_type_count][::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
 				{
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },
 				},
 				{//i8
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },//0
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },//0
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i8_t, ::pilo::i8_t>((const std::map<::pilo::i8_t, ::pilo::i8_t>*) a_data, (const std::map<::pilo::i8_t, ::pilo::i8_t>*) b_data, err); },//1
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i8_t, ::pilo::u8_t>((const std::map<::pilo::i8_t, ::pilo::u8_t>*) a_data, (const std::map<::pilo::i8_t, ::pilo::u8_t>*) b_data, err); },//2
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i8_t, ::pilo::i16_t>((const std::map<::pilo::i8_t, ::pilo::i16_t>*) a_data, (const std::map<::pilo::i8_t, ::pilo::i16_t>*) b_data, err); },//3
@@ -46,7 +46,7 @@ namespace pilo
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i8_t>((const std::map<::pilo::i8_t, ::pilo::tlv*>*) a_data, (const std::map<::pilo::i8_t, ::pilo::tlv*>*) b_data, err); },//14
 				},
 				{//u8
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },//0
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },//0
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u8_t, ::pilo::i8_t>((const std::map<::pilo::u8_t, ::pilo::i8_t>*) a_data, (const std::map<::pilo::u8_t, ::pilo::i8_t>*) b_data, err); },//1
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u8_t, ::pilo::u8_t>((const std::map<::pilo::u8_t, ::pilo::u8_t>*) a_data, (const std::map<::pilo::u8_t, ::pilo::u8_t>*) b_data, err); },//2
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u8_t, ::pilo::i16_t>((const std::map<::pilo::u8_t, ::pilo::i16_t>*) a_data, (const std::map<::pilo::u8_t, ::pilo::i16_t>*) b_data, err); },//3
@@ -63,7 +63,7 @@ namespace pilo
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u8_t>((const std::map<::pilo::u8_t, ::pilo::tlv*>*) a_data, (const std::map<::pilo::u8_t, ::pilo::tlv*>*) b_data, err); },//14
 				},
 				{//i16
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },//0
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },//0
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i16_t, ::pilo::i8_t>((const std::map<::pilo::i16_t, ::pilo::i8_t>*) a_data, (const std::map<::pilo::i16_t, ::pilo::i8_t>*) b_data, err); },//1
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i16_t, ::pilo::u8_t>((const std::map<::pilo::i16_t, ::pilo::u8_t>*) a_data, (const std::map<::pilo::i16_t, ::pilo::u8_t>*) b_data, err); },//2
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i16_t, ::pilo::i16_t>((const std::map<::pilo::i16_t, ::pilo::i16_t>*) a_data, (const std::map<::pilo::i16_t, ::pilo::i16_t>*) b_data, err); },//3
@@ -80,7 +80,7 @@ namespace pilo
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i16_t>((const std::map<::pilo::i16_t, ::pilo::tlv*>*) a_data, (const std::map<::pilo::i16_t, ::pilo::tlv*>*) b_data, err); },//14
 				},
 				{//u16
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },//0
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },//0
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u16_t, ::pilo::i8_t>((const std::map<::pilo::u16_t, ::pilo::i8_t>*) a_data, (const std::map<::pilo::u16_t, ::pilo::i8_t>*) b_data, err); },//1
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u16_t, ::pilo::u8_t>((const std::map<::pilo::u16_t, ::pilo::u8_t>*) a_data, (const std::map<::pilo::u16_t, ::pilo::u8_t>*) b_data, err); },//2
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u16_t, ::pilo::i16_t>((const std::map<::pilo::u16_t, ::pilo::i16_t>*) a_data, (const std::map<::pilo::u16_t, ::pilo::i16_t>*) b_data, err); },//3
@@ -97,7 +97,7 @@ namespace pilo
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u16_t>((const std::map<::pilo::u16_t, ::pilo::tlv*>*) a_data, (const std::map<::pilo::u16_t, ::pilo::tlv*>*) b_data, err); },//14
 				},
 				{//i32
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },//0
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },//0
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i32_t, ::pilo::i8_t>((const std::map<::pilo::i32_t, ::pilo::i8_t>*) a_data, (const std::map<::pilo::i32_t, ::pilo::i8_t>*) b_data, err); },//1
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i32_t, ::pilo::u8_t>((const std::map<::pilo::i32_t, ::pilo::u8_t>*) a_data, (const std::map<::pilo::i32_t, ::pilo::u8_t>*) b_data, err); },//2
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i32_t, ::pilo::i16_t>((const std::map<::pilo::i32_t, ::pilo::i16_t>*) a_data, (const std::map<::pilo::i32_t, ::pilo::i16_t>*) b_data, err); },//3
@@ -114,7 +114,7 @@ namespace pilo
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i32_t>((const std::map<::pilo::i32_t, ::pilo::tlv*>*) a_data, (const std::map<::pilo::i32_t, ::pilo::tlv*>*) b_data, err); },//14
 				},
 				{//u32
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },//0
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },//0
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u32_t, ::pilo::i8_t>((const std::map<::pilo::u32_t, ::pilo::i8_t>*) a_data, (const std::map<::pilo::u32_t, ::pilo::i8_t>*) b_data, err); },//1
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u32_t, ::pilo::u8_t>((const std::map<::pilo::u32_t, ::pilo::u8_t>*) a_data, (const std::map<::pilo::u32_t, ::pilo::u8_t>*) b_data, err); },//2
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u32_t, ::pilo::i16_t>((const std::map<::pilo::u32_t, ::pilo::i16_t>*) a_data, (const std::map<::pilo::u32_t, ::pilo::i16_t>*) b_data, err); },//3
@@ -131,7 +131,7 @@ namespace pilo
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u32_t>((const std::map<::pilo::u32_t, ::pilo::tlv*>*) a_data, (const std::map<::pilo::u32_t, ::pilo::tlv*>*) b_data, err); },//14
 				},
 				{//i64
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },//0
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },//0
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i64_t, ::pilo::i8_t>((const std::map<::pilo::i64_t, ::pilo::i8_t>*) a_data, (const std::map<::pilo::i64_t, ::pilo::i8_t>*) b_data, err); },//1
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i64_t, ::pilo::u8_t>((const std::map<::pilo::i64_t, ::pilo::u8_t>*) a_data, (const std::map<::pilo::i64_t, ::pilo::u8_t>*) b_data, err); },//2
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i64_t, ::pilo::i16_t>((const std::map<::pilo::i64_t, ::pilo::i16_t>*) a_data, (const std::map<::pilo::i64_t, ::pilo::i16_t>*) b_data, err); },//3
@@ -148,7 +148,7 @@ namespace pilo
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::i64_t>((const std::map<::pilo::i64_t, ::pilo::tlv*>*) a_data, (const std::map<::pilo::i64_t, ::pilo::tlv*>*) b_data, err); },//14
 				},
 				{//u64
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },//0
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },//0
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u64_t, ::pilo::i8_t>((const std::map<::pilo::u64_t, ::pilo::i8_t>*) a_data, (const std::map<::pilo::u64_t, ::pilo::i8_t>*) b_data, err); },//1
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u64_t, ::pilo::u8_t>((const std::map<::pilo::u64_t, ::pilo::u8_t>*) a_data, (const std::map<::pilo::u64_t, ::pilo::u8_t>*) b_data, err); },//2
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u64_t, ::pilo::i16_t>((const std::map<::pilo::u64_t, ::pilo::i16_t>*) a_data, (const std::map<::pilo::u64_t, ::pilo::i16_t>*) b_data, err); },//3
@@ -165,7 +165,7 @@ namespace pilo
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<::pilo::u64_t>((const std::map<::pilo::u64_t, ::pilo::tlv*>*) a_data, (const std::map<::pilo::u64_t, ::pilo::tlv*>*) b_data, err); },//14
 				},
 				{//str
-					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::make_core_error(PES_OP, PEP_UNSUPPORT); return false; },//0
+					[](const char*, const char*, ::pilo::err_t* err) -> bool { if (err != nullptr) *err = ::pilo::mk_perr(PERR_OP_UNSUPPORT); return false; },//0
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<std::string, ::pilo::i8_t>((const std::map<std::string, ::pilo::i8_t>*) a_data, (const std::map<std::string, ::pilo::i8_t>*) b_data, err); },//1
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<std::string, ::pilo::u8_t>((const std::map<std::string, ::pilo::u8_t>*) a_data, (const std::map<std::string, ::pilo::u8_t>*) b_data, err); },//2
 					[](const char* a_data, const char* b_data, ::pilo::err_t* err) -> bool { return map_equals<std::string, ::pilo::i16_t>((const std::map<std::string, ::pilo::i16_t>*) a_data, (const std::map<std::string, ::pilo::i16_t>*) b_data, err); },//3
@@ -198,7 +198,7 @@ namespace pilo
 				if (a_key_type >= ::pilo::core::rtti::wired_type::key_type_count)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_TLV, PEP_TYPE_MISMATCH);
+						*err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
 					return false;
 				}
 

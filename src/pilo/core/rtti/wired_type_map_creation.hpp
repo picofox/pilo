@@ -23,7 +23,7 @@ namespace pilo
 				{
 					map_ptr = new std::map<TA_KEY, TA_VALUE>;
 					if (map_ptr == nullptr)
-						return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+						return ::pilo::mk_perr(PERR_NULL_PARAM);
 				}
 				for (std::pair<TA_KEY, TA_VALUE> kvpair : list)
 				{
@@ -32,7 +32,7 @@ namespace pilo
 					{
 						if (! is_force)
 						{
-							return ::pilo::make_core_error(PES_ELEM, PEP_EXIST);
+							return ::pilo::mk_perr(PERR_EXIST);
 						}
 						map_ptr->erase(it);
 					}
@@ -48,7 +48,7 @@ namespace pilo
 				{
 					map_ptr = new std::map<TA_KEY, char*>;
 					if (map_ptr == nullptr)
-						return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+						return ::pilo::mk_perr(PERR_NULL_PARAM);
 
 				}
 				for (std::pair<TA_KEY, const char*> kvpair : list)
@@ -58,14 +58,14 @@ namespace pilo
 					{
 						if (!is_force)
 						{
-							return ::pilo::make_core_error(PES_ELEM, PEP_EXIST);
+							return ::pilo::mk_perr(PERR_EXIST);
 						}
 						map_ptr->erase(it);
 					}
 
 					char* tmp = ::pilo::core::string::duplicate(kvpair.second, -1);
 					if (tmp == nullptr)
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					map_ptr->insert(std::pair<TA_KEY, char*>(kvpair.first, tmp));					
 				}
 				return PILO_OK;;
@@ -79,7 +79,7 @@ namespace pilo
 				{
 					map_ptr = new std::map<TA_KEY, char*>;
 					if (map_ptr == nullptr)
-						return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+						return ::pilo::mk_perr(PERR_NULL_PARAM);
 				}
 				for (std::pair<TA_KEY, char*> kvpair : list)
 				{
@@ -88,7 +88,7 @@ namespace pilo
 					{
 						if (!is_force)
 						{
-							return ::pilo::make_core_error(PES_ELEM, PEP_EXIST);
+							return ::pilo::mk_perr(PERR_EXIST);
 						}
 						map_ptr->erase(it);
 					}
@@ -98,7 +98,7 @@ namespace pilo
 					{
 						char* tmp = ::pilo::core::string::duplicate(kvpair->second, -1);
 						if (tmp == nullptr)
-							return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+							return ::pilo::mk_perr( PERR_INSUF_HEAP);
 						map_ptr->insert(std::pair<TA_KEY, char*>(kvpair.first, tmp));
 					}
 				}
@@ -112,7 +112,7 @@ namespace pilo
 				{
 					map_ptr = new std::map<TA_KEY, ::pilo::tlv*>;
 					if (map_ptr == nullptr)
-						return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+						return ::pilo::mk_perr(PERR_NULL_PARAM);
 				}
 				for (std::pair<TA_KEY, ::pilo::tlv*> kvpair : list)
 				{
@@ -121,7 +121,7 @@ namespace pilo
 					{
 						if (!is_force)
 						{
-							return ::pilo::make_core_error(PES_ELEM, PEP_EXIST);
+							return ::pilo::mk_perr(PERR_EXIST);
 						}
 						map_ptr->erase(it);
 					}
@@ -131,7 +131,7 @@ namespace pilo
 					{
 						::pilo::tlv* tmp = kvpair.second->clone();
 						if (tmp == nullptr)
-							return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+							return ::pilo::mk_perr( PERR_INSUF_HEAP);
 						map_ptr->insert(std::pair<TA_KEY, char*>(kvpair.first, tmp));
 					}
 				}
@@ -149,7 +149,7 @@ namespace pilo
 
 				if (!is_force)
 				{
-					return ::pilo::make_core_error(PES_ELEM, PEP_EXIST);
+					return ::pilo::mk_perr(PERR_EXIST);
 				}
 				else
 				{
@@ -167,7 +167,7 @@ namespace pilo
 				{
 					map_ptr = new std::map<TA_KEY, TA_VALUE>;
 					if (map_ptr == nullptr)
-						return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+						return ::pilo::mk_perr(PERR_NULL_PARAM);
 				}
 				typename std::map<TA_KEY, TA_VALUE>::iterator it = map_ptr->find(key);
 				if (it == map_ptr->end())
@@ -178,7 +178,7 @@ namespace pilo
 
 				if (! is_force)
 				{
-					return ::pilo::make_core_error(PES_ELEM, PEP_EXIST);
+					return ::pilo::mk_perr(PERR_EXIST);
 				}
 				else
 				{
@@ -196,14 +196,14 @@ namespace pilo
 				{
 					map_ptr = new std::map<TA_KEY, char*>;
 					if (map_ptr == nullptr)
-						return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+						return ::pilo::mk_perr(PERR_NULL_PARAM);
 				}
 				typename std::map<TA_KEY, char*>::iterator it = map_ptr->find(key);
 				if (it != map_ptr->end())
 				{
 					if (!is_force)
 					{
-						return ::pilo::make_core_error(PES_ELEM, PEP_EXIST);
+						return ::pilo::mk_perr(PERR_EXIST);
 					}
 					else
 					{
@@ -221,7 +221,7 @@ namespace pilo
 					auto ptr = ::pilo::core::string::duplicate(value, -1);
 					if (ptr == nullptr)
 					{
-						return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						return ::pilo::mk_perr( PERR_INSUF_HEAP);
 					}
 					map_ptr->insert(std::pair<TA_KEY, char*>(key, ptr));
 				}
@@ -236,14 +236,14 @@ namespace pilo
 				{
 					map_ptr = new std::map<TA_KEY, char*>;
 					if (map_ptr == nullptr)
-						return ::pilo::make_core_error(PES_PARAM, PEP_IS_NULL);
+						return ::pilo::mk_perr(PERR_NULL_PARAM);
 				}
 				typename std::map<TA_KEY, char*>::iterator it = map_ptr->find(key);
 				if (it != map_ptr->end())
 				{
 					if (!is_force)
 					{
-						return ::pilo::make_core_error(PES_ELEM, PEP_EXIST);
+						return ::pilo::mk_perr(PERR_EXIST);
 					}
 					else
 					{
@@ -263,7 +263,7 @@ namespace pilo
 						auto ptr = ::pilo::core::string::duplicate(value, -1);
 						if (ptr == nullptr)
 						{
-							return ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+							return ::pilo::mk_perr( PERR_INSUF_HEAP);
 						}
 						map_ptr->insert(std::pair<TA_KEY, char*>(key, ptr));
 					}
@@ -336,7 +336,7 @@ namespace pilo
 				if (cloned_map == nullptr)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 					return nullptr;
 				}
 				return cloned_map;
@@ -352,7 +352,7 @@ namespace pilo
 				if (cloned_map == nullptr)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 					return nullptr;
 				}
 
@@ -365,7 +365,7 @@ namespace pilo
 						if (tmp_ptr == nullptr)
 						{
 							if (err != nullptr)
-								*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+								*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 							return nullptr;
 						}
 						cloned_map->insert(std::pair<TA_KEY, char*>(it->first, tmp_ptr));
@@ -389,7 +389,7 @@ namespace pilo
 				if (cloned_map == nullptr)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 					return nullptr;
 				}
 
@@ -402,7 +402,7 @@ namespace pilo
 						if (tmp_ptr == nullptr)
 						{
 							if (err != nullptr)
-								*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+								*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 							return nullptr;
 						}
 						cloned_map->insert(std::pair<TA_KEY, char*>(it->first, tmp_ptr));
@@ -429,7 +429,7 @@ namespace pilo
 				if (cloned_map == nullptr)
 				{
 					if (err != nullptr)
-						*err = ::pilo::make_core_error(PES_MEM, PEP_INSUFF);
+						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
 					return nullptr;
 				}
 
@@ -442,7 +442,7 @@ namespace pilo
 						if (tmp_tlv == nullptr)
 						{
 							if (err != nullptr)
-								*err = ::pilo::make_core_error(PES_TLV, PEP_CLONE_FAILED);
+								*err = ::pilo::mk_perr(PERR_OBJECT_CLONE_FAIL);
 							return nullptr;
 						}
                         cloned_map->insert(std::pair<TA_KEY, ::pilo::tlv*>(it->first, tmp_tlv));
