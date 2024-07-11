@@ -19,7 +19,7 @@ namespace pilo
 #ifdef WINDOWS
                     CloseHandle(this->_m_fd);
 #else
-                    close(this->_m_fd);
+                    ::close(this->_m_fd);
 #endif
                     this->_m_fd = PMI_INVALID_FILE_HANDLE;
                 
@@ -156,7 +156,8 @@ namespace pilo
                 else if (whence == seek_whence::current)
                     w = SEEK_CUR;
 
-                off_t ret = lseek(this->_m_fd, (off_t) off, int whence);
+
+                off_t ret = lseek(this->_m_fd, (off_t) off, w);
                 if (ret == (off_t) -1)
                     return ::pilo::mk_err(PERR_IO_SEEK_FAIL);
 
@@ -182,7 +183,7 @@ namespace pilo
 #ifdef WINDOWS
                     CloseHandle(this->_m_fd);
 #else
-                    close(this->_m_fd);
+                    ::close(this->_m_fd);
 #endif
                     this->_m_fd = PMI_INVALID_FILE_HANDLE;
 
@@ -312,7 +313,7 @@ namespace pilo
                     oflag |= O_TRUNC;
                 }
 
-                _m_fd = open(_m_path.fullpath(), oflag, m);
+                _m_fd = ::open(_m_path.fullpath(), oflag, m);
 
 #endif
                 if (_m_fd == PMI_INVALID_FILE_HANDLE) {

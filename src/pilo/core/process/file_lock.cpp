@@ -1,4 +1,5 @@
 #include "file_lock.hpp"
+#include <cstring>
 
 pilo::core::process::file_lock::file_lock(::pilo::os_file_handle_t fd)
 {
@@ -8,7 +9,7 @@ pilo::core::process::file_lock::file_lock(::pilo::os_file_handle_t fd)
     _m_info_len_high = MAXDWORD;
     memset(&_m_info_overlapped,0x00,sizeof(_m_info_overlapped));
 #else
-    memset(&_m_info, 0x00, sizeof(_m_info));
+    ::memset(&_m_info, 0x00, sizeof(_m_info));
 #endif
 }
 
@@ -96,8 +97,6 @@ pilo::core::process::file_lock::~file_lock()
     return PILO_OK;
 
 #else
-    if (length == -1)
-        length = 0;
     _m_info.l_type = F_UNLCK;
     _m_info.l_whence = SEEK_SET;
     int ret = fcntl(_m_fd, F_SETLK, &_m_info);
@@ -148,5 +147,6 @@ pilo::core::process::file_lock::~file_lock()
         }
         return ::pilo::mk_err(PERR_LOCK_FILE_FAIL);
     }
+    return PILO_OK;
 }
 #endif
