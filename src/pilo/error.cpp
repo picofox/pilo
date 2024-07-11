@@ -34,8 +34,9 @@ namespace pilo
         , "invalid value type", "invalid object", "infinit loop", "offset too small", "offset too large"
         , "offset is zero", "invalid offset", "invalid length", "read file link failed", "dir not empty"
 
-        , "", "", "", "", ""
-        , "", "", "", "", ""
+        , "has previous error", "invalid io state", "fs node not a regular file", "io seek failed", "lock file failed"
+        , "unlock file failed", "", "", "", ""
+
         , "", "", "", "", ""
         , "", "", "", "", ""
         , "", "", "", "", ""

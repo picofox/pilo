@@ -259,6 +259,14 @@ namespace pilo {
                 if (this->invalid())
                     return ::pilo::mk_perr(PERR_INVALID_PATH);
 
+                //::pilo::i8_t target_node_type = 0;
+                //if (path::path_type_na == this->get_fs_info(&target_node_type, nullptr)) {
+                //    return PILO_OK;
+                //}
+                //if (target_node_type == path::fs_node_type_file) {
+                //    path::remove_file(fullpath(), length());
+                //}
+
                 return path::remove_dir_recursively(fullpath(), length(), content_only, follow_link);
             }
 

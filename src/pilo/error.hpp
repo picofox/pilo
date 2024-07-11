@@ -83,6 +83,14 @@
 #define PERR_FSNODE_RDLINK_FAIL (68)
 #define PERR_DIR_NOT_EMPTY      (69)
 
+#define PERR_HAS_PREV_ERR       (70)
+#define PERR_INV_IO_STATE       (71)
+#define PERR_NOT_A_REG_FILE     (72)
+#define PERR_IO_SEEK_FAIL       (73)
+#define PERR_LOCK_FILE_FAIL     (74)
+
+#define PERR_UNLOCK_FILE_FAIL   (75)
+
 namespace pilo
 {
     __inline os_error_number_t get_os_last_err()

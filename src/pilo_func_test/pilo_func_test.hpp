@@ -36,6 +36,7 @@ namespace pilo
 		{
 			namespace io
 			{
+				int case_file_openmode(::pilo::core::testing::func_test_case* p_case);
 				int case_path_basic(::pilo::core::testing::func_test_case* p_case);
 				int case_path_fs_op(::pilo::core::testing::func_test_case* p_case);
 				int case_get_paths(::pilo::core::testing::func_test_case* p_case);

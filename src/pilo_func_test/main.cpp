@@ -54,6 +54,8 @@ int main(int argc, char * argv[])
 
 void load_cases(func_test_suite * suite)
 {	
+	suite->register_case("file_openmode", ::pilo::func_test::core::io::case_file_openmode, nullptr);
+
 	suite->register_case("path_basic", ::pilo::func_test::core::io::case_path_basic, nullptr);
 	suite->register_case("fs_op", ::pilo::func_test::core::io::case_path_fs_op, nullptr);
 

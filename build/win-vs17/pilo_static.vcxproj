@@ -358,11 +358,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\datetime.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\i18n\encoding_conversion.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\file.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\formatted_io.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\bits_operation.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\byte_buffer_interface.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\context.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_bool_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_bytes_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_conversion.cpp" />
@@ -412,6 +414,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\stop_watch.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\timestamp.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\i18n\encoding_conversion.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\device_interface.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\file.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\formatted_io.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\abstract_byte_buffer.hpp" />
@@ -443,6 +447,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\resource_cleaner.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\singleton.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\context.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_bool_conversion.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_bytes_conversion.hpp" />

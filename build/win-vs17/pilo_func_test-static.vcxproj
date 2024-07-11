@@ -313,6 +313,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\case_tlv_basic.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\crypto\case_base64.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\io\case_file_basic.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\io\case_path_basic.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\memory\case_fixed_byte_buffer.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\memory\case_linked_byte_buffer.cpp" />

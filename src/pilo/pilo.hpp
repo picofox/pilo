@@ -28,6 +28,9 @@
 
 #endif // WINDOWS
 
+#define TRISTATE_TRUE   (1)
+#define TRISTATE_FALSE  (0)
+#define TRISTATE_UNKNOW (-1)
 
 #define PMF_MAKE_U8(l, h)      ((unsigned char)(((unsigned char)(((unsigned char)(l)) & 0xf)) | ((unsigned char)((unsigned char)(((unsigned char)(h)) & 0xf))) << 4))
 #define PMF_LO_NIMBLE_OF_8(w)            ((unsigned char)(((unsigned char)(w)) & 0xf))

@@ -12,11 +12,11 @@ namespace pilo
             {
                 public:
                 inline void lock_shared() {}
-                inline void lock_write() {}
-                inline bool try_lock_read() { return true; }
-                inline bool try_lock_write() { return true; }
-                inline void unlock_read() {}
-                inline void unlock_write() {}
+                inline void lock() {}
+                inline bool try_lock() { return true; }
+                inline bool try_lock_shared() { return true; }
+                inline void unlock() {}
+                inline void unlock_shared() {}
             };
         }
     }

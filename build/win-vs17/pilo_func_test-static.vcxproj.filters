@@ -7,6 +7,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\crypto\case_base64.cpp">
       <Filter>pilo_func_test\core\crypto</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\io\case_file_basic.cpp">
+      <Filter>pilo_func_test\core\io</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\io\case_path_basic.cpp">
       <Filter>pilo_func_test\core\io</Filter>
     </ClCompile>
