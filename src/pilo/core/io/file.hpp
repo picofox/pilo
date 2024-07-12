@@ -123,11 +123,13 @@ namespace pilo
 
                 virtual ::pilo::err_t read(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t rbs, ::pilo::i64_t* n_read)
                 {
+                    ::pilo::err_t err = _pre_read();
+                    if (err != PILO_OK)
+                        return err;
 
-                    PMC_UNUSED(buf);
-                    PMC_UNUSED(rbs);
-                    PMC_UNUSED(n_read);
-                    return ::pilo::err_t();
+                    ::pilo::core::process::shared_mutex_guard<process_lock_type> p_guard(this->_m_proc_lock);
+                    ::pilo::core::threading::shared_mutex_guard<thread_lock_type> t_guard(this->_m_thread_lock);
+                    return _read(buf, rbs, n_read);
                 }
 
 
@@ -330,7 +332,7 @@ namespace pilo
                     }                    
                     ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)r_dwnread);
                     if (r_dwnread < rbs) {
-                        return ::pilo::mk_err(PERR_EOF);
+                        return ::pilo::mk_perr(PERR_EOF);
                     }
 #else
                     ssize_t r_read = read(_m_fd, buffer, rbs);
@@ -341,16 +343,51 @@ namespace pilo
                         return ::pilo::mk_err(PERR_IO_READ_FAIL);
                     } else if (r_read == 0) {
                         ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)r_read);
-                        return ::pilo::mk_err(PERR_EOF);
+                        return ::pilo::mk_perr(PERR_EOF);
                     } else if (r_read < rbs) {
                         ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)r_read);
-                        return ::pilo::mk_err(PERR_EOF);
+                        return ::pilo::mk_perr(PERR_EOF);
                     } 
 
                     ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)r_read);                    
 
 #endif // WINDOWS
 
+                    return PILO_OK;
+                }
+
+                ::pilo::err_t _read(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t rbs, ::pilo::i64_t* n_read)
+                {
+                    char tmp_buff[PMI_STCPARAM_4K_BUFFER_NODE_SIZE] = { 0 };
+                    ::pilo::i64_t tmp_space = PMI_STCPARAM_4K_BUFFER_NODE_SIZE;
+                    ::pilo::i64_t rbs_remain = rbs;
+                    ::pilo::err_t err = PILO_OK;
+                    ::pilo::i64_t rb = 0;
+                    ::pilo::i64_t rb_total = 0;
+                    while (rbs > 0)
+                    {
+                        if (rbs > PMI_STCPARAM_4K_BUFFER_NODE_SIZE)
+                            tmp_space = PMI_STCPARAM_4K_BUFFER_NODE_SIZE;
+                        else
+                            tmp_space = rbs;
+                        rbs -= tmp_space;
+
+                        err = _read(tmp_buff, tmp_space, &rb);
+                        if (err == PILO_OK) {
+                            buf->write_raw_bytes(tmp_buff, 0, rb);
+                            rb_total += rb;     
+
+                        } else if ( err == PERR_EOF) {
+                            buf->write_raw_bytes(tmp_buff, 0, rb);
+                            rb_total += rb;
+                            break;
+
+                        } else {
+                            return err;
+                        }
+                
+                    }
+                    ::pilo::set_if_ptr_is_not_null(n_read, rb_total);
                     return PILO_OK;
                 }
 
