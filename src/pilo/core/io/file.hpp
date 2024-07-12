@@ -245,34 +245,64 @@ namespace pilo
                 }
 
 
-                ::pilo::err_t process_lock_shared(::pilo::i64_t offset, ::pilo::i64_t length)
+                inline ::pilo::err_t process_lock_shared(::pilo::i64_t offset, ::pilo::i64_t length)
                 {
                     return this->_m_proc_lock.lock_shared(offset, length);
                 }
 
-                ::pilo::err_t process_lock(::pilo::i64_t offset, ::pilo::i64_t length)
+                inline ::pilo::err_t process_lock(::pilo::i64_t offset, ::pilo::i64_t length)
                 {
                     return this->_m_proc_lock.lock(offset, length);
                 }
 
-                ::pilo::err_t process_try_lock(::pilo::i64_t offset, ::pilo::i64_t length)
+                inline ::pilo::err_t process_try_lock(::pilo::i64_t offset, ::pilo::i64_t length)
                 {
                     return this->_m_proc_lock.try_lock(offset, length);
                 }
 
-                ::pilo::err_t process_try_lock_shared(::pilo::i64_t offset, ::pilo::i64_t length)
+                inline ::pilo::err_t process_try_lock_shared(::pilo::i64_t offset, ::pilo::i64_t length)
                 {
                     return this->_m_proc_lock.try_lock_shared(offset, length);
                 }
 
-                ::pilo::err_t process_unlock(::pilo::i64_t offset, ::pilo::i64_t length)
+                inline ::pilo::err_t process_unlock(::pilo::i64_t offset, ::pilo::i64_t length)
                 {
                     return this->_m_proc_lock.unlock(offset, length);
                 }
 
-                ::pilo::err_t process_unlock()
+                inline ::pilo::err_t process_unlock()
                 {
                     return this->_m_proc_lock.unlock();
+                }
+
+                inline void thread_lock_shared() 
+                {
+                    return this->_m_thread_lock->lock_shared();
+                }
+
+                inline void lock() 
+                {
+                    return this->_m_thread_lock->lock();
+                }
+
+                inline bool try_lock() 
+                { 
+                    return this->_m_thread_lock->try_lock();
+                }
+
+                inline bool try_lock_shared() 
+                { 
+                    return this->_m_thread_lock->try_lock_shared();
+                }
+
+                inline void unlock() 
+                {
+                    return this->_m_thread_lock->unlock();
+                }
+
+                inline void unlock_shared() 
+                {
+                    return this->_m_thread_lock->unlock_shared();
                 }
 
 
