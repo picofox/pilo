@@ -13,6 +13,9 @@ namespace pilo
             class dummy_file_lock
             {
             public:
+                dummy_file_lock() {}
+                dummy_file_lock(::pilo::os_file_handle_t fd) { PMC_UNUSED(fd);}
+
                 inline ::pilo::err_t initialize(::pilo::os_file_handle_t fd)
                 {
                     PMC_UNUSED(fd);

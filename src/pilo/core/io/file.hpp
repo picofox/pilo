@@ -394,7 +394,7 @@ namespace pilo
                     this->_m_access_perm = perm;
                     this->set_state(state_code::opened);
 
-                    this->_m_proc_lock.init(this->_m_fd);
+                    this->_m_proc_lock.initialize(this->_m_fd);
                     return PILO_OK;
                 }
 
