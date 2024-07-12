@@ -10,9 +10,6 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\i18n\encoding_conversion.cpp">
       <Filter>pilo\core\i18n</Filter>
     </ClCompile>
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\file.cpp">
-      <Filter>pilo\core\io</Filter>
-    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\formatted_io.cpp">
       <Filter>pilo\core\io</Filter>
     </ClCompile>
@@ -277,6 +274,9 @@
       <Filter>pilo\core\pattern</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\context.hpp">
+      <Filter>pilo\core\process</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\dummy_file_lock.hpp">
       <Filter>pilo\core\process</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock.hpp">

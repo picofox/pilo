@@ -34,7 +34,7 @@ namespace pilo
 
 					p.remove(true, true);
 
-					::pilo::core::io::file f0;
+					::pilo::core::io::file<> f0;
 
 					f0.open(&p, ::pilo::core::io::creation_mode::open_existing, ::pilo::core::io::access_permission::read_write, ::pilo::core::io::dev_open_flags::none);
 					if (!f0.error()) {

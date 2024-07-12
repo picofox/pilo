@@ -4,6 +4,7 @@
 pilo::core::process::file_lock::file_lock(::pilo::os_file_handle_t fd)
 {
     _m_fd = fd;
+    _m_lock = false;
 #ifdef WINDOWS
     _m_info_len_low = MAXDWORD;
     _m_info_len_high = MAXDWORD;
@@ -13,9 +14,22 @@ pilo::core::process::file_lock::file_lock(::pilo::os_file_handle_t fd)
 #endif
 }
 
+pilo::core::process::file_lock::file_lock()
+{
+    _m_fd = PMI_INVALID_FILE_HANDLE;
+    _m_lock = false;
+#ifdef WINDOWS
+    _m_info_len_low = MAXDWORD;
+    _m_info_len_high = MAXDWORD;
+    memset(&_m_info_overlapped, 0x00, sizeof(_m_info_overlapped));
+#else
+    ::memset(&_m_info, 0x00, sizeof(_m_info));
+#endif
+}
+
 pilo::core::process::file_lock::~file_lock()
 {
-
+    this->finalize();
 }
 
 ::pilo::err_t pilo::core::process::file_lock::lock(::pilo::i64_t offset, ::pilo::i64_t length)
@@ -27,13 +41,41 @@ pilo::core::process::file_lock::~file_lock()
 #endif
 }
 
-::pilo::err_t pilo::core::process::file_lock::try_lock(::pilo::i64_t offset, ::pilo::i64_t length)
+::pilo::err_t  pilo::core::process::file_lock::try_lock(::pilo::i64_t offset, ::pilo::i64_t length)
 {
 #ifdef WINDOWS
-    return _lock(offset, length, LOCKFILE_EXCLUSIVE_LOCK | LOCKFILE_FAIL_IMMEDIATELY);
+     return _lock(offset, length, LOCKFILE_EXCLUSIVE_LOCK | LOCKFILE_FAIL_IMMEDIATELY);
 #else
-    return _lock(offset, length, F_SETLK, F_WRLCK);
+     return _lock(offset, length, F_SETLK, F_WRLCK);
 #endif
+
+}
+
+::pilo::err_t pilo::core::process::file_lock::initialize(::pilo::os_file_handle_t fd)
+{
+    if (this->_m_fd != PMI_INVALID_FILE_HANDLE) {
+        return ::pilo::mk_perr(PERR_DUP_INIT);
+    }
+    _m_fd = fd;
+    return PILO_OK;
+}
+
+::pilo::err_t pilo::core::process::file_lock::finalize()
+{
+    if (_m_lock) {
+        this->unlock();
+    }
+
+    _m_fd = PMI_INVALID_FILE_HANDLE;
+    _m_lock = false;
+#ifdef WINDOWS
+    _m_info_len_low = MAXDWORD;
+    _m_info_len_high = MAXDWORD;
+    memset(&_m_info_overlapped, 0x00, sizeof(_m_info_overlapped));
+#else
+    ::memset(&_m_info, 0x00, sizeof(_m_info));
+#endif
+    return PILO_OK;
 }
 
 ::pilo::err_t pilo::core::process::file_lock::lock_shared(::pilo::i64_t offset, ::pilo::i64_t length)
@@ -45,17 +87,24 @@ pilo::core::process::file_lock::~file_lock()
 #endif
 }
 
-::pilo::err_t pilo::core::process::file_lock::try_lock_shared(::pilo::i64_t offset, ::pilo::i64_t length)
+::pilo::err_t  pilo::core::process::file_lock::try_lock_shared(::pilo::i64_t offset, ::pilo::i64_t length)
 {
+    ::pilo::err_t ret = PILO_OK;
 #ifdef WINDOWS
-    return _lock(offset, length, LOCKFILE_FAIL_IMMEDIATELY);
+    ret = _lock(offset, length, LOCKFILE_FAIL_IMMEDIATELY);
 #else
-    return _lock(offset, length, F_SETLK, F_RDLCK);
+    ret = _lock(offset, length, F_SETLK, F_WRLCK);
 #endif
+    if (ret == PERR_RETRY)
+        return false;
+    return true;
 }
 
 ::pilo::err_t pilo::core::process::file_lock::unlock(::pilo::i64_t offset, ::pilo::i64_t length)
 {
+    if (_m_fd != PMI_INVALID_FILE_HANDLE) {
+        return ::pilo::mk_perr(PERR_NOT_INIT);
+    }
 #ifdef WINDOWS
     ULARGE_INTEGER off = { 0 };
     ULARGE_INTEGER len = { 0 };
@@ -69,6 +118,7 @@ pilo::core::process::file_lock::~file_lock()
     }
     _m_info_overlapped.OffsetHigh = off.HighPart;
     _m_info_overlapped.Offset = off.LowPart;
+    _m_lock = false;
     return PILO_OK;
 
 #else
@@ -82,18 +132,22 @@ pilo::core::process::file_lock::~file_lock()
     if (ret != 0) {
         return ::pilo::mk_err(PERR_UNLOCK_FILE_FAIL);
     }
-        
+    _m_lock = false;
     return PILO_OK;
 #endif
 }
 
 ::pilo::err_t pilo::core::process::file_lock::unlock()
 {
+    if (_m_fd != PMI_INVALID_FILE_HANDLE) {
+        return ::pilo::mk_perr(PERR_NOT_INIT);
+    }
 #ifdef WINDOWS
     BOOL fSuccess = UnlockFileEx(_m_fd, 0, _m_info_len_low, _m_info_len_high, &_m_info_overlapped);
     if (!fSuccess) {
         return ::pilo::mk_err(PERR_UNLOCK_FILE_FAIL);
     }
+    _m_lock = false;
     return PILO_OK;
 
 #else
@@ -103,6 +157,7 @@ pilo::core::process::file_lock::~file_lock()
     if (ret != 0) {
         return ::pilo::mk_err(PERR_UNLOCK_FILE_FAIL);
     }
+    _m_lock = false;
     return PILO_OK;
 #endif
 }
@@ -110,6 +165,10 @@ pilo::core::process::file_lock::~file_lock()
 #ifdef WINDOWS
 ::pilo::err_t pilo::core::process::file_lock::_lock(::pilo::i64_t offset, ::pilo::i64_t length, DWORD flags)
 {
+    if (_m_fd != PMI_INVALID_FILE_HANDLE) {
+        return ::pilo::mk_perr(PERR_NOT_INIT);
+    }
+
     ULARGE_INTEGER off = { 0 };
     off.QuadPart = (ULONGLONG)offset;   
     
@@ -128,12 +187,17 @@ pilo::core::process::file_lock::~file_lock()
         return ::pilo::mk_err(PERR_LOCK_FILE_FAIL);
     }   
 
+    _m_lock = true;
     return PILO_OK;
 
 }
 #else
 ::pilo::err_t pilo::core::process::file_lock::_lock(::pilo::i64_t offset, ::pilo::i64_t length, int cmd, int type)
 {
+    if (_m_fd != PMI_INVALID_FILE_HANDLE) {
+        return ::pilo::mk_perr(PERR_NOT_INIT);
+    }
+
     if (length == -1)
         length = 0;
     _m_info.l_type = type;
@@ -147,6 +211,7 @@ pilo::core::process::file_lock::~file_lock()
         }
         return ::pilo::mk_err(PERR_LOCK_FILE_FAIL);
     }
+    _m_lock = true;
     return PILO_OK;
 }
 #endif

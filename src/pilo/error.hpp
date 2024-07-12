@@ -90,6 +90,8 @@
 #define PERR_LOCK_FILE_FAIL     (74)
 
 #define PERR_UNLOCK_FILE_FAIL   (75)
+#define PERR_NOT_INIT           (76)
+#define PERR_DUP_INIT           (77)
 
 namespace pilo
 {
