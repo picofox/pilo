@@ -282,6 +282,12 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock.hpp">
       <Filter>pilo\core\process</Filter>
     </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock_guard.hpp">
+      <Filter>pilo\core\process</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\shared_file_lock_guard.hpp">
+      <Filter>pilo\core\process</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type.hpp">
       <Filter>pilo\core\rtti</Filter>
     </ClInclude>

@@ -5,6 +5,10 @@
 #include "../threading/dummy_read_write_lock.hpp"
 #include "../process/dummy_file_lock.hpp"
 #include "../process/file_lock.hpp"
+#include "../process/shared_file_lock_guard.hpp"
+#include "../process/file_lock.hpp"
+#include "../threading/shared_mutex_guard.hpp"
+#include "../threading/exclusive_mutex_guard.hpp"
 
 
 namespace pilo
@@ -26,6 +30,7 @@ namespace pilo
                 {
                     _m_fd = PMI_INVALID_FILE_HANDLE;
                     this->set_state(state_code::uninitialized);
+                    memset(&_m_overlapped, 0x00, sizeof(_m_overlapped));
                 }
 
                 virtual ~file()
@@ -105,17 +110,20 @@ namespace pilo
                     return this->_open(cm, perm, f);
                 }
 
-                virtual ::pilo::err_t read(char* buffer, ::pilo::i64_t capacity, ::pilo::i64_t rbs, ::pilo::i64_t* n_read)
+                virtual ::pilo::err_t read(char* buffer, ::pilo::i64_t rbs, ::pilo::i64_t* n_read)
                 {
-                    PMC_UNUSED(buffer);
-                    PMC_UNUSED(capacity);
-                    PMC_UNUSED(rbs);
-                    PMC_UNUSED(n_read);
-                    return ::pilo::err_t();
+                    ::pilo::err_t err = _pre_read();
+                    if (err != PILO_OK)
+                        return err;
+
+                    ::pilo::core::process::shared_mutex_guard<process_lock_type> p_guard(this->_m_proc_lock);
+                    ::pilo::core::threading::shared_mutex_guard<thread_lock_type> t_guard(this->_m_thread_lock);
+                    return _read(buffer, rbs, n_read);
                 }
 
                 virtual ::pilo::err_t read(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t rbs, ::pilo::i64_t* n_read)
                 {
+
                     PMC_UNUSED(buf);
                     PMC_UNUSED(rbs);
                     PMC_UNUSED(n_read);
@@ -141,7 +149,7 @@ namespace pilo
 
                 virtual ::pilo::err_t seek(seek_whence whence, ::pilo::i64_t off)
                 {
-                    if (error() != 0)
+                    if (error())
                         return ::pilo::mk_perr(PERR_HAS_PREV_ERR);
 
                     if (state() != state_code::opened)
@@ -307,6 +315,45 @@ namespace pilo
 
 
             protected:
+                ::pilo::err_t _read(char* buffer, ::pilo::i64_t rbs, ::pilo::i64_t* n_read)
+                {
+#ifdef WINDOWS
+                    DWORD r_dwnread = 0;
+                    LPOVERLAPPED lpOverlapped = NULL;
+                    if (this->nonblocking())
+                        lpOverlapped = &this->_m_overlapped;
+                    BOOL bret = ReadFile(_m_fd, (LPVOID)buffer, rbs, r_dwnread, lpOverlapped);
+                    if (!bret) {
+                        ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)-1);
+                        set_error();
+                        return ::pilo::mk_err(PERR_IO_READ_FAIL);
+                    }                    
+                    ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)r_dwnread);
+                    if (r_dwnread < rbs) {
+                        return ::pilo::mk_err(PERR_EOF);
+                    }
+#else
+                    ssize_t r_read = read(_m_fd, buffer, rbs);
+                    ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)r_read);
+                    if (r_read < 0) {
+                        ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)-1);
+                        set_error();
+                        return ::pilo::mk_err(PERR_IO_READ_FAIL);
+                    } else if (r_read == 0) {
+                        ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)r_read);
+                        return ::pilo::mk_err(PERR_EOF);
+                    } else if (r_read < rbs) {
+                        ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)r_read);
+                        return ::pilo::mk_err(PERR_EOF);
+                    } 
+
+                    ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)r_read);                    
+
+#endif // WINDOWS
+
+                    return PILO_OK;
+                }
+
                 ::pilo::err_t _open(creation_mode cm, access_permission perm, dev_open_flags f)
                 {
 
@@ -430,9 +477,18 @@ namespace pilo
 
                 ::pilo::err_t _pre_open() const
                 {
-                    if (error() != 0)
+                    if (error())
                         return ::pilo::mk_perr(PERR_HAS_PREV_ERR);
                     if (state() == state_code::opened)
+                        return ::pilo::mk_perr(PERR_INV_IO_STATE);
+                    return PILO_OK;
+                }
+
+                ::pilo::err_t _pre_read() const
+                {
+                    if (error())
+                        return ::pilo::mk_perr(PERR_HAS_PREV_ERR);
+                    if (state() != state_code::opened)
                         return ::pilo::mk_perr(PERR_INV_IO_STATE);
                     return PILO_OK;
                 }
@@ -443,6 +499,11 @@ namespace pilo
                 ::pilo::os_file_handle_t    _m_fd;
                 process_lock_type           _m_proc_lock;
                 thread_lock_type            _m_thread_lock;
+
+#ifdef WINDOWS
+                OVERLAPPED                  _m_overlapped;
+#else
+#endif
 
                 PMC_DISABLE_COPY(file)    
                     

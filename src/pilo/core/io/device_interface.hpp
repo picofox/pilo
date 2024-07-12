@@ -107,7 +107,7 @@ namespace pilo
                 virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, predefined_pilo_dir_enum prefix, dev_open_flags f) = 0;
                 virtual ::pilo::err_t open(const ::pilo::core::io::path* p, creation_mode cm, access_permission perm, dev_open_flags f) = 0;
                 virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, dev_open_flags f) = 0;
-                virtual ::pilo::err_t read(char * buffer, ::pilo::i64_t capacity, ::pilo::i64_t rbs, ::pilo::i64_t * n_read) = 0;
+                virtual ::pilo::err_t read(char * buffer, ::pilo::i64_t rbs, ::pilo::i64_t * n_read) = 0;
                 virtual ::pilo::err_t read(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t rbs, ::pilo::i64_t* n_read) = 0;
                 virtual ::pilo::err_t write(const char* buffer, ::pilo::i64_t wbs, ::pilo::i64_t * n_written) = 0;
                 virtual ::pilo::err_t write(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t wbs, ::pilo::i64_t* n_written) = 0;
