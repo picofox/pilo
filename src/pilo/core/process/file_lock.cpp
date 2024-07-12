@@ -62,7 +62,7 @@ pilo::core::process::file_lock::~file_lock()
 
 ::pilo::err_t pilo::core::process::file_lock::finalize()
 {
-    if (_m_lock) {
+    if (_m_lock && _m_fd != PMI_INVALID_FILE_HANDLE) {
         this->unlock();
     }
 

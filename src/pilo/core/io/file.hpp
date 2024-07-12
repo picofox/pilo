@@ -30,16 +30,6 @@ namespace pilo
 
                 virtual ~file()
                 {
-                    if (this->_m_fd != PMI_INVALID_FILE_HANDLE) {
-#ifdef WINDOWS
-                        CloseHandle(this->_m_fd);
-#else
-                        ::close(this->_m_fd);
-#endif
-                        this->_m_fd = PMI_INVALID_FILE_HANDLE;
-
-                    }
-
                     this->finalize();
                 }
 
@@ -218,7 +208,17 @@ namespace pilo
 
                 virtual ::pilo::err_t finalize()
                 {
+                    if (this->_m_fd != PMI_INVALID_FILE_HANDLE) {
+#ifdef WINDOWS
+                        CloseHandle(this->_m_fd);
+#else
+                        ::close(this->_m_fd);
+#endif
+                        this->_m_fd = PMI_INVALID_FILE_HANDLE;
+
+                    }                    
                     this->set_state(state_code::uninitialized);
+                    this->_m_proc_lock.finalize();
                     return PILO_OK;
                 }                
 
@@ -243,6 +243,38 @@ namespace pilo
                     }
                     return ::pilo::mk_perr(PERR_FSNODE_EXIST);
                 }
+
+
+                ::pilo::err_t process_lock_shared(::pilo::i64_t offset, ::pilo::i64_t length)
+                {
+                    return this->_m_proc_lock.lock_shared(offset, length);
+                }
+
+                ::pilo::err_t process_lock(::pilo::i64_t offset, ::pilo::i64_t length)
+                {
+                    return this->_m_proc_lock.lock(offset, length);
+                }
+
+                ::pilo::err_t process_try_lock(::pilo::i64_t offset, ::pilo::i64_t length)
+                {
+                    return this->_m_proc_lock.try_lock(offset, length);
+                }
+
+                ::pilo::err_t process_try_lock_shared(::pilo::i64_t offset, ::pilo::i64_t length)
+                {
+                    return this->_m_proc_lock.try_lock_shared(offset, length);
+                }
+
+                ::pilo::err_t process_unlock(::pilo::i64_t offset, ::pilo::i64_t length)
+                {
+                    return this->_m_proc_lock.unlock(offset, length);
+                }
+
+                ::pilo::err_t process_unlock()
+                {
+                    return this->_m_proc_lock.unlock();
+                }
+
 
             protected:
                 ::pilo::err_t _open(creation_mode cm, access_permission perm, dev_open_flags f)
