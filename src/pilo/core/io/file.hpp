@@ -6,6 +6,7 @@
 #include "../process/dummy_file_lock.hpp"
 #include "../process/file_lock.hpp"
 #include "../process/shared_file_lock_guard.hpp"
+#include "../process/file_lock_guard.hpp"
 #include "../process/file_lock.hpp"
 #include "../threading/shared_mutex_guard.hpp"
 #include "../threading/exclusive_mutex_guard.hpp"
@@ -42,7 +43,9 @@ namespace pilo
                 {
                     _m_fd = PMI_INVALID_FILE_HANDLE;
                     this->set_state(state_code::uninitialized);
+#ifdef WINDOWS
                     memset(&_m_overlapped, 0x00, sizeof(_m_overlapped));
+#endif
                 }
 
                 virtual ~file()
@@ -128,7 +131,7 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
 
-                    ::pilo::core::process::shared_mutex_guard<process_lock_type> p_guard(this->_m_proc_lock);
+                    ::pilo::core::process::shared_file_lock_guard<process_lock_type> p_guard(this->_m_proc_lock);
                     ::pilo::core::threading::shared_mutex_guard<thread_lock_type> t_guard(this->_m_thread_lock);
                     return _read(buffer, rbs, n_read);
                 }
@@ -139,7 +142,7 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
 
-                    ::pilo::core::process::shared_mutex_guard<process_lock_type> p_guard(this->_m_proc_lock);
+                    ::pilo::core::process::shared_file_lock_guard<process_lock_type> p_guard(this->_m_proc_lock);
                     ::pilo::core::threading::shared_mutex_guard<thread_lock_type> t_guard(this->_m_thread_lock);
                     return _read(buf, rbs, n_read);
                 }
@@ -151,6 +154,8 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
 
+                    ::pilo::core::process::file_lock_guard<process_lock_type> p_guard(this->_m_proc_lock);
+                    ::pilo::core::threading::exclusive_mutex_guard<thread_lock_type> t_guard(this->_m_thread_lock);
                     return _write(buffer, wbs, n_written);
                 }
 
@@ -159,7 +164,8 @@ namespace pilo
                     ::pilo::err_t err = _pre_write();
                     if (err != PILO_OK)
                         return err;
-
+                    ::pilo::core::process::file_lock_guard<process_lock_type> p_guard(this->_m_proc_lock);
+                    ::pilo::core::threading::exclusive_mutex_guard<thread_lock_type> t_guard(this->_m_thread_lock);
                     return _write(buf, wbs, n_written);
                 }
 
@@ -349,9 +355,9 @@ namespace pilo
                         return ::pilo::mk_perr(PERR_EOF);
                     }
 #else
-                    ssize_t r_read = read(_m_fd, buffer, rbs);
+                    ssize_t r_read = ::read(_m_fd, buffer, rbs);
                     if (r_read < 0) {
-                        ::pilo::set_if_ptr_is_not_null(n_read, 0);
+                        ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t) 0);
                     } else {
                         ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)r_read);
                     }
@@ -441,7 +447,7 @@ namespace pilo
                 ::pilo::err_t _write(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t wbs, ::pilo::i64_t* n_written)
                 {
                     ::pilo::i64_t written_bs = 0;
-                    return buf.iterate(file::s_buffer_write_func, this, wbs, &written_bs, false);
+                    return buf->iterate(file::s_buffer_write_func, this, wbs, &written_bs, false);
                 }
 
                 ::pilo::err_t _open(creation_mode cm, access_permission perm, dev_open_flags f)

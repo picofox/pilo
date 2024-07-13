@@ -24,10 +24,10 @@ namespace pilo
 
                 ::pilo::err_t initialize(::pilo::os_file_handle_t fd);
                 ::pilo::err_t finalize();
-                ::pilo::err_t lock_shared(::pilo::i64_t offset, ::pilo::i64_t length);
-                ::pilo::err_t lock(::pilo::i64_t offset, ::pilo::i64_t length);
-                ::pilo::err_t try_lock(::pilo::i64_t offset, ::pilo::i64_t length);
-                ::pilo::err_t try_lock_shared(::pilo::i64_t offset, ::pilo::i64_t length);
+                ::pilo::err_t lock_shared(::pilo::i64_t offset = 0, ::pilo::i64_t length = -1);
+                ::pilo::err_t lock(::pilo::i64_t offset = 0, ::pilo::i64_t length = -1);
+                ::pilo::err_t try_lock(::pilo::i64_t offset = 0, ::pilo::i64_t length = -1);
+                ::pilo::err_t try_lock_shared(::pilo::i64_t offset = 0, ::pilo::i64_t length = -1);
                 ::pilo::err_t unlock(::pilo::i64_t offset, ::pilo::i64_t length);
                 ::pilo::err_t unlock();
 

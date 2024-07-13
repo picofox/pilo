@@ -24,34 +24,34 @@ namespace pilo
 
                 inline ::pilo::err_t finalize() { return PILO_OK;  }
 
-                inline ::pilo::err_t lock_shared(::pilo::i64_t offset, ::pilo::i64_t length) 
+                inline ::pilo::err_t lock_shared(::pilo::i64_t offset = 0, ::pilo::i64_t length = -1)
                 { 
                     PMC_UNUSED(offset);
                     PMC_UNUSED(length);
                     return PILO_OK; 
                 }
 
-                inline ::pilo::err_t lock(::pilo::i64_t offset, ::pilo::i64_t length) 
+                inline ::pilo::err_t lock(::pilo::i64_t offset = 0, ::pilo::i64_t length = -1)
                 { 
                     PMC_UNUSED(offset);
                     PMC_UNUSED(length);
                     return PILO_OK; 
                 }
 
-                inline ::pilo::err_t try_lock(::pilo::i64_t offset, ::pilo::i64_t length)
+                inline ::pilo::err_t try_lock(::pilo::i64_t offset = 0, ::pilo::i64_t length = -1)
                 { 
                     PMC_UNUSED(offset);
                     PMC_UNUSED(length);
                     return true; 
                 }
-                inline ::pilo::err_t try_lock_shared(::pilo::i64_t offset, ::pilo::i64_t length)
+                inline ::pilo::err_t try_lock_shared(::pilo::i64_t offset = 0, ::pilo::i64_t length = -1)
                 { 
                     PMC_UNUSED(offset);
                     PMC_UNUSED(length);
                     return true;
                 }
 
-                inline ::pilo::err_t unlock(::pilo::i64_t offset, ::pilo::i64_t length) 
+                inline ::pilo::err_t unlock(::pilo::i64_t offset, ::pilo::i64_t length)
                 { 
                     PMC_UNUSED(offset);
                     PMC_UNUSED(length);

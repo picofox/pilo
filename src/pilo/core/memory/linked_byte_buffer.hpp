@@ -1082,7 +1082,7 @@ namespace pilo
                 }
 
             public:
-                virtual ::pilo::err_t iterate(iterate_func_type iter, void* ctx, ::pilo::i64_t max_bytes, ::pilo::i64_t* out_bytes, bool ign_err)
+                virtual ::pilo::err_t iterate(::pilo::core::memory::byte_buffer_interface::iterate_func_type iter, void* ctx, ::pilo::i64_t max_bytes, ::pilo::i64_t* out_bytes, bool ign_err)
                 {
                     ::pilo::i64_t total_bytes = 0;
                     ::pilo::i64_t rpos = 0;

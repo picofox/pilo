@@ -25,6 +25,8 @@ namespace pilo
                     
                 }
 
+
+
                 bool validate(std::string& info, ::pilo::i64_t cap, ::pilo::i64_t beg, ::pilo::i64_t len, ::pilo::i64_t list_size)
                 {
                     std::stringstream ss;
@@ -622,6 +624,17 @@ namespace pilo
                     return this->set_cstring(buffer_off, str.c_str(), 0, str.size());
                 }
 
+                virtual ::pilo::err_t iterate(::pilo::core::memory::byte_buffer_interface::iterate_func_type iter, void* ctx, ::pilo::i64_t max_bytes, ::pilo::i64_t* out_bytes, bool ign_err)
+                {
+                    ::pilo::i64_t l = max_bytes < _m_length ? max_bytes : _m_length;
+                    ::pilo::err_t err = iter(this, _m_data +  _m_begin_pos, l, ctx);
+                    if (err != PILO_OK) {
+                        ::pilo::set_if_ptr_is_not_null(out_bytes, (::pilo::i64_t) 0);
+                        return err;
+                    }
+                    ::pilo::set_if_ptr_is_not_null(out_bytes, l);
+                    return PILO_OK;
+                }
 
             protected:
                 ::pilo::i64_t _m_capacity;

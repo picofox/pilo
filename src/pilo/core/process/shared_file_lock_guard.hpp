@@ -8,7 +8,7 @@ namespace pilo
         namespace process
         {
             template<class _Mutex>
-            class shared_mutex_guard
+            class shared_file_lock_guard
             {	// class with destructor that unlocks mutex
             public:
                 typedef _Mutex mutex_type;
@@ -21,7 +21,7 @@ namespace pilo
 
                 ~shared_file_lock_guard() noexcept
                 {	// unlock
-                    _MyMutex.unlock_shared();
+                    _MyMutex.unlock();
                 }
 
             private:
