@@ -15,7 +15,12 @@ namespace pilo
             class byte_buffer_interface
             {
             public:
+                typedef ::pilo::err_t(*iterate_func_type)(byte_buffer_interface* buf, char* buffer, ::pilo::i64_t b_len, void* ctx);
+
+            public:
                 virtual ~byte_buffer_interface() {}
+
+                virtual ::pilo::err_t iterate(iterate_func_type iter, void* ctx, ::pilo::i64_t max_bytes, ::pilo::i64_t * out_bytes, bool ign_err) = 0;
 
                 virtual ::pilo::i64_t read_available() const = 0;
                 virtual ::pilo::i64_t write_available() const = 0;

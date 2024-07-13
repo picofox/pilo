@@ -1081,6 +1081,41 @@ namespace pilo
                     return true;
                 }
 
+            public:
+                virtual ::pilo::err_t iterate(iterate_func_type iter, void* ctx, ::pilo::i64_t max_bytes, ::pilo::i64_t* out_bytes, bool ign_err)
+                {
+                    ::pilo::i64_t total_bytes = 0;
+                    ::pilo::i64_t rpos = 0;
+                    ::pilo::i64_t remain_len = _m_length < max_bytes ? _m_length : max_bytes;
+                    buffer_node* p = _find_node(_m_begin_pos, rpos);
+                    ::pilo::set_if_ptr_is_not_null(out_bytes, (::pilo::i64_t) 0);
+                    if (p == nullptr)
+                        return PILO_OK;
+
+                    ::pilo::err_t err = PILO_OK;
+                    ::pilo::i64_t cur_node_remain = 0;
+
+                    for (; p != _m_node_list.end(); p = _m_node_list.next(p)) {
+                        cur_node_remain = piece_size() - rpos;
+                        if (cur_node_remain > remain_len)
+                            cur_node_remain = remain_len;
+
+                        err = iter(this, p->data + rpos , cur_node_remain, ctx);
+                        if (err != PILO_OK)
+                        {
+                            if (!ign_err) {
+                                return err;
+                            }
+                        }
+
+                        total_bytes += cur_node_remain;
+                        remain_len -= cur_node_remain;
+                        rpos = 0; 
+                    }
+
+                    ::pilo::set_if_ptr_is_not_null(out_bytes, total_bytes);
+                    return PILO_OK;
+                }
                 
 
             protected:
