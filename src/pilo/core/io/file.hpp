@@ -131,8 +131,6 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
 
-                    ::pilo::core::process::shared_file_lock_guard<process_lock_type> p_guard(this->_m_proc_lock);
-                    ::pilo::core::threading::shared_mutex_guard<thread_lock_type> t_guard(this->_m_thread_lock);
                     return _read(buffer, rbs, n_read);
                 }
 
@@ -142,8 +140,7 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
 
-                    ::pilo::core::process::shared_file_lock_guard<process_lock_type> p_guard(this->_m_proc_lock);
-                    ::pilo::core::threading::shared_mutex_guard<thread_lock_type> t_guard(this->_m_thread_lock);
+
                     return _read(buf, rbs, n_read);
                 }
 
@@ -154,27 +151,16 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
 
-                    ::pilo::core::process::file_lock_guard<process_lock_type> p_guard(this->_m_proc_lock);
-                    ::pilo::core::threading::exclusive_mutex_guard<thread_lock_type> t_guard(this->_m_thread_lock);
                     return _write(buffer, wbs, n_written);
                 }
 
-                virtual ::pilo::err_t write_nolock(const char* buffer, ::pilo::i64_t wbs, ::pilo::i64_t* n_written)
-                {
-                    ::pilo::err_t err = _pre_write();
-                    if (err != PILO_OK)
-                        return err;
-
-                    return _write(buffer, wbs, n_written);
-                }
 
                 virtual ::pilo::err_t write(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t wbs, ::pilo::i64_t* n_written)
                 {
                     ::pilo::err_t err = _pre_write();
                     if (err != PILO_OK)
                         return err;
-                    ::pilo::core::process::file_lock_guard<process_lock_type> p_guard(this->_m_proc_lock);
-                    ::pilo::core::threading::exclusive_mutex_guard<thread_lock_type> t_guard(this->_m_thread_lock);
+
                     return _write(buf, wbs, n_written);
                 }
 

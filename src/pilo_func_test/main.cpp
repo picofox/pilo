@@ -68,13 +68,13 @@ int main(int argc, char * argv[])
 
 		::pilo::core::io::string_formated_output(fbuf, 128, "%08d: %u nihao, 1 ..... [%lld] \t\t\t\t",line, GetCurrentProcessId(), pos);
 
-		err = f.write_nolock(fbuf, ::pilo::core::string::character_count(fbuf), nullptr);
+		err = f.write(fbuf, ::pilo::core::string::character_count(fbuf), nullptr);
 		if (err != PILO_OK)
 			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
 		std::this_thread::sleep_for(std::chrono::milliseconds(300));
 
 		::pilo::core::io::string_formated_output(fbuf, 128, "%u ok\r\n", GetCurrentProcessId());
-		err = f.write_nolock(fbuf, ::pilo::core::string::character_count(fbuf), nullptr);
+		err = f.write(fbuf, ::pilo::core::string::character_count(fbuf), nullptr);
 		if (err != PILO_OK)
 			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
 		f.sync(0);
