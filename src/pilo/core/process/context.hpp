@@ -6,6 +6,7 @@
 #include "../pattern/singleton.hpp"
 #include "../stat/pool_object_stat_info.hpp"
 #include "../io/path.hpp"
+#include "./process.hpp"
 
 namespace pilo
 {
@@ -121,8 +122,8 @@ namespace pilo
 
             private:
                 ::pilo::core::io::path _proc_paths[(int)::pilo::predefined_pilo_dir_enum::count];
-
-
+                ::pilo::os_pid_t    _pid;
+                ::pilo::os_pid_t    _ppid;
 
                 page_allocator::page_allocator_type*   _page_pool;
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;

@@ -28,6 +28,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock.cpp">
       <Filter>pilo\core\process</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\process.cpp">
+      <Filter>pilo\core\process</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_bool_conversion.cpp">
       <Filter>pilo\core\rtti</Filter>
     </ClCompile>
@@ -283,6 +286,9 @@
       <Filter>pilo\core\process</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock_guard.hpp">
+      <Filter>pilo\core\process</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\process.hpp">
       <Filter>pilo\core\process</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\shared_file_lock_guard.hpp">

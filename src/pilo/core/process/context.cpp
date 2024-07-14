@@ -18,7 +18,8 @@ namespace pilo
             }
             context::context()
             {
-
+                _pid = ::pilo::core::process::current_process_id();
+                _ppid = ::pilo::core::process::parent_process_id(_pid);
                // atexit(s_on_exit);
                 _page_pool = new ::pilo::core::memory::dynamic_memory_pool<::pilo::core::threading::spin_mutex>(PMSO_SYSTEM_INFORMATION->page_size(), 1024);
             }
@@ -30,7 +31,7 @@ namespace pilo
 
             std::string context::startup_info() const
             {
-                char buffer[48] = {0};
+                char buffer[64] = {0};
                 std::stringstream ss;
                 ::pilo::core::string::fixed_width_line_formater formater;
 
@@ -46,6 +47,11 @@ namespace pilo
 
                 formater.format_field(ss, (::pilo::i64_t) 0, (const char*) "Executable");
                 formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_dir_enum::exe).fullpath());
+                ss << std::endl;
+
+                ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "%d (%d)", _pid, _ppid);
+                formater.format_field(ss, (::pilo::i64_t)0, (const char*)"IDS");
+                formater.format_field(ss, 1, (const char*) buffer);
                 ss << std::endl;
 
                 formater.format_field(ss, (::pilo::i64_t)0, (const char*)"CWD");
