@@ -159,6 +159,15 @@ namespace pilo
                     return _write(buffer, wbs, n_written);
                 }
 
+                virtual ::pilo::err_t write_nolock(const char* buffer, ::pilo::i64_t wbs, ::pilo::i64_t* n_written)
+                {
+                    ::pilo::err_t err = _pre_write();
+                    if (err != PILO_OK)
+                        return err;
+
+                    return _write(buffer, wbs, n_written);
+                }
+
                 virtual ::pilo::err_t write(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t wbs, ::pilo::i64_t* n_written)
                 {
                     ::pilo::err_t err = _pre_write();
@@ -208,6 +217,30 @@ namespace pilo
                     return PILO_OK;
                 }
 
+                virtual ::pilo::err_t tell(::pilo::i64_t & off) const
+                {
+#ifdef WINDOWS
+                    LARGE_INTEGER ret = { 0 };
+                    LARGE_INTEGER pos = { 0 };
+                    pos.QuadPart = 0;
+                    BOOL bret = SetFilePointerEx(_m_fd, pos, &ret, FILE_CURRENT);
+                    if (!bret) {
+                        off = -1;
+                        return ::pilo::mk_err(PERR_IO_SEEK_FAIL);
+                    }                        
+                    off = ret.QuadPart;
+#else
+                    off_t offset = lseek(_m_fd, 0, SEEK_CUR);
+                    if (offset == (off_t)-1) {
+                        off = -1;
+                        return ::pilo::mk_err(PERR_IO_SEEK_FAIL);
+                    }
+                    off = (::pilo::i64_t)offset;
+#endif
+
+                    return PILO_OK;
+                }
+
                 virtual ::pilo::err_t control(::pilo::i32_t cmd, ::pilo::tlv* param)
                 {
                     PMC_UNUSED(cmd);
@@ -218,6 +251,11 @@ namespace pilo
                 virtual ::pilo::err_t sync(::pilo::i32_t mode)
                 {
                     PMC_UNUSED(mode);
+#ifdef WINDOWS
+                    ::FlushFileBuffers(_m_fd);
+#else
+#endif // WINDOWS
+
                     return ::pilo::err_t();
                 }
 
@@ -344,7 +382,7 @@ namespace pilo
                     LPOVERLAPPED lpOverlapped = NULL;
                     if (this->nonblocking())
                         lpOverlapped = &this->_m_overlapped;
-                    BOOL bret = ReadFile(_m_fd, (LPVOID)buffer, rbs, r_dwnread, lpOverlapped);
+                    BOOL bret = ReadFile(_m_fd, (LPVOID)buffer, (DWORD)rbs, &r_dwnread, lpOverlapped);
                     ::pilo::set_if_ptr_is_not_null(n_read, (::pilo::i64_t)r_dwnread);
                     if (!bret) {                        
                         set_error();
@@ -379,7 +417,6 @@ namespace pilo
                 {
                     char tmp_buff[PMI_STCPARAM_4K_BUFFER_NODE_SIZE] = { 0 };
                     ::pilo::i64_t tmp_space = PMI_STCPARAM_4K_BUFFER_NODE_SIZE;
-                    ::pilo::i64_t rbs_remain = rbs;
                     ::pilo::err_t err = PILO_OK;
                     ::pilo::i64_t rb = 0;
                     ::pilo::i64_t rb_total = 0;
@@ -414,9 +451,9 @@ namespace pilo
                 {
 #ifdef WINDOWS
                     DWORD dw_written = 0;
-                    LPOVERLAPPED* pol = NULL;
+                    LPOVERLAPPED pol = NULL;
                     if (this->nonblocking()) {
-                        pol = &this->_m_overlapped;
+                        pol = &_m_overlapped;
                     }
                     BOOL bret = WriteFile(this->_m_fd, buffer, (DWORD)wbs, &dw_written, pol);
                     ::pilo::set_if_ptr_is_not_null(n_written, (::pilo::i64_t)dw_written);
@@ -447,7 +484,9 @@ namespace pilo
                 ::pilo::err_t _write(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t wbs, ::pilo::i64_t* n_written)
                 {
                     ::pilo::i64_t written_bs = 0;
-                    return buf->iterate(file::s_buffer_write_func, this, wbs, &written_bs, false);
+                    ::pilo::err_t err = buf->iterate(file::s_buffer_write_func, this, wbs, &written_bs, false);
+                    ::pilo::set_if_ptr_is_not_null(n_written, written_bs);
+                    return err;
                 }
 
                 ::pilo::err_t _open(creation_mode cm, access_permission perm, dev_open_flags f)
@@ -456,6 +495,7 @@ namespace pilo
                     DWORD dwShareMode = FILE_SHARE_READ;
                     DWORD dwDesiredAccess = 0;
                     if (((::pilo::u8_t)perm & (::pilo::u8_t)access_permission::read) != 0) {
+                        dwShareMode |= FILE_SHARE_READ;
                         dwDesiredAccess |= GENERIC_READ;
                     }
                     if (((::pilo::u8_t)perm & (::pilo::u8_t)access_permission::write) != 0) {
@@ -499,6 +539,11 @@ namespace pilo
                         NULL
                     );
 
+                    if ((((::pilo::u8_t)f & ((::pilo::u8_t) ::pilo::core::io::dev_open_flags::append)) != 0)) {
+                        if (this->_seek(seek_whence::end, 0) != PILO_OK)
+                            return ::pilo::mk_err(PERR_IO_SEEK_FAIL);
+                    }
+
 #else
                     int oflag = 0;
                     if (perm == access_permission::all
@@ -535,6 +580,8 @@ namespace pilo
                         oflag |= O_TMPFILE;
                     if ((((::pilo::u8_t)f & ((::pilo::u8_t) ::pilo::core::io::dev_open_flags::write_through)) != 0))
                         oflag |= O_SYNC;
+                    if ((((::pilo::u8_t)f & ((::pilo::u8_t) ::pilo::core::io::dev_open_flags::append)) != 0))
+                        oflag |= O_APPEND;
 
                     if (cm == creation_mode::create_always) {
                         oflag |= (O_CREAT | O_WRONLY | O_TRUNC);
@@ -560,6 +607,8 @@ namespace pilo
                         this->set_error();
                         return ::pilo::mk_err(PERR_IO_OPEN_FAIL);
                     }
+
+
 
                     this->_m_flags = f;
                     this->_m_creation_mode = cm;
@@ -588,12 +637,53 @@ namespace pilo
                     return PILO_OK;
                 }
 
-                ::pilo::err_t _pre_write() const
+                ::pilo::err_t _pre_write()
                 {
                     if (error())
                         return ::pilo::mk_perr(PERR_HAS_PREV_ERR);
                     if (state() != state_code::opened)
                         return ::pilo::mk_perr(PERR_INV_IO_STATE);
+
+#ifdef WINDOWS
+                    if (this->append()) {
+                        if (this->seek(seek_whence::end, 0) != PILO_OK)
+                            return ::pilo::mk_err(PERR_IO_SEEK_FAIL);
+                    }                    
+                    
+#endif
+
+                    return PILO_OK;
+                }
+
+                ::pilo::err_t _seek(seek_whence whence, ::pilo::i64_t off)
+                {
+#ifdef WINDOWS
+                    LARGE_INTEGER neo_off = { 0 };
+                    LARGE_INTEGER old_off = { 0 };
+                    neo_off.QuadPart = off;
+                    old_off.QuadPart = 0;
+                    DWORD w = FILE_BEGIN;
+                    if (whence == seek_whence::end)
+                        w = FILE_END;
+                    else if (whence == seek_whence::current)
+                        w = FILE_CURRENT;
+                    BOOL ret = SetFilePointerEx(this->_m_fd, neo_off, &old_off, w);
+                    if (!ret)
+                        return ::pilo::mk_err(PERR_IO_SEEK_FAIL);
+
+#else
+                    int w = SEEK_SET;
+                    if (whence == seek_whence::end)
+                        w = SEEK_END;
+                    else if (whence == seek_whence::current)
+                        w = SEEK_CUR;
+
+                    off_t ret = lseek(this->_m_fd, (off_t)off, w);
+                    if (ret == (off_t)-1)
+                        return ::pilo::mk_err(PERR_IO_SEEK_FAIL);
+
+#endif // WINDOWS
+
                     return PILO_OK;
                 }
 

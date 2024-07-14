@@ -102,7 +102,7 @@ pilo::core::process::file_lock::~file_lock()
 
 ::pilo::err_t pilo::core::process::file_lock::unlock(::pilo::i64_t offset, ::pilo::i64_t length)
 {
-    if (_m_fd != PMI_INVALID_FILE_HANDLE) {
+    if (_m_fd == PMI_INVALID_FILE_HANDLE) {
         return ::pilo::mk_perr(PERR_NOT_INIT);
     }
 #ifdef WINDOWS
@@ -139,7 +139,7 @@ pilo::core::process::file_lock::~file_lock()
 
 ::pilo::err_t pilo::core::process::file_lock::unlock()
 {
-    if (_m_fd != PMI_INVALID_FILE_HANDLE) {
+    if (_m_fd == PMI_INVALID_FILE_HANDLE) {
         return ::pilo::mk_perr(PERR_NOT_INIT);
     }
 #ifdef WINDOWS
@@ -165,7 +165,7 @@ pilo::core::process::file_lock::~file_lock()
 #ifdef WINDOWS
 ::pilo::err_t pilo::core::process::file_lock::_lock(::pilo::i64_t offset, ::pilo::i64_t length, DWORD flags)
 {
-    if (_m_fd != PMI_INVALID_FILE_HANDLE) {
+    if (_m_fd == PMI_INVALID_FILE_HANDLE) {
         return ::pilo::mk_perr(PERR_NOT_INIT);
     }
 
@@ -194,7 +194,7 @@ pilo::core::process::file_lock::~file_lock()
 #else
 ::pilo::err_t pilo::core::process::file_lock::_lock(::pilo::i64_t offset, ::pilo::i64_t length, int cmd, int type)
 {
-    if (_m_fd != PMI_INVALID_FILE_HANDLE) {
+    if (_m_fd == PMI_INVALID_FILE_HANDLE) {
         return ::pilo::mk_perr(PERR_NOT_INIT);
     }
 

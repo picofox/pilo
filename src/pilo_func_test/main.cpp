@@ -16,6 +16,11 @@
 #include "pilo/core/testing/inner_sample_data.hpp"
 #include "pilo/error.hpp"
 #include "pilo/tlv.hpp"
+#include "pilo/core/io/file.hpp"
+#include "pilo/core/process/file_lock.hpp"
+#include "pilo/core/process/dummy_file_lock.hpp"
+#include "pilo/core/threading/dummy_mutex.hpp"
+#include "pilo/core/threading/read_write_mutex.hpp"
 
 #include "pilo/core/pattern/resource_cleaner.hpp"
 
@@ -37,6 +42,47 @@ int main(int argc, char * argv[])
 	PMC_UNUSED(argv);
 
 	PILO_CONTEXT->initialize();
+
+	::pilo::core::io::file<::pilo::core::process::file_lock, ::pilo::core::threading::dummy_read_write_lock> f;
+	::pilo::core::io::path pth("test_fs\\oc\\a.log", ::pilo::predefined_pilo_dir_enum::tmp);
+
+	::pilo::err_t err = f.open(&pth, ::pilo::core::io::creation_mode::open_always, ::pilo::core::io::access_permission::read_write, ::pilo::core::io::dev_open_flags::append);
+	if (err != PILO_OK) {
+		printf("open fialed");
+		exit(-1);
+	}
+
+	char fbuf[128] = { 0 };
+
+	int line = 0;
+	while (true)
+	{
+		line++;
+
+		err = f.process_lock(0, -1);
+		if (err != PILO_OK)
+			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
+
+		::pilo::i64_t pos = 0;
+		f.tell(pos);
+
+		::pilo::core::io::string_formated_output(fbuf, 128, "%08d: %u nihao, 1 ..... [%lld] \t\t\t\t",line, GetCurrentProcessId(), pos);
+
+		err = f.write_nolock(fbuf, ::pilo::core::string::character_count(fbuf), nullptr);
+		if (err != PILO_OK)
+			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
+		std::this_thread::sleep_for(std::chrono::milliseconds(300));
+
+		::pilo::core::io::string_formated_output(fbuf, 128, "%u ok\r\n", GetCurrentProcessId());
+		err = f.write_nolock(fbuf, ::pilo::core::string::character_count(fbuf), nullptr);
+		if (err != PILO_OK)
+			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
+		f.sync(0);
+		err = f.process_unlock();
+		if (err != PILO_OK)
+			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
+	}
+
 
 	func_test_suite suite_default;
 

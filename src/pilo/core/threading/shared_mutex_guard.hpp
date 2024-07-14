@@ -21,7 +21,7 @@ namespace pilo
 
                 ~shared_mutex_guard() noexcept
                 {	// unlock
-                    _MyMutex.unlock_shared();
+                    _MyMutex.unlock();
                 }
 
             private:

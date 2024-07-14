@@ -54,8 +54,7 @@ namespace pilo
                 nonblocking = 0x01,
                 temp = 0x02,
                 write_through = 0x04,
-
-
+                append = 0x08,
             };
 
 
@@ -112,6 +111,7 @@ namespace pilo
                 virtual ::pilo::err_t write(const char* buffer, ::pilo::i64_t wbs, ::pilo::i64_t * n_written) = 0;
                 virtual ::pilo::err_t write(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t wbs, ::pilo::i64_t* n_written) = 0;
                 virtual ::pilo::err_t seek(seek_whence whence, ::pilo::i64_t off) = 0;
+                virtual ::pilo::err_t tell(::pilo::i64_t &off) const = 0;
                 virtual ::pilo::err_t control(::pilo::i32_t cmd, ::pilo::tlv* param) = 0;
                 virtual ::pilo::err_t sync(::pilo::i32_t mode) = 0;
                 virtual ::pilo::err_t close() = 0;
@@ -133,7 +133,12 @@ namespace pilo
                 virtual bool test_flag(dev_open_flags f) const
                 {
                     return ((::pilo::u8_t)_m_flags & (::pilo::u8_t) f);
-                }                
+                }            
+
+                virtual bool append() const
+                {
+                    return test_flag(dev_open_flags::append);
+                }
 
                 virtual bool nonblocking() const
                 {

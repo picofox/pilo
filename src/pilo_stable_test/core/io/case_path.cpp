@@ -120,15 +120,9 @@ namespace pilo
 
 					err = p0.set("\\\\d");
 					if (err != PILO_OK)
-<<<<<<< HEAD
 						return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "p0 val failed \\\\d");
 					if ((vret = ::pilo::core::testing::validate_path(&p0, "\\\\d", 3, "d", nullptr, "\\", "d",  ::pilo::core::io::path::other_absolute)) != 0)
 						return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "p0 val failed \\\\d %d", vret);
-=======
-						return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "p0 val failed \\\\d");
-					if ((vret = ::pilo::core::testing::validate_path(&p0, "\\\\d", 3, "d", nullptr, "\\", "d", ::pilo::core::io::path::other_absolute)) != 0)
-						return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "p0 val failed \\\\d %d", vret);
->>>>>>> 8561c89f7bf37d8a4d8fcc151cc5c8ce904f6ce5
 
 					err = p0.set("f:\\");
 					if (err != PILO_OK)

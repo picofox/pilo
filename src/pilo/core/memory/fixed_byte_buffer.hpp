@@ -624,7 +624,7 @@ namespace pilo
                     return this->set_cstring(buffer_off, str.c_str(), 0, str.size());
                 }
 
-                virtual ::pilo::err_t iterate(::pilo::core::memory::byte_buffer_interface::iterate_func_type iter, void* ctx, ::pilo::i64_t max_bytes, ::pilo::i64_t* out_bytes, bool ign_err)
+                virtual ::pilo::err_t iterate(::pilo::core::memory::byte_buffer_interface::iterate_func_type iter, void* ctx, ::pilo::i64_t max_bytes, ::pilo::i64_t* out_bytes, bool )
                 {
                     ::pilo::i64_t l = max_bytes < _m_length ? max_bytes : _m_length;
                     ::pilo::err_t err = iter(this, _m_data +  _m_begin_pos, l, ctx);
