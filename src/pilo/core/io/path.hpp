@@ -279,7 +279,7 @@ namespace pilo
                         _m_type = other._m_type;
                     }
                     path& operator=(const path& other) {
-                        if (this != &other) { // 防止自赋值
+                        if (this != &other) {
                             if (_m_pathstr_ptr == nullptr && other._m_pathstr_ptr == nullptr)
                             {
                                 _m_length = other._m_length;
@@ -381,6 +381,11 @@ namespace pilo
                     ::pilo::err_t create_sub_dir(const char* file_path_str, ::pilo::pathlen_t path_len, bool is_force, path* result) const;
                     ::pilo::err_t remove(bool content_only, bool follow_link) const;
                     ::pilo::err_t create_link_by(const path* target, bool is_force) const;
+
+                    ::pilo::err_t ensure_parent_path_exist() const
+                    {
+                        return make_dir(this->parentpath(), this->parentpath_len(), false);
+                    }
 
                     ::pilo::err_t fill_with_cwd(::pilo::pathlen_t extra);
                     ::pilo::err_t fill_with_exe(::pilo::pathlen_t extra);
@@ -508,6 +513,35 @@ namespace pilo
                         return PILO_OK;
                     }
 
+                    inline const char* parentpath() const
+                    {
+                        if (_m_lastpart_start_pos == 0)
+                        {
+                            return nullptr;
+                        }
+                        if (_m_lastpart_start_pos == path::unknow_length)
+                        {
+                            return nullptr;
+                        }
+
+                        return this->_m_pathstr_ptr;
+                    }
+
+                    inline ::pilo::pathlen_t parentpath_len() const
+                    {
+                        if (_m_lastpart_start_pos == 0)
+                        {
+                            return path::unknow_length;
+                        }
+                        if (_m_lastpart_start_pos == path::unknow_length)
+                        {
+                            return path::unknow_length;
+                        }
+
+                        return _m_lastpart_start_pos - 1;
+
+                    }
+
                     inline const char* parentpath(::pilo::pathlen_t& rlen) const
                     {
                         if (_m_lastpart_start_pos == 0)
@@ -524,15 +558,15 @@ namespace pilo
                         }                        
                         return this->_m_pathstr_ptr;
                     }
-
-                    inline std::string parentpath() const
-                    {
-                        ::pilo::pathlen_t rlen = 0;
-                        const char* ptr = parentpath(rlen);
-                        if (ptr == nullptr)
-                            return "";
-                        return std::string(ptr, (size_t)rlen);
-                    }
+//
+//                    inline std::string parentpath() const
+//                    {
+//                        ::pilo::pathlen_t rlen = 0;
+//                        const char* ptr = parentpath(rlen);
+//                        if (ptr == nullptr)
+//                            return "";
+//                        return std::string(ptr, (size_t)rlen);
+//                    }
 
                     inline ::pilo::err_t get_parentpath(::pilo::char_buffer_t& ret) const
                     {

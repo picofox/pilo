@@ -106,6 +106,10 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
 
+                    if (p->ensure_parent_path_exist()) {
+                        return err;
+                    }
+
                     this->_m_path = *p;
                     if (this->_m_path.invalid()) {
                         return ::pilo::mk_perr(PERR_INVALID_PATH);
@@ -430,6 +434,8 @@ namespace pilo
                         return ::pilo::mk_perr(PERR_HAS_PREV_ERR);
                     if (state() == state_code::opened)
                         return ::pilo::mk_perr(PERR_INV_IO_STATE);
+
+
                     return PILO_OK;
                 }
 
