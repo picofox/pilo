@@ -92,10 +92,11 @@ namespace pilo
         }
 
 #else  
-        if (strerror_r(os_err, buffer, cc_buffer) != 0)
-        {
-            ::pilo::core::string::copyz(buffer, cc_buffer, "Get os error string failed!");
+        const char* ret = strerror_r(os_err, buffer, cc_buffer);
+        if (ret != buffer) {
+            ::pilo::core::string::copyz(buffer, cc_buffer, ret);
         }
+
 #endif
         return ::pilo::core::string::trim_inplace(buffer, -1, nullptr);
     }

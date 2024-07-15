@@ -535,13 +535,11 @@ namespace pilo
                     if (perm == access_permission::all
                         || perm == access_permission::read_write) {
                         oflag = O_RDWR;
-                    }
-                    else if (perm == access_permission::exec
+                    } else if (perm == access_permission::exec
                         || perm == access_permission::read_exec
                         || perm == access_permission::read) {
                         oflag = O_RDONLY;
-                    }
-                    else if (perm == access_permission::write_exec || perm == access_permission::write) {
+                    } else if (perm == access_permission::write_exec || perm == access_permission::write) {
                         oflag = O_WRONLY;
                     }
 

@@ -48,7 +48,7 @@ int main(int argc, char * argv[])
 
 	::pilo::err_t err = f.open(&pth, ::pilo::core::io::creation_mode::open_always, ::pilo::core::io::access_permission::read_write, ::pilo::core::io::dev_open_flags::append);
 	if (err != PILO_OK) {
-		printf("open fialed");
+		printf("%s\n", ::pilo::str_err(err, "open failed:", true).c_str());
 		exit(-1);
 	}
 
