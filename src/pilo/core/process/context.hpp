@@ -118,6 +118,9 @@ namespace pilo
                 inline ::pilo::pointer allocate_page_buffer() { return  _page_pool->allocate(); }
                 inline void deallocate_page_buffer(::pilo::pointer p) { _page_pool->deallocate(p); }
 
+                inline ::pilo::os_pid_t process_id() const { return _pid; }
+                inline ::pilo::os_pid_t parent_process_id() const { return _ppid; }
+
                 std::string startup_info() const;
 
             private:

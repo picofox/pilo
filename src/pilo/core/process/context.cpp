@@ -3,6 +3,7 @@
 #include "../../tlv.hpp"
 #include "../memory/linked_byte_buffer.hpp"
 #include "../string/fixed_width_line_formater.hpp"
+#include "process.hpp"
 
 namespace pilo
 {
@@ -19,7 +20,7 @@ namespace pilo
             context::context()
             {
                 _pid = ::pilo::core::process::current_process_id();
-                _ppid = ::pilo::core::process::parent_process_id(_pid);
+                _ppid = ::pilo::core::process::current_parent_process_id();
                // atexit(s_on_exit);
                 _page_pool = new ::pilo::core::memory::dynamic_memory_pool<::pilo::core::threading::spin_mutex>(PMSO_SYSTEM_INFORMATION->page_size(), 1024);
             }
