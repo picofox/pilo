@@ -1,23 +1,13 @@
 #include "file_lock.hpp"
 #include <cstring>
 
-pilo::core::process::file_lock::file_lock(::pilo::os_file_handle_t fd)
-{
-    _m_fd = fd;
-    _m_lock = false;
-#ifdef WINDOWS
-    _m_info_len_low = MAXDWORD;
-    _m_info_len_high = MAXDWORD;
-    memset(&_m_info_overlapped,0x00,sizeof(_m_info_overlapped));
-#else
-    ::memset(&_m_info, 0x00, sizeof(_m_info));
-#endif
-}
+
 
 pilo::core::process::file_lock::file_lock()
 {
     _m_fd = PMI_INVALID_FILE_HANDLE;
     _m_lock = false;
+    _m_owner = false;
 #ifdef WINDOWS
     _m_info_len_low = MAXDWORD;
     _m_info_len_high = MAXDWORD;
@@ -51,12 +41,28 @@ pilo::core::process::file_lock::~file_lock()
 
 }
 
-::pilo::err_t pilo::core::process::file_lock::initialize(::pilo::os_file_handle_t fd)
+::pilo::err_t pilo::core::process::file_lock::initialize(::pilo::os_file_handle_t fd, const char* path_str, ::pilo::core::io::creation_mode cm, ::pilo::core::io::access_permission perm)
 {
+
     if (this->_m_fd != PMI_INVALID_FILE_HANDLE) {
         return ::pilo::mk_perr(PERR_DUP_INIT);
     }
-    _m_fd = fd;
+
+    if (fd != PMI_INVALID_FILE_HANDLE && path_str != nullptr) {
+        return ::pilo::mk_perr(PERR_INVALID_PARAM);
+    }
+    else if (fd != PMI_INVALID_FILE_HANDLE && path_str != nullptr) {
+        return ::pilo::mk_perr(PERR_NULL_PARAM);
+    } else if (fd != PMI_INVALID_FILE_HANDLE) {
+        _m_fd = fd;
+    } else {
+        _m_fd = ::pilo::core::io::xpf_open_file(path_str, cm, perm, ::pilo::core::io::dev_open_flags::none);
+    }
+
+    if (this->_m_fd != PMI_INVALID_FILE_HANDLE) {
+        return ::pilo::mk_perr(PERR_IO_OPEN_FAIL);
+    }
+
     return PILO_OK;
 }
 
@@ -64,6 +70,10 @@ pilo::core::process::file_lock::~file_lock()
 {
     if (_m_lock && _m_fd != PMI_INVALID_FILE_HANDLE) {
         this->unlock();
+    }
+
+    if (_m_owner && _m_fd != PMI_INVALID_FILE_HANDLE) {
+        ::pilo::core::io::xpf_close_file(&(this->_m_fd));
     }
 
     _m_fd = PMI_INVALID_FILE_HANDLE;

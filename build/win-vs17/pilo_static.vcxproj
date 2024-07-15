@@ -359,6 +359,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\datetime.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\i18n\encoding_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\formatted_io.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\io.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\bits_operation.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\byte_buffer_interface.cpp" />
@@ -417,6 +418,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\device_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\file.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\formatted_io.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\io.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\abstract_byte_buffer.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\autoreset_object_pool.hpp" />

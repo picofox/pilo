@@ -1,7 +1,8 @@
-#ifndef _file_lock_h_
-#define _file_lock_h_
+#ifndef _pilo_core_process_file_lock_hpp_
+#define _pilo_core_process_file_lock_hpp_
 
 #include "../../pilo.hpp"
+#include "../io/file.hpp"
 
 #ifdef WINDOWS
 #   define PMI_LOCK_ENTIRE_FILE_LENGTH MAXDWORD
@@ -18,11 +19,10 @@ namespace pilo
             class file_lock
             {
             public:
-                file_lock(::pilo::os_file_handle_t fd);
                 file_lock();
                 ~file_lock();
 
-                ::pilo::err_t initialize(::pilo::os_file_handle_t fd);
+                ::pilo::err_t initialize(::pilo::os_file_handle_t fd, const char* path_str, ::pilo::core::io::creation_mode cm = ::pilo::core::io::creation_mode::open_existing , ::pilo::core::io::access_permission perm = ::pilo::core::io::access_permission::none);
                 ::pilo::err_t finalize();
                 ::pilo::err_t lock_shared(::pilo::i64_t offset = 0, ::pilo::i64_t length = -1);
                 ::pilo::err_t lock(::pilo::i64_t offset = 0, ::pilo::i64_t length = -1);
@@ -34,6 +34,7 @@ namespace pilo
             protected:
                 ::pilo::os_file_handle_t    _m_fd;
                 bool                        _m_lock;
+                bool                        _m_owner;
 
 #ifdef WINDOWS
                 DWORD _m_info_len_low;
