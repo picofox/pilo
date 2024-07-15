@@ -77,7 +77,7 @@ int main(int argc, char * argv[])
 		err = f.write(fbuf, ::pilo::core::string::character_count(fbuf), nullptr);
 		if (err != PILO_OK)
 			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
-		f.sync(0);
+		f.flush(::pilo::core::io::flush_level::all);
 		err = f.process_unlock();
 		if (err != PILO_OK)
 			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");

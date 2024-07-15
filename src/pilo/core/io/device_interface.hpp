@@ -3,6 +3,7 @@
 
 #include "../../pilo.hpp"
 #include "../../tlv.hpp"
+#include "io.hpp"
 #include "path.hpp"
 #include "../memory/byte_buffer_interface.hpp"
 
@@ -12,51 +13,6 @@ namespace pilo
     {
         namespace io
         {
-            enum class creation_mode : ::pilo::u8_t
-            {
-                create_always = 0,
-                open_existing = 1,
-                create_neo = 2,
-                open_always = 3,
-                open_trunc = 4
-            };
-
-            enum class access_permission : ::pilo::u8_t
-            {
-                none = 0,
-                exec = 1,
-                write = 2,
-                write_exec = 3,
-                read = 4,
-                read_exec = 5,
-                read_write = 6,
-                all = 7,                            
-            };
-
-            enum class state_code : ::pilo::u8_t
-            {
-                uninitialized = 0,
-                initialized = 1,
-                opened = 2,
-                closed = 3,
-            };
-
-            enum class seek_whence
-            {
-                current = -1,
-                begin = 0,
-                end = 1,                
-            };
-
-            enum class dev_open_flags : ::pilo::u8_t
-            {
-                none = 0x00,
-                nonblocking = 0x01,
-                temp = 0x02,
-                write_through = 0x04,
-                append = 0x08,
-            };
-
 
             class device_interface
             {
@@ -113,7 +69,7 @@ namespace pilo
                 virtual ::pilo::err_t seek(seek_whence whence, ::pilo::i64_t off) = 0;
                 virtual ::pilo::err_t tell(::pilo::i64_t &off) const = 0;
                 virtual ::pilo::err_t control(::pilo::i32_t cmd, ::pilo::tlv* param) = 0;
-                virtual ::pilo::err_t sync(::pilo::i32_t mode) = 0;
+                virtual ::pilo::err_t flush(flush_level lv) = 0;
                 virtual ::pilo::err_t close() = 0;
                 virtual ::pilo::err_t finalize() = 0;
                 virtual ::pilo::err_t exist() const = 0;

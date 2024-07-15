@@ -1,8 +1,7 @@
 ﻿#ifndef _dummy_dummy_file_lock_h_
 #define _dummy_dummy_file_lock_h_
 
-#include "../../pilo.hpp"
-
+#include "../io/io.hpp"
 
 namespace pilo
 {
@@ -16,9 +15,14 @@ namespace pilo
                 dummy_file_lock() {}
                 dummy_file_lock(::pilo::os_file_handle_t fd) { PMC_UNUSED(fd);}
 
-                inline ::pilo::err_t initialize(::pilo::os_file_handle_t fd)
+                inline ::pilo::err_t initialize(::pilo::os_file_handle_t fd, const char* path_str
+                    , ::pilo::core::io::creation_mode cm = ::pilo::core::io::creation_mode::open_existing
+                    , ::pilo::core::io::access_permission perm = ::pilo::core::io::access_permission::none)
                 {
                     PMC_UNUSED(fd);
+                    PMC_UNUSED(path_str);
+                    PMC_UNUSED(cm);
+                    PMC_UNUSED(perm);
                     return PILO_OK;
                 }
 
