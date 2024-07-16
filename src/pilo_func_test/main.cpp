@@ -43,10 +43,15 @@ int main(int argc, char * argv[])
 
 	PILO_CONTEXT->initialize();
 
-	::pilo::core::io::file<::pilo::core::process::file_lock, ::pilo::core::threading::dummy_read_write_lock> f;
+	::pilo::err_t err = 0;
+	::pilo::core::io::file<> f;
 	::pilo::core::io::path pth("test_fs\\oc\\a.log", ::pilo::predefined_pilo_dir_enum::tmp);
 
-	::pilo::err_t err = f.open(&pth, ::pilo::core::io::creation_mode::open_always, ::pilo::core::io::access_permission::read_write, ::pilo::core::io::dev_open_flags::append);
+
+	::pilo::core::io::path lockpath("test_fs\\oc\\a.lock", ::pilo::predefined_pilo_dir_enum::tmp);
+	::pilo::core::process::file_lock plock(PMI_INVALID_FILE_HANDLE, lockpath.fullpath(), ::pilo::core::io::creation_mode::open_always, ::pilo::core::io::access_permission::write);
+
+	err = f.open(&pth, ::pilo::core::io::creation_mode::open_always, ::pilo::core::io::access_permission::read_write, ::pilo::core::io::dev_open_flags::append);
 	if (err != PILO_OK) {
 		printf("%s\n", ::pilo::str_err(err, "open failed:", true).c_str());
 		exit(-1);
@@ -59,7 +64,7 @@ int main(int argc, char * argv[])
 	{
 		line++;
 
-		err = f.process_lock(0, -1);
+		err = plock.lock(0, -1);
 		if (err != PILO_OK)
 			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
 
@@ -78,7 +83,7 @@ int main(int argc, char * argv[])
 		if (err != PILO_OK)
 			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
 		f.flush(::pilo::core::io::flush_level::all);
-		err = f.process_unlock();
+		err = plock.unlock();
 		if (err != PILO_OK)
 			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
 	}

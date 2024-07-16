@@ -17,6 +17,22 @@ pilo::core::process::file_lock::file_lock()
 #endif
 }
 
+pilo::core::process::file_lock::file_lock(::pilo::os_file_handle_t fd, const char* path_str, ::pilo::core::io::creation_mode cm, ::pilo::core::io::access_permission perm)
+{
+    _m_fd = PMI_INVALID_FILE_HANDLE;
+    _m_lock = false;
+    _m_owner = false;
+#ifdef WINDOWS
+    _m_info_len_low = MAXDWORD;
+    _m_info_len_high = MAXDWORD;
+    memset(&_m_info_overlapped, 0x00, sizeof(_m_info_overlapped));
+#else
+    ::memset(&_m_info, 0x00, sizeof(_m_info));
+#endif
+
+    initialize(fd, path_str, cm, perm);
+}
+
 pilo::core::process::file_lock::~file_lock()
 {
     this->finalize();
@@ -59,7 +75,7 @@ pilo::core::process::file_lock::~file_lock()
         _m_fd = ::pilo::core::io::xpf_open_file(path_str, cm, perm, ::pilo::core::io::dev_open_flags::none);
     }
 
-    if (this->_m_fd != PMI_INVALID_FILE_HANDLE) {
+    if (this->_m_fd == PMI_INVALID_FILE_HANDLE) {
         return ::pilo::mk_perr(PERR_IO_OPEN_FAIL);
     }
 

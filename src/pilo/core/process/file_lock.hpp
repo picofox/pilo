@@ -20,6 +20,7 @@ namespace pilo
             {
             public:
                 file_lock();
+                file_lock(::pilo::os_file_handle_t fd, const char* path_str, ::pilo::core::io::creation_mode cm, ::pilo::core::io::access_permission perm);
                 ~file_lock();
 
                 ::pilo::err_t initialize(::pilo::os_file_handle_t fd, const char* path_str, ::pilo::core::io::creation_mode cm = ::pilo::core::io::creation_mode::open_existing , ::pilo::core::io::access_permission perm = ::pilo::core::io::access_permission::none);
