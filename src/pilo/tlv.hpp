@@ -34,10 +34,10 @@ namespace pilo
 {
 
     class tlv
-		: public ::pilo::core::memory::portable_compactable_autoreset_object_pool<::pilo::tlv, PMI_STCPARAM_TLV_STEP, ::pilo::core::threading::native_mutex>
+		: public ::pilo::core::memory::portable_compactable_autoreset_object_pool<::pilo::tlv, SP_PMI__TLV_STEP, ::pilo::core::threading::native_mutex>
     {
 	public:
-		typedef ::pilo::core::memory::portable_compactable_autoreset_object_pool<::pilo::tlv, PMI_STCPARAM_TLV_STEP, ::pilo::core::threading::native_mutex> pool_type;
+		typedef ::pilo::core::memory::portable_compactable_autoreset_object_pool<::pilo::tlv, SP_PMI__TLV_STEP, ::pilo::core::threading::native_mutex> pool_type;
 
 	public:
 		friend bool core::rtti::map_equals(::pilo::u8_t a_key_type, ::pilo::u16_t a_val_type, const char* a_data, ::pilo::u8_t b_key_type, ::pilo::u16_t b_val_type, const char* b_data, ::pilo::err_t* err);

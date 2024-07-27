@@ -67,7 +67,7 @@ namespace pilo
                 virtual ::pilo::err_t write(const char* buffer, ::pilo::i64_t wbs, ::pilo::i64_t * n_written) = 0;
                 virtual ::pilo::err_t write(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t wbs, ::pilo::i64_t* n_written) = 0;
                 virtual ::pilo::err_t seek(seek_whence whence, ::pilo::i64_t off) = 0;
-                virtual ::pilo::err_t tell(::pilo::i64_t &off) const = 0;
+                virtual ::pilo::err_t tell(::pilo::i64_t &off) = 0;
                 virtual ::pilo::err_t control(::pilo::i32_t cmd, ::pilo::tlv* param) = 0;
                 virtual ::pilo::err_t flush(flush_level lv) = 0;
                 virtual ::pilo::err_t close() = 0;

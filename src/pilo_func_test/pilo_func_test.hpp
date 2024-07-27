@@ -36,6 +36,8 @@ namespace pilo
 		{
 			namespace io
 			{
+				int case_text_file_rdwrbuf(::pilo::core::testing::func_test_case* p_case);
+				int case_text_file_nb(::pilo::core::testing::func_test_case* p_case);
 				int case_file_openmode(::pilo::core::testing::func_test_case* p_case);
 				int case_path_basic(::pilo::core::testing::func_test_case* p_case);
 				int case_path_fs_op(::pilo::core::testing::func_test_case* p_case);
@@ -53,7 +55,7 @@ namespace pilo
 
 			namespace string
 			{
-
+				int case_find_substring(::pilo::core::testing::func_test_case* p_case);
 				int case_split_fixed(::pilo::core::testing::func_test_case* p_case);	
 				
 			}

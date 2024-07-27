@@ -270,3 +270,26 @@ void pilo::core::io::xpf_close_file(::pilo::os_file_handle_t* fd)
     return PILO_OK;
 }
 
+::pilo::err_t pilo::core::io::xpf_set_size(::pilo::os_file_handle_t fd, ::pilo::i64_t sz)
+{
+#ifdef WINDOWS
+    LARGE_INTEGER liDistanceToMove;
+    liDistanceToMove.QuadPart = sz;
+    BOOL bret = SetFilePointerEx(fd, liDistanceToMove, NULL, FILE_BEGIN);
+    if (!bret) {
+        return ::pilo::mk_err(PERR_IO_SEEK_FAIL);
+    }
+    bret = SetEndOfFile(fd);
+    if (!bret) {
+        return ::pilo::mk_err(PERR_FILE_SETSIZE_FAIL);
+    }
+
+#else
+    int r = ftruncate(fd, (off_t) sz);
+    if (r == -1)
+        return ::pilo::mk_err(PERR_FILE_SETSIZE_FAIL);
+
+#endif
+    return PILO_OK;
+}
+

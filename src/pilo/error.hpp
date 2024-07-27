@@ -95,6 +95,13 @@
 #define PERR_EOF                (78)
 #define PERR_IO_TELL_FAIL       (79)
 
+#define PERR_FILE_SETSIZE_FAIL  (80)
+
+
+#define PILO_ERRRET(e)         if (PILO_OK != (e)) { return e; }    
+
+#define PILO_ERRRET_NULL(e)         if (PILO_OK != (e)) { return nullptr; }    
+
 namespace pilo
 {
     __inline os_error_number_t get_os_last_err()

@@ -68,7 +68,7 @@ namespace pilo
             ::pilo::err_t xpf_flush_file(::pilo::os_file_handle_t fd, flush_level lv = flush_level::all);
             ::pilo::err_t xpf_write_file(::pilo::os_file_handle_t fd, const char* buffer, ::pilo::i64_t wbs, ::pilo::i64_t* n_written);
             ::pilo::err_t xpf_read_file(::pilo::os_file_handle_t fd, char* buffer, ::pilo::i64_t rbs, ::pilo::i64_t* n_read);
-
+            ::pilo::err_t xpf_set_size(::pilo::os_file_handle_t fd, ::pilo::i64_t sz);
 
 
 

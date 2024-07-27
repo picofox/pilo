@@ -75,6 +75,12 @@ namespace pilo
                 }
 
             public:
+                ::pilo::err_t set_size(::pilo::i64_t length)
+                {
+                    return ::pilo::core::io::xpf_set_size(_m_fd, length);
+                }
+
+            public:
                 // Inherited via device_interface
                 virtual ::pilo::err_t initialize(::pilo::tlv* param)
                 {
@@ -106,7 +112,7 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
 
-                    if (p->ensure_parent_path_exist()) {
+                    if ((err = p->ensure_parent_path_exist()) != PILO_OK) {
                         return err;
                     }
 
@@ -179,7 +185,7 @@ namespace pilo
                     return ::pilo::core::io::xpf_seek_file(_m_fd, whence, off);
                 }
 
-                virtual ::pilo::err_t tell(::pilo::i64_t & off) const
+                virtual ::pilo::err_t tell(::pilo::i64_t & off)
                 {
                     return pilo::core::io::xpf_tell_file(_m_fd, off);
                 }
@@ -338,15 +344,15 @@ namespace pilo
 
                 ::pilo::err_t _read(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t rbs, ::pilo::i64_t* n_read)
                 {
-                    char tmp_buff[PMI_STCPARAM_4K_BUFFER_NODE_SIZE] = { 0 };
-                    ::pilo::i64_t tmp_space = PMI_STCPARAM_4K_BUFFER_NODE_SIZE;
+                    char tmp_buff[SP_PMI_4K_BUFFER_NODE_SIZE] = { 0 };
+                    ::pilo::i64_t tmp_space = SP_PMI_4K_BUFFER_NODE_SIZE;
                     ::pilo::err_t err = PILO_OK;
                     ::pilo::i64_t rb = 0;
                     ::pilo::i64_t rb_total = 0;
                     while (rbs > 0)
                     {
-                        if (rbs > PMI_STCPARAM_4K_BUFFER_NODE_SIZE)
-                            tmp_space = PMI_STCPARAM_4K_BUFFER_NODE_SIZE;
+                        if (rbs > SP_PMI_4K_BUFFER_NODE_SIZE)
+                            tmp_space = SP_PMI_4K_BUFFER_NODE_SIZE;
                         else
                             tmp_space = rbs;
                         rbs -= tmp_space;
@@ -471,7 +477,7 @@ namespace pilo
                 }
 
 
-            private:
+            protected:
                 ::pilo::core::io::path      _m_path;
                 ::pilo::os_file_handle_t    _m_fd;
                 process_lock_type           _m_proc_lock;

@@ -258,7 +258,7 @@ namespace pilo {
                 }
 
 #if defined(WINDOWS)
-                ::pilo::core::memory::object_array<wchar_t, PMI_STCPARAM_PATH_DEFAULT_LENGTH> wbuf;
+                ::pilo::core::memory::object_array<wchar_t, SP_PMI_PATH_DEFAULT_LENGTH> wbuf;
                 int dwUnicodeLen = MultiByteToWideChar(CP_UTF8, 0, src, src_len, NULL, 0);
                 dwUnicodeLen++;
                 wbuf.check_more_space(dwUnicodeLen + 1);                
@@ -330,7 +330,7 @@ namespace pilo {
                     src_len = (::pilo::i32_t) ::pilo::core::string::character_count(src);
                 }
 #if defined(WINDOWS)
-                ::pilo::core::memory::object_array<wchar_t, PMI_STCPARAM_PATH_DEFAULT_LENGTH> wbuf;
+                ::pilo::core::memory::object_array<wchar_t, SP_PMI_PATH_DEFAULT_LENGTH> wbuf;
                 int dwUnicodeLen = MultiByteToWideChar(CP_ACP, 0, src, src_len, NULL, 0);
                 dwUnicodeLen++;
                 wbuf.check_space(dwUnicodeLen);

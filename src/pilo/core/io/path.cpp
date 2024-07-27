@@ -168,7 +168,7 @@ namespace pilo {
                                              target_node_type, nullptr);
                     return fs_node_type;
                 } else {
-                    char target_path_buffer[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = {0};
+                    char target_path_buffer[SP_PMI_PATH_DEFAULT_LENGTH] = {0};
                     ::pilo::char_buffer_t target_path(target_path_buffer, sizeof(target_path_buffer), 0, false);
                     ::pilo::err_t err = path::get_path_node_type(this->_m_pathstr_ptr, this->_m_length,
                                                                  path::local_fs_path, fs_node_type, target_node_type,
@@ -341,21 +341,21 @@ namespace pilo {
                 ::pilo::err_t err = fill_with_home(extra);
                 if (err != PILO_OK)
                     return err;
-                return append(PMS_STCPARAM_PILO_PREDEF_DIR_CNF, path::unknow_length, extra);
+                return append(SP_PMS_PILO_PREDEF_DIR_CNF, path::unknow_length, extra);
             }
 
             ::pilo::err_t path::fill_with_log(::pilo::pathlen_t extra) {
                 ::pilo::err_t err = fill_with_home(extra);
                 if (err != PILO_OK)
                     return err;
-                return append(PMS_STCPARAM_PILO_PREDEF_DIR_LOG, path::unknow_length, extra);
+                return append(SP_PMS_PILO_PREDEF_DIR_LOG, path::unknow_length, extra);
             }
 
             ::pilo::err_t path::fill_with_tmp(::pilo::pathlen_t extra) {
                 ::pilo::err_t err = fill_with_home(extra);
                 if (err != PILO_OK)
                     return err;
-                return append(PMS_STCPARAM_PILO_PREDEF_DIR_TMP, path::unknow_length, extra);
+                return append(SP_PMS_PILO_PREDEF_DIR_TMP, path::unknow_length, extra);
             }
 
             ::pilo::err_t path::append(const char *p, ::pilo::i64_t len, ::pilo::pathlen_t extra,
@@ -1115,8 +1115,8 @@ namespace pilo {
                 ::pilo::err_t err = PILO_OK;
                 if (path_type_hint == path::local_fs_path)
                 {
-                    wchar_t warr[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
-                    ::pilo::wchar_buffer_t wbuf(warr, PMI_STCPARAM_PATH_DEFAULT_LENGTH);
+                    wchar_t warr[SP_PMI_PATH_DEFAULT_LENGTH] = { 0 };
+                    ::pilo::wchar_buffer_t wbuf(warr, SP_PMI_PATH_DEFAULT_LENGTH);
                     err = ::pilo::core::i18n::utf8_to_os_unicode(wbuf, path_cstr, path_len, 0);
                     if (err != PILO_OK)
                     {
@@ -1347,8 +1347,8 @@ namespace pilo {
 
             ::pilo::err_t path::make_dir(const char *dirpath, ::pilo::pathlen_t path_len, bool) {
 #ifdef WINDOWS
-                wchar_t wb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
-                ::pilo::wchar_buffer_t buffer(wb, PMI_STCPARAM_PATH_DEFAULT_LENGTH, 0, false);
+                wchar_t wb[SP_PMI_PATH_DEFAULT_LENGTH] = { 0 };
+                ::pilo::wchar_buffer_t buffer(wb, SP_PMI_PATH_DEFAULT_LENGTH, 0, false);
                 ::pilo::err_t err = ::pilo::core::i18n::utf8_to_os_unicode(buffer, dirpath, path_len);
                 if (err != PILO_OK)
                     return err;
@@ -1399,7 +1399,7 @@ namespace pilo {
 
             ::pilo::err_t path::touch_file(const char *filepath, ::pilo::pathlen_t path_len, bool delete_exist) {
                 const char *p = filepath;
-                ::pilo::core::memory::object_array<char, PMI_STCPARAM_PATH_DEFAULT_LENGTH> src;
+                ::pilo::core::memory::object_array<char, SP_PMI_PATH_DEFAULT_LENGTH> src;
                 if (path_len != path::unknow_length) {
                     src.check_space(path_len + 1);
                     ::pilo::core::string::n_copyz(src.begin(), src.capacity(), filepath, path_len);
@@ -1407,8 +1407,8 @@ namespace pilo {
                 }
 
 #ifdef WINDOWS
-                wchar_t wb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
-                ::pilo::wchar_buffer_t buffer(wb, PMI_STCPARAM_PATH_DEFAULT_LENGTH, 0, false);
+                wchar_t wb[SP_PMI_PATH_DEFAULT_LENGTH] = { 0 };
+                ::pilo::wchar_buffer_t buffer(wb, SP_PMI_PATH_DEFAULT_LENGTH, 0, false);
                 ::pilo::err_t err = ::pilo::core::i18n::utf8_to_os_unicode(buffer, filepath, path_len);
                 if (err != PILO_OK)
                     return err;
@@ -1540,7 +1540,7 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::i8_t target_node_type = path::node_type_na;
-                char target_path_buffer[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = {0};
+                char target_path_buffer[SP_PMI_PATH_DEFAULT_LENGTH] = {0};
                 ::pilo::char_buffer_t target_path(target_path_buffer, sizeof(target_path_buffer), 0, false);
                 bool can_follow = false;
                 if (fs_node_type == path::path_type_na || fs_node_type == path::fs_node_type_lnk) {
@@ -1598,8 +1598,8 @@ namespace pilo {
 
             ::pilo::err_t path::remove_dir(const char *dirpath, ::pilo::pathlen_t path_len) {
 #ifdef WINDOWS
-                wchar_t wb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
-                ::pilo::wchar_buffer_t buffer(wb, PMI_STCPARAM_PATH_DEFAULT_LENGTH, 0, false);
+                wchar_t wb[SP_PMI_PATH_DEFAULT_LENGTH] = { 0 };
+                ::pilo::wchar_buffer_t buffer(wb, SP_PMI_PATH_DEFAULT_LENGTH, 0, false);
                 ::pilo::err_t err = ::pilo::core::i18n::utf8_to_os_unicode(buffer, dirpath, path_len);
                 if (err != PILO_OK)
                     return err;
@@ -1662,8 +1662,8 @@ namespace pilo {
 
             ::pilo::err_t path::remove_file(const char *pth, ::pilo::pathlen_t path_len) {
 #ifdef WINDOWS
-                wchar_t wb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
-                ::pilo::wchar_buffer_t buffer(wb, PMI_STCPARAM_PATH_DEFAULT_LENGTH, 0, false);
+                wchar_t wb[SP_PMI_PATH_DEFAULT_LENGTH] = { 0 };
+                ::pilo::wchar_buffer_t buffer(wb, SP_PMI_PATH_DEFAULT_LENGTH, 0, false);
                 ::pilo::err_t err = ::pilo::core::i18n::utf8_to_os_unicode(buffer, pth, path_len);
                 if (err != PILO_OK)
                     return err;
@@ -1762,8 +1762,8 @@ namespace pilo {
                 }
 
 #ifdef WINDOWS
-                wchar_t wb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
-                ::pilo::wchar_buffer_t wbuffer(wb, PMI_STCPARAM_PATH_DEFAULT_LENGTH, 0, false);
+                wchar_t wb[SP_PMI_PATH_DEFAULT_LENGTH] = { 0 };
+                ::pilo::wchar_buffer_t wbuffer(wb, SP_PMI_PATH_DEFAULT_LENGTH, 0, false);
                 err = ::pilo::core::i18n::utf8_to_os_unicode(wbuffer, p->fullpath(), (::pilo::i32_t)p->length(), 5);
                 if (err != PILO_OK)
                     return err;
@@ -1797,7 +1797,7 @@ namespace pilo {
                     wbuffer.check_more_space(fn_len + 1);
                     ::pilo::core::string::copyz(wbuffer.ptr(base_len), wbuffer.space_available(), findData.cFileName);
                     ::pilo::i64_t sublen = wbuffer.size() + fn_len;
-                    char dir_bb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
+                    char dir_bb[SP_PMI_PATH_DEFAULT_LENGTH] = { 0 };
                     ::pilo::char_buffer_t dir_buf(dir_bb, sizeof(dir_bb), 0, false);
                     err = ::pilo::core::i18n::os_unicode_to_utf8(dir_buf, wbuffer.begin(), (::pilo::i32_t)sublen);
                     if (err != PILO_OK)
@@ -2012,10 +2012,10 @@ namespace pilo {
                         return err;
                 }
 #ifdef  WINDOWS
-                char src_bb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
-                wchar_t dst_bb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = { 0 };
-                ::pilo::char_buffer_t src_buf(src_bb, PMI_STCPARAM_PATH_DEFAULT_LENGTH, 0, false);
-                ::pilo::wchar_buffer_t dst_buf(dst_bb, PMI_STCPARAM_PATH_DEFAULT_LENGTH, 0, false);
+                char src_bb[SP_PMI_PATH_DEFAULT_LENGTH] = { 0 };
+                wchar_t dst_bb[SP_PMI_PATH_DEFAULT_LENGTH] = { 0 };
+                ::pilo::char_buffer_t src_buf(src_bb, SP_PMI_PATH_DEFAULT_LENGTH, 0, false);
+                ::pilo::wchar_buffer_t dst_buf(dst_bb, SP_PMI_PATH_DEFAULT_LENGTH, 0, false);
                 ::pilo::core::i18n::utf8_to_ansi(src_buf, src->fullpath(), src->length());
                 ::pilo::core::i18n::utf8_to_os_unicode(dst_buf, target->fullpath(), target->length());
                 if (src->absolute_type() == path::absolute && src->length() > 4)

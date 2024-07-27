@@ -198,6 +198,9 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.hpp">
       <Filter>pilo\core\io</Filter>
     </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\text_file.hpp">
+      <Filter>pilo\core\io</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\abstract_byte_buffer.hpp">
       <Filter>pilo\core\memory</Filter>
     </ClInclude>

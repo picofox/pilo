@@ -967,7 +967,68 @@ namespace pilo
             }
 
             template<typename CHAR_T>
-            CHAR_T* find_substring(const CHAR_T* str, ::pilo::i64_t srclen,  const CHAR_T* needle,  ::pilo::i64_t needle_len)
+            CHAR_T* find_substring(const CHAR_T* str, ::pilo::i64_t srclen,  const CHAR_T* needle,  ::pilo::i64_t needle_len, ::pilo::i64_t &needle_match_len)
+            {
+                needle_match_len = 0;
+
+                if (str == nullptr)
+                {
+                    return nullptr;
+                }
+                ::pilo::i64_t i = 0;             
+                if (needle == nullptr)
+                {
+                    return (CHAR_T*)str;
+                }
+                else if (*needle == 0)
+                {
+                    return (CHAR_T*)str;
+                }
+                if (needle_len < 1)
+                    needle_len = ::pilo::core::string::character_count(needle);
+
+                if (str == nullptr || srclen == 0)
+                {
+                    return nullptr;
+                }
+
+                if (srclen == -1)
+                {
+                    srclen = ::pilo::core::string::character_count(str);
+                }
+
+                ::pilo::i64_t matching_idx = 0;
+                for (i = 0; i < srclen; i++)
+                {
+                    if (0 == str[i])
+                    {
+                        return nullptr;
+                    }
+                    if (str[i] == needle[matching_idx]) {                        
+                        matching_idx++;
+                        needle_match_len = matching_idx;
+                        if (needle_len == matching_idx) {
+                            return (CHAR_T*) (str + i + 1 - needle_len);
+                        }
+                    } else if (str[i] == needle[0]) {
+                        matching_idx = 1;
+                        needle_match_len = 1;
+                        if (needle_len == matching_idx) {
+                            return (CHAR_T*)(str + i + 1 - needle_len);
+                        }
+                    }
+                    else {
+                        matching_idx = 0;
+                        needle_match_len = 0;
+                    }
+
+                }
+
+                return nullptr;
+            }
+
+            template<typename CHAR_T>
+            CHAR_T* find_substring(const CHAR_T* str, ::pilo::i64_t srclen, const CHAR_T* needle, ::pilo::i64_t needle_len)
             {
                 if (str == nullptr)
                 {
@@ -976,7 +1037,7 @@ namespace pilo
 
                 ::pilo::i64_t i = 0;
                 ::pilo::i64_t remain = 0;
-                
+
                 if (needle == nullptr)
                 {
                     return (CHAR_T*)str;
@@ -986,7 +1047,8 @@ namespace pilo
                     return (CHAR_T*)str;
                 }
 
-                needle_len = ::pilo::core::string::character_count(needle);
+                if (needle_len < 1)
+                    needle_len = ::pilo::core::string::character_count(needle);
 
                 if (str == nullptr || srclen == 0)
                 {

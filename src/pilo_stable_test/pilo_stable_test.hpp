@@ -24,6 +24,7 @@ namespace pilo
 
 			namespace io
 			{
+
 				int case_path_creation(::pilo::core::testing::stable_test_case* p_case);
 			}
 

@@ -41,53 +41,6 @@ int main(int argc, char * argv[])
 	PMC_UNUSED(argc);
 	PMC_UNUSED(argv);
 
-	PILO_CONTEXT->initialize();
-
-	::pilo::err_t err = 0;
-	::pilo::core::io::file<> f;
-	::pilo::core::io::path pth("test_fs\\oc\\a.log", ::pilo::predefined_pilo_dir_enum::tmp);
-
-
-	::pilo::core::io::path lockpath("test_fs\\oc\\a.lock", ::pilo::predefined_pilo_dir_enum::tmp);
-	::pilo::core::process::file_lock plock(PMI_INVALID_FILE_HANDLE, lockpath.fullpath(), ::pilo::core::io::creation_mode::open_always, ::pilo::core::io::access_permission::write);
-
-	err = f.open(&pth, ::pilo::core::io::creation_mode::open_always, ::pilo::core::io::access_permission::read_write, ::pilo::core::io::dev_open_flags::append);
-	if (err != PILO_OK) {
-		printf("%s\n", ::pilo::str_err(err, "open failed:", true).c_str());
-		exit(-1);
-	}
-
-	char fbuf[128] = { 0 };
-
-	int line = 0;
-	while (true)
-	{
-		line++;
-
-		err = plock.lock(0, -1);
-		if (err != PILO_OK)
-			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
-
-		::pilo::i64_t pos = 0;
-		f.tell(pos);
-
-		::pilo::core::io::string_formated_output(fbuf, 128, "%08d: %u nihao, 1 ..... [%lld] \t\t\t\t",line, PILO_CONTEXT->process_id(), pos);
-
-		err = f.write(fbuf, ::pilo::core::string::character_count(fbuf), nullptr);
-		if (err != PILO_OK)
-			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
-		std::this_thread::sleep_for(std::chrono::milliseconds(300));
-
-		::pilo::core::io::string_formated_output(fbuf, 128, "%u ok\r\n", PILO_CONTEXT->process_id());
-		err = f.write(fbuf, ::pilo::core::string::character_count(fbuf), nullptr);
-		if (err != PILO_OK)
-			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
-		f.flush(::pilo::core::io::flush_level::all);
-		err = plock.unlock();
-		if (err != PILO_OK)
-			printf("xxxxxxxxxxxxxxxxxxxxxxxx\n");
-	}
-
 
 	func_test_suite suite_default;
 
@@ -105,6 +58,10 @@ int main(int argc, char * argv[])
 
 void load_cases(func_test_suite * suite)
 {	
+	
+
+	suite->register_case("text_file buffered", ::pilo::func_test::core::io::case_text_file_rdwrbuf, nullptr);
+	suite->register_case("text_file no-buf", ::pilo::func_test::core::io::case_text_file_nb, nullptr);
 	suite->register_case("file_openmode", ::pilo::func_test::core::io::case_file_openmode, nullptr);
 
 	suite->register_case("path_basic", ::pilo::func_test::core::io::case_path_basic, nullptr);
@@ -145,6 +102,7 @@ void load_cases(func_test_suite * suite)
 	 suite->register_case("case_fixed_byte_buffer_serialize_net", ::pilo::func_test::core::memory::case_fixed_byte_buffer_serialize_net, nullptr);
 	 suite->register_case("case_fixed_byte_buffer_serialize_host", ::pilo::func_test::core::memory::case_fixed_byte_buffer_serialize_host, nullptr);
 	
+	 suite->register_case("find_substring", ::pilo::func_test::core::string::case_find_substring, nullptr);
 	 suite->register_case("split_fixed<>", ::pilo::func_test::core::string::case_split_fixed, nullptr);
 	 suite->register_case("case_linked_byte_buffer_basic",::pilo::func_test::core::memory::case_linked_byte_buffer_basic, nullptr);
 	 suite->register_case("case_linked_byte_buffer_serialize_net", ::pilo::func_test::core::memory::case_linked_byte_buffer_serialize_net, nullptr);

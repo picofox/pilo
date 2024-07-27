@@ -384,6 +384,15 @@ namespace pilo
 
                     ::pilo::err_t ensure_parent_path_exist() const
                     {
+#ifdef WINDOWS
+                        if (this->parentpath_len() > 0 && this->parentpath()[this->parentpath_len() - 1] == ':') {
+                            return PILO_OK;
+                        }
+#else
+                        if (this->parentpath_len() == 1 && this->parentpath()[0] == '/')
+                            return PILO_OK;
+#endif // WINDOWS
+
                         return make_dir(this->parentpath(), this->parentpath_len(), false);
                     }
 
