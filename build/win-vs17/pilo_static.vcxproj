@@ -421,6 +421,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\io.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\text_file.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\text_logger.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\abstract_byte_buffer.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\autoreset_object_pool.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\bits_operation.hpp" />

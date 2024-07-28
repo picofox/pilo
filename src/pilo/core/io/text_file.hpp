@@ -1,5 +1,5 @@
-﻿#ifndef _pilo_core_io_file_text_hpp_
-#define _pilo_core_io_file_text_hpp_
+﻿#ifndef _pilo_core_io_text_file_hpp_
+#define _pilo_core_io_text_file_hpp_
 
 
 #include    "./file.hpp"

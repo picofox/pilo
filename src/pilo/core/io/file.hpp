@@ -274,32 +274,32 @@ namespace pilo
 
                 inline void thread_lock_shared() 
                 {
-                    return this->_m_thread_lock->lock_shared();
+                    return this->_m_thread_lock.lock_shared();
                 }
 
                 inline void lock() 
                 {
-                    return this->_m_thread_lock->lock();
+                    return this->_m_thread_lock.lock();
                 }
 
                 inline bool try_lock() 
                 { 
-                    return this->_m_thread_lock->try_lock();
+                    return this->_m_thread_lock.try_lock();
                 }
 
                 inline bool try_lock_shared() 
                 { 
-                    return this->_m_thread_lock->try_lock_shared();
+                    return this->_m_thread_lock.try_lock_shared();
                 }
 
                 inline void unlock() 
                 {
-                    return this->_m_thread_lock->unlock();
+                    return this->_m_thread_lock.unlock();
                 }
 
                 inline void unlock_shared() 
                 {
-                    return this->_m_thread_lock->unlock_shared();
+                    return this->_m_thread_lock.unlock_shared();
                 }
 
 

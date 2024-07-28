@@ -201,6 +201,9 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\text_file.hpp">
       <Filter>pilo\core\io</Filter>
     </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\text_logger.hpp">
+      <Filter>pilo\core\logging</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\abstract_byte_buffer.hpp">
       <Filter>pilo\core\memory</Filter>
     </ClInclude>
@@ -619,6 +622,9 @@
     </Filter>
     <Filter Include="pilo\core\io">
       <UniqueIdentifier>{9047C9CC-4DD1-3A42-BF6F-9BEDE4F5F0C0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\logging">
+      <UniqueIdentifier>{5FA4FB7D-ED61-3DC9-8001-013C4764A08C}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo\core\memory">
       <UniqueIdentifier>{6BD3C0C2-0905-3946-9490-6B24CB8773C2}</UniqueIdentifier>

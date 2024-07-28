@@ -14,3 +14,5 @@
 #define SP_PMI_TEXT_FILE_WRBUF_SIZE         (0)
 #define SP_PMI_TEXT_FILE_DFL_LINE_SIZE      (128)
 #define SP_PMI_TEXT_FILE_LINE_STEP_SIZE     (64)
+#define SP_PMS_TEXT_FILE_DFL_LINE_RSEP      "\n"
+#define SP_PMS_TEXT_FILE_DFL_LINE_WSEP      "\n"
