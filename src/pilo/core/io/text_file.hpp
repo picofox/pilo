@@ -15,7 +15,7 @@ namespace pilo
             class text_file : public file<PLOCK, TLOCK>
             {
             public:
-                typedef file base_type;
+                typedef file<PLOCK, TLOCK> base_type;
                 typedef PLOCK process_lock_type;
                 typedef TLOCK thread_lock_type;
 
@@ -77,38 +77,38 @@ namespace pilo
 
                 virtual ::pilo::err_t initialize(::pilo::tlv* param)
                 {
-                    ::pilo::err_t err = file::initialize(param);
+                    ::pilo::err_t err = file<PLOCK, TLOCK>::initialize(param);
                     return err;
                 }
 
                 virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, predefined_pilo_dir_enum prefix, dev_open_flags f)
                 {
-                    ::pilo::err_t err = file::open(path_str, cm, perm, prefix, f);
+                    ::pilo::err_t err = file<PLOCK, TLOCK>::open(path_str, cm, perm, prefix, f);
                     return err;
                 }
 
                 virtual ::pilo::err_t open(const ::pilo::core::io::path* p, creation_mode cm, access_permission perm, dev_open_flags f)
                 {
-                    ::pilo::err_t err = file::open(p, cm, perm, f);
+                    ::pilo::err_t err = file<PLOCK, TLOCK>::open(p, cm, perm, f);
                     return err;
                 }
 
                 virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, dev_open_flags f)
                 {
-                    ::pilo::err_t err = file::open(path_str, cm, perm, f);
+                    ::pilo::err_t err = file<PLOCK, TLOCK>::open(path_str, cm, perm, f);
                     return err;
                 }
 
                 virtual ::pilo::err_t close()
                 {
-                    ::pilo::core::io::xpf_close_file(&_m_fd);
+                    ::pilo::core::io::xpf_close_file(&this->_m_fd);
                     this->set_state(state_code::closed);
                     return PILO_OK;
                 }
 
                 virtual ::pilo::err_t finalize()
                 {
-                    ::pilo::err_t err = file::finalize();
+                    ::pilo::err_t err = file<PLOCK, TLOCK>::finalize();
                     _reset();
                     return err;
                 }
@@ -145,6 +145,12 @@ namespace pilo
                 {
                     this->_check_wirte_buffer(true);
                     return base_type::tell(off);
+                }
+
+                virtual ::pilo::err_t flush(flush_level lv)
+                {
+                    this->_check_wirte_buffer(true);
+                    return base_type ::flush(lv);
                 }
 
 
@@ -239,14 +245,14 @@ namespace pilo
                     return PILO_OK;
 
 #               else
-                    int n = dprintf(this->_m_fd, fmt, args);
+                    int n = vdprintf(this->_m_fd, fmt, args);
                     if (n < 0)
                         return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
+                    va_end(args);
+
                     if (nl) {
                         dprintf(this->_m_fd, "%s", this->_m_write_sep);
                     }
-                    va_end(args);
-
                     if (n < 0)
                         return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
 

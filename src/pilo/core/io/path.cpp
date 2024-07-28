@@ -1204,7 +1204,7 @@ namespace pilo {
 
             static ::pilo::err_t _s_read_link_posix(::pilo::char_buffer_t *dst, const char *src)
             {
-                char tbb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = {0};
+                char tbb[SP_PMI_PATH_DEFAULT_LENGTH] = {0};
                 ::pilo::char_buffer_t tbuf(tbb, sizeof(tbb), 0, false);
                 ::pilo::core::io::path tmp_path(src);
                 ::pilo::err_t  err = PILO_OK;
@@ -1240,9 +1240,9 @@ namespace pilo {
 
             static ::pilo::err_t
             _s_read_link_recursively_posix(::pilo::i8_t &node_type, ::pilo::char_buffer_t *dst, const char *src) {
-                char sbb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = {0};
+                char sbb[SP_PMI_PATH_DEFAULT_LENGTH] = {0};
                 ::pilo::char_buffer_t sbuf(sbb, sizeof(sbb), 0, false);
-                char dbb[PMI_STCPARAM_PATH_DEFAULT_LENGTH] = {0};
+                char dbb[SP_PMI_PATH_DEFAULT_LENGTH] = {0};
                 ::pilo::char_buffer_t dbuf(dbb, sizeof(dbb), 0, false);
                 ::pilo::err_t err = PILO_OK;
 
@@ -1296,7 +1296,7 @@ namespace pilo {
                     return ::pilo::mk_perr(PERR_INVALID_PARAM);
                 }
                 const char * ptr_path_cstr = path_cstr;
-                ::pilo::core::memory::object_array<char, PMI_STCPARAM_PATH_DEFAULT_LENGTH> pbuf;
+                ::pilo::core::memory::object_array<char, SP_PMI_PATH_DEFAULT_LENGTH> pbuf;
                 if (path_len < 0) {
                     ::pilo::i64_t tmplen = ::pilo::core::string::character_count(path_cstr);
                     if (tmplen >= path::length_max) {
@@ -1619,7 +1619,7 @@ namespace pilo {
                 }
 #else
                 const char *p = dirpath;
-                ::pilo::core::memory::object_array<char, PMI_STCPARAM_PATH_DEFAULT_LENGTH> src;
+                ::pilo::core::memory::object_array<char, SP_PMI_PATH_DEFAULT_LENGTH> src;
                 if (path_len != path::unknow_length) {
                     src.check_space(path_len + 1);
                     ::pilo::core::string::n_copyz(src.begin(), src.capacity(), dirpath, path_len);
@@ -1674,7 +1674,7 @@ namespace pilo {
                 }
 #else
                 const char *p = pth;
-                ::pilo::core::memory::object_array<char, PMI_STCPARAM_PATH_DEFAULT_LENGTH> src;
+                ::pilo::core::memory::object_array<char, SP_PMI_PATH_DEFAULT_LENGTH> src;
                 if (path_len != path::unknow_length) {
                     src.check_space(path_len + 1);
                     ::pilo::core::string::n_copyz(src.begin(), src.capacity(), pth, path_len);

@@ -97,13 +97,14 @@
         oflag |= O_APPEND;
 
     if (cm == creation_mode::create_always) {
-        oflag |= (O_CREAT | O_WRONLY | O_TRUNC);
+        oflag |= (O_CREAT | O_TRUNC);
     }
     else if (cm == creation_mode::open_existing) {
 
     }
     else if (cm == creation_mode::create_neo) {
         oflag |= O_EXCL;
+        oflag |= O_CREAT;
     }
     else if (cm == creation_mode::open_always) {
         oflag |= O_CREAT;

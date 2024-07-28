@@ -157,20 +157,20 @@ namespace pilo
 						PMC_ASSERT(cnt > 0);
 						err = tf0.write_line(tmp_buffer, cnt, true, &rlen);
 						if (err != PILO_OK) {
-							return p_case->error(PERR_IO_READ_FAIL, "write text failed");
+							return p_case->error(PERR_IO_WRITE_FAIL, "write text failed");
 						}
 						if (cnt != rlen - tf0.write_seperator_length()) {
-							return p_case->error(PERR_IO_READ_FAIL, "write text cnt failed");
+							return p_case->error(PERR_IO_WRITE_FAIL, "write text cnt failed");
 						}
 					}
 					memset(tmp_buffer, 'x', 4091);
 					tmp_buffer[4091] = 0;
 					err = tf0.write_line(tmp_buffer, 4091, false, &rlen);
 					if (err != PILO_OK) {
-						return p_case->error(PERR_IO_READ_FAIL, "write text failed");
+						return p_case->error(PERR_IO_WRITE_FAIL, "write text failed");
 					}
 					if (4091 != rlen ) {
-						return p_case->error(PERR_IO_READ_FAIL, "write text cnt failed");
+						return p_case->error(PERR_IO_WRITE_FAIL, "write text cnt failed");
 					}
 
 
@@ -328,8 +328,10 @@ namespace pilo
 					}
 
 					
+                    tf0.flush(::pilo::core::io::flush_level::all);
 
-					tf0.formatted_output(true, "today 's dinner is %s at price %f", "yuxiangrousi", 3.15);
+
+					tf0.formatted_output(true, "today 's dinner is %s at price %8.8f\n", "yuxiangrousi", 3.15f);
 
 
 

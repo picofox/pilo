@@ -65,12 +65,12 @@ namespace pilo
                 ret = _vsnprintf_s(buf, len, _TRUNCATE, fmt, args);
 #               else
                 ret = vsnprintf(buf, len, fmt, args);
-                if (ret < 0 || ret + 1 > len) {
-                    return -1
-                }
 #               endif
                 va_end(args);
 
+                if (ret < 0 || ret + 1 > len) {
+                    return -1;
+                }
 
 
                 return (::pilo::i64_t)ret;
@@ -87,7 +87,7 @@ namespace pilo
 #               else
                 ret = vswprintf(buf, len, fmt, args);
                 if (ret < 0 || ret + 1 > len) {
-                    return -1
+                    return -1;
                 }
 #               endif
                 va_end(args);
