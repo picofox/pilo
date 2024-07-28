@@ -25,7 +25,7 @@ namespace pilo {
                 procname    = 0x00001000,
             };
 
-            enum class level : ::pilo::u8_t
+            enum class level : ::pilo::u32_t
             {
                 none    = 0,
                 fatal   = 1,
@@ -41,10 +41,10 @@ namespace pilo {
             class text_logger
             {
             public:
-                static const char* s_level_to_name(::pilo::u8_t level)
+                static const char* s_level_to_name(::pilo::u32_t level)
                 {
                     static const char* s_level_names[] = { "[none]", "[fatal]", "[error]", "[warn]", "[info]", "[debug]" };
-                    if (level > ::pilo::core::logging::debug) {
+                    if (level > (::pilo::u32_t) ::pilo::core::logging::level::debug) {
                         return "[na]";
                     }
                     return s_level_names[level];
