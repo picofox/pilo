@@ -299,6 +299,9 @@ namespace pilo
                         if (neosz > TV_SIZE)
                         {
                             _dynamic = (TA_ELEMOBJ*) PMF_HEAP_MALLOC(neosz * sizeof(value_type));
+                            if (_dynamic == nullptr) {
+                                return -1;
+                            }
                             for (::pilo::i32_t i = 0; i < TV_SIZE; i++)
                             {
                                 _dynamic[i] = _fixed[i];
@@ -312,6 +315,9 @@ namespace pilo
                         if (neosz > _dynamic_capacity)
                         {
                             TA_ELEMOBJ* p = (TA_ELEMOBJ*) PMF_HEAP_MALLOC(neosz*sizeof(value_type));
+                            if (p == nullptr) {
+                                return -1;
+                            }
                             for (::pilo::i32_t i = 0; i < TV_SIZE; i++)
                             {
                                 p[i] = _dynamic[i];

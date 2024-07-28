@@ -188,6 +188,75 @@ namespace pilo
                     return PILO_OK;
                 }
 
+                ::pilo::err_t formatted_output(bool nl, const char* fmt, ...)
+                {
+                    this->_check_wirte_buffer(true);
+                    ::pilo::err_t err = PILO_OK;
+                    va_list args;
+                    va_start(args, fmt);
+
+#               if defined(WINDOWS)
+                    ::pilo::core::memory::object_array<char, 4096> buffer;
+                    ::pilo::i32_t i = 0;
+                    ::pilo::i64_t ret = 0;
+                    bool done = false;
+                    
+                    while (i < 16) {
+                        ret = _vsnprintf_s(buffer.begin(), buffer.capacity(), _TRUNCATE, fmt, args);
+                        if (ret >= 0) {
+                            buffer.set_size((::pilo::i32_t)ret);
+                            done = true;
+                            break;
+                        }
+                        buffer.check_space(4096 * (i + 1));
+                        i++;
+                    }
+
+                    va_end(args);
+
+                    if (!done) {
+                        ::pilo::i64_t tr_size = ::pilo::core::string::character_count(buffer.begin());
+                        buffer.set_size((::pilo::i32_t)tr_size);
+                    }
+
+
+                    ::pilo::i64_t rlen = 0;
+                    err = this->write(buffer.begin(), buffer.size(), &rlen);   
+                    if (err != PILO_OK) {
+                        return err;
+                    }     
+                    if (rlen != buffer.size())
+                        return err;
+
+                    if (nl) {
+                        err = this->write(this->_m_write_sep, this->_m_write_sep_len, &rlen);
+                        if (err != PILO_OK) {
+                            return err;
+                        }
+                    }
+                                   
+
+                    return PILO_OK;
+
+#               else
+                    int n = dprintf(this->_m_fd, fmt, args);
+                    if (n < 0)
+                        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
+                    if (nl) {
+                        dprintf(this->_m_fd, "%s", this->_m_write_sep);
+                    }
+                    va_end(args);
+
+                    if (n < 0)
+                        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
+
+                    return PILO_OK;
+#               endif
+
+                    
+
+                }
+
                 template<typename CONTAINER_T>
                 ::pilo::err_t read_lines(CONTAINER_T& cont, bool trim_nl, bool trim_empty_line)
                 {

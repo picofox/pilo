@@ -41,7 +41,6 @@ int main(int argc, char * argv[])
 	PMC_UNUSED(argc);
 	PMC_UNUSED(argv);
 
-
 	func_test_suite suite_default;
 
 	load_cases(&suite_default);

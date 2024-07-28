@@ -329,6 +329,7 @@ namespace pilo
 
 					
 
+					tf0.formatted_output(true, "today 's dinner is %s at price %f", "yuxiangrousi", 3.15);
 
 
 
