@@ -43,8 +43,20 @@ namespace pilo
 
             char* xpf_get_proc_name(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen)
             {
-                ::pilo::i32_t len = ::pilo::core::string::character_count(__progname);
-
+                char filename[PMI_PATH_MAX] = {0};
+                ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
+                int fd = -1;
+                fd = open("/proc/self/comm", O_RDONLY);
+                ssize_t n = ::read(fd, filename, sizeof(filename));
+                if (n < 0) {
+                    ::close(fd);
+                    return nullptr;
+                }
+                int len = (int) ::pilo::core::string::character_count(filename);
+                cb.check_space(len + 1);
+                ::pilo::core::string::copyz(cb.begin(), cb.capacity(), filename);
+                ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t) len);
+                return cb.begin();
             }
 #endif
 
@@ -68,6 +80,9 @@ namespace pilo
                     size_t pos = _proc_name.rfind('.');
                     if (pos != std::string::npos) {
                         _proc_basename = _proc_name.substr(0, pos);
+                    }
+                    if (cret != nullptr && cret != buffer) {
+                        PMF_HEAP_FREE(cret);
                     }
 
                 } else {
