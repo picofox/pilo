@@ -25,7 +25,7 @@ namespace pilo
 				int case_text_logger_basic(::pilo::core::testing::func_test_case* p_case)
 				{
 					::pilo::core::logging::text_logger<> logger;
-
+					logger.set_filename_suffix(::pilo::core::logging::Date | ::pilo::core::logging::Pid);
 					logger.open();
 
 

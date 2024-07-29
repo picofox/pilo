@@ -103,6 +103,12 @@ namespace pilo
                     if (this->_m_path.invalid()) {
                         return ::pilo::mk_perr(PERR_INVALID_PATH);
                     }
+
+                    err = this->_m_path.ensure_parent_path_exist();
+                    if (err != PILO_OK) {
+                        return ::pilo::mk_perr(PERR_INVALID_PATH);
+                    }
+
                     return this->_open(cm, perm, f);
                 }
 

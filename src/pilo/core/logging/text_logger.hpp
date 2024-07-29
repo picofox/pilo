@@ -94,16 +94,26 @@ namespace pilo {
                 }
 
                 ::pilo::err_t open()
-                {
-                    set_filename_suffix(Date | Pid);
-
+                { 
+                    if (this->_m_file.state() == ::pilo::core::io::state_code::opened) {
+                        return PILO_OK;
+                    }
                     char name_buf[256] = { 0 };
                     ::pilo::err_t err = _calc_log_filename(name_buf, sizeof(name_buf));
                     if (err != PILO_OK)
                         return err;
 
+                    err = this->_m_file.open(name_buf
+                        , ::pilo::core::io::creation_mode::open_always
+                        , ::pilo::core::io::access_permission::write
+                        , ::pilo::predefined_pilo_dir_enum::log
+                        , ::pilo::core::io::dev_open_flags::append);
+                    if (err != PILO_OK) {
+                        return err;
+                    }
+
+
                     return PILO_OK;
-                   // this->_m_file.open(const path_str, creation_mode cm, access_permission perm, predefined_pilo_dir_enum prefix, dev_open_flags f)
                 }
 
                 void add_filename_suffix(::pilo::u32_t e)
@@ -218,6 +228,9 @@ namespace pilo {
                     if (this->_m_filename_suffix.test_value(Pid)) {
                         ::pilo::core::io::string_formated_output(buffer + idx, remain_capa, "_%d", PILO_CONTEXT->process_id());
                     }
+
+                    ::pilo::core::string::n_concatenate_inplace(buffer, capa, ".log", 4);
+
                     return PILO_OK;                    
                 }
 
