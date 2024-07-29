@@ -58,8 +58,8 @@ int main(int argc, char * argv[])
 }
 
 void load_cases(func_test_suite * suite)
-{	
-	
+{		
+	suite->register_case("text_logger_basic", ::pilo::func_test::core::logging::case_text_logger_basic, nullptr);
 
 	suite->register_case("text_file buffered", ::pilo::func_test::core::io::case_text_file_rdwrbuf, nullptr);
 	suite->register_case("text_file no-buf", ::pilo::func_test::core::io::case_text_file_nb, nullptr);

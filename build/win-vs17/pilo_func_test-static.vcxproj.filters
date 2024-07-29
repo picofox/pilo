@@ -13,6 +13,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\io\case_path_basic.cpp">
       <Filter>pilo_func_test\core\io</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\logging\case_text_logger_basic.cpp">
+      <Filter>pilo_func_test\core\logging</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\memory\case_fixed_byte_buffer.cpp">
       <Filter>pilo_func_test\core\memory</Filter>
     </ClCompile>
@@ -52,6 +55,9 @@
     </Filter>
     <Filter Include="pilo_func_test\core\io">
       <UniqueIdentifier>{87A346BC-1589-3B5E-8702-D9E8C9D44EE2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo_func_test\core\logging">
+      <UniqueIdentifier>{D43003A0-46BA-3D46-ADC0-8C71A1F165A1}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo_func_test\core\memory">
       <UniqueIdentifier>{18E4A5D8-BA6C-3768-8521-CCE277882019}</UniqueIdentifier>

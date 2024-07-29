@@ -39,7 +39,6 @@ namespace pilo
 
             }
 #else
-            extern char* __progname;
 
             char* xpf_get_proc_name(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen)
             {

@@ -60,6 +60,11 @@ namespace pilo
 				
 			}
 
+			namespace logging 
+			{
+				int case_text_logger_basic(::pilo::core::testing::func_test_case* p_case);
+			}
+
 			namespace memory
 			{
 				

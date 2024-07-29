@@ -334,6 +334,7 @@ namespace pilo
 		bit_flag() { _flags = 0; }
 		bit_flag& operator=(INT_T v) { _flags = v; return *this; }
 		inline INT_T data() const { return _flags; }
+		inline void set(INT_T i) { _flags = i;  }
 		inline void reset() { _flags = 0; }
 		inline bool test_index(::pilo::u32_t pos) const { return bit_flag::test_index(_flags, pos); }
 		inline bool test_value(INT_T v) const { return bit_flag::test_value(_flags, v); }
@@ -373,6 +374,11 @@ namespace pilo
 		{
 			return bit_flag::count_bit_1(_flags);
 		}
+		inline bool empty() const
+		{
+			return _flags == 0;
+		}
+
 
 	private:
 		INT_T _flags;

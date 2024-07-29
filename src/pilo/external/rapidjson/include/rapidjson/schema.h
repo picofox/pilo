@@ -2506,7 +2506,7 @@ public:
         flags_(kValidateDefaultFlags),
         depth_(0)
     {
-        RAPIDJSON_SCHEMA_PRINT(Method, "GenericSchemaValidator::GenericSchemaValidator (output handler)");
+        RAPIDJSON_SCHEMA_PRINT(Method, "GenericSchemaValidator::GenericSchemaValidator (output_dev handler)");
     }
 
     //! Destructor.
