@@ -11,6 +11,43 @@ namespace pilo
     {
         namespace process
         {
+
+#ifdef WINDOWS
+            char* xpf_get_proc_name(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t * rlen)
+            {
+                char tmp_buffer[PMI_PATH_MAX] = { 0 };
+                ::pilo::u32_t len = GetModuleFileName(NULL, tmp_buffer, sizeof(tmp_buffer));
+                ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
+
+                if (len > 0) {
+                    cb.check_space(len + 1);
+                    const char* lastSlash = ::pilo::core::string::rfind_char(tmp_buffer,  len, '\\');
+                    if (lastSlash != nullptr) {
+                        ::pilo::core::string::copyz(cb.begin(), cb.capacity(), lastSlash + 1);
+                        ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t) len - (::pilo::i32_t)(lastSlash - tmp_buffer + 1));
+                        return cb.begin();
+                    }
+                    else {
+                        ::pilo::core::string::copyz(cb.begin(), cb.capacity(), tmp_buffer);
+                        ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t) len);
+                        return cb.begin();
+                    }
+                }
+                else {
+                    return nullptr;
+                }
+
+            }
+#else
+            extern char* __progname;
+
+            char* xpf_get_proc_name(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen)
+            {
+                ::pilo::i32_t len = ::pilo::core::string::character_count(__progname);
+
+            }
+#endif
+
             static void s_on_exit(void)
             {
                 printf("pilo on exit, finanlizing.....\n");
@@ -19,10 +56,30 @@ namespace pilo
             }
             context::context()
             {
+                char buffer[PMI_PATH_MAX] = { 0 };
+                ::pilo::i32_t rlen = 0;
+
                 _pid = ::pilo::core::process::current_process_id();
                 _ppid = ::pilo::core::process::current_parent_process_id();
-               // atexit(s_on_exit);
+               
+                char* cret = xpf_get_proc_name(buffer, sizeof(buffer), &rlen);
+                if (cret != nullptr) {
+                    _proc_name.assign(cret, rlen);
+                    size_t pos = _proc_name.rfind('.');
+                    if (pos != std::string::npos) {
+                        _proc_basename = _proc_name.substr(0, pos);
+                    }
+
+                } else {
+                    _proc_name.assign("unknow_proc", 11);
+                    _proc_basename = _proc_name;
+                }
+
+                    
+
                 _page_pool = new ::pilo::core::memory::dynamic_memory_pool<::pilo::core::threading::spin_mutex>(PMSO_SYSTEM_INFORMATION->page_size(), 1024);
+
+
             }
 
             context::~context()
@@ -36,10 +93,15 @@ namespace pilo
                 std::stringstream ss;
                 ::pilo::core::string::fixed_width_line_formater formater;
 
+
                 formater.add_meta_field(16, PMI_FIXED_WIDTH_LINE_FMT_LEFT_ALIGH, "Item ");
                 formater.add_meta_field(56, PMI_FIXED_WIDTH_LINE_FMT_LEFT_ALIGH, "Info");
-
                 formater.format_header(ss);
+
+                formater.format_field(ss, (::pilo::i64_t)0, (const char*)"Process:");
+                formater.format_field(ss, 1, this->process_basename());
+                ss << std::endl;
+
                 formater.format_field(ss, (::pilo::i64_t) 0, (const char*) "PILO Version:");
                 ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "%u.%u.%u.%s"
                                                          , major_version(), minor_version(), revision(), stage_cstr());

@@ -8,7 +8,7 @@ namespace pilo {
     namespace core {
         namespace logging {
 
-            enum class header_cols : ::pilo::u32_t
+            enum class predef_item : ::pilo::u32_t
             {
                 date        = 0x00000001,
                 time        = 0x00000002,
@@ -53,7 +53,9 @@ namespace pilo {
 
             public:
                 text_logger(::pilo::core::logging::level lv = ::pilo::core::logging::level::debug
-                    , ::pilo::u32_t flags = 0
+                    , ::pilo::u32_t hdrs = 0
+                    , ::pilo::u32_t fn_suffix = 0
+                    , const char* logname = PILO_CONTEXT->process_name()
                     , const char* line_seperator = SP_PMS_TEXT_FILE_DFL_LINE_WSEP)
 
                     : _m_level(lv)
@@ -62,12 +64,18 @@ namespace pilo {
                     , _m_next_shift_ts(0)
                     , _m_line_count(0)
                     , _m_total_size(0)
-                    , _m_flags(flags)
-                    , _m_logname("")
+                    , _m_headers(hdrs)
+                    , _m_filename_suffix(fn_suffix)
+                    , _m_logname(logname)
                     , _m_file(0,0, SP_PMS_TEXT_FILE_DFL_LINE_RSEP, line_seperator)
                     
                 {
                     
+                }
+
+                ~text_logger()
+                {
+                    _m_file.finalize();
                 }
 
                 inline ::pilo::err_t process_lock_shared(::pilo::i64_t offset, ::pilo::i64_t length)
@@ -131,6 +139,10 @@ namespace pilo {
                 }
 
 
+
+
+            protected:
+
                 
 
 
@@ -142,9 +154,11 @@ namespace pilo {
                 ::pilo::i64_t                       _m_next_shift_ts;
                 ::pilo::i64_t                       _m_line_count;
                 ::pilo::i64_t                       _m_total_size;
-                ::pilo::bit_flag<::pilo::u32_t>     _m_flags;
-                ::std::string                       _m_logname;
+                ::pilo::bit_flag<::pilo::u32_t>     _m_headers;
+                ::pilo::bit_flag<::pilo::u32_t>     _m_filename_suffix;
+                ::std::string                       _m_logname;                
                 ::pilo::core::io::text_file<PLOCK, TLOCK>             _m_file;
+                ::pilo::core::io::path              _m_bak_path;
 
 
             private:

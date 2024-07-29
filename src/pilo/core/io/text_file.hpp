@@ -101,6 +101,7 @@ namespace pilo
 
                 virtual ::pilo::err_t close()
                 {
+                    this->_check_wirte_buffer(true);
                     ::pilo::core::io::xpf_close_file(&this->_m_fd);
                     this->set_state(state_code::closed);
                     return PILO_OK;
@@ -108,6 +109,7 @@ namespace pilo
 
                 virtual ::pilo::err_t finalize()
                 {
+                    this->_check_wirte_buffer(true);
                     ::pilo::err_t err = file<PLOCK, TLOCK>::finalize();
                     _reset();
                     return err;

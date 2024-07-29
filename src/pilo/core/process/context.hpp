@@ -14,6 +14,9 @@ namespace pilo
     {
         namespace process
         {
+            char* xpf_get_proc_name(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen);
+
+
             class context
             {
             public:
@@ -54,6 +57,15 @@ namespace pilo
                     const static char* cst_parr[] = {"base", "alpha", "beta", "RC", "release"};
                     ::pilo::u8_t i = PMF_EXTRACT_U8(s_pilo_version, 0);
                     return cst_parr[i];
+                }
+                inline const char* process_name() const
+                {
+                    return this->_proc_name.c_str();
+                }
+
+                inline const char* process_basename() const
+                {
+                    return this->_proc_basename.c_str();
                 }
 
                 inline const ::pilo::core::io::path& cwd(bool update = false)
@@ -127,6 +139,8 @@ namespace pilo
                 ::pilo::core::io::path _proc_paths[(int)::pilo::predefined_pilo_dir_enum::count];
                 ::pilo::os_pid_t    _pid;
                 ::pilo::os_pid_t    _ppid;
+                std::string         _proc_name;
+                std::string         _proc_basename;
 
                 page_allocator::page_allocator_type*   _page_pool;
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;
