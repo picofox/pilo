@@ -269,6 +269,17 @@ namespace pilo {
                 return _m_root_value;
             }
 
+            ::pilo::tlv* json_configuator::get_value(const char* fqn, ::pilo::err_t& err)
+            {                
+                if (_m_root_value == nullptr) {
+                    err = ::pilo::mk_perr(PERR_NULL_PTR);
+                    return nullptr;
+                }
+
+                ::pilo::tlv* tlv_p = _m_root_value->get_tlv<32>(fqn, err);
+                return tlv_p;
+            }
+
         }
     }
 }

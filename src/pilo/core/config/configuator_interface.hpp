@@ -16,6 +16,7 @@ namespace pilo {
                 virtual ::pilo::err_t load(const char* data, ::pilo::i64_t len) = 0;
                 virtual ::pilo::err_t save() = 0;
                 virtual ::pilo::tlv* root() = 0;
+                virtual ::pilo::tlv* get_value(const char* fqn, ::pilo::err_t& err) = 0;
             };
         }
     }

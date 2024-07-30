@@ -25,7 +25,7 @@ namespace pilo {
                 ::pilo::err_t load(const char* data, ::pilo::i64_t len) override;
                 ::pilo::err_t save() override;
                 ::pilo::tlv* root() override;
-                
+                ::pilo::tlv* get_value(const char* fqn, ::pilo::err_t& err) override;
 
             public:
                 void set_file(const::pilo::core::io::path* path_ptr);
