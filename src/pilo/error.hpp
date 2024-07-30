@@ -96,6 +96,7 @@
 #define PERR_IO_TELL_FAIL       (79)
 
 #define PERR_FILE_SETSIZE_FAIL  (80)
+#define PERR_PARSE_JSON_FAIL    (81)
 
 
 #define PILO_ERRRET(e)         if (PILO_OK != (e)) { return e; }    

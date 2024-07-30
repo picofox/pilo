@@ -40,6 +40,14 @@ namespace pilo
                     return filp->write(buffer, b_len, &rlen);
                 }
 
+                static void s_free_all_buffer(char** p)
+                {
+                    if (p != nullptr && *p != nullptr) {
+                        PMF_HEAP_FREE(*p);
+                        *p = nullptr;
+                    }
+                }
+
             public:
                 file()
                 {

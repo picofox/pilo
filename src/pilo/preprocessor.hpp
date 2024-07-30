@@ -7,7 +7,7 @@
 #define SP_PMI_4K_BUFFER_NODE_SIZE          (4096)
 #define SP_PMI_4K_BUFFER_NODE_STEP          (1024)
 #define SP_PMI_PATH_DEFAULT_LENGTH          (1)
-#define SP_PMS_PILO_PREDEF_DIR_CNF          "cnf"
+#define SP_PMS_PILO_PREDEF_DIR_CNF          "conf"
 #define SP_PMS_PILO_PREDEF_DIR_TMP          "tmp"
 #define SP_PMS_PILO_PREDEF_DIR_LOG          "log"
 #define SP_PMI_TEXT_FILE_RDBUF_SIZE         (1024)

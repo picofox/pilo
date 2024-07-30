@@ -3,6 +3,7 @@
 #include "pilo/core/string/string_operation.hpp"
 #include "pilo/core/io/formatted_io.hpp"
 #include "pilo/core/config/json_configuator.hpp"
+#include "pilo/core/process/context.hpp"
 
 using namespace ::pilo::func_test;
 
@@ -19,14 +20,20 @@ namespace pilo
 				int case_json_config_basic(::pilo::core::testing::func_test_case* p_case)
 				{
 					::pilo::core::config::json_configuator jct;
+					std::string fn = PILO_CONTEXT->process_basename();
+					fn += ".json";
 
-					::pilo::core::io::path p("f:\\xinguanghemei_bak.rar");
+					::pilo::core::io::path p(fn.c_str(), ::pilo::predefined_pilo_dir_enum::cnf);
 					jct.set_file(&p);
 
-					::pilo::err_t r = jct.load();
-					if (r == PILO_OK)
-						return 0;
+					::pilo::err_t err = jct.load();
+					if (err != PILO_OK) {
+						return p_case->error(err, "load json file %s failed.", fn.c_str());
+					}
+						
+					std::string str = jct.root()->to_string();
 
+					printf("(%s)\n", str.c_str());
 
 
 					p_case->set_result(PILO_OK);

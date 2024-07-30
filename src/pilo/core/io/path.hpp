@@ -384,6 +384,9 @@ namespace pilo
 
                     ::pilo::err_t ensure_parent_path_exist() const
                     {
+                        if (this->absolute_type() == path::relative) {
+                            return PILO_OK;
+                        }
 #ifdef WINDOWS
                         if (this->parentpath_len() > 0 && this->parentpath()[this->parentpath_len() - 1] == ':') {
                             return PILO_OK;

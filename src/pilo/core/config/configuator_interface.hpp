@@ -3,6 +3,7 @@
 
 #include "../io/path.hpp"
 #include "../io/file.hpp"
+#include "../../tlv.hpp"
 
 
 namespace pilo {
@@ -14,6 +15,7 @@ namespace pilo {
                 virtual ::pilo::err_t load() = 0;
                 virtual ::pilo::err_t load(const char* data, ::pilo::i64_t len) = 0;
                 virtual ::pilo::err_t save() = 0;
+                virtual ::pilo::tlv* root() = 0;
             };
         }
     }
