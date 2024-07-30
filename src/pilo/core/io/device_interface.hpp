@@ -59,11 +59,13 @@ namespace pilo
 
             public:
                 virtual ::pilo::err_t initialize(::pilo::tlv * param) = 0; 
+                virtual ::pilo::err_t open(creation_mode cm, access_permission perm, dev_open_flags f) = 0;
                 virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, predefined_pilo_dir_enum prefix, dev_open_flags f) = 0;
                 virtual ::pilo::err_t open(const ::pilo::core::io::path* p, creation_mode cm, access_permission perm, dev_open_flags f) = 0;
                 virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, dev_open_flags f) = 0;
                 virtual ::pilo::err_t read(char * buffer, ::pilo::i64_t rbs, ::pilo::i64_t * n_read) = 0;
                 virtual ::pilo::err_t read(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t rbs, ::pilo::i64_t* n_read) = 0;
+                virtual char* read_all(char* buffer, ::pilo::i64_t capa, ::pilo::i64_t* n_read, ::pilo::err_t *) = 0;
                 virtual ::pilo::err_t write(const char* buffer, ::pilo::i64_t wbs, ::pilo::i64_t * n_written) = 0;
                 virtual ::pilo::err_t write(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t wbs, ::pilo::i64_t* n_written) = 0;
                 virtual ::pilo::err_t seek(seek_whence whence, ::pilo::i64_t off) = 0;
@@ -74,6 +76,7 @@ namespace pilo
                 virtual ::pilo::err_t finalize() = 0;
                 virtual ::pilo::err_t exist() const = 0;
                 virtual ::pilo::err_t remove() = 0;
+                virtual ::pilo::err_t set_path(const ::pilo::core::io::path* path) = 0;
 
             public:   
                 virtual void set_flag(dev_open_flags f)

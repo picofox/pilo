@@ -75,6 +75,16 @@ namespace pilo
                 }
 
             public:
+
+                ::pilo::err_t set_path(const ::pilo::core::io::path* path)
+                {
+                    if (this->state() > state_code::initialized) {
+                        return ::pilo::mk_perr(PERR_EXIST);
+                    }
+                    this->_m_path = *path;
+                    return PILO_OK;
+                }
+
                 ::pilo::err_t set_size(::pilo::i64_t length)
                 {
                     return ::pilo::core::io::xpf_set_size(_m_fd, length);
@@ -91,6 +101,21 @@ namespace pilo
                     }
                     this->set_state(state_code::initialized);
                     return PILO_OK;
+                }
+
+                virtual ::pilo::err_t open(creation_mode cm, access_permission perm, dev_open_flags f)
+                {
+                    if (this->_m_path.invalid())
+                        return ::pilo::mk_err(PERR_INVALID_PATH);
+                    ::pilo::err_t err = _pre_open();
+                    if (err != PILO_OK)
+                        return err;
+
+                    if ((err = _m_path.ensure_parent_path_exist()) != PILO_OK) {
+                        return err;
+                    }
+
+                    return this->_open(cm, perm, f);                    
                 }
 
                 virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, predefined_pilo_dir_enum prefix, dev_open_flags f)
@@ -160,6 +185,41 @@ namespace pilo
 
 
                     return _read(buf, rbs, n_read);
+                }
+
+                virtual char* read_all(char* buffer, ::pilo::i64_t capa, ::pilo::i64_t* n_read, ::pilo::err_t * rerr)
+                {
+                    ::pilo::err_t err = _pre_read();
+                    if (err != PILO_OK) {
+                        ::pilo::set_if_ptr_is_not_null(rerr, err);
+                        return nullptr;
+                    }
+
+
+                    ::pilo::i64_t size_to_read = 0;
+                    err = xpf_get_file_size(this->_m_fd, size_to_read);
+                    if (err != PILO_OK) {
+                        ::pilo::set_if_ptr_is_not_null(rerr, err);
+                        return nullptr;
+                    }
+
+                    char* ptr = buffer;
+                    if (capa < size_to_read + 1 || buffer == nullptr) {
+                        ptr = (char*)PMF_HEAP_MALLOC(size_to_read + 1);
+                        if (ptr == nullptr) {
+                            ::pilo::set_if_ptr_is_not_null(rerr, ::pilo::mk_err(PERR_INSUF_HEAP));
+                            return nullptr;
+                        }
+                        ptr[size_to_read] = 0;
+                    }
+
+                    err = _read(ptr, size_to_read, n_read);
+                    if (err != PILO_OK) {
+                        ::pilo::set_if_ptr_is_not_null(rerr, err);
+                        return nullptr;
+                    }
+
+                    return ptr;
                 }
 
 

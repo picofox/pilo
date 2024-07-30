@@ -70,6 +70,7 @@ namespace pilo
             ::pilo::err_t xpf_read_file(::pilo::os_file_handle_t fd, char* buffer, ::pilo::i64_t rbs, ::pilo::i64_t* n_read);
             ::pilo::err_t xpf_set_size(::pilo::os_file_handle_t fd, ::pilo::i64_t sz);
 
+            ::pilo::err_t xpf_get_file_size(::pilo::os_file_handle_t fd, ::pilo::i64_t &sz);
 
 
         } // end of name space

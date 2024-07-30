@@ -45,6 +45,11 @@ namespace pilo
 				int case_paths_attr(::pilo::core::testing::func_test_case* p_case);
 			}
 
+			namespace config
+			{
+				int case_json_config_basic(::pilo::core::testing::func_test_case* p_case);
+			}
+
 			namespace rtti
 			{
 				int case_wired_deque_pushback(::pilo::core::testing::func_test_case* p_case);

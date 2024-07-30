@@ -294,3 +294,22 @@ void pilo::core::io::xpf_close_file(::pilo::os_file_handle_t* fd)
     return PILO_OK;
 }
 
+::pilo::err_t pilo::core::io::xpf_get_file_size(::pilo::os_file_handle_t fd, ::pilo::i64_t& sz)
+{
+#ifdef WINDOWS
+    LARGE_INTEGER size = {0};
+    BOOL bret = ::GetFileSizeEx(fd, &size);
+    if (!bret)
+        return ::pilo::mk_err(PERR_IO_READ_FAIL);
+    sz = size.QuadPart;
+#else
+    struct stat file_inf = {0};
+    int ret = fstat(fd, &file_inf);
+    if (0! = ret)
+        return ::pilo::mk_err(PERR_IO_READ_FAIL);
+    sz = (::pilo::i64_t)file_inf.st_size;
+
+#endif
+    return PILO_OK;
+}
+

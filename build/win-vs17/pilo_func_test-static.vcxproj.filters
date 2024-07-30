@@ -4,6 +4,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\case_tlv_basic.cpp">
       <Filter>pilo_func_test</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\config\case_json_config_basic.cpp">
+      <Filter>pilo_func_test\core\config</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\crypto\case_base64.cpp">
       <Filter>pilo_func_test\core\crypto</Filter>
     </ClCompile>
@@ -49,6 +52,9 @@
     </Filter>
     <Filter Include="pilo_func_test\core">
       <UniqueIdentifier>{385B5755-C305-3173-963C-C4CBF8DB9972}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo_func_test\core\config">
+      <UniqueIdentifier>{B22E4717-CC01-3563-862E-A2971E2C482B}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo_func_test\core\crypto">
       <UniqueIdentifier>{8979A699-B1BC-3DBD-B142-8675C73846A5}</UniqueIdentifier>

@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\json_configuator.cpp">
+      <Filter>pilo\core\config</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp">
       <Filter>pilo\core\crypto</Filter>
     </ClCompile>
@@ -149,6 +152,15 @@
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp">
       <Filter>pilo\core\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuator_interface.hpp">
+      <Filter>pilo\core\config</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.hpp">
+      <Filter>pilo\core\config</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\json_configuator.hpp">
+      <Filter>pilo\core\config</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\auto_array.hpp">
       <Filter>pilo\core\container</Filter>
@@ -607,6 +619,9 @@
     </Filter>
     <Filter Include="pilo\core\algorithm">
       <UniqueIdentifier>{C4C4E99B-CE10-33A3-836A-90BC2FAC23DB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\config">
+      <UniqueIdentifier>{6B267DC8-0D06-31E6-9ABE-305141A9ED54}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo\core\container">
       <UniqueIdentifier>{2D759E9B-C72B-3DCB-814A-5FC53B226830}</UniqueIdentifier>
