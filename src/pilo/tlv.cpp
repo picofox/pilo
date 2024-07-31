@@ -272,6 +272,7 @@ namespace pilo
                 {
                     return ::pilo::mk_perr( PERR_INSUF_HEAP);
                 }
+                _dynamic_data[len] = 0;
                 ::pilo::core::string::n_copy(_dynamic_data, len + 1, str, len);
                 _size = len + 1;
             }
@@ -611,6 +612,7 @@ namespace pilo
                     {
                         return ::pilo::mk_perr( PERR_INSUF_HEAP);
                     }
+                    _dynamic_data[len] = 0;
                     memcpy(_dynamic_data, bs, len);
                     _size = len + 1;
                     _dynamic_data[len] = 0;
