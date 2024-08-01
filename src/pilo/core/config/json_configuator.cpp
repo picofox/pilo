@@ -1,5 +1,8 @@
 ﻿#include "json_configuator.hpp"
 #include "../../external/rapidjson/document.h"
+#include "../../external/rapidjson/writer.h"
+#include "../../external/rapidjson/stringbuffer.h"
+
 
 
 namespace pilo {
@@ -40,8 +43,11 @@ namespace pilo {
                 ::pilo::i64_t data_len = 0;
                 char* data = this->_m_file_ptr->read_all(buffer, sizeof(buffer), &data_len, &err);
                 if (err != PILO_OK) {
+                    this->_m_file_ptr->close();
                     return err;
                 }
+                this->_m_file_ptr->close();
+
                 if (data == nullptr) {
                     return ::pilo::mk_perr(PERR_VAL_EMPTY);
                 }                
@@ -56,23 +62,45 @@ namespace pilo {
 
             ::pilo::err_t core::config::json_configuator::save()
             {
-                return ::pilo::err_t();
-            }
+                if (this->_m_root_value == nullptr)
+                    return ::pilo::mk_perr(PERR_NOOP);
 
-            void json_configuator::set_file(const::pilo::core::io::path* path_ptr)
-            {
-                if (_m_file_ptr != nullptr) {
-                    return;
+                if (_m_file_ptr == nullptr) {
+                    return ::pilo::mk_perr(PERR_NULL_PTR);
                 }
 
-                if (path_ptr != nullptr) {
-                    _m_file_ptr = new ::pilo::core::io::file<>();
-                    _m_file_ptr->set_path(path_ptr);
+                ::pilo::core::io::path pth;
+                ::pilo::err_t err = PILO_OK;
+
+                err = _m_file_ptr->path()->make_temp(pth,".tmp", ::pilo::core::io::path::TFNRandPolicyNone);
+                if (err != PILO_OK)
+                    return err;               
+
+                ::rapidjson::Document root_jdoc; 
+                err = _write_json_object(root_jdoc, _m_root_value, root_jdoc.GetAllocator());
+                if (err != PILO_OK)
+                    return err;
+
+                ::pilo::core::io::file<> tmp_file;
+                err = tmp_file.open(&pth, ::pilo::core::io::creation_mode::create_always
+                    , ::pilo::core::io::access_permission::write
+                    , ::pilo::core::io::dev_open_flags::append);
+                rapidjson::StringBuffer jbuffer;
+                rapidjson::Writer<rapidjson::StringBuffer> writer(jbuffer);
+                root_jdoc.Accept(writer);
+                ::pilo::i64_t wlen = (::pilo::i64_t)jbuffer.GetSize();
+                ::pilo::i64_t rlen = 0;
+                err = tmp_file.write(jbuffer.GetString(), wlen, &rlen);
+                if (err != PILO_OK || wlen < rlen) {
+                    tmp_file.close();
+                    return ::pilo::mk_err(PERR_IO_WRITE_FAIL);
                 }
-                else {
-                    _m_file_ptr = nullptr;
-                }
+
+                tmp_file.close();
+
+                return err;
             }
+
 
             ::pilo::err_t json_configuator::load(const char* data, ::pilo::i64_t len)
             {
@@ -203,6 +231,125 @@ namespace pilo {
                 return PILO_OK;
             }
 
+            ::pilo::core::io::path* json_configuator::file_path()
+            {
+                if (this->_m_file_ptr != nullptr) {
+                    return this->_m_file_ptr->path();
+                }
+                return nullptr;
+            }
+
+            ::pilo::err_t json_configuator::_write_json_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (tlvp->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_single)
+                {
+                    if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_na)
+                    {
+                        obj.SetNull();
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i8) {
+                        obj.SetInt((::pilo::i32_t)tlvp->as_i8(&err));
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i16) {
+                        obj.SetInt((::pilo::i32_t)tlvp->as_i16(&err));
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i32) {
+                        obj.SetInt(tlvp->as_i32(&err));
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                        obj.SetInt64(tlvp->as_i64(&err));
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u8) {
+                        obj.SetUint((::pilo::u32_t)tlvp->as_u8(&err));
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u16) {
+                        obj.SetUint((::pilo::u32_t)tlvp->as_u16(&err));
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u32) {
+                        obj.SetUint(tlvp->as_u32(&err));
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                        obj.SetUint64(tlvp->as_u64(&err));
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                        obj.SetBool(tlvp->as_bool(&err));
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+                        obj.SetFloat(tlvp->as_f32(&err));
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+                        obj.SetDouble(tlvp->as_f64(&err));
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                        char tmp_buffer[32] = { 0 };
+                        ::pilo::i32_t rlen = 0;
+                        const char* pret = tlvp->as_bytes(tmp_buffer, sizeof(tmp_buffer), &err, &rlen);
+                        if (pret == nullptr) {
+                            obj.SetNull();
+                        }
+                        else {
+                            obj.SetString(pret, rlen);
+                        }                        
+                    }
+                    else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                        const std::string* strp = tlvp->as_str_ptr(&err);
+                        if (strp == nullptr) {
+                            obj.SetNull();
+                        }
+                        else {
+                            obj.SetString(strp->c_str(), (::rapidjson::SizeType) strp->size());
+                        }
+                    }
+                    else
+                    {
+                        err = ::pilo::mk_err(PERR_INV_VAL_TYPE);
+                    }
+                }
+                else if (tlvp->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_array)
+                {
+                    obj.SetArray();
+
+                    for (::pilo::i32_t i = 0; i < tlvp->size(); i++) {
+                        ::rapidjson::Value tmp_val;
+                        const ::pilo::tlv* sub_tlv = tlvp->get<::pilo::tlv*>(i, &err);
+                        err = _write_json_object(tmp_val, sub_tlv, allocator);
+                        if (err != PILO_OK)
+                            return err;
+                        obj.PushBack(tmp_val, allocator);                        
+                    }
+                }
+                else if (tlvp->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_dict)
+                {
+                    obj.SetObject();
+                    if (tlvp->daynamic_data() != nullptr) {
+                        if (tlvp->key_type() != ::pilo::core::rtti::wired_type::key_type_str
+                            || tlvp->value_type() != ::pilo::core::rtti::wired_type::value_type_tlv) {
+                            return ::pilo::mk_perr(PERR_INV_KEY_TYPE);
+                        }
+
+                        std::map<std::string, ::pilo::tlv*>* map_ptr = (std::map<std::string, ::pilo::tlv*>*) tlvp->daynamic_data();
+                        auto cit = map_ptr->begin();
+                        for (; cit != map_ptr->end(); cit++) {
+                            ::rapidjson::Value tmp_val;
+                            ::rapidjson::Value key_value(cit->first.c_str(), allocator);
+                            err = _write_json_object(tmp_val, cit->second, allocator);
+                            if (err != PILO_OK)
+                                return err;
+
+                            obj.AddMember(key_value, tmp_val, allocator);                            
+                        }                    
+                    }
+
+                }
+                else {
+                    err = ::pilo::mk_err(PERR_INV_VAL_TYPE);
+                }
+
+
+                return PILO_OK;
+            }
+
             ::pilo::err_t json_configuator::_parse_json_object(::rapidjson::Value& obj, ::pilo::tlv* parent_tlv)
             {
                 ::pilo::err_t err = PILO_OK;
@@ -278,6 +425,131 @@ namespace pilo {
 
                 ::pilo::tlv* tlv_p = _m_root_value->get_tlv<32>(fqn, err);
                 return tlv_p;
+            }
+
+            ::pilo::err_t json_configuator::set_file(const char* file_path_cstr, ::pilo::pathlen_t len, ::pilo::predefined_pilo_dir predef_dir)
+            {
+                if (_m_file_ptr != nullptr) {
+                    return ::pilo::mk_perr(PERR_EXIST) ;
+                }
+
+                if (file_path_cstr == nullptr) {
+                    return ::pilo::mk_perr(PERR_NULL_PTR);
+                }
+
+                _m_file_ptr = new ::pilo::core::io::file<>();
+
+                ::pilo::i8_t abs_type = ::pilo::core::io::path::absolute_type(file_path_cstr, false, len);
+                if (abs_type == ::pilo::core::io::path::absolute) {
+                    return _m_file_ptr->path()->set(file_path_cstr, len, 0, ::pilo::predefined_pilo_dir::count);
+                }
+                else {
+                    return _m_file_ptr->path()->set(file_path_cstr, len, 0, predef_dir);
+                }
+                
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, bool is_force)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (_m_root_value == nullptr) {
+                    _m_root_value = ::pilo::tlv::allocate();
+                }
+                _m_root_value->set(fqn, err, is_force);
+                return err;
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, bool iv, bool is_force)
+            {
+                return _set_trivil_type(fqn, iv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::i8_t iv, bool is_force)
+            {
+                return _set_trivil_type(fqn, iv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::i16_t iv, bool is_force)
+            {
+                return _set_trivil_type(fqn, iv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::i32_t iv, bool is_force)
+            {
+                return _set_trivil_type(fqn, iv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::i64_t iv, bool is_force)
+            {
+                return _set_trivil_type(fqn, iv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::u8_t iv, bool is_force)
+            {
+                return _set_trivil_type(fqn, iv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::u16_t iv, bool is_force)
+            {
+                return _set_trivil_type(fqn, iv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::u32_t iv, bool is_force)
+            {
+                return _set_trivil_type(fqn, iv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::u64_t iv, bool is_force)
+            {
+                return _set_trivil_type(fqn, iv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::f32_t fv, bool is_force)
+            {
+                return _set_trivil_type(fqn, fv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::f64_t fv, bool is_force)
+            {
+                return _set_trivil_type(fqn, fv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, const std::string& sv, bool is_force)
+            {
+                return _set_trivil_type(fqn, sv, is_force);
+            }
+
+            ::pilo::err_t json_configuator::set_value(const char* fqn, const char* value, ::pilo::i32_t len, bool adopt, bool is_force)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (_m_root_value == nullptr) {
+                    _m_root_value = ::pilo::tlv::allocate();
+                }
+
+                if (fqn == nullptr || *fqn == 0)
+                {
+                    err = _m_root_value->set_cstr(value, len, adopt);
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
+
+                if (!is_force)
+                {
+                    ::pilo::tlv* tmp = _m_root_value->get_tlv<32>(fqn, err);
+                    if (tmp != nullptr)
+                    {
+                        return ::pilo::mk_perr(PERR_EXIST);
+                    }
+                    err = PILO_OK;
+                }
+
+                ::pilo::tlv* t = _m_root_value->set_tlv<32>(fqn, err);
+                if (t != nullptr)
+                {
+                    t->set_cstr(value, len, adopt);
+                }
+
+
+                return err;
             }
 
         }

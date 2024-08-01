@@ -713,7 +713,7 @@ namespace pilo
 		typedef _pilo_truetype     is_basetype;
 	};
 
-	enum class predefined_pilo_dir_enum
+	enum class predefined_pilo_dir
 	{
 		cwd = 0,
 		exe,

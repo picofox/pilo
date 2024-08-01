@@ -137,7 +137,7 @@ namespace pilo
 #endif
 
 
-					p.set(test_file_path_str, predefined_pilo_dir_enum::count);
+					p.set(test_file_path_str, predefined_pilo_dir::count);
 					if (p.invalid())
 					{
 						return p_case->error(PERR_INVALID_PATH, "init path failed");
@@ -352,7 +352,7 @@ namespace pilo
 					::pilo::err_t err = PILO_OK;
 					
 
-					p.set("test_fs/oc/f1.txt", predefined_pilo_dir_enum::tmp);
+					p.set("test_fs/oc/f1.txt", predefined_pilo_dir::tmp);
 					if (p.invalid())
 					{
 						return p_case->error(PERR_INVALID_PATH, "init path failed");
@@ -398,7 +398,7 @@ namespace pilo
 					::pilo::core::io::path p;
 					::pilo::err_t err = PILO_OK;
 
-					p.set("test_fs/oc/f0.txt", predefined_pilo_dir_enum::tmp);
+					p.set("test_fs/oc/f0.txt", predefined_pilo_dir::tmp);
 					if (p.invalid())
 					{
 						return p_case->error(PERR_INVALID_PATH, "init path failed");

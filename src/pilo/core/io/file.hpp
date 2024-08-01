@@ -93,6 +93,11 @@ namespace pilo
                     return PILO_OK;
                 }
 
+                ::pilo::core::io::path * path()
+                {
+                    return &(this->_m_path);
+                }
+
                 ::pilo::err_t set_size(::pilo::i64_t length)
                 {
                     return ::pilo::core::io::xpf_set_size(_m_fd, length);
@@ -126,7 +131,7 @@ namespace pilo
                     return this->_open(cm, perm, f);                    
                 }
 
-                virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, predefined_pilo_dir_enum prefix, dev_open_flags f)
+                virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, predefined_pilo_dir prefix, dev_open_flags f)
                 {
                     ::pilo::err_t err = _pre_open();
                     if (err != PILO_OK)
@@ -169,7 +174,7 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
 
-                    this->_m_path.set(path_str, predefined_pilo_dir_enum::count);
+                    this->_m_path.set(path_str, predefined_pilo_dir::count);
                     if (this->_m_path.invalid()) {
                         return ::pilo::mk_perr(PERR_INVALID_PATH);
                     }

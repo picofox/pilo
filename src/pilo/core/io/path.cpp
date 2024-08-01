@@ -4,6 +4,7 @@
 #include "../string/string_operation.hpp"
 #include "../pattern/resource_cleaner.hpp"
 #include <vector>
+#include "../process/context.hpp"
 
 #ifdef WINDOWS
 #include <Shlobj.h>
@@ -67,7 +68,7 @@ namespace pilo {
 
 
             ::pilo::err_t path::set(const char *p, ::pilo::i64_t len, ::pilo::pathlen_t extra,
-                                    predefined_pilo_dir_enum rel_to_abs_basis) {
+                                    predefined_pilo_dir rel_to_abs_basis) {
                 if (p == nullptr) return ::pilo::mk_perr(PERR_NULL_PARAM);
                 bool isabs = false;
                 char sb[1] = {0};
@@ -310,7 +311,7 @@ namespace pilo {
                 if (err != PILO_OK)
                     return err;
 
-                return this->set(buffer.begin(), buffer.size(), extra, ::pilo::predefined_pilo_dir_enum::cwd);
+                return this->set(buffer.begin(), buffer.size(), extra, ::pilo::predefined_pilo_dir::cwd);
             }
 
             ::pilo::err_t path::fill_with_exe(::pilo::pathlen_t extra) {
@@ -359,7 +360,7 @@ namespace pilo {
             }
 
             ::pilo::err_t path::append(const char *p, ::pilo::i64_t len, ::pilo::pathlen_t extra,
-                                       predefined_pilo_dir_enum rel_to_abs_basis) {
+                                       predefined_pilo_dir rel_to_abs_basis) {
                 if (p == nullptr) return ::pilo::mk_perr(PERR_NULL_PARAM);
 
                 if (len == path::unknow_length)
@@ -436,7 +437,7 @@ namespace pilo {
 
 
 #ifdef WINDOWS
-            ::pilo::err_t path::validate_path(::pilo::char_buffer_t* buffer, const char* path_str, ::pilo::i64_t path_str_len, ::pilo::pathlen_t extra, ::pilo::i8_t& fs_type, bool& isabs, predefined_pilo_dir_enum rel_to_abs_basis)
+            ::pilo::err_t path::validate_path(::pilo::char_buffer_t* buffer, const char* path_str, ::pilo::i64_t path_str_len, ::pilo::pathlen_t extra, ::pilo::i8_t& fs_type, bool& isabs, predefined_pilo_dir rel_to_abs_basis)
             {
                 if (buffer == nullptr)
                     return ::pilo::mk_perr(PERR_NULL_PARAM);
@@ -464,7 +465,7 @@ namespace pilo {
                 ::pilo::i8_t abs_type = path::absolute_type(path_str, nullptr, (::pilo::pathlen_t)path_str_len);
                 if (abs_type == path::relative)
                 {
-                    if (rel_to_abs_basis != predefined_pilo_dir_enum::count)
+                    if (rel_to_abs_basis != predefined_pilo_dir::count)
                     {
                         path prefix;
                         if (prefix.fill_with_predef_path(rel_to_abs_basis, 0) != PILO_OK)
@@ -1713,6 +1714,33 @@ namespace pilo {
                 return p->set(tp, path::unknow_length, extra);
 #endif
 
+            }
+
+            ::pilo::err_t path::make_temp(::pilo::core::io::path& p, const char* suffix, ::pilo::u32_t rand_alg) const
+            {
+                char tmp_buffer[128] = { 0 };
+                int pid = PILO_CONTEXT->process_id();
+                ::pilo::i32_t tmp_len = 0;
+                ::pilo::i32_t sub_tmp_len = 0;
+                if (suffix != nullptr) {
+                    tmp_len = (::pilo::i32_t) ::pilo::core::io::string_formated_output(tmp_buffer, sizeof(tmp_buffer), "%s", suffix);
+                }
+
+                if (rand_alg & ::pilo::core::io::path::TFNRandPolicyPid) {
+                    sub_tmp_len = (::pilo::i32_t) ::pilo::core::io::string_formated_output(tmp_buffer + tmp_len, sizeof(tmp_buffer) - tmp_len, "%d", pid);
+                }
+                tmp_len += sub_tmp_len;
+
+                if (rand_alg & ::pilo::core::io::path::TFNRandPolicyTimeZone) {
+                    sub_tmp_len = (::pilo::i32_t) ::pilo::core::io::string_formated_output(tmp_buffer + tmp_len, sizeof(tmp_buffer) - tmp_len, "-%x", ::pilo::core::datetime::timestamp_micro_system());
+                }
+                tmp_len += sub_tmp_len;
+
+                ::pilo::core::memory::object_array<char, 256> cb;
+                cb.check_space(this->length() + tmp_len + 1);
+                ::pilo::core::io::string_formated_output(cb.begin(), cb.capacity(), "%s%s", this->fullpath(), tmp_buffer);
+
+                return p.set(cb.begin(), ::pilo::predefined_pilo_dir::count);
             }
 
             ::pilo::err_t

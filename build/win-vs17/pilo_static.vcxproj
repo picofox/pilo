@@ -105,7 +105,8 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Debug/libpilo-static-debug.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
@@ -161,7 +162,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Release/libpilo-static-release.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
@@ -216,7 +218,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/MinSizeRel/libpilo-static.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
@@ -270,7 +273,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/RelWithDebInfo/libpilo-static.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
@@ -355,6 +359,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\pilo\core\config\core_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\json_configuator.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\datetime.cpp" />
@@ -425,6 +430,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\io.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\text_file.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\text_logger.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\abstract_byte_buffer.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\autoreset_object_pool.hpp" />
@@ -518,44 +524,44 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\preprocessor.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\tlv.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\types.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\allocators.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\cursorstreamwrapper.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\document.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\encodedstream.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\encodings.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\error\en.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\error\error.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\filereadstream.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\filewritestream.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\fwd.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\biginteger.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\clzll.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\diyfp.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\dtoa.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\ieee754.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\itoa.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\meta.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\pow10.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\regex.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\stack.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\strfunc.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\strtod.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\swap.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\istreamwrapper.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\memorybuffer.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\memorystream.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\msinttypes\inttypes.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\msinttypes\stdint.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\ostreamwrapper.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\pointer.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\prettywriter.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\rapidjson.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\reader.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\schema.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\stream.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\stringbuffer.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\uri.h" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\writer.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\allocators.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\cursorstreamwrapper.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\document.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\encodedstream.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\encodings.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\error\en.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\error\error.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\filereadstream.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\filewritestream.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\fwd.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\biginteger.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\clzll.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\diyfp.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\dtoa.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\ieee754.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\itoa.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\meta.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\pow10.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\regex.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\stack.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\strfunc.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\strtod.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\swap.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\istreamwrapper.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\memorybuffer.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\memorystream.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\msinttypes\inttypes.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\msinttypes\stdint.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\ostreamwrapper.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\pointer.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\prettywriter.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\rapidjson.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\reader.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\schema.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\stream.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\stringbuffer.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\uri.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\writer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\projects\git_repo\libpilo\build\win-vs17\ZERO_CHECK.vcxproj">

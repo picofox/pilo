@@ -2125,7 +2125,7 @@ namespace pilo
         return nullptr;
     }
 
-    const char* tlv::as_bytes(char* buffer, ::pilo::i32_t sz, ::pilo::err_t* err, ::pilo::i32_t* rlen)
+    const char* tlv::as_bytes(char* buffer, ::pilo::i32_t sz, ::pilo::err_t* err, ::pilo::i32_t* rlen) const
     {
         if (_type.is_single())
         {

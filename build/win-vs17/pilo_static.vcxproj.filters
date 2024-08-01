@@ -145,6 +145,7 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp">
       <Filter>pilo</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\pilo\core\config\core_config.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp">
@@ -212,6 +213,9 @@
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\text_file.hpp">
       <Filter>pilo\core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_interface.hpp">
+      <Filter>pilo\core\logging</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\text_logger.hpp">
       <Filter>pilo\core\logging</Filter>
@@ -492,119 +496,119 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\types.hpp">
       <Filter>pilo</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\allocators.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\allocators.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\cursorstreamwrapper.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\cursorstreamwrapper.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\document.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\document.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\encodedstream.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\encodedstream.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\encodings.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\encodings.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\error\en.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\error</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\error\en.h">
+      <Filter>pilo\external\rapidjson\error</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\error\error.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\error</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\error\error.h">
+      <Filter>pilo\external\rapidjson\error</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\filereadstream.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\filereadstream.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\filewritestream.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\filewritestream.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\fwd.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\fwd.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\biginteger.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\biginteger.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\clzll.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\clzll.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\diyfp.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\diyfp.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\dtoa.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\dtoa.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\ieee754.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\ieee754.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\itoa.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\itoa.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\meta.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\meta.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\pow10.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\pow10.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\regex.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\regex.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\stack.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\stack.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\strfunc.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\strfunc.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\strtod.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\strtod.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\internal\swap.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\internal</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\internal\swap.h">
+      <Filter>pilo\external\rapidjson\internal</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\istreamwrapper.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\istreamwrapper.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\memorybuffer.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\memorybuffer.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\memorystream.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\memorystream.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\msinttypes\inttypes.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\msinttypes</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\msinttypes\inttypes.h">
+      <Filter>pilo\external\rapidjson\msinttypes</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\msinttypes\stdint.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson\msinttypes</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\msinttypes\stdint.h">
+      <Filter>pilo\external\rapidjson\msinttypes</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\ostreamwrapper.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\ostreamwrapper.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\pointer.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\pointer.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\prettywriter.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\prettywriter.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\rapidjson.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\rapidjson.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\reader.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\reader.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\schema.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\schema.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\stream.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\stream.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\stringbuffer.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\stringbuffer.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\uri.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\uri.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\include\rapidjson\writer.h">
-      <Filter>pilo\external\rapidjson\include\rapidjson</Filter>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\writer.h">
+      <Filter>pilo\external\rapidjson</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -671,20 +675,14 @@
     <Filter Include="pilo\external\rapidjson">
       <UniqueIdentifier>{E7E264E9-92A0-389D-A6E3-8DF6CB44FE6C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pilo\external\rapidjson\include">
-      <UniqueIdentifier>{E33F27ED-21DF-3017-B1E3-65C472AD3C8F}</UniqueIdentifier>
+    <Filter Include="pilo\external\rapidjson\error">
+      <UniqueIdentifier>{5FE61845-8BC6-3A80-AA63-0DD1B24E88A4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pilo\external\rapidjson\include\rapidjson">
-      <UniqueIdentifier>{9B832CE2-543F-35ED-B578-E9635083E012}</UniqueIdentifier>
+    <Filter Include="pilo\external\rapidjson\internal">
+      <UniqueIdentifier>{1228835C-9E35-3C7A-AA7F-CEC9D0EC70E4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pilo\external\rapidjson\include\rapidjson\error">
-      <UniqueIdentifier>{F4E32BA8-EB83-3CAA-8D16-6A8193BAA22D}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="pilo\external\rapidjson\include\rapidjson\internal">
-      <UniqueIdentifier>{576BE095-95BC-39F8-B204-7F6C2BE06249}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="pilo\external\rapidjson\include\rapidjson\msinttypes">
-      <UniqueIdentifier>{3A977299-F6C4-382F-973F-E87700FBF244}</UniqueIdentifier>
+    <Filter Include="pilo\external\rapidjson\msinttypes">
+      <UniqueIdentifier>{E45413A9-7D78-34E0-AA4F-561E67BB2DFF}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo\external\rapidxml">
       <UniqueIdentifier>{5C58F6C5-94CA-3B33-B1FC-EEE713BADCE8}</UniqueIdentifier>

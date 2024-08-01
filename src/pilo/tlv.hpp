@@ -102,7 +102,7 @@ namespace pilo
 			set(str);
 		}
 
-		template <typename T, ::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, T & value)
+		template <typename T, ::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, T & value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -113,7 +113,7 @@ namespace pilo
 			return  t->get_array<T>(value);
 		}
 
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, ::pilo::i8_t & value)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, ::pilo::i8_t & value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -124,7 +124,7 @@ namespace pilo
 			value = t->as_i8(&err);
 			return PILO_OK;
 		}
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, ::pilo::u8_t & value)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, ::pilo::u8_t & value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -135,7 +135,7 @@ namespace pilo
 			value = t->as_u8(&err);
 			return PILO_OK;
 		}
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, ::pilo::i16_t& value)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, ::pilo::i16_t& value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -146,7 +146,7 @@ namespace pilo
 			value = t->as_i16(&err);
 			return PILO_OK;
 		}
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, ::pilo::u16_t& value)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, ::pilo::u16_t& value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -157,7 +157,7 @@ namespace pilo
 			value = t->as_u16(&err);
 			return PILO_OK;
 		}
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, ::pilo::i32_t& value)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, ::pilo::i32_t& value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -168,7 +168,7 @@ namespace pilo
 			value = t->as_i32(&err);
 			return PILO_OK;
 		}
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, ::pilo::u32_t& value)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, ::pilo::u32_t& value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -179,7 +179,7 @@ namespace pilo
 			value = t->as_u32(&err);
 			return PILO_OK;
 		}
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, ::pilo::i64_t& value)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, ::pilo::i64_t& value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -190,7 +190,7 @@ namespace pilo
 			value = t->as_i64(&err);
 			return PILO_OK;
 		}
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, ::pilo::u64_t& value)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, ::pilo::u64_t& value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -202,7 +202,7 @@ namespace pilo
 			return PILO_OK;
 		}
 
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, bool& value)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, bool& value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -214,7 +214,7 @@ namespace pilo
 			return PILO_OK;
 		}
 
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, ::pilo::f32_t& value)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, ::pilo::f32_t& value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -226,7 +226,7 @@ namespace pilo
 			return PILO_OK;
 		}
 
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, ::pilo::f64_t& value)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, ::pilo::f64_t& value)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -238,7 +238,7 @@ namespace pilo
 			return PILO_OK;
 		}
 
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, char*& value, ::pilo::i32_t * sz)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, char*& value, ::pilo::i32_t * sz)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -251,7 +251,7 @@ namespace pilo
 			return PILO_OK;
 		}
 
-		template <::pilo::i32_t TV_CNT = 16 > ::pilo::err_t get(const char* fqn, std::string& str)
+		template <::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, std::string& str)
 		{
 			::pilo::err_t err = PILO_OK;
 			::pilo::tlv* t = get_tlv<TV_CNT>(fqn, err);
@@ -263,7 +263,7 @@ namespace pilo
 			return PILO_OK;
 		}
 
-		template <::pilo::i32_t TV_CNT = 16 >
+		template <::pilo::i32_t TV_CNT = 32 >
 		::pilo::tlv* get_tlv(const char* fqn, ::pilo::err_t& err)
 		{
 			if (fqn == nullptr || *fqn == 0)
@@ -366,7 +366,35 @@ namespace pilo
 			return p;
 		}
 
-		template <typename T, ::pilo::i32_t TV_CNT = 16 >
+		template <::pilo::i32_t TV_CNT = 32 >
+		::pilo::tlv* set(const char* fqn, ::pilo::err_t& err, bool is_force = false)
+		{
+			if (fqn == nullptr || *fqn == 0)
+			{
+				this->set_na();
+				return this;
+			}
+
+			if (!is_force)
+			{
+				::pilo::tlv* tmp = get_tlv<TV_CNT>(fqn, err);
+				if (tmp != nullptr)
+				{
+					err = ::pilo::mk_perr(PERR_EXIST);
+					return nullptr;
+				}
+				err = PILO_OK;
+			}
+
+			::pilo::tlv* t = set_tlv<TV_CNT>(fqn, err);
+			if (t != nullptr)
+			{
+				t->set_na();
+			}
+			return t;
+		}
+
+		template <typename T, ::pilo::i32_t TV_CNT = 32 >
 		::pilo::tlv* set(const char* fqn, T&& value, ::pilo::err_t& err, bool is_force = false)
 		{
 			if (fqn == nullptr || *fqn == 0)
@@ -394,7 +422,7 @@ namespace pilo
 			return t;
 		}
 
-		template <::pilo::i32_t TV_CNT = 16 >
+		template <::pilo::i32_t TV_CNT = 32 >
 		::pilo::tlv* set(const char* fqn, const char* value, ::pilo::i32_t len, bool adopt, ::pilo::err_t& err, bool is_force = false)
 		{
 			if (fqn == nullptr || *fqn == 0)
@@ -424,7 +452,7 @@ namespace pilo
 
 
 
-		template <::pilo::i32_t TV_CNT = 16 >
+		template <::pilo::i32_t TV_CNT = 32 >
 		::pilo::tlv* set_tlv(const char* fqn, ::pilo::err_t& err)
 		{
 			::pilo::cstr_ref<char> parts[TV_CNT];
@@ -703,6 +731,13 @@ namespace pilo
 			_clear_dynamic_data();
 			_size = 0;
 			_type.reset();
+		}
+		void set_na()
+		{
+			_clear_dynamic_data();
+			_size = 0;
+			_type.reset();
+			_type.set_single_type(::pilo::core::rtti::wired_type::value_type_na);
 		}
 		inline ::pilo::u16_t value_type() const
 		{
@@ -1024,7 +1059,7 @@ namespace pilo
 		const char* as_cstr(char* buffer, ::pilo::i32_t sz, ::pilo::err_t* err, ::pilo::i32_t* rlen, const char* fmt = nullptr) const;
 		const std::string* as_str_ptr(::pilo::err_t* err) const;
 		std::string as_str(::pilo::err_t* err, const char* fmt = nullptr) const;
-		const char* as_bytes(char* buffer, ::pilo::i32_t sz, ::pilo::err_t* err, ::pilo::i32_t* rlen);
+		const char* as_bytes(char* buffer, ::pilo::i32_t sz, ::pilo::err_t* err, ::pilo::i32_t* rlen) const;
 
 		template<typename T>
 		::pilo::err_t get_array(T& arr)

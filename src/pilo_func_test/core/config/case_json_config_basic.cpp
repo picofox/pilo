@@ -24,22 +24,36 @@ namespace pilo
 					fn += PILO_CONTEXT->process_basename();
 					fn += ".json";
 
-					::pilo::core::io::path p(fn.c_str(), ::pilo::predefined_pilo_dir_enum::tmp);
-					jct.set_file(&p);
+					::pilo::core::io::path p(fn.c_str(), ::pilo::predefined_pilo_dir::tmp);
+					jct.set_file(fn.c_str(), (::pilo::pathlen_t)fn.size(), ::pilo::predefined_pilo_dir::tmp);
 
-					::pilo::err_t err = jct.load();
-					if (err != PILO_OK) {
-						return p_case->error(err, "load json file %s failed.", fn.c_str());
-					}
-					//	
-					//std::string str = jct.root()->to_string();
-					//printf("(%s)\n", str.c_str());
+					//::pilo::err_t err = jct.load();
+					//if (err != PILO_OK) {
+					//	return p_case->error(err, "load json file %s failed.", fn.c_str());
+					//}
+					////	
+					
 
-					::pilo::tlv* v0 = jct.get_value("player.name",err);
-					if (v0 == nullptr)
-					{
-						return p_case->error(err, "load json file %s failed.", fn.c_str());
-					}
+					//::pilo::tlv* v0 = jct.get_value("player.name",err);
+					//if (v0 == nullptr)
+					//{
+					//	return p_case->error(err, "load json file %s failed.", fn.c_str());
+					//}
+
+					::pilo::err_t err = PILO_OK;
+					err = jct.set_value("loggers.[0].size_quota", 2048, true);
+
+					std::string str = jct.root()->to_string();
+					printf("(%s)\n", str.c_str());
+
+
+					if (err != PILO_OK) return p_case->error(err, "set ival fialed.");
+
+					err = jct.save();
+					if (err != PILO_OK)
+						return p_case->error(err, "save fialed.");
+
+					
 
 
 					p_case->set_result(PILO_OK);

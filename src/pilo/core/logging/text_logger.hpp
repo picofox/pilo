@@ -8,50 +8,15 @@
 #include "../threading/read_write_mutex.hpp"
 #include "../datetime/datetime.hpp"
 #include "../datetime/timestamp.hpp"
+#include "./logger_interface.hpp"
 
 namespace pilo {
     namespace core {
-        namespace logging {
-
-            const ::pilo::u32_t Date        = 0x00000001;
-            const ::pilo::u32_t Time        = 0x00000002;
-            const ::pilo::u32_t TimeZone    = 0x00000004;
-            const ::pilo::u32_t MsgSeq      = 0x00000008;
-            const ::pilo::u32_t MicroSec    = 0x00000010;
-            const ::pilo::u32_t TimeStamp   = 0x00000020;
-            const ::pilo::u32_t Level       = 0x00000040;
-            const ::pilo::u32_t Pid         = 0x00000080;
-            const ::pilo::u32_t StdTid      = 0x00000100;
-            const ::pilo::u32_t LocalTid    = 0x00000200;
-            const ::pilo::u32_t SrcFile     = 0x00000400;
-            const ::pilo::u32_t SrcLine     = 0x00000800;
-            const ::pilo::u32_t ProcName    = 0x00001000;
-            const ::pilo::u32_t PPid        = 0x00002000;
-
-            const ::pilo::u32_t DefaultHeaders = 0xFFFFFFFF;
-
-
-            enum class level : ::pilo::u16_t
-            {
-                none    = 0,
-                fatal   = 1,
-                error   = 2,
-                warn    = 3,
-                info    = 4,
-                debug   = 5,
-            };
-
-            const ::pilo::u16_t DevNone = 0;
-            const ::pilo::u16_t DevLogFile = 0x00001;
-            const ::pilo::u16_t DevStdOut = 0x00002;
-            const ::pilo::u16_t DevStdErr = 0x00004;
-
-            const ::pilo::u16_t DeviceDevices = (DevLogFile | DevStdOut);
-
+        namespace logging {      
 
             template <typename PLOCK = ::pilo::core::process::dummy_file_lock
                 , typename TLOCK = ::pilo::core::threading::dummy_read_write_lock>
-            class text_logger
+            class text_logger : public logger_interface
             {
             public:
                 static const char* s_level_to_name(::pilo::u32_t level)
@@ -66,7 +31,7 @@ namespace pilo {
 
             public:
                 text_logger(::pilo::core::logging::level lv = ::pilo::core::logging::level::debug
-                    , ::pilo::u16_t outdevs = (::pilo::core::logging::DevLogFile | ::pilo::core::logging::DevStdOut)
+                    , ::pilo::u8_t outdevs = (::pilo::core::logging::DevLogFile | ::pilo::core::logging::DevStdOut)
                     , ::pilo::u32_t hdrs = 0
                     , ::pilo::u32_t fn_suffix = 0
                     , const char* logname = PILO_CONTEXT->process_basename()
@@ -88,7 +53,7 @@ namespace pilo {
                     
                 }
 
-                ~text_logger()
+                virtual ~text_logger()
                 {
                     _m_file.finalize();
                 }
@@ -275,7 +240,7 @@ namespace pilo {
             protected:
 
                 ::pilo::core::logging::level        _m_level;
-                ::pilo::bit_flag<::pilo::u16_t>     _m_outputs;
+                ::pilo::bit_flag<::pilo::u8_t>     _m_outputs;
                 ::pilo::i32_t                       _m_volno;
                 ::pilo::i64_t                       _m_ts;
                 ::pilo::i64_t                       _m_next_shift_ts;
@@ -293,10 +258,10 @@ namespace pilo {
             PMC_DISABLE_COPY(text_logger)
             };       
 
-            typedef class text_logger<::pilo::core::process::dummy_file_lock, ::pilo::core::threading::dummy_read_write_lock>   unsafe_text_logger;
-            typedef class text_logger<::pilo::core::process::file_lock, ::pilo::core::threading::read_write_mutex>   mps_text_logger;
-            typedef class text_logger<::pilo::core::process::dummy_file_lock, ::pilo::core::threading::dummy_read_write_lock>   mts_logger;
-            typedef class text_logger<::pilo::core::process::file_lock, ::pilo::core::threading::read_write_mutex>   safe_text_logger;
+            typedef class text_logger<::pilo::core::process::dummy_file_lock, ::pilo::core::threading::dummy_read_write_lock>   spst_text_logger;
+            typedef class text_logger<::pilo::core::process::file_lock, ::pilo::core::threading::dummy_read_write_lock>   mpst_text_logger;
+            typedef class text_logger<::pilo::core::process::dummy_file_lock, ::pilo::core::threading::read_write_mutex>   spmt_logger;
+            typedef class text_logger<::pilo::core::process::file_lock, ::pilo::core::threading::read_write_mutex>   mpmt_text_logger;
         
         }
     }

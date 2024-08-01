@@ -8,7 +8,7 @@
 #include "../threading/native_mutex.hpp"
 #include "../memory/compactable_autoreset_object_pool.hpp"
 #include "../memory/util.hpp"
-
+#include "../datetime/timestamp.hpp"
 
 #define PMI_STC_PARAM_PATH_STEP_SIZE    (510)
 #define PMI_PATH_MAX_SIZE (65535)
@@ -74,6 +74,10 @@ namespace pilo
                 const static ::pilo::i8_t relative = 0;
                 const static ::pilo::i8_t absolute = 1;
 
+                const static ::pilo::u32_t TFNRandPolicyNone     = 0x00000000;
+                const static ::pilo::u32_t TFNRandPolicyPid      = 0x00000001;
+                const static ::pilo::u32_t TFNRandPolicyTimeZone = 0x00000002;
+
 
             public: //static methods
                 /**
@@ -137,7 +141,7 @@ namespace pilo
                     return PILO_OK;
                 }               
 
-                static ::pilo::err_t validate_path(::pilo::char_buffer_t* buffer, const char* path, ::pilo::i64_t len, ::pilo::pathlen_t extra, ::pilo::i8_t & fs_type, bool & isabs, predefined_pilo_dir_enum rel_to_abs_basis);
+                static ::pilo::err_t validate_path(::pilo::char_buffer_t* buffer, const char* path, ::pilo::i64_t len, ::pilo::pathlen_t extra, ::pilo::i8_t & fs_type, bool & isabs, predefined_pilo_dir rel_to_abs_basis);
                 static ::pilo::err_t get_cwd(::pilo::char_buffer_t& buffer,  ::pilo::i32_t endsep_mode, ::pilo::pathlen_t extra_space = 0);
                 static ::pilo::err_t get_path_node_type(const char* path, ::pilo::pathlen_t path_len,  ::pilo::i8_t path_type_hint, ::pilo::i8_t& node_type, ::pilo::i8_t* target_node_type, ::pilo::char_buffer_t* buffer);
                 static ::pilo::err_t make_dir(const char* dirpath, ::pilo::pathlen_t path_len, bool is_force);
@@ -234,19 +238,19 @@ namespace pilo
 
 
                 public:
-                    path(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::count)
+                    path(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir rel_to_abs_basis = predefined_pilo_dir::count)
                         : _m_pathstr_ptr(nullptr), _m_length(0), _m_capacity(0), _m_lastpart_start_pos(path::unknow_length), _m_ext_name_len(path::invalid_ext_length), _m_type(path::path_type_na)
                     {
                         set(p, len, extra, rel_to_abs_basis);
                     }
 
-                    path(const char* p, ::pilo::i64_t len, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::count)
+                    path(const char* p, ::pilo::i64_t len, predefined_pilo_dir rel_to_abs_basis = predefined_pilo_dir::count)
                         : _m_pathstr_ptr(nullptr), _m_length(0), _m_capacity(0), _m_lastpart_start_pos(path::unknow_length), _m_ext_name_len(path::invalid_ext_length), _m_type(path::path_type_na)
                     {
                         set(p, len, 0, rel_to_abs_basis);
                     }
 
-                    path(const char* p, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::count)
+                    path(const char* p, predefined_pilo_dir rel_to_abs_basis = predefined_pilo_dir::count)
                         : _m_pathstr_ptr(nullptr), _m_length(0), _m_capacity(0), _m_lastpart_start_pos(path::unknow_length), _m_ext_name_len(path::invalid_ext_length), _m_type(path::path_type_na)
                     {
                         set(p, path::unknow_length, 0, rel_to_abs_basis);
@@ -357,19 +361,19 @@ namespace pilo
                     }
 
 
-                    ::pilo::err_t append(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::count);
-                    ::pilo::err_t append(const char* p, ::pilo::i64_t len, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::count)
+                    ::pilo::err_t append(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir rel_to_abs_basis = predefined_pilo_dir::count);
+                    ::pilo::err_t append(const char* p, ::pilo::i64_t len, predefined_pilo_dir rel_to_abs_basis = predefined_pilo_dir::count)
                     {
                         return append(p, len, 0, rel_to_abs_basis);
                     }
-                    ::pilo::err_t append(const char* p,  predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::count)
+                    ::pilo::err_t append(const char* p,  predefined_pilo_dir rel_to_abs_basis = predefined_pilo_dir::count)
                     {
                         return append(p, path::unknow_length, 0, rel_to_abs_basis);
                     }
 
                     
-                    ::pilo::err_t set(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::count);
-                    ::pilo::err_t set(const char* p, predefined_pilo_dir_enum rel_to_abs_basis = predefined_pilo_dir_enum::count)
+                    ::pilo::err_t set(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir rel_to_abs_basis = predefined_pilo_dir::count);
+                    ::pilo::err_t set(const char* p, predefined_pilo_dir rel_to_abs_basis = predefined_pilo_dir::count)
                     {
                         return set(p, path::unknow_length, 0, rel_to_abs_basis);
                     }
@@ -406,15 +410,15 @@ namespace pilo
                     ::pilo::err_t fill_with_cnf(::pilo::pathlen_t extra);
                     ::pilo::err_t fill_with_log(::pilo::pathlen_t extra);
                     ::pilo::err_t fill_with_tmp(::pilo::pathlen_t extra);
-                    inline ::pilo::err_t fill_with_predef_path(predefined_pilo_dir_enum rel_to_abs_basis, ::pilo::pathlen_t extra)
+                    inline ::pilo::err_t fill_with_predef_path(predefined_pilo_dir rel_to_abs_basis, ::pilo::pathlen_t extra)
                     {
-                        if (rel_to_abs_basis == predefined_pilo_dir_enum::cwd) return fill_with_cwd(extra);
-                        else if (rel_to_abs_basis == predefined_pilo_dir_enum::exe) return fill_with_exe(extra);
-                        else if (rel_to_abs_basis == predefined_pilo_dir_enum::home) return fill_with_home(extra);
-                        else if (rel_to_abs_basis == predefined_pilo_dir_enum::bin) return fill_with_bin(extra);
-                        else if (rel_to_abs_basis == predefined_pilo_dir_enum::cnf) return fill_with_cnf(extra);
-                        else if (rel_to_abs_basis == predefined_pilo_dir_enum::log) return fill_with_log(extra);
-                        else if (rel_to_abs_basis == predefined_pilo_dir_enum::tmp) return fill_with_tmp(extra);
+                        if (rel_to_abs_basis == predefined_pilo_dir::cwd) return fill_with_cwd(extra);
+                        else if (rel_to_abs_basis == predefined_pilo_dir::exe) return fill_with_exe(extra);
+                        else if (rel_to_abs_basis == predefined_pilo_dir::home) return fill_with_home(extra);
+                        else if (rel_to_abs_basis == predefined_pilo_dir::bin) return fill_with_bin(extra);
+                        else if (rel_to_abs_basis == predefined_pilo_dir::cnf) return fill_with_cnf(extra);
+                        else if (rel_to_abs_basis == predefined_pilo_dir::log) return fill_with_log(extra);
+                        else if (rel_to_abs_basis == predefined_pilo_dir::tmp) return fill_with_tmp(extra);
                         else return ::pilo::mk_perr(PERR_INVALID_PARAM);                        
                     }
 
@@ -655,6 +659,9 @@ namespace pilo
                         return false;
                         
                     }
+
+                    ::pilo::err_t make_temp(::pilo::core::io::path& p, const char* suffix, ::pilo::u32_t rand_alg) const;
+
 
                 protected:
                     static ::pilo::err_t _dfs_travel_path(::pilo::i32_t l_idx, const path* p, traval_fs_node_func_t handler, void* ctx, bool ignore_err, ::pilo::u32_t flags);

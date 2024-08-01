@@ -32,7 +32,7 @@ namespace pilo
 				static ::pilo::err_t create_complex_dir_hirechy()
 				{
 					pilo::err_t err = PILO_OK;
-					::pilo::core::io::path rt("test_fs\\cdh", ::pilo::core::io::path::unknow_length, 0, ::pilo::predefined_pilo_dir_enum::tmp);
+					::pilo::core::io::path rt("test_fs\\cdh", ::pilo::core::io::path::unknow_length, 0, ::pilo::predefined_pilo_dir::tmp);
                     err = rt.remove(false, false);
 					if (err != PILO_OK)
 					{
@@ -58,7 +58,7 @@ namespace pilo
 
 					const char* test_str_0 = "test_fs\\cdh\\目录1\\目录2\\目录3\\abc1\\abc3\\.\\..\\..\\目录_del\\目录_del\\..\\..\\目录4\\";
 					::pilo::core::io::path p0;
-					err = p0.set(test_str_0, ::pilo::predefined_pilo_dir_enum::tmp);
+					err = p0.set(test_str_0, ::pilo::predefined_pilo_dir::tmp);
 					if (err != PILO_OK)
 						return err;
 					err = p0.create(::pilo::core::io::path::fs_node_type_dir, false);
@@ -84,7 +84,7 @@ namespace pilo
 					if (err != PILO_OK)
 						return err;
 
-					::pilo::core::io::path rt2("test_fs\\cdh2\\", ::pilo::predefined_pilo_dir_enum::tmp);
+					::pilo::core::io::path rt2("test_fs\\cdh2\\", ::pilo::predefined_pilo_dir::tmp);
 					if (rt2.invalid())
 					{
 						return ::pilo::mk_perr(PERR_NULL_PARAM);
@@ -96,7 +96,7 @@ namespace pilo
 						return err;
 					}
 
-					::pilo::core::io::path rt2_0("test_fs\\cdh2\\测文件符号\\", ::pilo::predefined_pilo_dir_enum::tmp);
+					::pilo::core::io::path rt2_0("test_fs\\cdh2\\测文件符号\\", ::pilo::predefined_pilo_dir::tmp);
 					if (rt2_0.invalid())
 					{
 						return ::pilo::mk_perr(PERR_NULL_PARAM);
@@ -106,7 +106,7 @@ namespace pilo
 					{
 						return err;
 					}
-					::pilo::core::io::path p1_link("test_fs\\cdh\\目录1\\目录2\\目录3\\cdh2.lnk", ::pilo::predefined_pilo_dir_enum::tmp);
+					::pilo::core::io::path p1_link("test_fs\\cdh\\目录1\\目录2\\目录3\\cdh2.lnk", ::pilo::predefined_pilo_dir::tmp);
 					err = rt2.create_link_by(&p1_link, true);
 					if (err != PILO_OK)
 					{
@@ -120,7 +120,7 @@ namespace pilo
 					{
 						return err;
 					}					
-					::pilo::core::io::path p2_link("test_fs\\cdh\\目录1\\目录2\\一号文件abc.txt.lnk", ::pilo::predefined_pilo_dir_enum::tmp);
+					::pilo::core::io::path p2_link("test_fs\\cdh\\目录1\\目录2\\一号文件abc.txt.lnk", ::pilo::predefined_pilo_dir::tmp);
 					err = path_file1.create_link_by(&p2_link, true);
 					if (err != PILO_OK)
 					{
@@ -140,7 +140,7 @@ namespace pilo
 						return  p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "set long chn path");
 					}
 
-					::pilo::core::io::path rt("test_fs\\cdh", ::pilo::core::io::path::unknow_length, 0, ::pilo::predefined_pilo_dir_enum::tmp);
+					::pilo::core::io::path rt("test_fs\\cdh", ::pilo::core::io::path::unknow_length, 0, ::pilo::predefined_pilo_dir::tmp);
 					err = rt.remove(false, false);
 					if (err != PILO_OK)
 					{
@@ -232,11 +232,11 @@ namespace pilo
 					if ((vret = ::pilo::core::testing::validate_path(&p0, ".ddd.txt", 8, ".ddd.txt", "txt", nullptr, ".ddd", ::pilo::core::io::path::relative)) != 0)
 						return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "p0 val failed f: %d", vret);
 
-					err = p0.set("dir0/dir1/ddd.txt", ::pilo::predefined_pilo_dir_enum::home);
+					err = p0.set("dir0/dir1/ddd.txt", ::pilo::predefined_pilo_dir::home);
 					if (err != PILO_OK)
 						return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "p0 val failed ddd");					
 
-					err = p0.set("../../../dir0/dir1/ddd.txt", ::pilo::predefined_pilo_dir_enum::cwd);
+					err = p0.set("../../../dir0/dir1/ddd.txt", ::pilo::predefined_pilo_dir::cwd);
 					if (err != PILO_OK)
 						return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "p0 val failed ddd");
 
