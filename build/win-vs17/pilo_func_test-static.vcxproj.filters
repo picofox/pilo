@@ -4,6 +4,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\case_tlv_basic.cpp">
       <Filter>pilo_func_test</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\config\case_core_config.cpp">
+      <Filter>pilo_func_test\core\config</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\config\case_json_config_basic.cpp">
       <Filter>pilo_func_test\core\config</Filter>
     </ClCompile>

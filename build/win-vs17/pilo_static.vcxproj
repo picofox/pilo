@@ -105,8 +105,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>
-      </Message>
+      <Message></Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Debug/libpilo-static-debug.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
@@ -162,8 +161,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>
-      </Message>
+      <Message></Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Release/libpilo-static-release.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
@@ -218,8 +216,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>
-      </Message>
+      <Message></Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/MinSizeRel/libpilo-static.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
@@ -273,8 +270,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>
-      </Message>
+      <Message></Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/RelWithDebInfo/libpilo-static.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
@@ -359,7 +355,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\pilo\core\config\core_config.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\json_configuator.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\datetime.cpp" />
@@ -367,6 +363,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\formatted_io.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\io.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_interface.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\bits_operation.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\byte_buffer_interface.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\context.cpp" />
@@ -410,6 +407,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuation_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuator_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\json_configuator.hpp" />

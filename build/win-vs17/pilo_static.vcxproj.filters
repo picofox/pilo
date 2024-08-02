@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.cpp">
+      <Filter>pilo\core\config</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\json_configuator.cpp">
       <Filter>pilo\core\config</Filter>
     </ClCompile>
@@ -21,6 +24,9 @@
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.cpp">
       <Filter>pilo\core\io</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_interface.cpp">
+      <Filter>pilo\core\logging</Filter>
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\bits_operation.cpp">
       <Filter>pilo\core\memory</Filter>
@@ -145,7 +151,6 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp">
       <Filter>pilo</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\pilo\core\config\core_config.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp">
@@ -153,6 +158,9 @@
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp">
       <Filter>pilo\core\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuation_interface.hpp">
+      <Filter>pilo\core\config</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuator_interface.hpp">
       <Filter>pilo\core\config</Filter>
