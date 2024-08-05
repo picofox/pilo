@@ -334,12 +334,8 @@ namespace pilo
                     tf0.flush(::pilo::core::io::flush_level::all);
 
 
-					tf0.formatted_output(true, "today 's dinner is %s at price %8.8f\n", "yuxiangrousi", 3.15f);
 
-
-
-
-					tf0.close();
+				tf0.close();
 					p_case->set_result(PILO_OK);
 					return PILO_OK;
 
@@ -383,6 +379,7 @@ namespace pilo
 					if (err != PILO_OK) {
 						return -1;
 					}
+
 
 
 

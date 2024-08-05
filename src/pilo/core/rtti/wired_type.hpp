@@ -64,6 +64,20 @@ namespace pilo
 				::pilo::u8_t attribute() const { return _attribute; }
 				::pilo::u8_t flags() const { return _flags; }
 
+				inline void set_flag(::pilo::u8_t f)
+				{
+					_flags |= f;
+				}
+
+				inline void clear_flag(::pilo::u8_t f)
+				{
+					_flags &= ~f;
+				}
+
+				inline bool test_flag(::pilo::u8_t f) const
+				{
+					return (_flags & f);
+				}
 
 				bool valid() const
 				{

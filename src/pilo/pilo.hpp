@@ -63,6 +63,8 @@
 #define PMF_HEAP_FREE free
 #define PMF_HEAP_REALLOC realloc
 
+#define PMF_COMPARE_HEAP_FREE(ptr, buffer_ptr)      do { if (ptr != nullptr && ptr != buffer_ptr) { (void) free(ptr); ptr = nullptr; }} while(0)
+
 #define PMF_INV_PATHLEN_TO_SZ(plen)	(plen==PMI_INVALID_PATH_LEN ? -1 : plen)
 
 #if (PMI_BITS == 64)
@@ -80,6 +82,8 @@
 #define PMB_DEBUG_MPOOL_SHOW_AVAILIST_DETAIL  (0x2)
 #define PMB_DEBUG_MPOOL_SHOW_FULLLIST_DETAIL  (0x3)
 #define PMB_DEBUG_MPOOL_SHOW_UNIT_IMAGE		  (0x4)
+
+
 
 #if defined(WINDOWS)
 #   define PMC_UNUSED(x) do { (void)(x); } while (0)

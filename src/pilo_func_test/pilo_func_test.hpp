@@ -47,6 +47,7 @@ namespace pilo
 
 			namespace config
 			{
+				int case_core_config(::pilo::core::testing::func_test_case* p_case);
 				int case_json_config_basic(::pilo::core::testing::func_test_case* p_case);
 			}
 

@@ -24,6 +24,7 @@ namespace pilo {
                 ::pilo::err_t load() override;
                 ::pilo::err_t load(const char* data, ::pilo::i64_t len) override;
                 ::pilo::err_t save() override;
+                ::pilo::err_t save_as(const ::pilo::core::io::path* dest_path) override;
                 ::pilo::tlv* root() override;
                 ::pilo::tlv* get_value(const char* fqn, ::pilo::err_t& err) override;
                 ::pilo::err_t set_file(const char* path_cstr, ::pilo::pathlen_t len, ::pilo::predefined_pilo_dir predef_dir) override;
@@ -42,7 +43,7 @@ namespace pilo {
                 ::pilo::err_t set_value(const char* fqn, ::pilo::f32_t v, bool is_force);
                 ::pilo::err_t set_value(const char* fqn, ::pilo::f64_t v, bool is_force);            
                 ::pilo::err_t set_value(const char* fqn, const std::string & v, bool is_force);
-                ::pilo::err_t set_value(const char* fqn, const char* value, ::pilo::i32_t len, bool adopt, bool is_force);
+                ::pilo::err_t set_value(const char* fqn, const char* value, ::pilo::i32_t len, bool adopt, bool is_cstr, bool is_force);
 
             public:
 
@@ -75,7 +76,7 @@ namespace pilo {
                     ::pilo::tlv* t = _m_root_value->set_tlv<32>(fqn, err);
                     if (t != nullptr)
                     {
-                        t->set(value);
+                        err = t->set(value);
                     }
 
 

@@ -277,6 +277,7 @@ namespace pilo
                 _size = len + 1;
             }
         }
+        this->set_flag(::pilo::tlv::FlagBytesAsCStr);
         return PILO_OK;
     }
 

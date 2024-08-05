@@ -71,7 +71,7 @@ namespace pilo {
                     err = this->_m_file.open(name_buf
                         , ::pilo::core::io::creation_mode::open_always
                         , ::pilo::core::io::access_permission::write
-                        , ::pilo::predefined_pilo_dir_enum::log
+                        , ::pilo::predefined_pilo_dir::log
                         , ::pilo::core::io::dev_open_flags::append);
                     if (err != PILO_OK) {
                         return err;

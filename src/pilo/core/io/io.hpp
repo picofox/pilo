@@ -61,6 +61,8 @@ namespace pilo
                 partial = 1,
             };
 
+            class path;
+
             ::pilo::os_file_handle_t xpf_open_file(const char* path_str, creation_mode cm, access_permission perm, dev_open_flags f);
             void xpf_close_file(::pilo::os_file_handle_t* fd);
             ::pilo::err_t xpf_seek_file(::pilo::os_file_handle_t fd, seek_whence whence, ::pilo::i64_t off);
@@ -69,9 +71,9 @@ namespace pilo
             ::pilo::err_t xpf_write_file(::pilo::os_file_handle_t fd, const char* buffer, ::pilo::i64_t wbs, ::pilo::i64_t* n_written);
             ::pilo::err_t xpf_read_file(::pilo::os_file_handle_t fd, char* buffer, ::pilo::i64_t rbs, ::pilo::i64_t* n_read);
             ::pilo::err_t xpf_set_size(::pilo::os_file_handle_t fd, ::pilo::i64_t sz);
-
             ::pilo::err_t xpf_get_file_size(::pilo::os_file_handle_t fd, ::pilo::i64_t &sz);
-
+            ::pilo::err_t xpf_move_fs_node(bool is_src_abs, const path* src, bool is_dst_abs, const path* dst, bool force);
+            ::pilo::err_t _xpf_move_fs_node(bool is_src_abs, const path* src, bool is_dst_abs, const path* dst, bool force);
 
         } // end of name space
     }

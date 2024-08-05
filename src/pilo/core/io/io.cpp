@@ -1,4 +1,5 @@
 ﻿#include "io.hpp"
+#include "path.hpp"
 
 ::pilo::os_file_handle_t pilo::core::io::xpf_open_file(const char* path_str, creation_mode cm, access_permission perm, dev_open_flags f)
 {
@@ -313,3 +314,65 @@ void pilo::core::io::xpf_close_file(::pilo::os_file_handle_t* fd)
     return PILO_OK;
 }
 
+::pilo::err_t pilo::core::io::xpf_move_fs_node(bool is_src_abs, const path* src, bool is_dst_abs, const path* dst, bool force)
+{
+    if (src == nullptr || dst == nullptr) {
+        return ::pilo::mk_perr(PERR_NULL_PARAM);
+    }
+    if (src->invalid() || dst->invalid()) {
+        return ::pilo::mk_perr(PERR_INVALID_PATH);
+    }
+    return _xpf_move_fs_node(is_src_abs, src, is_dst_abs, dst, force);
+}
+
+::pilo::err_t pilo::core::io::_xpf_move_fs_node(bool is_src_abs, const path* src, bool is_dst_abs, const path* dst, bool force)
+{
+#ifdef WINDOWS
+    DWORD flags = MOVEFILE_COPY_ALLOWED;
+    if (force)
+        flags |= MOVEFILE_REPLACE_EXISTING;
+    BOOL bret = FALSE;
+    if (is_src_abs && is_dst_abs) {
+        bret = MoveFileEx(src->fullpath(), dst->fullpath(), flags);
+    }
+    else if (is_src_abs && !is_dst_abs) {
+        bret = MoveFileEx(src->fullpath(), dst->lastpart(), flags);
+    }
+    else if (!is_src_abs && is_dst_abs) {
+        bret = MoveFileEx(src->lastpart(), dst->fullpath(), flags);
+    }
+    else if (!is_src_abs && !is_dst_abs) {
+        bret = MoveFileEx(src->lastpart(), dst->lastpart(), flags);
+    }
+
+    if (!bret) {
+        return ::pilo::mk_err(PERR_FILE_RENAME_FAIL);
+    }
+    
+#else
+    int flags = 0;
+    if (!force)
+        flags |= RENAME_NOREPLACE;
+
+    int nret = 0;
+    if (is_src_abs && is_dst_abs) {
+        nret = renameat2(AT_FDCWD, src->fullpath(), AT_FDCWD, dst->fullpath(), flags);
+    }
+    else if (is_src_abs && !is_dst_abs) {
+        nret = renameat2(AT_FDCWD,src->fullpath(), AT_FDCWD, dst->lastpart(), flags);
+    }
+    else if (!is_src_abs && is_dst_abs) {
+        nret = renameat2(AT_FDCWD, src->lastpart(), AT_FDCWD, dst->fullpath(), flags);
+    }
+    else if (!is_src_abs && !is_dst_abs) {
+        nret = renameat2(AT_FDCWD, src->lastpart(), AT_FDCWD, dst->lastpart(), flags);
+    }
+
+    if (0 != nret) {
+        return ::pilo::mk_err(PERR_FILE_MOVE_FAIL);
+    }
+
+
+#endif
+    return PILO_OK;
+}

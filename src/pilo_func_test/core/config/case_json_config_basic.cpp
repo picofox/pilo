@@ -43,8 +43,8 @@ namespace pilo
 					::pilo::err_t err = PILO_OK;
 					err = jct.set_value("loggers.[0].size_quota", 2048, true);
 
-					std::string str = jct.root()->to_string();
-					printf("(%s)\n", str.c_str());
+					//std::string str = jct.root()->to_string();
+					//printf("(%s)\n", str.c_str());
 
 
 					if (err != PILO_OK) return p_case->error(err, "set ival fialed.");

@@ -1416,6 +1416,42 @@ namespace pilo
             }
 
 
+            template<typename RET_ID_T, typename INT_T>
+            ::pilo::err_t str_to_id(RET_ID_T& ret, const char* str, ::pilo::i64_t len, const char* const dict[], INT_T count, bool ignore_case)
+            {
+                if (str == nullptr)
+                    return ::pilo::mk_err(PERR_NULL_PTR);
+                if (len < 0)
+                    len = ::pilo::core::string::character_count(str);
+
+                for (INT_T i = 0; i < count; i++) {
+                    ::pilo::i64_t clen = ::pilo::core::string::character_count(dict[i]);
+                    if (len == clen) {
+                        if (ignore_case) {
+                            if (::pilo::core::string::i_compare(str, 0, dict[i], 0, len) == 0) {
+                                ret = (RET_ID_T)i;
+                                return PILO_OK;
+                            }                                
+                        }
+                        else {
+                            if (::pilo::core::string::strict_compare(str, 0, dict[i], 0, len) == 0) {
+                                ret = (RET_ID_T)i;
+                                return PILO_OK;
+                            }
+                        }
+                    }
+                    
+                }
+
+                return ::pilo::mk_perr(PERR_NON_EXIST);
+            }
+
+            template<typename RET_ID_T, typename INT_T>
+            ::pilo::err_t str_to_id(RET_ID_T& ret, const std::string* str, const char* const dict[], INT_T count, bool ignore_case)
+            {
+                return str_to_id(ret, str->c_str(), str->size(),  dict, count, ignore_case);
+            }
+
 
             template<typename CHAR_T>
             void* forward_section_iterate(const CHAR_T*                      s,
@@ -2019,6 +2055,84 @@ namespace pilo
                 }
                 return PILO_OK;
             }
+
+            template<typename INT_T, ::pilo::i32_t capacity>
+            void compose_strlist_to_flags(INT_T& ev
+                , const char* strlist, ::pilo::i32_t str_list_len
+                , const char* delim, ::pilo::i32_t delim_len
+                , const char* const str_dict[])
+            {
+                ::pilo::cstr_ref<char> parts[capacity];
+                ::pilo::i64_t cnt = ::pilo::core::string::split_fixed<char>(strlist, str_list_len, delim, delim_len, parts, capacity, true, true, true, true);
+                if (cnt < 1)
+                {
+                    ev = (INT_T)0;
+                    return;
+                }
+
+                ev = 0;
+                INT_T idx = 0;
+                for (int i = 0; i < cnt; i++) {
+                    idx = 0;
+                    for (int j = 0; j < capacity; j ++) {
+                        ::pilo::i32_t tlen = (::pilo::i32_t) ::pilo::core::string::character_count(str_dict[j]);
+                        if (parts[i].length == tlen) {
+                            if (0 == ::pilo::core::string::i_compare(parts[i].ptr, 0, str_dict[j], 0, tlen)) {
+                                ev |= (((INT_T)1) << idx);
+                                break;
+                            }
+                        } 
+                        idx++;
+                    }
+                }
+                return;
+            }
+
+            template<typename INT_T>
+            char* extract_flags_to_strlist(char *result, ::pilo::i32_t capa, INT_T flags
+                , const char* delim, ::pilo::i32_t delim_len
+                , const char* const str_dict[], ::pilo::i32_t count
+                , bool need_calc_size = false
+            )
+            {
+                if (delim_len < 0)
+                    delim_len = (::pilo::i32_t) ::pilo::core::string::character_count(delim);
+
+                ::pilo::i32_t total_need_size = 0;
+                if (need_calc_size) {
+                    for (int i = 0; i < count; i++) {
+                        if (i != 0)
+                            total_need_size += delim_len;
+                        total_need_size += (::pilo::i32_t) ::pilo::core::string::character_count(str_dict[i]);
+                    }
+                }
+
+                ::pilo::char_buffer_t cb(result, capa, 0, false);
+                cb.check_space(total_need_size);
+                bool hasset = false;
+                ::pilo::bit_flag<INT_T> f(flags);
+                for (int i = 0; i < count; i++) {
+                    if (f.test_index(i)) {
+                        if (hasset) {
+                            ::pilo::core::string::n_copyz(cb.ptr(), cb.space_available(), delim, delim_len);
+                            cb.add_size(delim_len);
+                        }
+                        else {
+                            hasset = true;
+                        }
+                        ::pilo::i32_t tmplen = (::pilo::i32_t) ::pilo::core::string::character_count(str_dict[i]);
+                        ::pilo::core::string::n_copyz(cb.ptr(), cb.space_available(), str_dict[i], tmplen);
+                        cb.add_size(tmplen);
+                                                
+                    }
+                }
+
+
+
+                return cb.begin();
+            }
+            
+
             
         }
     }

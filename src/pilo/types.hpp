@@ -273,62 +273,6 @@ namespace pilo
 			}
 			return c;
 		}
-		static ::pilo::i32_t count_bit_1(::pilo::i8_t sn)
-		{
-			unsigned int c = 0;
-			::pilo::u8_t n = (::pilo::u8_t)sn;
-			while (n != 0)
-			{
-				if ((n & 1) == 1)
-				{
-					++c;
-				}
-				n = n >> 1;
-			}
-			return c;
-		}
-		static ::pilo::i32_t count_bit_1(::pilo::i16_t sn)
-		{
-			unsigned int c = 0;
-			::pilo::u16_t n = (::pilo::u16_t)sn;
-			while (n != 0)
-			{
-				if ((n & 1) == 1)
-				{
-					++c;
-				}
-				n = n >> 1;
-			}
-			return c;
-		}
-		static ::pilo::i32_t count_bit_1(::pilo::i32_t sn)
-		{
-			unsigned int c = 0;
-			::pilo::u32_t n = (::pilo::u32_t)sn;
-			while (n != 0)
-			{
-				if ((n & 1) == 1)
-				{
-					++c;
-				}
-				n = n >> 1;
-			}
-			return c;
-		}
-		static ::pilo::i32_t count_bit_1(::pilo::i64_t sn)
-		{
-			unsigned int c = 0;
-			::pilo::u64_t n = (::pilo::u64_t)sn;
-			while (n != 0)
-			{
-				if ((n & 1) == 1)
-				{
-					++c;
-				}
-				n = n >> 1;
-			}
-			return c;
-		}
 	public:
 		bit_flag(INT_T dfl) { _flags = dfl; }
 		bit_flag() { _flags = 0; }

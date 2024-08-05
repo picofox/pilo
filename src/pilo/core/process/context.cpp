@@ -89,6 +89,7 @@ namespace pilo
                     _proc_basename = _proc_name;
                 }
 
+                _core_config.load_or_save_default();
                     
 
                 _page_pool = new ::pilo::core::memory::dynamic_memory_pool<::pilo::core::threading::spin_mutex>(PMSO_SYSTEM_INFORMATION->page_size(), 1024);
@@ -161,6 +162,7 @@ namespace pilo
 
             ::pilo::i32_t context::initialize()
             {
+
                 _pool_object_stat_mgr.register_item(::pilo::core::stat::pool_object_stat_manager::pool_object_key_code::key_tlv
                     , sizeof(::pilo::tlv), [](::pilo::core::stat::pool_object_stat_manager::pool_object_key_code 
                         , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return ::pilo::tlv::update_pool_object_stat(si);}
@@ -171,6 +173,10 @@ namespace pilo
                         , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return  ::pilo::core::memory::linked_byte_buffer<4096, 1024, false>::buffer_node::update_pool_object_stat(si); }
                     , "local_bn"
                 );
+
+
+                
+
 
                 ::pilo::err_t err = PILO_OK;
                 err = this->_proc_paths[(int) ::pilo::predefined_pilo_dir::cwd].fill_with_cwd(0);

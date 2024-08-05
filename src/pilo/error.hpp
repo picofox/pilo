@@ -99,6 +99,8 @@
 #define PERR_PARSE_JSON_FAIL    (81)
 
 
+#define PILO_CHKERR_RET(err, exp)         do {if ( (err = (exp)) != PILO_OK ) { return err; }} while(0);
+
 #define PILO_ERRRET(e)         if (PILO_OK != (e)) { return e; }    
 
 #define PILO_ERRRET_NULL(e)         if (PILO_OK != (e)) { return nullptr; }    

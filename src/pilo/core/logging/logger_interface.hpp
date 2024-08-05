@@ -18,7 +18,7 @@ namespace pilo {
             const ::pilo::u32_t Date = 0x00000001;
             const ::pilo::u32_t Time = 0x00000002;
             const ::pilo::u32_t TimeZone = 0x00000004;
-            const ::pilo::u32_t MsgSeq = 0x00000008;
+            const ::pilo::u32_t Seq = 0x00000008;
             const ::pilo::u32_t MicroSec = 0x00000010;
             const ::pilo::u32_t TimeStamp = 0x00000020;
             const ::pilo::u32_t Level = 0x00000040;
@@ -29,7 +29,9 @@ namespace pilo {
             const ::pilo::u32_t SrcLine = 0x00000800;
             const ::pilo::u32_t ProcName = 0x00001000;
             const ::pilo::u32_t PPid = 0x00002000;
+
             const ::pilo::u32_t DefaultHeaders = 0xFFFFFFFF;
+            const ::pilo::u32_t DefaultBakNameSuffix = (Date | PPid);
 
             const ::pilo::u8_t DevNone = 0x00;
             const ::pilo::u8_t DevLogFile = 0x01;
@@ -70,6 +72,16 @@ namespace pilo {
                 virtual ~logger_interface() {};
 
             };
+
+            extern const char* const g_logger_type_names[4];
+            extern const char* const g_level_names[6];
+            extern const char* const g_splition_type_names[3];
+            extern const char* const g_output_dev_names[4];
+            extern const char* const g_predef_elment_names[14];
+            extern const char* const g_flags[2];
+
+
+
 
         }
     }

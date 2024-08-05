@@ -1719,7 +1719,9 @@ namespace pilo {
             ::pilo::err_t path::make_temp(::pilo::core::io::path& p, const char* suffix, ::pilo::u32_t rand_alg) const
             {
                 char tmp_buffer[128] = { 0 };
-                int pid = PILO_CONTEXT->process_id();
+
+
+                int pid = ::pilo::core::process::current_process_id();
                 ::pilo::i32_t tmp_len = 0;
                 ::pilo::i32_t sub_tmp_len = 0;
                 if (suffix != nullptr) {

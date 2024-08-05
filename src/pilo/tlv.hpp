@@ -37,6 +37,9 @@ namespace pilo
 		: public ::pilo::core::memory::portable_compactable_autoreset_object_pool<::pilo::tlv, SP_PMI__TLV_STEP, ::pilo::core::threading::native_mutex>
     {
 	public:
+		const static ::pilo::u8_t	FlagBytesAsCStr = 0x01;
+
+	public:
 		typedef ::pilo::core::memory::portable_compactable_autoreset_object_pool<::pilo::tlv, SP_PMI__TLV_STEP, ::pilo::core::threading::native_mutex> pool_type;
 
 	public:
@@ -100,6 +103,83 @@ namespace pilo
 		tlv(std::string& str)
 		{
 			set(str);
+		}
+
+		inline void set_flag(::pilo::u8_t f)
+		{
+			_type.set_flag(f);
+		}
+
+		inline void clear_flag(::pilo::u8_t f)
+		{
+			_type.clear_flag(f);
+		}
+
+		inline bool test_flag(::pilo::u8_t f) const
+		{
+			return _type.test_flag(f);
+		}
+
+		inline ::pilo::i32_t as_str_length() const
+		{
+			if (_dynamic_data == nullptr)
+				return -1;
+
+			if (_size < 0) {
+				return -1;
+			}				
+			else if (_size == 0) {
+				return 0;
+			}				
+
+			if (_dynamic_data[_size-1] == 0)
+				return _size-1;
+			else
+				return _size;
+
+		}
+
+		inline ::pilo::err_t assign_as_str(std::string & str) const
+		{
+			::pilo::err_t err = PILO_OK;
+
+			if (_type.wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
+				return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
+			}
+
+			if (_type.value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+				str = this->as_str(&err, nullptr);
+
+			}
+			else if (_type.value_type() == ::pilo::core::rtti::wired_type::value_type_bytes)
+			{
+				if (_dynamic_data == nullptr)
+					return ::pilo::mk_perr(PERR_NULL_PTR);
+
+				::pilo::i32_t data_size = _size;
+				if (this->test_flag(::pilo::tlv::FlagBytesAsCStr)) {
+					data_size--;
+				}
+
+				if (data_size == 0) {
+					str.clear();
+					return PILO_OK;
+				}
+				else if (data_size < 0)
+					return ::pilo::mk_perr(PERR_INV_LEN);
+
+				if (this->test_flag(::pilo::tlv::FlagBytesAsCStr)) {
+					str.assign(_dynamic_data, data_size - 1);
+				}
+				else {
+					str.assign(_dynamic_data, data_size);
+				}				
+			}
+			else {
+				str = this->as_str(&err, nullptr);
+			}			
+
+			return err;
 		}
 
 		template <typename T, ::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, T & value)
@@ -498,16 +578,22 @@ namespace pilo
 							return nullptr;
 						}
 
+						tmp = nullptr;
 						err = p->get<std::string, ::pilo::tlv*>(key, tmp);
-						if (tmp != nullptr)
+
+						if (err == PILO_OK)
 						{
 							p = tmp;
 						}
-						else
+						else if (err == PERR_NON_EXIST)
 						{
 							tmp = ::pilo::tlv::allocate();
 							p->insert<std::string, ::pilo::tlv*>(key, tmp, false);
 							p = tmp;
+							err = PILO_OK;
+						}
+						else {
+							return nullptr;
 						}
 					}
 					else

@@ -59,7 +59,7 @@ int main(int argc, char * argv[])
 
 void load_cases(func_test_suite * suite)
 {		
-	;
+	suite->register_case("case_core_config", ::pilo::func_test::core::config::case_core_config, nullptr);	
 	suite->register_case("json_config_basic", ::pilo::func_test::core::config::case_json_config_basic, nullptr);
 	suite->register_case("text_logger_basic", ::pilo::func_test::core::logging::case_text_logger_basic, nullptr);
 

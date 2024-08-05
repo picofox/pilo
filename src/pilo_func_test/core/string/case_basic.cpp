@@ -2,7 +2,7 @@
 #include "pilo/core/testing/func_test_suite.hpp"
 #include "pilo/core/string/string_operation.hpp"
 #include "pilo/core/io/formatted_io.hpp"
-
+#include "pilo/core/logging/logger_interface.hpp"
 
 using namespace ::pilo::func_test;
 
@@ -91,11 +91,23 @@ namespace pilo
 						return ::pilo::mk_perr(PERR_INVALID_PARAM);
 					}
 
+					char buffer[128] = { 0 };
+					for (int i = 0; i < 16384; i++) {
+						::pilo::i32_t ev = i;
+						::pilo::core::string::extract_flags_to_strlist(buffer, 128, ev, ",", 1, ::pilo::core::logging::g_predef_elment_names, PMF_COUNT_OF(::pilo::core::logging::g_predef_elment_names), true);
+						::pilo::core::string::compose_strlist_to_flags<::pilo::i32_t, PMF_COUNT_OF(::pilo::core::logging::g_predef_elment_names)>(ev, buffer, -1, ",", 1, ::pilo::core::logging::g_predef_elment_names);
+						if (ev != i) {
+							return p_case->error(PERR_INC_DATA, "compose and restore flags failed at %d", i);
+						}
+					}
+
 
 					p_case->set_result(PILO_OK);
 
 					return PILO_OK;
 				}
+
+
 			}
 		}
 	}

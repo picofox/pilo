@@ -61,11 +61,11 @@ namespace pilo
                     if ((vret = ::pilo::core::testing::validate_path(&p0, ".ddd.txt", 8, ".ddd.txt", "txt", nullptr, ".ddd", ::pilo::core::io::path::relative)) != 0)
                         return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "p0 val failed f: %d", vret);
 
-                    err = p0.set("dir0/dir1/ddd.txt", ::pilo::predefined_pilo_dir_enum::home);
+                    err = p0.set("dir0/dir1/ddd.txt", ::pilo::predefined_pilo_dir::home);
                     if (err != PILO_OK)
                         return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "p0 val failed ddd");
 
-                    err = p0.set("../../../dir0/dir1/ddd.txt", ::pilo::predefined_pilo_dir_enum::cwd);
+                    err = p0.set("../../../dir0/dir1/ddd.txt", ::pilo::predefined_pilo_dir::cwd);
                     if (err != PILO_OK)
                         return p_case->error(::pilo::mk_perr(PERR_TESTCASE_FAIL), "p0 val failed ddd");
 

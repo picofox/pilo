@@ -62,27 +62,31 @@ namespace pilo {
 
             ::pilo::err_t core::config::json_configuator::save()
             {
-                if (this->_m_root_value == nullptr)
-                    return ::pilo::mk_perr(PERR_NOOP);
-
-                if (_m_file_ptr == nullptr) {
+                if (_m_file_ptr == nullptr || this->_m_file_ptr->path() == nullptr) {
                     return ::pilo::mk_perr(PERR_NULL_PTR);
                 }
+                return this->save_as(this->_m_file_ptr->path());
+            }
 
-                ::pilo::core::io::path pth;
+            ::pilo::err_t json_configuator::save_as(const::pilo::core::io::path* dest_path)
+            {
+                if (this->_m_root_value == nullptr)
+                    return ::pilo::mk_perr(PERR_NOOP);                
+
+                ::pilo::core::io::path tmp_file_path;
                 ::pilo::err_t err = PILO_OK;
 
-                err = _m_file_ptr->path()->make_temp(pth,".tmp", ::pilo::core::io::path::TFNRandPolicyNone);
+                err = _m_file_ptr->path()->make_temp(tmp_file_path, ".tmp", ::pilo::core::io::path::TFNRandPolicyNone);
                 if (err != PILO_OK)
-                    return err;               
+                    return err;
 
-                ::rapidjson::Document root_jdoc; 
+                ::rapidjson::Document root_jdoc;
                 err = _write_json_object(root_jdoc, _m_root_value, root_jdoc.GetAllocator());
                 if (err != PILO_OK)
                     return err;
 
                 ::pilo::core::io::file<> tmp_file;
-                err = tmp_file.open(&pth, ::pilo::core::io::creation_mode::create_always
+                err = tmp_file.open(&tmp_file_path, ::pilo::core::io::creation_mode::create_always
                     , ::pilo::core::io::access_permission::write
                     , ::pilo::core::io::dev_open_flags::append);
                 rapidjson::StringBuffer jbuffer;
@@ -97,6 +101,9 @@ namespace pilo {
                 }
 
                 tmp_file.close();
+
+                err = ::pilo::core::io::xpf_move_fs_node(true, &tmp_file_path, true, dest_path, true);
+
 
                 return err;
             }
@@ -282,15 +289,28 @@ namespace pilo {
                         obj.SetDouble(tlvp->as_f64(&err));
                     }
                     else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
-                        char tmp_buffer[32] = { 0 };
-                        ::pilo::i32_t rlen = 0;
-                        const char* pret = tlvp->as_bytes(tmp_buffer, sizeof(tmp_buffer), &err, &rlen);
-                        if (pret == nullptr) {
+                        if (tlvp->daynamic_data() == nullptr) {
                             obj.SetNull();
                         }
                         else {
-                            obj.SetString(pret, rlen);
-                        }                        
+                            if (tlvp->test_flag(::pilo::tlv::FlagBytesAsCStr)) {
+                                ::pilo::i32_t tmp_slen = tlvp->as_str_length();
+                                if (tmp_slen < 0) {
+                                    obj.SetNull();
+                                }
+                                else if (tmp_slen == 0) {
+                                    obj.SetString("", 0);
+                                }
+                                else {
+                                    obj.SetString(tlvp->daynamic_data(), tmp_slen);
+                                }
+                                
+                            }
+                            else {
+                                obj.SetString(tlvp->daynamic_data(), tlvp->size());
+                            }
+                            
+                        }                                               
                     }
                     else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
                         const std::string* strp = tlvp->as_str_ptr(&err);
@@ -519,16 +539,27 @@ namespace pilo {
                 return _set_trivil_type(fqn, sv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, const char* value, ::pilo::i32_t len, bool adopt, bool is_force)
+            ::pilo::err_t json_configuator::set_value(const char* fqn, const char* value, ::pilo::i32_t len, bool adopt, bool is_cstr, bool is_force)
             {
                 ::pilo::err_t err = PILO_OK;
                 if (_m_root_value == nullptr) {
                     _m_root_value = ::pilo::tlv::allocate();
                 }
 
+                if (value == nullptr) {
+                    return set_value(fqn, is_force);
+                }
+
                 if (fqn == nullptr || *fqn == 0)
                 {
-                    err = _m_root_value->set_cstr(value, len, adopt);
+                    if (is_cstr) {
+                        err = _m_root_value->set_cstr(value, len, adopt);
+                    }
+                    else {
+                        err = _m_root_value->set_bytes(value, len, adopt);
+                    }
+
+                    
                     return ::pilo::mk_perr(PERR_NON_EXIST);
                 }
 
@@ -545,7 +576,12 @@ namespace pilo {
                 ::pilo::tlv* t = _m_root_value->set_tlv<32>(fqn, err);
                 if (t != nullptr)
                 {
-                    t->set_cstr(value, len, adopt);
+                    if (is_cstr) {
+                        err = t->set_cstr(value, len, adopt);
+                    }
+                    else {
+                        err = t->set_bytes(value, len, adopt);
+                    }
                 }
 
 

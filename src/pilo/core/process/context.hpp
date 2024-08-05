@@ -7,6 +7,7 @@
 #include "../stat/pool_object_stat_info.hpp"
 #include "../io/path.hpp"
 #include "./process.hpp"
+#include "../config/core_config.hpp"
 
 namespace pilo
 {
@@ -141,6 +142,7 @@ namespace pilo
                 ::pilo::os_pid_t    _ppid;
                 std::string         _proc_name;
                 std::string         _proc_basename;
+                ::pilo::core::config::core_config _core_config;
 
                 page_allocator::page_allocator_type*   _page_pool;
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;
