@@ -436,7 +436,7 @@ namespace pilo {
                 return _m_root_value;
             }
 
-            ::pilo::tlv* json_configuator::get_value(const char* fqn, ::pilo::err_t& err)
+            ::pilo::tlv* json_configuator::get_value_node(const char* fqn, ::pilo::err_t& err)
             {                
                 if (_m_root_value == nullptr) {
                     err = ::pilo::mk_perr(PERR_NULL_PTR);

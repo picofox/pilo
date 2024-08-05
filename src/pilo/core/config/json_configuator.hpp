@@ -26,7 +26,7 @@ namespace pilo {
                 ::pilo::err_t save() override;
                 ::pilo::err_t save_as(const ::pilo::core::io::path* dest_path) override;
                 ::pilo::tlv* root() override;
-                ::pilo::tlv* get_value(const char* fqn, ::pilo::err_t& err) override;
+                ::pilo::tlv* get_value_node(const char* fqn, ::pilo::err_t& err) override;
                 ::pilo::err_t set_file(const char* path_cstr, ::pilo::pathlen_t len, ::pilo::predefined_pilo_dir predef_dir) override;
                 ::pilo::core::io::path* file_path() override;
 
@@ -46,6 +46,9 @@ namespace pilo {
                 ::pilo::err_t set_value(const char* fqn, const char* value, ::pilo::i32_t len, bool adopt, bool is_cstr, bool is_force);
 
             public:
+                
+
+
 
 
             protected:

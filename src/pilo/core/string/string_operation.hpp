@@ -1417,7 +1417,7 @@ namespace pilo
 
 
             template<typename RET_ID_T, typename INT_T>
-            ::pilo::err_t str_to_id(RET_ID_T& ret, const char* str, ::pilo::i64_t len, const char* const dict[], INT_T count, bool ignore_case)
+            ::pilo::err_t str_to_enum_id(RET_ID_T& ret, const char* str, ::pilo::i64_t len, const char* const dict[], INT_T count, bool ignore_case)
             {
                 if (str == nullptr)
                     return ::pilo::mk_err(PERR_NULL_PTR);
@@ -1447,9 +1447,9 @@ namespace pilo
             }
 
             template<typename RET_ID_T, typename INT_T>
-            ::pilo::err_t str_to_id(RET_ID_T& ret, const std::string* str, const char* const dict[], INT_T count, bool ignore_case)
+            ::pilo::err_t str_to_enum_id(RET_ID_T& ret, const std::string* str, const char* const dict[], INT_T count, bool ignore_case)
             {
-                return str_to_id(ret, str->c_str(), str->size(),  dict, count, ignore_case);
+                return str_to_enum_id(ret, str->c_str(), str->size(),  dict, count, ignore_case);
             }
 
 

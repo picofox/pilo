@@ -31,7 +31,7 @@ namespace pilo {
                         , _flags(::pilo::core::logging::DefaultFlags)
                         , _bak_name_suffix(0)
                         ,_size_quota(0)
-                        ,_piece_quata(0)
+                        ,_piece_quota(0)
                         ,_name("")
                         ,_bak_dir("")
 
@@ -114,9 +114,9 @@ namespace pilo {
                     {
                         return _size_quota;
                     }
-                    inline ::pilo::i64_t piece_quata() const
+                    inline ::pilo::i64_t piece_quota() const
                     {
-                        return _piece_quata;
+                        return _piece_quota;
                     }
                     inline const std::string& name() const
                     {
@@ -153,7 +153,7 @@ namespace pilo {
                         _flags = ::pilo::core::logging::DefaultFlags;
                         _bak_name_suffix = 0;
                         _size_quota = 0;
-                        _piece_quata = 0;
+                        _piece_quota = 0;
                         _name = "";
                         _bak_dir = "";
                     }
@@ -172,7 +172,7 @@ namespace pilo {
                     ::pilo::bit_flag<::pilo::u32_t> _bak_name_suffix;
 
                     ::pilo::i64_t _size_quota;
-                    ::pilo::i64_t _piece_quata;
+                    ::pilo::i64_t _piece_quota;
 
                     std::string _name;
                     std::string _bak_dir;

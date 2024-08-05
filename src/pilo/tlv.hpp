@@ -182,6 +182,77 @@ namespace pilo
 			return err;
 		}
 
+		template<typename INT_T, ::pilo::i32_t capacity>
+		::pilo::err_t to_flags(::pilo::bit_flag<INT_T> & flags
+			, const char* delim, ::pilo::i32_t delim_len
+			, const char* const str_dict[]) const
+		{
+			INT_T ev = 0;
+			if (this->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
+				return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
+			}
+
+			if (_dynamic_data == nullptr)
+				return ::pilo::mk_perr(PERR_NULL_PTR);
+
+			if (this->value_type() == ::pilo::core::rtti::wired_type::value_type_na) {
+				return ::pilo::mk_perr(PERR_INV_VAL_TYPE);
+			}
+			else if (this->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+				::pilo::core::string::compose_strlist_to_flags<INT_T, capacity>(ev, this->_dynamic_data, this->as_str_length(), delim, delim_len, str_dict);
+				flags.set(ev);
+				return PILO_OK;
+			}
+			else if (this->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+				std::string* p = (std::string*)this->_dynamic_data;
+				::pilo::core::string::compose_strlist_to_flags<INT_T, capacity>(ev, p->c_str(), (::pilo::i32_t) p->size(), delim, delim_len, str_dict);
+				flags.set(ev);
+				return PILO_OK;
+			}
+			else if (this->value_type() > ::pilo::core::rtti::wired_type::value_type_na
+				&& this->value_type() < ::pilo::core::rtti::wired_type::value_type_boolean) {
+				ev = (INT_T)this->as_i64(nullptr);
+				flags.set(ev);
+				return PILO_OK;
+			}
+			return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
+		}
+
+
+		template<typename RET_ID_T, typename INT_T>
+		::pilo::err_t to_enum_id(RET_ID_T& ret, const char* const dict[], INT_T count, bool ignore_case) const
+		{
+			if (this->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
+				return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
+			}
+
+			if (_dynamic_data == nullptr)
+				return ::pilo::mk_perr(PERR_NULL_PTR);
+
+			if (this->value_type() == ::pilo::core::rtti::wired_type::value_type_na) {
+				return ::pilo::mk_perr(PERR_INV_VAL_TYPE);
+			} else if (this->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+				if (this->test_flag(::pilo::tlv::FlagBytesAsCStr)) {
+					return ::pilo::core::string::str_to_enum_id(ret, _dynamic_data, _size - 1, dict, count, ignore_case);
+				}
+				else {
+					return ::pilo::core::string::str_to_enum_id(ret, _dynamic_data, _size, dict, count, ignore_case);
+				}
+			} else if (this->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+				std::string* p = (std::string*)this->_dynamic_data;
+				return ::pilo::core::string::str_to_enum_id(ret, p, dict, count, ignore_case);
+			}
+			else if (this->value_type() > ::pilo::core::rtti::wired_type::value_type_na
+				&& this->value_type() < ::pilo::core::rtti::wired_type::value_type_boolean) {
+				if (this->as_i64(nullptr) >= (::pilo::i64_t)count) {
+					return ::pilo::mk_perr(PERR_INC_DATA);
+				}
+				ret = (RET_ID_T)this->as_i64(nullptr);
+			}
+
+			return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
+		}
+
 		template <typename T, ::pilo::i32_t TV_CNT = 32 > ::pilo::err_t get(const char* fqn, T & value)
 		{
 			::pilo::err_t err = PILO_OK;

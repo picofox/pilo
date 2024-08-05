@@ -122,13 +122,9 @@ namespace pilo {
                 ::pilo::tlv* svp2 = nullptr;
                 logger tmp_logger;
 
-                vp = this->_configuator->get_value("cwd", err);
-                PILO_ERRRET(err);
+                PILO_CHKERR_RET(err, this->_configuator->get_value("cwd", this->_cwd));
 
-                err = vp->assign_as_str(this->_cwd);
-                PILO_ERRRET(err);
-
-                vp = this->_configuator->get_value("loggers", err);
+                vp = this->_configuator->get_value_node("loggers", err);
                 PILO_ERRRET(err);
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_array) {
                     return ::pilo::mk_err(PERR_MIS_DATA_TYPE);
@@ -143,11 +139,59 @@ namespace pilo {
                     }
                     err = svp->get<std::string, ::pilo::tlv*>(std::string("type"), svp2);
                     PILO_ERRRET(err);
-                    err = ::pilo::core::string::str_to_id<::pilo::core::logging::logger_type, ::pilo::u8_t>(tmp_logger._type, svp2->daynamic_data(), svp2->as_str_length()
-                        , ::pilo::core::logging::g_logger_type_names, (::pilo::u8_t) (PMF_COUNT_OF(::pilo::core::logging::g_logger_type_names)), true);
+                    err = svp2->to_enum_id(tmp_logger._type, ::pilo::core::logging::g_logger_type_names, (::pilo::u8_t)(PMF_COUNT_OF(::pilo::core::logging::g_logger_type_names)), true);
+                    PILO_ERRRET(err);
+                    
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("level"), svp2);
+                    PILO_ERRRET(err);
+                    err = svp2->to_enum_id(tmp_logger._level, ::pilo::core::logging::g_level_names, (::pilo::u8_t)(PMF_COUNT_OF(::pilo::core::logging::g_level_names)), true);
+                    PILO_ERRRET(err);
+
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("splition_type"), svp2);
+                    PILO_ERRRET(err);
+                    err = svp2->to_enum_id(tmp_logger._splition_type, ::pilo::core::logging::g_splition_type_names, (::pilo::u8_t)(PMF_COUNT_OF(::pilo::core::logging::g_splition_type_names)), true);
+                    PILO_ERRRET(err);
+
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("outputs"), svp2);
+                    PILO_ERRRET(err);
+                    svp2->to_flags<::pilo::u8_t, PMF_COUNT_OF(::pilo::core::logging::g_output_dev_names)>(tmp_logger._outputs, ",", 1, ::pilo::core::logging::g_output_dev_names);
+
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("headers"), svp2);
+                    PILO_ERRRET(err);
+                    svp2->to_flags<::pilo::u32_t, PMF_COUNT_OF(::pilo::core::logging::g_predef_elment_names)>(tmp_logger._headers, ",", 1, ::pilo::core::logging::g_predef_elment_names);
+
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("split_every"), svp2);
+                    tmp_logger._split_every = svp2->as_i32(&err);
+                    PILO_ERRRET(err);
+
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("flags"), svp2);
+                    PILO_ERRRET(err);
+                    svp2->to_flags<::pilo::u32_t, PMF_COUNT_OF(::pilo::core::logging::g_flags)>(tmp_logger._flags, ",", 1, ::pilo::core::logging::g_flags);
+
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("bak_name_suffix"), svp2);
+                    PILO_ERRRET(err);
+                    svp2->to_flags<::pilo::u32_t, PMF_COUNT_OF(::pilo::core::logging::g_predef_elment_names)>(tmp_logger._bak_name_suffix, ",", 1, ::pilo::core::logging::g_predef_elment_names);
+
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("size_quota"), svp2);
+                    tmp_logger._size_quota = svp2->as_i64(&err);
+                    PILO_ERRRET(err);
+
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("piece_quota"), svp2);
+                    tmp_logger._piece_quota = svp2->as_i64(&err);
+                    PILO_ERRRET(err);
+
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("name"), svp2);
+                    PILO_ERRRET(err);
+                    err = svp2->assign_as_str(tmp_logger._name);
+                    PILO_ERRRET(err);
+                    
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("bak_dir"), svp2);
+                    PILO_ERRRET(err);
+                    err = svp2->assign_as_str(tmp_logger._bak_dir);
                     PILO_ERRRET(err);
 
 
+                    this->_loggers.push_back(tmp_logger);
                 }
 
 
@@ -203,6 +247,9 @@ namespace pilo {
 
                     ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "loggers.[%d].size_quota", i);
                     PILO_CHKERR_RET(err, this->_configuator->set_value(buffer, _loggers[i].size_quota(), true));
+
+                    ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "loggers.[%d].piece_quota", i);
+                    PILO_CHKERR_RET(err, this->_configuator->set_value(buffer, _loggers[i].piece_quota(), true));
 
                     ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "loggers.[%d].name", i);
                     PILO_CHKERR_RET(err, this->_configuator->set_value(buffer, _loggers[i].name().c_str(), (::pilo::i32_t) _loggers[i].name().size(), false, true, true));
