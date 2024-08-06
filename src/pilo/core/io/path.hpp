@@ -371,7 +371,6 @@ namespace pilo
                         return append(p, path::unknow_length, 0, rel_to_abs_basis);
                     }
 
-                    
                     ::pilo::err_t set(const char* p, ::pilo::i64_t len, ::pilo::pathlen_t extra, predefined_pilo_dir rel_to_abs_basis = predefined_pilo_dir::count);
                     ::pilo::err_t set(const char* p, predefined_pilo_dir rel_to_abs_basis = predefined_pilo_dir::count)
                     {

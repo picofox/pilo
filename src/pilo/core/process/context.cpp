@@ -38,12 +38,57 @@ namespace pilo
                 }
 
             }
+
+            char* xpf_get_proc_basename(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen, const char* suffix, ::pilo::i32_t suffix_len)
+            {
+                char tmp_buffer[PMI_PATH_MAX] = { 0 };
+                ::pilo::u32_t len = GetModuleFileName(NULL, tmp_buffer, sizeof(tmp_buffer));
+                ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
+                ::pilo::i32_t delta = len;
+                if (suffix != nullptr && suffix_len < 0)
+                    suffix_len = (::pilo::i32_t) ::pilo::core::string::character_count(suffix);
+
+
+                if (len > 0) {
+                    cb.check_space(len + 1 + suffix_len);
+                    const char* lastSlash = ::pilo::core::string::rfind_char(tmp_buffer, len, '\\');
+                    if (lastSlash != nullptr) {
+                        ::pilo::core::string::copyz(cb.begin(), cb.capacity(), lastSlash + 1);
+                        delta = (::pilo::i32_t) len - (::pilo::i32_t) (lastSlash - tmp_buffer + 1);
+                        ::pilo::set_if_ptr_is_not_null(rlen, delta); 
+                    }
+                    else {
+                        delta = len;
+                        ::pilo::core::string::copyz(cb.begin(), cb.capacity(), tmp_buffer);
+                        ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)len);
+                    }
+
+                    const char* firstdot = ::pilo::core::string::find_char(cb.begin(), delta, '.');
+                    if (firstdot != nullptr) {
+                        ::pilo::i32_t base_len = (::pilo::i32_t)(firstdot - cb.begin());
+                        cb.set_value(base_len, 0);
+                        cb.set_size(base_len);
+                        ::pilo::core::string::n_copyz(cb.ptr(), cb.space_available(), suffix, suffix_len);
+                        cb.set_value(base_len + suffix_len, 0);
+                        cb.set_size(base_len + suffix_len);
+
+                        ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)(base_len + suffix_len));
+                    }
+                    return cb.begin();
+
+                }
+                else {
+                    return nullptr;
+                }
+            }
 #else
 
             char* xpf_get_proc_name(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen)
             {
                 char filename[PMI_PATH_MAX] = {0};
                 ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
+                if (suffix != nullptr && suffix_len < 0)
+                    suffix_len = (::pilo::i32_t) ::pilo::core::string::character_count(suffix);
                 int fd = -1;
                 fd = open("/proc/self/comm", O_RDONLY);
                 ssize_t n = ::read(fd, filename, sizeof(filename));
@@ -55,6 +100,36 @@ namespace pilo
                 cb.check_space(len + 1);
                 ::pilo::core::string::copyz(cb.begin(), cb.capacity(), filename);
                 ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t) len);
+                return cb.begin();
+            }
+
+            char* xpf_get_proc_basename(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen, const char* suffix, ::pilo::i32_t suffix_len)
+            {
+                char filename[PMI_PATH_MAX] = { 0 };
+                ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
+                int fd = -1;
+                fd = open("/proc/self/comm", O_RDONLY);
+                ssize_t n = ::read(fd, filename, sizeof(filename));
+                if (n < 0) {
+                    ::close(fd);
+                    return nullptr;
+                }       
+                int len = (int) ::pilo::core::string::character_count(filename);
+                cb.check_space(len + 1);
+                ::pilo::core::string::copyz(cb.begin(), cb.capacity(), filename);
+                ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)len);
+
+                const char* firstdot = ::pilo::core::string::find_char(cb.begin(), len, '.');
+                if (firstdot != nullptr) {
+                    ::pilo::i32_t base_len = (::pilo::i32_t)(firstdot - cb.begin());
+                    cb.set_value(base_len, 0);
+                    cb.set_size(base_len);
+                    ::pilo::core::string::n_copyz(cb.ptr(), cb.space_available(), suffix, suffix_len);
+                    cb.set_value(base_len + suffix_len, 0);
+                    cb.set_size(base_len + suffix_len);
+
+                    ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)(base_len + suffix_len));
+                }
                 return cb.begin();
             }
 #endif
@@ -89,12 +164,13 @@ namespace pilo
                     _proc_basename = _proc_name;
                 }
 
-                _core_config.load_or_save_default();
+
                     
 
                 _page_pool = new ::pilo::core::memory::dynamic_memory_pool<::pilo::core::threading::spin_mutex>(PMSO_SYSTEM_INFORMATION->page_size(), 1024);
 
-
+                _core_config = ::std::make_shared<::pilo::core::config::core_config>();
+                _core_config->load();
             }
 
             context::~context()

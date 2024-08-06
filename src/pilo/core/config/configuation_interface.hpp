@@ -4,6 +4,7 @@
 #include "../io/path.hpp"
 #include "../io/file.hpp"
 #include "../../tlv.hpp"
+#include "./configuator_interface.hpp"
 
 
 namespace pilo {
@@ -19,8 +20,9 @@ namespace pilo {
                 virtual ::pilo::err_t save() = 0;
                 virtual ::pilo::err_t set_default() = 0;
                 virtual void clear(bool purge = true) = 0;
-                virtual ::pilo::err_t save_to_configurator() = 0;
-                virtual ::pilo::err_t load_from_configurator() = 0;
+                virtual ::pilo::err_t save_to_configurator(configuator_interface * configuator) = 0;
+                virtual ::pilo::err_t load_from_configurator(configuator_interface* configuator) = 0;
+                virtual const ::pilo::core::io::path& file_path() const = 0;
             };
         }
     }

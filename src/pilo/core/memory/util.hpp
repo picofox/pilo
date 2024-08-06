@@ -3,6 +3,7 @@
 #include <memory>
 #include <wchar.h>
 #include <cstring>
+#include "../../pilo.hpp"
 
 namespace pilo
 {
@@ -11,7 +12,7 @@ namespace pilo
         namespace memory
         {
             template<typename T>
-            void clear_raw_ptr_linear_container(T& cont, bool purge)
+            _inline void clear_raw_ptr_linear_container(T& cont, bool purge)
             {
                 for (typename T::iterator it = cont.begin(); it != cont.end(); ++it)
                 {

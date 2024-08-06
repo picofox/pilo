@@ -38,6 +38,7 @@ namespace pilo {
                     {
                     }
 
+
                 public:
                     inline void set_type(::pilo::core::logging::logger_type t)
                     {
@@ -135,12 +136,6 @@ namespace pilo {
                         return _bak_name_suffix.data();
                     }
 
-                    inline ::pilo::core::logging::logger_type set_type(const char* ) const
-                    {
-
-                    }
-
-
                     inline void set_defualt()
                     {
                         _type = ::pilo::core::logging::logger_type::local_spst_text;
@@ -176,23 +171,23 @@ namespace pilo {
 
                     std::string _name;
                     std::string _bak_dir;
+
                 };
                 //-------------------------------
 
             public:
-                core_config(configurator_type ct = configurator_type::json);
+                core_config();
                 virtual ~core_config()
                 {
-                    delete this->_configuator;
-                    this->_configuator = nullptr;
+                    clear();
                 }
                 
                 virtual ::pilo::err_t load();
                 virtual ::pilo::err_t save() override;
                 virtual void core_config::clear(bool purge = true);
                 virtual ::pilo::err_t set_default() override;
-                virtual ::pilo::err_t save_to_configurator();
-                virtual ::pilo::err_t load_from_configurator();
+                virtual ::pilo::err_t save_to_configurator(configuator_interface* configuator);
+                virtual ::pilo::err_t load_from_configurator(configuator_interface* configuator);
                 virtual ::pilo::err_t load_or_save_default()
                 {
                     ::pilo::err_t err = load();
@@ -209,6 +204,11 @@ namespace pilo {
                         return err;
 
                     return this->save();                    
+                }
+
+                virtual const ::pilo::core::io::path& file_path() const
+                {
+                    return _file_path;
                 }
 
             public:
@@ -230,11 +230,11 @@ namespace pilo {
 
 
             private:
-
-                configuator_interface* _configuator;
+                ::pilo::core::io::path  _file_path;
                 
                 ::std::string           _cwd;
                 ::std::vector<logger> _loggers;
+
 
                 
 

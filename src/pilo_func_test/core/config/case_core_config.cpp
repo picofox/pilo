@@ -20,10 +20,17 @@ namespace pilo
 		{
 			namespace config
 			{
+
+
 				int case_core_config(::pilo::core::testing::func_test_case* p_case)
 				{
 
+
+
+
+
 					p_case->set_result(PILO_OK);
+
 					return PILO_OK;
 				}
 

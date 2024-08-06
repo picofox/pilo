@@ -8,6 +8,7 @@
 #include "../io/path.hpp"
 #include "./process.hpp"
 #include "../config/core_config.hpp"
+#include <memory>
 
 namespace pilo
 {
@@ -16,7 +17,7 @@ namespace pilo
         namespace process
         {
             char* xpf_get_proc_name(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen);
-
+            char* xpf_get_proc_basename(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen, const char* suf, ::pilo::i32_t len);
 
             class context
             {
@@ -134,6 +135,20 @@ namespace pilo
                 inline ::pilo::os_pid_t process_id() const { return _pid; }
                 inline ::pilo::os_pid_t parent_process_id() const { return _ppid; }
 
+                inline ::pilo::err_t load_core_config()
+                {
+                    ::pilo::core::config::core_config *cfg = new ::pilo::core::config::core_config;
+                    ::pilo::err_t err = cfg->load();
+                    if (err != PILO_OK)
+                        return err;
+                    _core_config.reset(cfg);
+                    return PILO_OK;
+                }
+
+                inline ::std::shared_ptr<::pilo::core::config::core_config> core_config() const {
+                    return _core_config;
+                }
+
                 std::string startup_info() const;
 
             private:
@@ -142,10 +157,12 @@ namespace pilo
                 ::pilo::os_pid_t    _ppid;
                 std::string         _proc_name;
                 std::string         _proc_basename;
-                ::pilo::core::config::core_config _core_config;
+                
 
                 page_allocator::page_allocator_type*   _page_pool;
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;
+
+                ::std::shared_ptr<::pilo::core::config::core_config> _core_config;
             };
         }
     }

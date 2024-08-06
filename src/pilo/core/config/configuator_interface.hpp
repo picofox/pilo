@@ -19,10 +19,9 @@ namespace pilo {
             {
             public:
                 virtual ~configuator_interface() {};
-                virtual ::pilo::err_t load() = 0;
+                virtual ::pilo::err_t load(const::pilo::core::io::path* path_ptr) = 0;
                 virtual ::pilo::err_t load(const char* data, ::pilo::i64_t len) = 0;
-                virtual ::pilo::err_t save() = 0;
-                virtual ::pilo::err_t save_as(const ::pilo::core::io::path * dest_path) = 0;
+                virtual ::pilo::err_t save(const ::pilo::core::io::path * dest_path) = 0;
                 virtual ::pilo::tlv* root() = 0;
                 virtual ::pilo::tlv* get_value_node(const char* fqn, ::pilo::err_t& err) = 0;
                 virtual ::pilo::err_t set_value(const char* fqn, bool is_force) = 0;
@@ -39,10 +38,7 @@ namespace pilo {
                 virtual ::pilo::err_t set_value(const char* fqn, ::pilo::f64_t v, bool is_force) = 0;
                 virtual ::pilo::err_t set_value(const char* fqn, const std::string& v, bool is_force) = 0;
                 virtual ::pilo::err_t set_value(const char* fqn, const char* value, ::pilo::i32_t len, bool adopt, bool is_cstr, bool is_force) = 0;
-                virtual ::pilo::err_t set_file(const char* file, ::pilo::pathlen_t len, ::pilo::predefined_pilo_dir predef_dir) = 0;
 
-
-                virtual ::pilo::core::io::path* file_path() = 0;
 
             public:
                 virtual ::pilo::err_t get_value(const char* fqn, ::pilo::i8_t& v)

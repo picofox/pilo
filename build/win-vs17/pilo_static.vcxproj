@@ -364,6 +364,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\io.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_interface.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_manager.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\bits_operation.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\byte_buffer_interface.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\context.cpp" />
@@ -429,6 +430,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\text_file.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_interface.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_manager.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\text_logger.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\abstract_byte_buffer.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\autoreset_object_pool.hpp" />

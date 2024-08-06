@@ -14,21 +14,17 @@ namespace pilo {
             class json_configuator : public configuator_interface
             {
             public:
-                json_configuator() : _m_file_ptr(nullptr), _m_root_value(nullptr) {}
-                json_configuator(const::pilo::core::io::path* path_ptr);
+                json_configuator() : _m_root_value(nullptr) {}
                 virtual ~json_configuator();
 
 
             public:
                 // Inherited via configuator_interface
-                ::pilo::err_t load() override;
+                ::pilo::err_t load(const::pilo::core::io::path* path_ptr) override;
                 ::pilo::err_t load(const char* data, ::pilo::i64_t len) override;
-                ::pilo::err_t save() override;
-                ::pilo::err_t save_as(const ::pilo::core::io::path* dest_path) override;
+                ::pilo::err_t save(const ::pilo::core::io::path* dest_path) override;
                 ::pilo::tlv* root() override;
                 ::pilo::tlv* get_value_node(const char* fqn, ::pilo::err_t& err) override;
-                ::pilo::err_t set_file(const char* path_cstr, ::pilo::pathlen_t len, ::pilo::predefined_pilo_dir predef_dir) override;
-                ::pilo::core::io::path* file_path() override;
 
                 ::pilo::err_t set_value(const char* fqn, bool is_force);
                 ::pilo::err_t set_value(const char* fqn, bool iv, bool is_force);
@@ -92,8 +88,10 @@ namespace pilo {
                 ::pilo::err_t _write_json_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType & allocator);
                 ::pilo::err_t _parse_json_object(::rapidjson::Value & obj, ::pilo::tlv* parent_tlv);
                 ::pilo::err_t json_configuator::_parse_json_array(::rapidjson::Value& obj, ::pilo::tlv* parent_tlv);
+
+
             protected:
-                ::pilo::core::io::file<>  *_m_file_ptr;
+
                 ::pilo::tlv* _m_root_value;
 
             private:

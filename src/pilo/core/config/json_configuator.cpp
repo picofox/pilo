@@ -8,20 +8,6 @@
 namespace pilo {
     namespace core {
         namespace config {
-
-            json_configuator::json_configuator(const::pilo::core::io::path* path_ptr)
-            {
-                if (path_ptr != nullptr) {
-                    _m_file_ptr = new ::pilo::core::io::file<>();
-                    _m_file_ptr->set_path(path_ptr);
-                }
-                else {
-                    _m_file_ptr = nullptr;
-                }
-
-                _m_root_value = nullptr;
-            }
-
             json_configuator::~json_configuator()
             {
                 if (_m_root_value != nullptr) {
@@ -30,9 +16,10 @@ namespace pilo {
                 }
             }
 
-            ::pilo::err_t core::config::json_configuator::load()
+            ::pilo::err_t core::config::json_configuator::load(const::pilo::core::io::path* path_ptr)
             {
-                ::pilo::err_t err = this->_m_file_ptr->open(::pilo::core::io::creation_mode::open_existing
+                ::pilo::core::io::file<> f;
+                ::pilo::err_t err = f.open(path_ptr,::pilo::core::io::creation_mode::open_existing
                     , ::pilo::core::io::access_permission::read
                     , ::pilo::core::io::dev_open_flags::none);
                 if (err != PILO_OK) {
@@ -41,12 +28,11 @@ namespace pilo {
 
                 char buffer[1024] = { 0 };
                 ::pilo::i64_t data_len = 0;
-                char* data = this->_m_file_ptr->read_all(buffer, sizeof(buffer), &data_len, &err);
+                char* data = f.read_all(buffer, sizeof(buffer), &data_len, &err);
                 if (err != PILO_OK) {
-                    this->_m_file_ptr->close();
                     return err;
                 }
-                this->_m_file_ptr->close();
+                f.close();
 
                 if (data == nullptr) {
                     return ::pilo::mk_perr(PERR_VAL_EMPTY);
@@ -60,15 +46,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t core::config::json_configuator::save()
-            {
-                if (_m_file_ptr == nullptr || this->_m_file_ptr->path() == nullptr) {
-                    return ::pilo::mk_perr(PERR_NULL_PTR);
-                }
-                return this->save_as(this->_m_file_ptr->path());
-            }
-
-            ::pilo::err_t json_configuator::save_as(const::pilo::core::io::path* dest_path)
+            ::pilo::err_t json_configuator::save(const::pilo::core::io::path* dest_path)
             {
                 if (this->_m_root_value == nullptr)
                     return ::pilo::mk_perr(PERR_NOOP);                
@@ -76,7 +54,7 @@ namespace pilo {
                 ::pilo::core::io::path tmp_file_path;
                 ::pilo::err_t err = PILO_OK;
 
-                err = _m_file_ptr->path()->make_temp(tmp_file_path, ".tmp", ::pilo::core::io::path::TFNRandPolicyNone);
+                err = dest_path->make_temp(tmp_file_path, ".tmp", ::pilo::core::io::path::TFNRandPolicyNone);
                 if (err != PILO_OK)
                     return err;
 
@@ -236,14 +214,6 @@ namespace pilo {
                 }
 
                 return PILO_OK;
-            }
-
-            ::pilo::core::io::path* json_configuator::file_path()
-            {
-                if (this->_m_file_ptr != nullptr) {
-                    return this->_m_file_ptr->path();
-                }
-                return nullptr;
             }
 
             ::pilo::err_t json_configuator::_write_json_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
@@ -445,28 +415,6 @@ namespace pilo {
 
                 ::pilo::tlv* tlv_p = _m_root_value->get_tlv<32>(fqn, err);
                 return tlv_p;
-            }
-
-            ::pilo::err_t json_configuator::set_file(const char* file_path_cstr, ::pilo::pathlen_t len, ::pilo::predefined_pilo_dir predef_dir)
-            {
-                if (_m_file_ptr != nullptr) {
-                    return ::pilo::mk_perr(PERR_EXIST) ;
-                }
-
-                if (file_path_cstr == nullptr) {
-                    return ::pilo::mk_perr(PERR_NULL_PTR);
-                }
-
-                _m_file_ptr = new ::pilo::core::io::file<>();
-
-                ::pilo::i8_t abs_type = ::pilo::core::io::path::absolute_type(file_path_cstr, false, len);
-                if (abs_type == ::pilo::core::io::path::absolute) {
-                    return _m_file_ptr->path()->set(file_path_cstr, len, 0, ::pilo::predefined_pilo_dir::count);
-                }
-                else {
-                    return _m_file_ptr->path()->set(file_path_cstr, len, 0, predef_dir);
-                }
-                
             }
 
             ::pilo::err_t json_configuator::set_value(const char* fqn, bool is_force)
