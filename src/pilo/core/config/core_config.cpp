@@ -20,7 +20,7 @@ namespace pilo {
                 ::pilo::err_t err = PILO_OK;
 
                 json_configuator jct;
-                err = jct.load(&_file_path);
+               err = jct.load(&_file_path);
                 if (err != PILO_OK)
                     return err;
                
@@ -53,11 +53,17 @@ namespace pilo {
                 tmp_logger.set_type(::pilo::core::logging::logger_type::local_spmt_text);
                 tmp_logger.set_name(core_conf_file_name.c_str());
                 tmp_logger.set_bak_name_suffix(::pilo::core::logging::DefaultBakNameSuffix);
+                tmp_logger.set_bak_dir("baks");
+                tmp_logger.set_size_quota(1024 * 1024);
+                tmp_logger.set_field_sep(SP_PMS_LOG_FILE_DFL_FLD_SEP);
+
                 this->_loggers.emplace_back(std::move(tmp_logger));
                 tmp_logger.set_defualt();
                 tmp_logger.set_type(::pilo::core::logging::logger_type::local_spst_text);
                 tmp_logger.set_name(buffer);
                 tmp_logger.set_bak_name_suffix(::pilo::core::logging::DefaultBakNameSuffix);
+                tmp_logger.set_field_sep(SP_PMS_LOG_FILE_DFL_FLD_SEP);
+                
                 this->_loggers.emplace_back(std::move(tmp_logger));
 
                 return PILO_OK;
@@ -128,6 +134,11 @@ namespace pilo {
                     PILO_ERRRET(err);
                     svp2->to_flags<::pilo::u8_t, PMF_COUNT_OF(::pilo::core::logging::g_output_dev_names)>(tmp_logger._outputs, ",", 1, ::pilo::core::logging::g_output_dev_names);
 
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("name_suffix"), svp2);
+                    PILO_ERRRET(err);
+                    svp2->to_flags<::pilo::u32_t, PMF_COUNT_OF(::pilo::core::logging::g_predef_elment_names)>(tmp_logger._name_suffix, ",", 1, ::pilo::core::logging::g_predef_elment_names);
+
+
                     err = svp->get<std::string, ::pilo::tlv*>(std::string("headers"), svp2);
                     PILO_ERRRET(err);
                     svp2->to_flags<::pilo::u32_t, PMF_COUNT_OF(::pilo::core::logging::g_predef_elment_names)>(tmp_logger._headers, ",", 1, ::pilo::core::logging::g_predef_elment_names);
@@ -160,6 +171,16 @@ namespace pilo {
                     err = svp->get<std::string, ::pilo::tlv*>(std::string("bak_dir"), svp2);
                     PILO_ERRRET(err);
                     err = svp2->assign_as_str(tmp_logger._bak_dir);
+                    PILO_ERRRET(err);
+
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("line_sep"), svp2);
+                    PILO_ERRRET(err);
+                    err = svp2->assign_as_str(tmp_logger._line_sep);
+                    PILO_ERRRET(err);
+
+                    err = svp->get<std::string, ::pilo::tlv*>(std::string("field_sep"), svp2);
+                    PILO_ERRRET(err);
+                    err = svp2->assign_as_str(tmp_logger._field_sep);
                     PILO_ERRRET(err);
 
 
@@ -195,12 +216,12 @@ namespace pilo {
                     PMF_COMPARE_HEAP_FREE(flag_buffer_ptr, flag_buffer);
 
                     ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "loggers.[%d].name_suffix", i);
-                    flag_buffer_ptr = this->logger_at(i)->get_predef_elements(_loggers[i].outputs(), flag_buffer, sizeof(flag_buffer));
+                    flag_buffer_ptr = this->logger_at(i)->get_predef_elements(_loggers[i].name_suffix().data(), flag_buffer, sizeof(flag_buffer));
                     PILO_CHKERR_RET(err, configuator->set_value(buffer, flag_buffer_ptr, -1, false, true, true));
                     PMF_COMPARE_HEAP_FREE(flag_buffer_ptr, flag_buffer);
 
                     ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "loggers.[%d].headers", i);
-                    flag_buffer_ptr = this->logger_at(i)->get_predef_elements(_loggers[i].headers(), flag_buffer, sizeof(flag_buffer));
+                    flag_buffer_ptr = this->logger_at(i)->get_predef_elements(_loggers[i].headers().data(), flag_buffer, sizeof(flag_buffer));
                     PILO_CHKERR_RET(err, configuator->set_value(buffer, flag_buffer_ptr, -1, false, true, true));
                     PMF_COMPARE_HEAP_FREE(flag_buffer_ptr, flag_buffer);
 
@@ -213,7 +234,7 @@ namespace pilo {
                     PMF_COMPARE_HEAP_FREE(flag_buffer_ptr, flag_buffer);
 
                     ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "loggers.[%d].bak_name_suffix", i);
-                    flag_buffer_ptr = this->logger_at(i)->get_predef_elements(_loggers[i].bak_name_suffix(), flag_buffer, sizeof(flag_buffer));
+                    flag_buffer_ptr = this->logger_at(i)->get_predef_elements(_loggers[i].bak_name_suffix().data(), flag_buffer, sizeof(flag_buffer));
                     PILO_CHKERR_RET(err, configuator->set_value(buffer, flag_buffer_ptr, -1, false, true, true));
                     PMF_COMPARE_HEAP_FREE(flag_buffer_ptr, flag_buffer);
 
@@ -228,6 +249,12 @@ namespace pilo {
 
                     ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "loggers.[%d].bak_dir", i);
                     PILO_CHKERR_RET(err, configuator->set_value(buffer, _loggers[i].bak_dir().c_str(), (::pilo::i32_t) _loggers[i].bak_dir().size(), false, true, true));
+
+                    ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "loggers.[%d].line_sep", i);
+                    PILO_CHKERR_RET(err, configuator->set_value(buffer, _loggers[i].line_sep().c_str(), (::pilo::i32_t)_loggers[i].line_sep().size(), false, true, true));
+
+                    ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "loggers.[%d].field_sep", i);
+                    PILO_CHKERR_RET(err, configuator->set_value(buffer, _loggers[i].field_sep().c_str(), (::pilo::i32_t)_loggers[i].field_sep().size(), false, true, true));
 
                 }
 

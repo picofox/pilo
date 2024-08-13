@@ -8,7 +8,7 @@
 #include "pilo/core/process/context.hpp"
 #include "pilo/core/testing/case_utils.hpp"
 #include "pilo/core/memory/util.hpp"
-#include "pilo/core/logging/text_logger.hpp"
+#include "pilo/core/logging/local_text_logger.hpp"
 
 using namespace ::pilo::func_test;
 
@@ -24,11 +24,11 @@ namespace pilo
 			{
 				int case_text_logger_basic(::pilo::core::testing::func_test_case* p_case)
 				{
-					::pilo::core::logging::text_logger<> logger;
-					logger.set_filename_suffix(::pilo::core::logging::Date | ::pilo::core::logging::Pid);
-					logger.open();
+					for (int i = 0; i < 200; i++) {
+						PILO_CONTEXT->logger(0)->log(::pilo::core::logging::level::error, "%s index is %d", "server starting", i);
+					}
 
-
+					
 
 					p_case->set_result(PILO_OK);
 					return PILO_OK;

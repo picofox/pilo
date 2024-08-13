@@ -403,6 +403,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\stable_test_case.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\stable_test_suite.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\read_write_mutex.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\error.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\pilo.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp" />
@@ -429,9 +430,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\io.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\path.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\text_file.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\local_text_logger.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_def.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_manager.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\text_logger.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\abstract_byte_buffer.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\autoreset_object_pool.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\bits_operation.hpp" />
@@ -513,6 +515,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\read_write_mutex.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\shared_mutex_guard.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\spin_mutex.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\error.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml_iterators.hpp" />

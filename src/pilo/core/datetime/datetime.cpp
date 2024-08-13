@@ -432,6 +432,15 @@ namespace pilo
                 return (pilo::i64_t)dt.seconds_since_epoch();
             }
 
+            pilo::i64_t datetime::calculate_next_hours_initial_second(pilo::i64_t sec)
+            {
+                ::pilo::i64_t day_init = ::pilo::core::datetime::datetime::calculate_day_initial_second_local(sec);
+                ::pilo::i64_t delta = sec - day_init;
+                ::pilo::i64_t cnt = delta / 3600;
+                cnt++;
+                return day_init + (cnt * 3600);
+            }
+
             pilo::i64_t datetime::calculate_next_day_initial_second(pilo::i64_t sec)
             {
                 return ::pilo::core::datetime::datetime::calculate_day_initial_second_local(sec) + day_seconds;
@@ -503,9 +512,9 @@ namespace pilo
                 {
                     return -1;
                 }
-                return t;
+                return 0-t;
 #else
-                return timezone;
+                return 0-timezone;
 #endif
             }
 

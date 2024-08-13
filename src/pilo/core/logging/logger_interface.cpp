@@ -22,6 +22,10 @@ namespace pilo {
                 "debug",
             };
 
+            const ::pilo::i32_t g_level_name_lens[6]{
+                4, 5, 5, 4, 4, 5,
+            };
+
             const char*  const g_splition_type_names[3]{
                 "none",
                 "by_day",
@@ -35,12 +39,12 @@ namespace pilo {
                 "stderr",
             };
 
-            const char* const g_predef_elment_names[14]{
+            const char* const g_predef_elment_names[16]{
                 "Date",
                 "Time",
                 "TimeZone",
                 "Seq",
-                "MicroSec",
+                "TotalSeq",
                 "TimeStamp",
                 "Level",
                 "Pid",
@@ -50,6 +54,8 @@ namespace pilo {
                 "SrcLine",
                 "ProcName",
                 "PPid",
+                "SavedDate",
+                "SavedTime",
             };
 
             const char* const g_flags[2]{

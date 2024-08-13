@@ -101,6 +101,9 @@ namespace pilo
 
                 virtual ::pilo::err_t close()
                 {
+                    if (this->state() == state_code::closed) {
+                        return PILO_OK;
+                    }
                     this->_check_wirte_buffer(true);
                     ::pilo::core::io::xpf_close_file(&this->_m_fd);
                     this->set_state(state_code::closed);
@@ -196,73 +199,72 @@ namespace pilo
                     return PILO_OK;
                 }
 
-                ::pilo::err_t formatted_output(bool nl, const char* fmt, ...)
+                ::pilo::i64_t v_formatted_output(bool nl, const char* fmt, va_list args)
                 {
                     this->_check_wirte_buffer(true);
                     ::pilo::err_t err = PILO_OK;
-                    va_list args;
-                    va_start(args, fmt);
 
 #               if defined(WINDOWS)
                     ::pilo::core::memory::object_array<char, 4096> buffer;
                     ::pilo::i32_t i = 0;
                     ::pilo::i64_t ret = 0;
                     bool done = false;
-                    
                     while (i < 16) {
-                        ret = _vsnprintf_s(buffer.begin(), buffer.capacity(), _TRUNCATE, fmt, args);
+                        ret = _vsnprintf_s(buffer.begin(), buffer.capacity() - this->_m_write_sep_len, _TRUNCATE, fmt, args);
                         if (ret >= 0) {
                             buffer.set_size((::pilo::i32_t)ret);
                             done = true;
                             break;
                         }
-                        buffer.check_space(4096 * (i + 1));
+                        buffer.check_space(4096 * (i + 1) + this->_m_write_sep_len);
                         i++;
                     }
 
-                    va_end(args);
-
                     if (!done) {
-                        ::pilo::i64_t tr_size = ::pilo::core::string::character_count(buffer.begin());
-                        buffer.set_size((::pilo::i32_t)tr_size);
+                        ret = ::pilo::core::string::character_count(buffer.begin());
+                        buffer.set_size((::pilo::i32_t)ret);
                     }
 
-
-                    ::pilo::i64_t rlen = 0;
-                    err = this->write(buffer.begin(), buffer.size(), &rlen);   
+                    err = this->write(buffer.begin(), buffer.size(), &ret);
                     if (err != PILO_OK) {
-                        return err;
-                    }     
-                    if (rlen != buffer.size())
-                        return err;
+                        return -1;
+                    }
+                    if (ret != (::pilo::i64_t) buffer.size())
+                        return -2;
 
                     if (nl) {
-                        err = this->write(this->_m_write_sep, this->_m_write_sep_len, &rlen);
+                        err = this->write(this->_m_write_sep, this->_m_write_sep_len, nullptr);
                         if (err != PILO_OK) {
                             return err;
                         }
+                        ret += this->_m_write_sep_len;
                     }
-                                   
 
-                    return PILO_OK;
+                    return ret;
+
 
 #               else
                     int n = vdprintf(this->_m_fd, fmt, args);
                     if (n < 0)
-                        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
-                    va_end(args);
+                        return -1
 
                     if (nl) {
                         dprintf(this->_m_fd, "%s", this->_m_write_sep);
+                        n += this->_m_write_sep_len;
                     }
-                    if (n < 0)
-                        return ::pilo::mk_perr(PERR_IO_WRITE_FAIL);
 
-                    return PILO_OK;
-#               endif
+                    return (::pilo::i64_t) n;
+#               endif          
+                }
 
-                    
-
+                ::pilo::i64_t formatted_output(bool nl, const char* fmt, ...)
+                {
+                    va_list args;
+                    ::pilo::i64_t ret = 0;
+                    va_start(args, fmt);
+                    ret = this->v_formatted_output(nl, fmt, args);
+                    va_end(args);
+                    return ret;
                 }
 
                 template<typename CONTAINER_T>

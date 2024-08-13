@@ -48,6 +48,7 @@ namespace pilo
                     }
                 }
 
+
             public:
                 file()
                 {
@@ -83,6 +84,16 @@ namespace pilo
                 }
 
             public:
+
+                process_lock_type & process_lock()
+                {
+                    return this->_m_proc_lock;
+                }
+
+                thread_lock_type& thread_lock()
+                {
+                    return this->_m_thread_lock;
+                }
 
                 ::pilo::err_t set_path(const ::pilo::core::io::path* path)
                 {
@@ -310,6 +321,11 @@ namespace pilo
                         return ::pilo::mk_perr(PERR_FSNODE_EXIST);
                     }
                     return ::pilo::mk_perr(PERR_NOT_A_REG_FILE);
+                }
+
+                virtual ::pilo::err_t size(::pilo::i64_t& sz) const
+                {
+                    return xpf_get_file_size(this->_m_fd, sz);
                 }
 
                 ::pilo::err_t remove()
@@ -559,8 +575,8 @@ namespace pilo
             protected:
                 ::pilo::core::io::path      _m_path;
                 ::pilo::os_file_handle_t    _m_fd;
-                process_lock_type           _m_proc_lock;
-                thread_lock_type            _m_thread_lock;
+                mutable process_lock_type   _m_proc_lock;
+                mutable thread_lock_type    _m_thread_lock;
 
 #ifdef WINDOWS
                 OVERLAPPED                  _m_overlapped;

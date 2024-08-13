@@ -145,6 +145,7 @@ namespace pilo
                 char buffer[PMI_PATH_MAX] = { 0 };
                 ::pilo::i32_t rlen = 0;
 
+                _initialized = false;
                 _pid = ::pilo::core::process::current_process_id();
                 _ppid = ::pilo::core::process::current_parent_process_id();
                
@@ -170,7 +171,13 @@ namespace pilo
                 _page_pool = new ::pilo::core::memory::dynamic_memory_pool<::pilo::core::threading::spin_mutex>(PMSO_SYSTEM_INFORMATION->page_size(), 1024);
 
                 _core_config = ::std::make_shared<::pilo::core::config::core_config>();
-                _core_config->load();
+                _core_config->load_or_save_default();
+
+                ::pilo::err_t err = initialize();
+                if (err != PILO_OK) {
+                    fprintf(stderr, "PILO Initilization Failed: %s", ::pilo::str_err(err, nullptr, true).c_str());
+                    exit(0);
+                }
             }
 
             context::~context()
@@ -190,7 +197,7 @@ namespace pilo
                 formater.format_header(ss);
 
                 formater.format_field(ss, (::pilo::i64_t)0, (const char*)"Process:");
-                formater.format_field(ss, 1, this->process_basename());
+                formater.format_field(ss, 1, this->process_basename().c_str());
                 ss << std::endl;
 
                 formater.format_field(ss, (::pilo::i64_t) 0, (const char*) "PILO Version:");
@@ -238,6 +245,8 @@ namespace pilo
 
             ::pilo::i32_t context::initialize()
             {
+                if (_initialized)
+                    return PILO_OK;
 
                 _pool_object_stat_mgr.register_item(::pilo::core::stat::pool_object_stat_manager::pool_object_key_code::key_tlv
                     , sizeof(::pilo::tlv), [](::pilo::core::stat::pool_object_stat_manager::pool_object_key_code 
@@ -249,9 +258,6 @@ namespace pilo
                         , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return  ::pilo::core::memory::linked_byte_buffer<4096, 1024, false>::buffer_node::update_pool_object_stat(si); }
                     , "local_bn"
                 );
-
-
-                
 
 
                 ::pilo::err_t err = PILO_OK;
@@ -283,9 +289,14 @@ namespace pilo
                 if (err != PILO_OK)
                     return err;
 
+                err = _logger_manager.initialize(_core_config->loggers());
+                if (err != PILO_OK)
+                    return err;
 
                 std::string si = startup_info();                
                 printf("%s\n",si.c_str());
+
+                _initialized = true;
 
                 return PILO_OK;
             }

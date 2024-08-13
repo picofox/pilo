@@ -145,6 +145,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\read_write_mutex.cpp">
       <Filter>pilo\core\threading</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\error.cpp">
       <Filter>pilo</Filter>
     </ClCompile>
@@ -225,13 +228,16 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\text_file.hpp">
       <Filter>pilo\core\io</Filter>
     </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\local_text_logger.hpp">
+      <Filter>pilo\core\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_def.hpp">
+      <Filter>pilo\core\logging</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_interface.hpp">
       <Filter>pilo\core\logging</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_manager.hpp">
-      <Filter>pilo\core\logging</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\text_logger.hpp">
       <Filter>pilo\core\logging</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\abstract_byte_buffer.hpp">
@@ -475,6 +481,9 @@
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\spin_mutex.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\error.hpp">

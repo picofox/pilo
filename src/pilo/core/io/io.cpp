@@ -327,6 +327,8 @@ void pilo::core::io::xpf_close_file(::pilo::os_file_handle_t* fd)
 
 ::pilo::err_t pilo::core::io::_xpf_move_fs_node(bool is_src_abs, const path* src, bool is_dst_abs, const path* dst, bool force)
 {
+    PILO_ERRRET(dst->ensure_parent_path_exist());
+
 #ifdef WINDOWS
     DWORD flags = MOVEFILE_COPY_ALLOWED;
     if (force)

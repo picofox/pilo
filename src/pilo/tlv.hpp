@@ -169,7 +169,7 @@ namespace pilo
 					return ::pilo::mk_perr(PERR_INV_LEN);
 
 				if (this->test_flag(::pilo::tlv::FlagBytesAsCStr)) {
-					str.assign(_dynamic_data, data_size - 1);
+					str.assign(_dynamic_data, data_size);
 				}
 				else {
 					str.assign(_dynamic_data, data_size);

@@ -16,3 +16,4 @@
 #define SP_PMI_TEXT_FILE_LINE_STEP_SIZE     (64)
 #define SP_PMS_TEXT_FILE_DFL_LINE_RSEP      "\n"
 #define SP_PMS_TEXT_FILE_DFL_LINE_WSEP      "\n"
+#define SP_PMS_LOG_FILE_DFL_FLD_SEP         "\t"

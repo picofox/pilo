@@ -10,7 +10,7 @@
 #include "pilo/core/io/file.hpp"
 #include "pilo/core/io/text_file.hpp"
 #include "pilo/core/memory/util.hpp"
-#include "pilo/core/logging/text_logger.hpp"
+#include "pilo/core/logging/local_text_logger.hpp"
 
 using namespace ::pilo::func_test;
 
@@ -124,7 +124,6 @@ namespace pilo
 
 				int case_text_file_rdwrbuf(::pilo::core::testing::func_test_case* p_case)
 				{
-					::pilo::core::logging::text_logger<> logger;
 
 					::pilo::core::io::path p;
 					::pilo::err_t err = PILO_OK;

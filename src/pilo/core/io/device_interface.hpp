@@ -77,6 +77,7 @@ namespace pilo
                 virtual ::pilo::err_t exist() const = 0;
                 virtual ::pilo::err_t remove() = 0;
                 virtual ::pilo::err_t set_path(const ::pilo::core::io::path* path) = 0;
+                virtual ::pilo::err_t size(::pilo::i64_t & sz) const = 0;
 
             public:   
                 virtual void set_flag(dev_open_flags f)

@@ -54,7 +54,7 @@ set_target_properties(pilo_static PROPERTIES
     COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
 )
 
-set_target_properties(pilo_static PROPERTIES
+set_target_properties(pilo_shared PROPERTIES
     COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -fPIC -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
     COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
 )
@@ -74,7 +74,7 @@ add_custom_command(TARGET pilo_static POST_BUILD
         COMMAND find ${PILO_OUTPUT_DIR}/include/pilo -type f -name "*.cpp" -delete
 )
 add_custom_command(TARGET pilo_static PRE_BUILD
-        COMMAND rm -f ${PILO_OUTPUT_DIR}/lib/libpilo-shared-release.a
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/lib/libpilo-shared-debug.a
         COMMAND rm -f ${PILO_OUTPUT_DIR}/lib/libpilo-shared-release.a
 )
 add_custom_command(TARGET pilo_shared POST_BUILD

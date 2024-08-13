@@ -3,8 +3,8 @@
 
 #include "./json_configuator.hpp"
 #include "./configuation_interface.hpp"
-#include "../logging/logger_interface.hpp"
 #include "../string/string_operation.hpp"
+#include "../logging/logger_def.hpp"
 #include <vector>
 
 
@@ -15,13 +15,13 @@ namespace pilo {
         namespace config {
 
             class core_config : public configuation_interface {
-
+            public:
                 //-----------------------------
                 class logger {
                 public:
                     friend class core_config;
                 public:
-                    logger() : _type(::pilo::core::logging::logger_type::local_spst_text)                        
+                    logger() : _type(::pilo::core::logging::logger_type::local_spst_text)
                         , _level(::pilo::core::logging::level::debug)
                         , _splition_type(::pilo::core::logging::splition_type::by_day)
                         , _outputs(::pilo::core::logging::DevLogFile)
@@ -30,11 +30,12 @@ namespace pilo {
                         , _split_every(0)
                         , _flags(::pilo::core::logging::DefaultFlags)
                         , _bak_name_suffix(0)
-                        ,_size_quota(0)
-                        ,_piece_quota(0)
-                        ,_name("")
-                        ,_bak_dir("")
-
+                        , _size_quota(0)
+                        , _piece_quota(0)
+                        , _name("")
+                        , _bak_dir("")
+                        , _line_sep("\n")
+                        , _field_sep(", ")
                     {
                     }
 
@@ -57,28 +58,51 @@ namespace pilo {
                         _bak_dir.assign(p.fullpath(), p.length());
 
                         return PILO_OK;
-                    }                    
+                    }   
+                    inline ::pilo::err_t set_bak_dir(const char* dn)
+                    {
+                        _bak_dir = dn;
+                        return PILO_OK;
+                    }
                     inline void set_bak_name_suffix(const char* n)
                     {
                         _name = n;
                     }
-
+                    inline void set_size_quota(::pilo::i64_t q)
+                    {
+                        _size_quota = q;
+                    }
                     inline void set_bak_name_suffix(::pilo::u32_t v)
                     {
                         _bak_name_suffix = v;
                     }
-
-                    inline const char* type_name()
+                    inline ::pilo::core::logging::logger_type type() const
+                    {
+                        return _type;
+                    }
+                    inline const char* type_name() const
                     {
                         return ::pilo::core::logging::g_logger_type_names[(::pilo::u8_t)_type];
                     }
-                    inline const char* level_name()
+                    inline const char* level_name() const
                     {
                         return ::pilo::core::logging::g_level_names[(::pilo::u8_t)_level];
+                    }
+                    inline ::pilo::core::logging::level level() const
+                    {
+                        return _level;
+                    }
+                    inline void set_level(::pilo::core::logging::level lv)
+                    {
+                        _level = lv;
                     }
                     inline const char* splition_type_name()
                     {
                         return ::pilo::core::logging::g_splition_type_names[(::pilo::u8_t)_splition_type];
+                    }
+                    inline ::pilo::core::logging::splition_type  splition_type() const
+                    {
+                        return _splition_type;
                     }
                     inline char* get_outputs_devs(char* buffer, ::pilo::i32_t capacity) const
                     {
@@ -94,17 +118,17 @@ namespace pilo {
                         return ::pilo::core::string::extract_flags_to_strlist(buffer, capacity, v, ",", 1
                             , ::pilo::core::logging::g_predef_elment_names, PMF_COUNT_OF(::pilo::core::logging::g_predef_elment_names));
                     }
-                    inline ::pilo::u8_t outputs() const
+                    inline ::pilo::bit_flag<::pilo::u8_t> outputs() const
                     {
-                        return _outputs.data();
+                        return _outputs;
                     }
-                    inline ::pilo::u32_t name_suffix() const
+                    inline const ::pilo::bit_flag<::pilo::u32_t> name_suffix() const
                     {
-                        return _name_suffix.data();
+                        return _name_suffix;
                     }
-                    inline ::pilo::u32_t headers() const
+                    inline ::pilo::bit_flag<::pilo::u32_t> headers() const
                     {
-                        return _headers.data();
+                        return _headers;
                     }
 
                     inline ::pilo::i32_t split_every() const
@@ -131,11 +155,22 @@ namespace pilo {
                     {
                         return _flags.data();
                     }
-                    inline ::pilo::u32_t bak_name_suffix() const
+                    inline const ::pilo::bit_flag<::pilo::u32_t> bak_name_suffix() const
                     {
-                        return _bak_name_suffix.data();
+                        return _bak_name_suffix;
                     }
-
+                    inline const std::string& line_sep() const
+                    {
+                        return _line_sep;
+                    }
+                    inline const std::string& field_sep() const
+                    {
+                        return _field_sep;
+                    }
+                    inline void set_field_sep(const char * fld_sep)
+                    {
+                        _field_sep = fld_sep;
+                    }
                     inline void set_defualt()
                     {
                         _type = ::pilo::core::logging::logger_type::local_spst_text;
@@ -151,6 +186,8 @@ namespace pilo {
                         _piece_quota = 0;
                         _name = "";
                         _bak_dir = "";
+                        _line_sep = "\n";
+                        _field_sep = ", ";
                     }
 
                 private:                    
@@ -171,6 +208,9 @@ namespace pilo {
 
                     std::string _name;
                     std::string _bak_dir;
+                    std::string _line_sep;
+                    std::string _field_sep;
+                    
 
                 };
                 //-------------------------------
@@ -211,6 +251,7 @@ namespace pilo {
                     return _file_path;
                 }
 
+
             public:
                 const logger* logger_at(::pilo::u32_t idx) const
                 {
@@ -222,6 +263,11 @@ namespace pilo {
                 const std::string& cwd() const
                 {
                     return _cwd;
+                }
+
+                const ::std::vector<logger>& loggers() const
+                {
+                    return _loggers;
                 }
                 
             

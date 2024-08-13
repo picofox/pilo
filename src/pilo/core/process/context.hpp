@@ -9,6 +9,7 @@
 #include "./process.hpp"
 #include "../config/core_config.hpp"
 #include <memory>
+#include "../logging/logger_manager.hpp"
 
 namespace pilo
 {
@@ -60,14 +61,14 @@ namespace pilo
                     ::pilo::u8_t i = PMF_EXTRACT_U8(s_pilo_version, 0);
                     return cst_parr[i];
                 }
-                inline const char* process_name() const
+                inline const std::string& process_name() const
                 {
-                    return this->_proc_name.c_str();
+                    return this->_proc_name;
                 }
 
-                inline const char* process_basename() const
+                inline const std::string& process_basename() const
                 {
-                    return this->_proc_basename.c_str();
+                    return this->_proc_basename;
                 }
 
                 inline const ::pilo::core::io::path& cwd(bool update = false)
@@ -149,20 +150,29 @@ namespace pilo
                     return _core_config;
                 }
 
+                inline ::pilo::core::logging::logger_interface* logger(::pilo::i32_t idx)
+                {
+                    return _logger_manager.at(idx);
+                }
+
                 std::string startup_info() const;
 
             private:
                 ::pilo::core::io::path _proc_paths[(int)::pilo::predefined_pilo_dir::count];
+                bool                _initialized;
                 ::pilo::os_pid_t    _pid;
                 ::pilo::os_pid_t    _ppid;
                 std::string         _proc_name;
                 std::string         _proc_basename;
+
                 
 
                 page_allocator::page_allocator_type*   _page_pool;
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;
 
                 ::std::shared_ptr<::pilo::core::config::core_config> _core_config;
+                ::pilo::core::logging::logger_manager _logger_manager;
+                
             };
         }
     }

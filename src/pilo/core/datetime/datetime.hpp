@@ -399,6 +399,7 @@ namespace pilo
                 static pilo::i64_t calculate_day_initial_second_local(pilo::i64_t sec);
                 static pilo::i64_t calculate_week_initial_second(pilo::i64_t sec);
                 static pilo::i64_t calculate_month_initial_second(pilo::i64_t sec);
+                static pilo::i64_t calculate_next_hours_initial_second(pilo::i64_t sec);
                 static pilo::i64_t calculate_next_day_initial_second(pilo::i64_t sec);
                 static pilo::i64_t calculate_next_week_initial_second(pilo::i64_t sec);
                 static pilo::i64_t calculate_next_month_initial_second(pilo::i64_t sec);

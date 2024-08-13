@@ -60,10 +60,16 @@ namespace pilo
     typedef int                     os_file_handle_t;
     typedef int                     os_process_id_t;
     typedef void* os_dll_module_handle_t;
-    typedef pthread_t               os_thread_id_t;
     typedef pthread_cond_t          os_event_handle_t;
     typedef pthread_mutex_t         os_cs_handle_t;
 	typedef pid_t					os_pid_t;
+
+#       ifdef __linux__
+	typedef pid_t					os_thread_id_t;
+#       else
+	typedef pthread_t               os_thread_id_t;
+#       endif
+
 #endif
 
     template <size_t n> struct __regtype__ { typedef int int_r; typedef unsigned int uint_r; };
