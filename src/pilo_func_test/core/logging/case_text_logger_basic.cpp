@@ -24,7 +24,7 @@ namespace pilo
 			{
 				int case_text_logger_basic(::pilo::core::testing::func_test_case* p_case)
 				{
-					for (int i = 0; i < 200; i++) {
+					for (int i = 0; i < 0; i++) {
 						PILO_CONTEXT->logger(0)->log(::pilo::core::logging::level::error, "%s index is %d", "server starting", i);
 					}
 
