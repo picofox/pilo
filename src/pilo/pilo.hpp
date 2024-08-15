@@ -443,6 +443,8 @@ namespace pilo {
 
 namespace pilo
 {
+    
+
     template<bool use32> struct _hash_32_or_64 {
         static inline std::uint32_t hash(std::uint32_t h)
         {
@@ -476,7 +478,14 @@ namespace pilo
             *ptr = value;
     }
 
+    
+
+
+    
+
 }
 
-#define PILO_CONTEXT    (::pilo::core::pattern::singleton<::pilo::core::process::context>::instance())
-#define PILO_WIRED_TYPE_FACTORY (::pilo::core::pattern::singleton<::pilo::core::rtti::wired_type_factory>::instance())
+#define PILO_STARTUP_INIT   (::pilo::core::process::startup_initialize())
+#define PILO_CONTEXT    (::pilo::core::process::pilo_context())
+
+

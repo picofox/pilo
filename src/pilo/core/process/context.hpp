@@ -10,6 +10,7 @@
 #include "../config/core_config.hpp"
 #include <memory>
 #include "../logging/logger_manager.hpp"
+#include "../rtti/wired_type_factory.hpp"
 
 namespace pilo
 {
@@ -128,7 +129,10 @@ namespace pilo
                     return _proc_paths[(int)::pilo::predefined_pilo_dir::tmp];
                 }
                 inline const ::pilo::core::io::path& proc_path(::pilo::predefined_pilo_dir which) const { return _proc_paths[(int)which];}
-                
+                inline ::pilo::core::rtti::wired_type_factory* wired_type_factory()
+                {
+                    return this->_wired_type_facotry;
+                }
               
                 inline ::pilo::pointer allocate_page_buffer() { return  _page_pool->allocate(); }
                 inline void deallocate_page_buffer(::pilo::pointer p) { _page_pool->deallocate(p); }
@@ -165,6 +169,7 @@ namespace pilo
                 std::string         _proc_name;
                 std::string         _proc_basename;
 
+                ::pilo::core::rtti::wired_type_factory* _wired_type_facotry;
                 
 
                 page_allocator::page_allocator_type*   _page_pool;
@@ -174,6 +179,9 @@ namespace pilo
                 ::pilo::core::logging::logger_manager _logger_manager;
                 
             };
+
+            ::pilo::err_t startup_initialize();
+            core::process::context* pilo_context();
         }
     }
 }

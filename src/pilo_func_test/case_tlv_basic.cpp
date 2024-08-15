@@ -5,7 +5,7 @@
 #include "pilo/tlv.hpp"
 #include "pilo/core/rtti/wired_type_factory.hpp"
 #include "pilo/core/memory/linked_byte_buffer.hpp"
-
+#include "pilo/core/process/context.hpp"
 #include <memory>
 
 using namespace ::pilo::func_test;
@@ -52,7 +52,7 @@ namespace pilo
 
 		int case_tlv_basic(::pilo::core::testing::func_test_case* p_case)
 		{
-			::pilo::tlv* t = (::pilo::tlv*) PILO_WIRED_TYPE_FACTORY->allocate(0, ::pilo::core::rtti::wired_type::value_type_tlv);
+			::pilo::tlv* t = (::pilo::tlv*) PILO_CONTEXT->wired_type_factory()->allocate(0, ::pilo::core::rtti::wired_type::value_type_tlv);
 			if (t == nullptr)
 				return 9;
 

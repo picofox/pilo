@@ -163,10 +163,7 @@ namespace pilo
                 } else {
                     _proc_name.assign("unknow_proc", 11);
                     _proc_basename = _proc_name;
-                }
-
-
-                    
+                }                                    
 
                 _page_pool = new ::pilo::core::memory::dynamic_memory_pool<::pilo::core::threading::spin_mutex>(PMSO_SYSTEM_INFORMATION->page_size(), 1024);
 
@@ -178,6 +175,8 @@ namespace pilo
                     fprintf(stderr, "PILO Initilization Failed: %s", ::pilo::str_err(err, nullptr, true).c_str());
                     exit(0);
                 }
+
+                this->_wired_type_facotry = new ::pilo::core::rtti::wired_type_factory;
             }
 
             context::~context()
@@ -296,6 +295,7 @@ namespace pilo
                 std::string si = startup_info();                
                 printf("%s\n",si.c_str());
 
+
                 _initialized = true;
 
                 return PILO_OK;
@@ -307,6 +307,29 @@ namespace pilo
                 std::cout << str << std::endl;
             }
 
+
+            static ::pilo::core::process::context* _s_pilo_context_instance = nullptr;
+
+            ::pilo::err_t startup_initialize()
+            {
+                if (_s_pilo_context_instance != nullptr)
+                    return PILO_OK;
+
+                _s_pilo_context_instance = new ::pilo::core::process::context();
+                if (_s_pilo_context_instance == nullptr)
+                    return ::pilo::mk_perr(PERR_INSUF_HEAP);
+
+                ::pilo::err_t err = _s_pilo_context_instance->initialize();
+                if (err != PILO_OK) {
+                    return err;
+                }
+                return PILO_OK;
+            }
+
+            ::pilo::core::process::context* pilo_context()
+            {
+                return _s_pilo_context_instance;
+            }
            
         }
     }
