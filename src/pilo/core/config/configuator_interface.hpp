@@ -60,7 +60,7 @@ namespace pilo {
                 virtual ::pilo::err_t get_value(const char* fqn, ::pilo::f32_t& v);
                 virtual ::pilo::err_t get_value(const char* fqn, ::pilo::f64_t& v);
                 virtual ::pilo::err_t get_value(const char* fqn, std::string& v);
-                virtual  ::pilo::err_t get_value(const char* fqn, bool& v);
+                virtual ::pilo::err_t get_value(const char* fqn, bool& v);
                 virtual ::pilo::err_t get_value(const char* fqn, const char*& cstr, ::pilo::i32_t& len, bool* is_bytes_as_cstr);
 
             };
