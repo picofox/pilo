@@ -9,6 +9,7 @@
 #include "core/rtti/wired_type_map_comparation.hpp"
 #include "core/rtti/wired_type_map_creation.hpp"
 #include "core/rtti/wired_type_deque.hpp"
+#include "core/process/context.hpp"
 
 
 namespace pilo
@@ -2345,11 +2346,39 @@ namespace pilo
         }
     }
 
+    ::pilo::tlv* tlv::allocate()
+    {
+        return PILO_CONTEXT->allocate_tlv();
+    }
+
+    void tlv::deallocate(::pilo::tlv* tlvp) 
+    {
+        PILO_CONTEXT->deallocate_tlv(tlvp);
+    }
+
+    std::shared_ptr<::pilo::tlv> tlv::allocate_shared()
+    {
+        std::shared_ptr<::pilo::tlv> t(PILO_CONTEXT->allocate_tlv(),
+            [](::pilo::tlv* x) {
+                PILO_CONTEXT->deallocate_tlv(x);
+            });
+        return t;
+    }
+
+    std::unique_ptr<::pilo::tlv, void(*)(::pilo::tlv*)> tlv::allocate_unique()
+    {
+        std::unique_ptr<::pilo::tlv, void(*)(::pilo::tlv*)> t(PILO_CONTEXT->allocate_tlv(),
+            [](::pilo::tlv* x) {
+                PILO_CONTEXT->deallocate_tlv(x);
+            });
+        return t;
+    }
+
     ::pilo::err_t tlv::update_pool_object_stat(::pilo::core::stat::pool_object_stat_manager::stat_item* si)
     {
         ::pilo::i64_t avail = 0;
         ::pilo::i64_t total = 0;
-        pool()->m_memory_pool.calc_available_units_nolock(avail, total, 0);
+        PILO_CONTEXT->tlv_pool()->m_memory_pool.calc_available_units_nolock(avail, total, 0);
         si->set(total, avail);
         return PILO_OK;
     }
@@ -2438,6 +2467,24 @@ namespace pilo
         }
 
         return ret_tlv;
+    }
+
+    std::shared_ptr<::pilo::tlv> tlv::clone_shared() const
+    {
+        std::shared_ptr<::pilo::tlv> t(this->clone(),
+            [](::pilo::tlv* x) {
+                PILO_CONTEXT->deallocate_tlv(x);
+            });
+        return t;
+    }
+
+    std::unique_ptr<::pilo::tlv, void(*)(::pilo::tlv*)> tlv::clone_unique() const
+    {
+        std::unique_ptr<::pilo::tlv, void(*)(::pilo::tlv*)> t(this->clone(),
+            [](::pilo::tlv* x) {
+                PILO_CONTEXT->deallocate_tlv(x);
+            });
+        return t;
     }
 
     ::pilo::err_t tlv::_clone_data_array(const ::pilo::tlv* src_tlv)

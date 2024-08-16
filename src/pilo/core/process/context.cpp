@@ -162,17 +162,8 @@ namespace pilo
                     _proc_name.assign("unknow_proc", 11);
                     _proc_basename = _proc_name;
                 }                                    
-                _core_config = ::std::make_shared<::pilo::core::config::core_config>();
-                _core_config->load_or_save_default();
-
-                ::pilo::err_t err = initialize();
-                if (err != PILO_OK) {
-                    fprintf(stderr, "PILO Initilization Failed: %s", ::pilo::str_err(err, nullptr, true).c_str());
-                    exit(0);
-                }
-
+                _core_config = ::std::make_shared<::pilo::core::config::core_config>();     
                 this->_system_information = new ::pilo::core::stat::system_information();
-
                 this->_wired_type_facotry = new ::pilo::core::rtti::wired_type_factory;
             }
 
@@ -181,11 +172,23 @@ namespace pilo
                 s_on_exit();
             }
 
+            ::pilo::tlv* context::allocate_tlv()
+            {
+                return _tlv_pool.allocate();
+            }
+
+            void context::deallocate_tlv(::pilo::tlv* tlvp)
+            {
+                _tlv_pool.deallocate(tlvp);
+            }
+
             std::string context::startup_info() const
             {
                 char buffer[64] = {0};
                 std::stringstream ss;
                 ::pilo::core::string::fixed_width_line_formater formater;
+
+
 
 
                 formater.add_meta_field(16, PMI_FIXED_WIDTH_LINE_FMT_LEFT_ALIGH, "Item ");
@@ -243,6 +246,8 @@ namespace pilo
             {
                 if (_initialized)
                     return PILO_OK;
+
+                _core_config->load_or_save_default();
 
                 _pool_object_stat_mgr.register_item(::pilo::core::stat::pool_object_stat_manager::pool_object_key_code::key_tlv
                     , sizeof(::pilo::tlv), [](::pilo::core::stat::pool_object_stat_manager::pool_object_key_code 

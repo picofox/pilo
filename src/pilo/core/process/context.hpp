@@ -20,6 +20,9 @@ namespace pilo
             class context
             {
             public:
+                typedef ::pilo::core::memory::compactable_autoreset_object_pool<::pilo::tlv, SP_PMI__TLV_STEP, ::pilo::core::threading::native_mutex>  tlv_pool_type;
+
+            public:
                 const static ::pilo::u32_t s_pilo_version = PMF_MAKE_U32_BY_BYTES_BE(1,0,34,0);
                 context();
                 ~context();
@@ -147,6 +150,9 @@ namespace pilo
                 }
 
 
+                ::pilo::tlv* allocate_tlv();
+                void deallocate_tlv(::pilo::tlv* tlvp);                
+                tlv_pool_type* tlv_pool() { return &_tlv_pool;  }
 
                 std::string startup_info() const;
 
@@ -160,6 +166,8 @@ namespace pilo
 
                 ::pilo::core::stat::system_information* _system_information;
                 ::pilo::core::rtti::wired_type_factory* _wired_type_facotry;
+
+                tlv_pool_type _tlv_pool;
                 
 
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;

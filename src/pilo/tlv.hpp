@@ -33,13 +33,9 @@ namespace pilo
 {
 
     class tlv
-		: public ::pilo::core::memory::portable_compactable_autoreset_object_pool<::pilo::tlv, SP_PMI__TLV_STEP, ::pilo::core::threading::native_mutex>
     {
 	public:
 		const static ::pilo::u8_t	FlagBytesAsCStr = 0x01;
-
-	public:
-		typedef ::pilo::core::memory::portable_compactable_autoreset_object_pool<::pilo::tlv, SP_PMI__TLV_STEP, ::pilo::core::threading::native_mutex> pool_type;
 
 	public:
 		friend bool core::rtti::map_equals(::pilo::u8_t a_key_type, ::pilo::u16_t a_val_type, const char* a_data, ::pilo::u8_t b_key_type, ::pilo::u16_t b_val_type, const char* b_data, ::pilo::err_t* err);
@@ -917,6 +913,10 @@ namespace pilo
 
 
 		//static allocation
+		static ::pilo::tlv* allocate();
+		static void deallocate(::pilo::tlv*);
+
+
 		template<typename T> static ::pilo::tlv * allocate_single(T&& v)
 		{
 			auto t = ::pilo::tlv::allocate();
@@ -958,22 +958,9 @@ namespace pilo
 			t->set(v, len, is_str, adopt);
 			return t;
 		}
-		static std::shared_ptr<::pilo::tlv> allocate_shared()
-		{
-			std::shared_ptr<::pilo::tlv> t(::pilo::tlv::allocate(),
-				[](::pilo::tlv* x) {
-					::pilo::tlv::deallocate(x);
-				});
-			return t;
-		}
-		static std::unique_ptr<::pilo::tlv, void(*)(::pilo::tlv*)> allocate_unique()
-		{
-			std::unique_ptr<::pilo::tlv, void(*)(::pilo::tlv*)> t(::pilo::tlv::allocate(),
-				[](::pilo::tlv* x) {
-					::pilo::tlv::deallocate(x);
-				});
-			return t;
-		}
+		static std::shared_ptr<::pilo::tlv> allocate_shared();		
+		static std::unique_ptr<::pilo::tlv, void(*)(::pilo::tlv*)> allocate_unique();
+		
 
 		static ::pilo::err_t update_pool_object_stat(::pilo::core::stat::pool_object_stat_manager::stat_item * si);
 
@@ -1661,22 +1648,8 @@ namespace pilo
 		::pilo::err_t serialize(::pilo::core::memory::serializable_header_interface* header, ::pilo::core::memory::byte_buffer_interface* byte_buffer) const;
 		::pilo::err_t deserialize(::pilo::core::memory::serializable_header_interface* header, ::pilo::core::memory::byte_buffer_interface* byte_buffer);
 		tlv* clone() const;
-		std::shared_ptr<::pilo::tlv> clone_shared() const
-		{
-			std::shared_ptr<::pilo::tlv> t(this->clone(),
-				[](::pilo::tlv* x) {
-					::pilo::tlv::deallocate(x);
-				});
-			return t;
-		}
-		std::unique_ptr<::pilo::tlv, void(*)(::pilo::tlv*)> clone_unique() const
-		{
-			std::unique_ptr<::pilo::tlv, void(*)(::pilo::tlv*)> t(this->clone(),
-				[](::pilo::tlv* x) {
-					::pilo::tlv::deallocate(x);
-				});
-			return t;
-		}
+		std::shared_ptr<::pilo::tlv> clone_shared() const;		
+		std::unique_ptr<::pilo::tlv, void(*)(::pilo::tlv*)> clone_unique() const;		
 		bool equals_to(const ::pilo::tlv* other) const;
 
 		//debuging
