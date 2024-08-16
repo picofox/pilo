@@ -246,7 +246,7 @@ namespace pilo
 #               else
                     int n = vdprintf(this->_m_fd, fmt, args);
                     if (n < 0)
-                        return -1
+                        return -1;
 
                     if (nl) {
                         dprintf(this->_m_fd, "%s", this->_m_write_sep);

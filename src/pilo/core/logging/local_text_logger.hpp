@@ -381,9 +381,8 @@ namespace pilo {
                             }
                             else {
                                 cstr2 = ::pilo::core::string::find_char(cstr, -1, PMI_PATH_OTHER_SEP);
-                                cstr2++;
-                                if (*cstr2 != 0) {
-                                    cstr = cstr2;
+                                if (cstr2 != nullptr && (*(cstr2+1) != 0)) {
+                                    cstr = cstr2+1;
                                 }
                             }
                         }                       

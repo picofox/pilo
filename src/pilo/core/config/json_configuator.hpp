@@ -4,6 +4,7 @@
 #include "./configuator_interface.hpp"
 
 #include "../../external/rapidjson/document.h"
+#include "../../tlv.hpp"
 
 namespace pilo {
 
@@ -89,7 +90,7 @@ namespace pilo {
 
                 ::pilo::err_t _write_json_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType & allocator);
                 ::pilo::err_t _parse_json_object(::rapidjson::Value & obj, ::pilo::tlv* parent_tlv);
-                ::pilo::err_t json_configuator::_parse_json_array(::rapidjson::Value& obj, ::pilo::tlv* parent_tlv);
+                ::pilo::err_t _parse_json_array(::rapidjson::Value& obj, ::pilo::tlv* parent_tlv);
 
 
             protected:

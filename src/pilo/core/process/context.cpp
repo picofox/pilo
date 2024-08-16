@@ -87,8 +87,6 @@ namespace pilo
             {
                 char filename[PMI_PATH_MAX] = {0};
                 ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
-                if (suffix != nullptr && suffix_len < 0)
-                    suffix_len = (::pilo::i32_t) ::pilo::core::string::character_count(suffix);
                 int fd = -1;
                 fd = open("/proc/self/comm", O_RDONLY);
                 ssize_t n = ::read(fd, filename, sizeof(filename));

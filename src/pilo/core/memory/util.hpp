@@ -12,7 +12,7 @@ namespace pilo
         namespace memory
         {
             template<typename T>
-            _inline void clear_raw_ptr_linear_container(T& cont, bool purge)
+            void clear_raw_ptr_linear_container(T& cont, bool purge)
             {
                 for (typename T::iterator it = cont.begin(); it != cont.end(); ++it)
                 {

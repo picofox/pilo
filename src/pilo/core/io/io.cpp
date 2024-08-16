@@ -1,6 +1,15 @@
 ﻿#include "io.hpp"
 #include "path.hpp"
 
+#ifdef WINDOWS
+
+#else
+#   ifdef LINUX
+#       include <sys/stat.h>
+#endif
+
+#endif
+
 ::pilo::os_file_handle_t pilo::core::io::xpf_open_file(const char* path_str, creation_mode cm, access_permission perm, dev_open_flags f)
 {
     ::pilo::os_file_handle_t fd = PMI_INVALID_FILE_HANDLE;
@@ -305,8 +314,8 @@ void pilo::core::io::xpf_close_file(::pilo::os_file_handle_t* fd)
     sz = size.QuadPart;
 #else
     struct stat file_inf = {0};
-    int ret = fstat(fd, &file_inf);
-    if (0! = ret)
+    int ret = ::fstat(fd, &file_inf);
+    if (0 != ret)
         return ::pilo::mk_err(PERR_IO_READ_FAIL);
     sz = (::pilo::i64_t)file_inf.st_size;
 
@@ -371,7 +380,7 @@ void pilo::core::io::xpf_close_file(::pilo::os_file_handle_t* fd)
     }
 
     if (0 != nret) {
-        return ::pilo::mk_err(PERR_FILE_MOVE_FAIL);
+        return ::pilo::mk_err(PERR_FILE_RENAME_FAIL);
     }
 
 

@@ -777,7 +777,7 @@ namespace pilo {
 #else
             ::pilo::err_t path::validate_path(::pilo::char_buffer_t *buffer, const char *path_str, ::pilo::i64_t path_str_len,
                                 ::pilo::pathlen_t extra, ::pilo::i8_t &fs_type, bool &isabs,
-                                predefined_pilo_dir_enum rel_to_abs_basis)
+                                predefined_pilo_dir rel_to_abs_basis)
            {
                 if (buffer == nullptr)
                     return ::pilo::mk_perr(PERR_NULL_PARAM);
@@ -804,7 +804,7 @@ namespace pilo {
                 ::pilo::core::memory::object_array<char, 64> tmp_path;
                 ::pilo::i8_t abs_type = path::absolute_type(path_str, nullptr, (::pilo::pathlen_t) path_str_len);
                 if (abs_type == path::relative) {
-                    if (rel_to_abs_basis != predefined_pilo_dir_enum::count) {
+                    if (rel_to_abs_basis != predefined_pilo_dir::count) {
                         path prefix;
                         if (prefix.fill_with_predef_path(rel_to_abs_basis, 0) != PILO_OK) {
                             return ::pilo::mk_perr(PERR_INVALID_PATH);

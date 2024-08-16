@@ -120,13 +120,13 @@ namespace pilo {
                     _m_root_value->set(jdoc_root.GetInt());
                 }
                 else if (jdoc_root.IsInt64()) {
-                    _m_root_value->set(jdoc_root.GetInt64());
+                    _m_root_value->set((::pilo::i64_t )jdoc_root.GetInt64());
                 }
                 else if (jdoc_root.IsUint()) {
                     _m_root_value->set(jdoc_root.GetUint());
                 }
                 else if (jdoc_root.IsUint64()) {
-                    _m_root_value->set(jdoc_root.GetUint64());
+                    _m_root_value->set((::pilo::u64_t)jdoc_root.GetUint64());
                 }
                 else if (jdoc_root.IsFloat()) {
                     _m_root_value->set(jdoc_root.GetFloat());
@@ -174,10 +174,10 @@ namespace pilo {
                         tlv->set(obj[i].GetUint());
                     }
                     else if (obj[i].IsInt64()) {
-                        tlv->set(obj[i].GetInt64());
+                        tlv->set((::pilo::i64_t) obj[i].GetInt64());
                     }
                     else if (obj[i].IsUint64()) {
-                        tlv->set(obj[i].GetUint64());
+                        tlv->set((::pilo::u64_t) obj[i].GetUint64());
                     }
                     else if (obj[i].IsDouble()) {
                         tlv->set(obj[i].GetDouble());
@@ -190,7 +190,7 @@ namespace pilo {
                             tlv->set_cstr(nullptr, (::pilo::i64_t)-1, false);
                         }
                         else {
-                            tlv->set_cstr(obj[i].GetString(), (::pilo::i64_t)obj[i].GetStringLength(), false);
+                            tlv->set_cstr(obj[i].GetString(), (::pilo::i32_t)obj[i].GetStringLength(), false);
                         }
                     }
                     else if (obj[i].IsObject()) {
@@ -359,10 +359,10 @@ namespace pilo {
                         tlv->set(itr->value.GetUint());
                     }
                     else if (itr->value.IsInt64()) {
-                        tlv->set(itr->value.GetInt64());
+                        tlv->set((::pilo::i64_t) itr->value.GetInt64());
                     }
                     else if (itr->value.IsUint64()) {
-                        tlv->set(itr->value.GetUint64());
+                        tlv->set((::pilo::u64_t) itr->value.GetUint64());
                     }
                     else if (itr->value.IsDouble()) {
                         tlv->set(itr->value.GetDouble());

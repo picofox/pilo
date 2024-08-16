@@ -226,7 +226,7 @@ namespace pilo {
                 
                 virtual ::pilo::err_t load();
                 virtual ::pilo::err_t save() override;
-                virtual void core_config::clear(bool purge = true);
+                virtual void clear(bool purge = true);
                 virtual ::pilo::err_t set_default() override;
                 virtual ::pilo::err_t save_to_configurator(configuator_interface* configuator);
                 virtual ::pilo::err_t load_from_configurator(configuator_interface* configuator);
