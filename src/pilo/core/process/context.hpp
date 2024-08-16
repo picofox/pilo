@@ -1,12 +1,13 @@
 ﻿#pragma once
 
+#include <memory>
 #include "../memory/dynamic_memory_pool.hpp"
 #include "../stat/pool_object_stat_info.hpp"
 #include "../io/path.hpp"
 #include "../config/core_config.hpp"
-#include <memory>
 #include "../logging/logger_manager.hpp"
 #include "../rtti/wired_type_factory.hpp"
+#include "../memory/linked_byte_buffer.hpp"
 
 namespace pilo
 {
@@ -167,10 +168,12 @@ namespace pilo
                 ::pilo::core::stat::system_information* _system_information;
                 ::pilo::core::rtti::wired_type_factory* _wired_type_facotry;
 
+
                 tlv_pool_type _tlv_pool;
                 
 
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;
+
 
                 ::std::shared_ptr<::pilo::core::config::core_config> _core_config;
                 ::pilo::core::logging::logger_manager _logger_manager;
