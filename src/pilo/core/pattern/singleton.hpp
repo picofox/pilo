@@ -7,10 +7,10 @@ namespace pilo
         namespace pattern
         {
             template <class T>
-            class singleton
+            class _singleton
             {
             protected:
-                singleton() {};                
+                _singleton() {};
 
             public:
                 static T* instance()
@@ -20,8 +20,8 @@ namespace pilo
                 }
 
             private:
-                singleton(const singleton &);
-                singleton& operator=(const singleton &);
+                _singleton(const _singleton &);
+                _singleton& operator=(const _singleton &);
                 
 
             };

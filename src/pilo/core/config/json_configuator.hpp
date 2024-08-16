@@ -2,11 +2,13 @@
 #define _pilo_core_config_json_configuator_h_
 
 #include "./configuator_interface.hpp"
-#include "../io/file.hpp"
-#include "../../tlv.hpp"
+
 #include "../../external/rapidjson/document.h"
 
 namespace pilo {
+
+    class tlv;
+
     namespace core {
         namespace config {
         

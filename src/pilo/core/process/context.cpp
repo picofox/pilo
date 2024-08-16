@@ -164,9 +164,6 @@ namespace pilo
                     _proc_name.assign("unknow_proc", 11);
                     _proc_basename = _proc_name;
                 }                                    
-
-                _page_pool = new ::pilo::core::memory::dynamic_memory_pool<::pilo::core::threading::spin_mutex>(PMSO_SYSTEM_INFORMATION->page_size(), 1024);
-
                 _core_config = ::std::make_shared<::pilo::core::config::core_config>();
                 _core_config->load_or_save_default();
 
@@ -175,6 +172,8 @@ namespace pilo
                     fprintf(stderr, "PILO Initilization Failed: %s", ::pilo::str_err(err, nullptr, true).c_str());
                     exit(0);
                 }
+
+                this->_system_information = new ::pilo::core::stat::system_information();
 
                 this->_wired_type_facotry = new ::pilo::core::rtti::wired_type_factory;
             }

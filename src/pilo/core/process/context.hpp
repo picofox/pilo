@@ -1,12 +1,8 @@
 ﻿#pragma once
 
-#include "../../pilo.hpp"
 #include "../memory/dynamic_memory_pool.hpp"
-#include "../threading/spin_mutex.hpp"
-#include "../pattern/singleton.hpp"
 #include "../stat/pool_object_stat_info.hpp"
 #include "../io/path.hpp"
-#include "./process.hpp"
 #include "../config/core_config.hpp"
 #include <memory>
 #include "../logging/logger_manager.hpp"
@@ -23,16 +19,6 @@ namespace pilo
 
             class context
             {
-            public:
-                class page_allocator
-                {
-                public:
-                    typedef ::pilo::core::memory::dynamic_memory_pool<::pilo::core::threading::spin_mutex> page_allocator_type;
-                    inline static ::pilo::pointer allocate() {return ::pilo::core::pattern::singleton<page_allocator_type>::instance()->allocate(); }
-                    inline static void deallocate(::pilo::pointer p) { ::pilo::core::pattern::singleton<page_allocator_type>::instance()->deallocate(p); }
-
-                };                
-
             public:
                 const static ::pilo::u32_t s_pilo_version = PMF_MAKE_U32_BY_BYTES_BE(1,0,34,0);
                 context();
@@ -129,13 +115,14 @@ namespace pilo
                     return _proc_paths[(int)::pilo::predefined_pilo_dir::tmp];
                 }
                 inline const ::pilo::core::io::path& proc_path(::pilo::predefined_pilo_dir which) const { return _proc_paths[(int)which];}
+                inline const ::pilo::core::stat::system_information* system_information() const
+                {
+                    return _system_information;
+                }
                 inline ::pilo::core::rtti::wired_type_factory* wired_type_factory()
                 {
                     return this->_wired_type_facotry;
                 }
-              
-                inline ::pilo::pointer allocate_page_buffer() { return  _page_pool->allocate(); }
-                inline void deallocate_page_buffer(::pilo::pointer p) { _page_pool->deallocate(p); }
 
                 inline ::pilo::os_pid_t process_id() const { return _pid; }
                 inline ::pilo::os_pid_t parent_process_id() const { return _ppid; }
@@ -159,6 +146,8 @@ namespace pilo
                     return _logger_manager.at(idx);
                 }
 
+
+
                 std::string startup_info() const;
 
             private:
@@ -169,10 +158,10 @@ namespace pilo
                 std::string         _proc_name;
                 std::string         _proc_basename;
 
+                ::pilo::core::stat::system_information* _system_information;
                 ::pilo::core::rtti::wired_type_factory* _wired_type_facotry;
                 
 
-                page_allocator::page_allocator_type*   _page_pool;
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;
 
                 ::std::shared_ptr<::pilo::core::config::core_config> _core_config;

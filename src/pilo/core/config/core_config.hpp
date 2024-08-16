@@ -1,12 +1,14 @@
-﻿#ifndef _pilo_core_config_config_core_config_h_
-#define _pilo_core_config_config_core_config_h_
+﻿#ifndef _pilo_core_config_core_config_h_
+#define _pilo_core_config_core_config_h_
 
+
+#include <vector>
 #include "./json_configuator.hpp"
 #include "./configuation_interface.hpp"
 #include "../string/string_operation.hpp"
 #include "../logging/logger_def.hpp"
-#include <vector>
 
+#include "../io/path.hpp"
 
 
 
@@ -246,9 +248,9 @@ namespace pilo {
                     return this->save();                    
                 }
 
-                virtual const ::pilo::core::io::path& file_path() const
+                virtual const ::pilo::core::io::path* file_path() const
                 {
-                    return _file_path;
+                    return &_file_path;
                 }
 
 

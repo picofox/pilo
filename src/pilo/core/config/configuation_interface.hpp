@@ -1,14 +1,16 @@
 #ifndef _pilo_core_config_configuation_interface_h_
 #define _pilo_core_config_configuation_interface_h_
 
-#include "../io/path.hpp"
-#include "../io/file.hpp"
-#include "../../tlv.hpp"
 #include "./configuator_interface.hpp"
 
 
 namespace pilo {
     namespace core {
+
+        namespace io {
+            class path;
+        }
+
         namespace config {
 
 
@@ -22,7 +24,7 @@ namespace pilo {
                 virtual void clear(bool purge = true) = 0;
                 virtual ::pilo::err_t save_to_configurator(configuator_interface * configuator) = 0;
                 virtual ::pilo::err_t load_from_configurator(configuator_interface* configuator) = 0;
-                virtual const ::pilo::core::io::path& file_path() const = 0;
+                virtual const ::pilo::core::io::path* file_path() const = 0;
             };
         }
     }

@@ -9,7 +9,6 @@
 #include <set>
 #include <list>
 #include <map>
-#include "./pilo.hpp"
 #include "./core/memory/compactable_autoreset_object_pool.hpp"
 #include "./core/memory/compactable_object_pool.hpp"
 #include "./core/threading/native_mutex.hpp"

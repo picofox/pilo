@@ -1,9 +1,11 @@
-﻿#pragma once
-#include "types.hpp"
-#include "error.hpp"
+﻿#ifndef _pilo_hpp_
+#define _pilo_hpp_
+
 #include <memory>
 #include <thread>
 #include <atomic>
+
+#include "error.hpp"
 #include "preprocessor.hpp"
 
 #ifdef WINDOWS
@@ -489,3 +491,4 @@ namespace pilo
 #define PILO_CONTEXT    (::pilo::core::process::pilo_context())
 
 
+#endif

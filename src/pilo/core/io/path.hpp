@@ -2,7 +2,6 @@
 #define _pilo_io_path_hpp_
 
 #include <string>
-#include "../../pilo.hpp"
 #include "../string/string_operation.hpp"
 #include "./formatted_io.hpp"
 #include "../threading/native_mutex.hpp"

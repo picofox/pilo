@@ -2,7 +2,6 @@
 #define _pilo_core_log_logger_def_hpp_
 
 #include "../../pilo.hpp"
-#include "../config/core_config.hpp"
 
 
 

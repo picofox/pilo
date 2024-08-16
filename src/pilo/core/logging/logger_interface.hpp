@@ -1,9 +1,8 @@
 ﻿#ifndef _pilo_core_log_logger_interface_hpp_
 #define _pilo_core_log_logger_interface_hpp_
 
-#include "../../pilo.hpp"
 #include "../config/core_config.hpp"
-
+#include "./logger_def.hpp"
 
 
 namespace pilo {

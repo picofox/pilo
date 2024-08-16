@@ -2,8 +2,8 @@
 #include "../../external/rapidjson/document.h"
 #include "../../external/rapidjson/writer.h"
 #include "../../external/rapidjson/stringbuffer.h"
-
-
+#include "../../tlv.hpp"
+#include "../io/file.hpp"
 
 namespace pilo {
     namespace core {

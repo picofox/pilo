@@ -55,7 +55,10 @@ namespace pilo {
 				LARGE_INTEGER pcounter;
 				QueryPerformanceCounter(&pcounter);
 
-				return (long long)((double)(1000000000.0L / ::pilo::core::pattern::singleton<::pilo::core::stat::system_information>::instance()->freq()) * pcounter.QuadPart);
+				LARGE_INTEGER li;
+				QueryPerformanceFrequency(&li);
+
+				return (long long)((double)(1000000000.0L / li.QuadPart) * pcounter.QuadPart);
 			}
 
 			/**
@@ -69,7 +72,12 @@ namespace pilo {
 			{
 				LARGE_INTEGER pcounter;
 				QueryPerformanceCounter(&pcounter);
-				return (long long)((double)(1000000.0L / ::pilo::core::pattern::singleton<::pilo::core::stat::system_information>::instance()->freq()) * pcounter.QuadPart);
+
+				LARGE_INTEGER li;
+				QueryPerformanceFrequency(&li);
+
+
+				return (long long)((double)(1000000.0L / li.QuadPart) * pcounter.QuadPart);
 			}
 
 			/**
@@ -83,7 +91,13 @@ namespace pilo {
 			{
 				LARGE_INTEGER pcounter;
 				QueryPerformanceCounter(&pcounter);
-				return (long long)((double)(1000.0L / ::pilo::core::pattern::singleton<::pilo::core::stat::system_information>::instance()->freq()) * pcounter.QuadPart);
+
+				LARGE_INTEGER li;
+				QueryPerformanceFrequency(&li);
+
+
+				return (long long)((double)(1000.0L / li.QuadPart) * pcounter.QuadPart);
+
 			}
 
 			/**

@@ -1,15 +1,17 @@
 #ifndef _pilo_core_log_logger_manager_hpp_
 #define _pilo_core_log_logger_manager_hpp_
 
-#include "../../pilo.hpp"
-#include "./logger_interface.hpp"
-#include "../config/core_config.hpp"
 #include <vector>
+#include <map>
 #include <unordered_map>
+#include "../config/core_config.hpp"
+
 
 namespace pilo {
     namespace core {
         namespace logging {
+
+            class logger_interface;
 
             class logger_manager
             {
