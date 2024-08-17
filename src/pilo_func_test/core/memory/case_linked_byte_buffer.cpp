@@ -115,7 +115,7 @@ namespace pilo
 				int case_linked_byte_buffer_mt_4k_net(::pilo::core::testing::func_test_case* p_case)
 				{
 					stc_count.store(0);
-					::pilo::core::memory::linked_byte_buffer<4096, 1024, true> buffer;
+					::pilo::core::memory::linked_byte_buffer_4k_be buffer;
 					std::vector<::pilo::core::threading::auto_join_thread> producers;
 					std::vector<::pilo::core::threading::auto_join_thread> consumers;
 
@@ -149,7 +149,7 @@ namespace pilo
 				int case_linked_byte_buffer_mt_4k_local(::pilo::core::testing::func_test_case* p_case)
 				{
 					stc_count.store(0);
-					::pilo::core::memory::linked_byte_buffer<4096, 1024, false> buffer;
+					::pilo::core::memory::linked_byte_buffer_4k_le buffer;
 					std::vector<::pilo::core::threading::auto_join_thread> producers;
 					std::vector<::pilo::core::threading::auto_join_thread> consumers;
 
@@ -182,7 +182,7 @@ namespace pilo
 				int case_linked_byte_buffer_serialize_net(::pilo::core::testing::func_test_case* p_case)
 				{
 					const int test_count = 100000;
-					::pilo::core::memory::linked_byte_buffer< 4096, 1024, true> buffer;
+					::pilo::core::memory::linked_byte_buffer_4k_be buffer;
 					::pilo::core::testing::large_sample_object sobj(false, 0);
 					::pilo::core::memory::o1l31c16_header header;
 					::pilo::i64_t ser_time = 0;
@@ -244,7 +244,7 @@ namespace pilo
 				int case_linked_byte_buffer_serialize_host(::pilo::core::testing::func_test_case* p_case)
 				{
 					const int test_count = 100000;
-					::pilo::core::memory::linked_byte_buffer< 4096, 1024, false> buffer;
+					::pilo::core::memory::linked_byte_buffer_4k_le buffer;
 					::pilo::core::testing::large_sample_object sobj(false, 0);
 					::pilo::core::memory::o1l31c16_header header;
 					::pilo::i64_t ser_time = 0;
@@ -304,7 +304,7 @@ namespace pilo
 				int case_linked_byte_buffer_serialize_1(::pilo::core::testing::func_test_case* p_case)
 				{
 					const ::pilo::i64_t test_count = 1000000;
-					::pilo::core::memory::linked_byte_buffer< 4096, 1024, true> buffer;
+					::pilo::core::memory::linked_byte_buffer_4k_be buffer;
 					::pilo::core::testing::large_sample_object sobj(false, 0);
 					::pilo::core::memory::o1l31c16_header header;
 					::pilo::i64_t ser_time = 0;
@@ -364,25 +364,25 @@ namespace pilo
 				int case_linked_byte_buffer_basic(::pilo::core::testing::func_test_case* p_case)
 				{
 					std::string err_info;
-					::pilo::core::memory::linked_byte_buffer<4096, 4096, false> buffer;
+					::pilo::core::memory::linked_byte_buffer_4k_be buffer;
 					if (!buffer.validate(err_info, 0, 0, 0, 0))
 						return ::pilo::mk_perr( PERR_INC_DATA);
 
 					::pilo::err_t err;
 					::pilo::i64_t orig_pos = 0;
-					err = buffer.writable_seek(::pilo::seek_whence_enum::current, 408000, false,  &orig_pos);
+					err = buffer.writable_seek(::pilo::seek_whence_enum::current, BKILO(4)*100, false,  &orig_pos);
 					if (err != PILO_OK)
 						return err;
 					if (orig_pos != 0)
 						return  ::pilo::mk_perr( PERR_INV_OFF);
-					if (!buffer.validate(err_info, 408000, 0, 408000, 100))
+					if (!buffer.validate(err_info, BKILO(4) * 100, 0, BKILO(4) * 100, 100))
 						return ::pilo::mk_perr(PERR_INC_DATA);
 					err = buffer.writable_seek(::pilo::seek_whence_enum::begin, 0, false, &orig_pos);
 					if (err != PILO_OK)
 						return err;
-					if (orig_pos != 408000)
-						return  ::pilo::mk_perr( PERR_INV_OFF);
-					if (!buffer.validate(err_info, 408000, 0, 0, 100))
+					if (orig_pos != BKILO(4) * 100)
+						return  ::pilo::mk_perr(PERR_INC_DATA);
+					if (!buffer.validate(err_info, BKILO(4) * 100, 0, 0, 100))
 						return ::pilo::mk_perr(PERR_INC_DATA);
 					err = buffer.compact(::pilo::ioop_type_enum::write);
 					if (err != PILO_OK)
@@ -390,22 +390,22 @@ namespace pilo
 					if (!buffer.validate(err_info, 0, 0, 0, 0))
 						return ::pilo::mk_perr(PERR_INC_DATA);
 
-					err = buffer.writable_seek(::pilo::seek_whence_enum::current, 408000, false, &orig_pos);
+					err = buffer.writable_seek(::pilo::seek_whence_enum::current, BKILO(4) * 100, false, &orig_pos);
 					if (err != PILO_OK)
 						return err;
-					err = buffer.readable_seek(::pilo::seek_whence_enum::current, 204000, false, &orig_pos);
+					err = buffer.readable_seek(::pilo::seek_whence_enum::current, BKILO(4) * 50, false, &orig_pos);
 					if (err != PILO_OK)
 						return err;
 					if (orig_pos != 0)
 						return  ::pilo::mk_perr( PERR_INV_OFF);
-					if (!buffer.validate(err_info, 408000, 204000, 204000, 100))
+					if (!buffer.validate(err_info, BKILO(4) * 100, BKILO(4) * 50, BKILO(4) * 50, 100))
 						return ::pilo::mk_perr( PERR_INC_DATA);
 					err = buffer.compact(::pilo::ioop_type_enum::read);
 					if (err != PILO_OK)
 						return err;
-					if (!buffer.validate(err_info, 204000, 0, 204000, 50))
+					if (!buffer.validate(err_info, BKILO(4) * 50, 0, BKILO(4) * 50, 50))
 						return ::pilo::mk_perr( PERR_INC_DATA);
-					err = buffer.readable_seek(::pilo::seek_whence_enum::current, 204000, false, &orig_pos);
+					err = buffer.readable_seek(::pilo::seek_whence_enum::current, BKILO(4) * 50, false, &orig_pos);
 					if (err != PILO_OK)
 						return err;
 					if (orig_pos != 0)
@@ -417,16 +417,16 @@ namespace pilo
 						return ::pilo::mk_perr( PERR_INC_DATA);
 
 
-					err = buffer.writable_seek(::pilo::seek_whence_enum::current, 408000, false, &orig_pos);
+					err = buffer.writable_seek(::pilo::seek_whence_enum::current, BKILO(4) * 100, false, &orig_pos);
 					if (err != PILO_OK)
 						return err;
-					err = buffer.readable_seek(::pilo::seek_whence_enum::current, 204000, false, &orig_pos);
+					err = buffer.readable_seek(::pilo::seek_whence_enum::current, BKILO(4) * 50, false, &orig_pos);
 					if (err != PILO_OK)
 						return err;
-					err = buffer.writable_seek(::pilo::seek_whence_enum::current, -204000, false, &orig_pos);
+					err = buffer.writable_seek(::pilo::seek_whence_enum::current, 0 - (BKILO(4) * 50), false, &orig_pos);
 					if (err != PILO_OK)
 						return err;
-					if (orig_pos != 408000)
+					if (orig_pos != BKILO(4) * 100)
 						return  ::pilo::mk_perr( PERR_INV_OFF);
 					err = buffer.compact(::pilo::ioop_type_enum::read_write);
 					if (err != PILO_OK)

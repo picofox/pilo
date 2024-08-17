@@ -3,7 +3,7 @@
 #include "../../pilo.hpp"
 #include <chrono>
 #include "../stat/system_information.hpp"
-#include "../pattern/singleton.hpp"
+
 
 
 

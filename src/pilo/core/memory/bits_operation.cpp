@@ -1,7 +1,5 @@
 ﻿#include "../../platform.hpp"
 #include "bits_operation.hpp"
-#include "../pattern/singleton.hpp"
-
 
 namespace pilo
 {

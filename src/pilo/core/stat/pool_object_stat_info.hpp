@@ -5,7 +5,6 @@
 #include <map>
 #include <functional>
 #include "../../pilo.hpp"
-#include "../pattern/singleton.hpp"
 #include "../string/string_operation.hpp"
 
 namespace pilo
@@ -20,7 +19,7 @@ namespace pilo
                 enum class pool_object_key_code : pilo::i16_t
                 {
                     key_tlv = -1,
-                    local_buffer_node = -2,
+                    linked_buffer_node_4k = -2,
                 };
 
             public:

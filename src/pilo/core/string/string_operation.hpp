@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "../pattern/singleton.hpp"
 #include "../algorithm/find.hpp"
 #include "../memory/bits_operation.hpp"
 #include <uchar.h>

@@ -91,7 +91,7 @@ namespace pilo
             };
 
             template <typename T, ::pilo::i64_t _Step, typename _Lock = pilo::core::threading::dummy_mutex>
-            class portable_compactable_autoreset_object_pool
+            class _portable_compactable_autoreset_object_pool
             {
             public:
                 typedef  compactable_autoreset_object_pool<T, _Step, _Lock>       object_pool_type;
@@ -103,21 +103,21 @@ namespace pilo
 
                 static T* allocate()
                 {
-                    object_pool_type* p = portable_compactable_autoreset_object_pool::pool();
+                    object_pool_type* p = _portable_compactable_autoreset_object_pool::pool();
 					PMC_ASSERT(p != nullptr);
                     return p->allocate();
                 }
 
                 static void deallocate(T* object)
                 {
-                    object_pool_type* p = portable_compactable_autoreset_object_pool::pool();
+                    object_pool_type* p = _portable_compactable_autoreset_object_pool::pool();
 					PMC_ASSERT(p != nullptr);
                     p->deallocate(object);
                 }
 
                 static std::string to_string()
                 {
-                    object_pool_type* p = portable_compactable_autoreset_object_pool::pool();
+                    object_pool_type* p = _portable_compactable_autoreset_object_pool::pool();
                     PMC_ASSERT(p != nullptr);
                     return p->to_string();
                 }

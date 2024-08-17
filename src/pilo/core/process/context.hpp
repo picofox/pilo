@@ -7,21 +7,26 @@
 #include "../config/core_config.hpp"
 #include "../logging/logger_manager.hpp"
 #include "../rtti/wired_type_factory.hpp"
-#include "../memory/linked_byte_buffer.hpp"
+#include "../threading/spin_mutex.hpp"
 
 namespace pilo
 {
     namespace core
     {
+        namespace memory
+        {
+            template<::pilo::i64_t TA_UNIT_SIZE>
+            class linked_buffer_node;
+        }
+
         namespace process
         {
-            char* xpf_get_proc_name(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen);
-            char* xpf_get_proc_basename(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen, const char* suf, ::pilo::i32_t len);
-
             class context
             {
             public:
                 typedef ::pilo::core::memory::compactable_autoreset_object_pool<::pilo::tlv, SP_PMI__TLV_STEP, ::pilo::core::threading::native_mutex>  tlv_pool_type;
+                typedef ::pilo::core::memory::compactable_object_pool<::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>, SP_PMI_LBKBUF_NODE_4K_STEP_SIZE, ::pilo::core::threading::spin_mutex> linked_buffer_node_4k_pool_type;
+
 
             public:
                 const static ::pilo::u32_t s_pilo_version = PMF_MAKE_U32_BY_BYTES_BE(1,0,34,0);
@@ -129,7 +134,7 @@ namespace pilo
                 }
 
                 inline ::pilo::os_pid_t process_id() const { return _pid; }
-                inline ::pilo::os_pid_t parent_process_id() const { return _ppid; }
+                inline ::pilo::os_pid_t xpf_parent_process_id() const { return _ppid; }
 
                 inline ::pilo::err_t load_core_config()
                 {
@@ -150,11 +155,15 @@ namespace pilo
                     return _logger_manager.at(idx);
                 }
 
-
                 ::pilo::tlv* allocate_tlv();
                 void deallocate_tlv(::pilo::tlv* tlvp);                
                 tlv_pool_type* tlv_pool() { return &_tlv_pool;  }
 
+
+                ::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>* allocate_linked_buffer_node_4k();
+                void deallocate_linked_buffer_node_4k(::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE> * node_ptr);
+                linked_buffer_node_4k_pool_type* linked_buffer_node_4k_pool() { return _linked_buffer_node_pool; }
+ 
                 std::string startup_info() const;
 
             private:
@@ -170,7 +179,7 @@ namespace pilo
 
 
                 tlv_pool_type _tlv_pool;
-                
+                linked_buffer_node_4k_pool_type *_linked_buffer_node_pool;
 
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;
 

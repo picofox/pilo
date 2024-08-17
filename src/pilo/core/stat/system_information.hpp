@@ -2,7 +2,7 @@
 
 #include <string>
 #include "../../pilo.hpp"
-#include "../pattern/singleton.hpp"
+
 
 namespace pilo
 {
@@ -34,11 +34,5 @@ namespace pilo
             };
         }
     }
-
-    //inline ::pilo::core::stat::system_information* pilo_get_system_information()
-    //{
-    //    return ::pilo::core::pattern::singleton<::pilo::core::stat::system_information>::instance();
-    //}
 }
 
-#define PMSO_SYSTEM_INFORMATION (::pilo::core::pattern::singleton<::pilo::core::stat::system_information>::instance())

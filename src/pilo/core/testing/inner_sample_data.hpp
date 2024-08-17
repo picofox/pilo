@@ -15,10 +15,13 @@ namespace pilo
 		namespace testing
 		{
 			class inner_sample_data : public ::pilo::core::memory::serializable_interface
-				, public ::pilo::core::memory::portable_compactable_object_pool<inner_sample_data, 1024, ::pilo::core::threading::spin_mutex>
 			{
 			public:
 				static inner_sample_data* deserialise(::pilo::core::memory::serializable_header_interface* header, ::pilo::core::memory::byte_buffer_interface* byte_buffer);
+
+			public:
+				static inner_sample_data* allocate() { return new inner_sample_data; }
+				static void deallocate(inner_sample_data* p) { delete p; }
 
 			public:
 				inner_sample_data() : _seq(0), _name("abcdefghi"), _sal(3.14f) 				

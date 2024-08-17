@@ -13,7 +13,6 @@
 #include "pilo/core/threading/auto_join_thread.hpp"
 #include "pilo/core/process/context.hpp"
 #include "pilo/core/memory/linked_byte_buffer.hpp"
-#include "pilo/core/pattern/singleton.hpp"
 #include "pilo/core/testing/inner_sample_data.hpp"
 #include "pilo/error.hpp"
 #include "pilo/tlv.hpp"

@@ -525,13 +525,13 @@ namespace pilo {
                     if (this->_m_config.headers().test_value(::pilo::core::logging::PPid)) {
 
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
-                            tlen = this->_m_file.formatted_output(false, "%d%s", PILO_CONTEXT->parent_process_id(), this->_m_config.field_sep().c_str());
+                            tlen = this->_m_file.formatted_output(false, "%d%s", PILO_CONTEXT->xpf_parent_process_id(), this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%d%s", PILO_CONTEXT->parent_process_id(), this->_m_config.field_sep().c_str());
+                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%d%s", PILO_CONTEXT->xpf_parent_process_id(), this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%d%s", PILO_CONTEXT->parent_process_id(), this->_m_config.field_sep().c_str());
+                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%d%s", PILO_CONTEXT->xpf_parent_process_id(), this->_m_config.field_sep().c_str());
                         }
                         hlen += tlen;
                     }

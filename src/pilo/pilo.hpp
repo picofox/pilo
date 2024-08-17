@@ -487,6 +487,8 @@ namespace pilo
 
 }
 
+
+
 #define PILO_STARTUP_INIT   (::pilo::core::process::startup_initialize())
 #define PILO_CONTEXT    (::pilo::core::process::pilo_context())
 

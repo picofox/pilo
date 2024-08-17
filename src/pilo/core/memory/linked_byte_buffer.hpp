@@ -11,24 +11,27 @@
 #include "../memory/compactable_object_pool.hpp"
 #include "../algorithm/minmax.hpp"
 #include "../threading/spin_mutex.hpp"
+#include "./linked_buffer_node.hpp"
+
 namespace pilo
 {
     namespace core
     {
+        namespace process
+        {
+            class context;
+            extern context* pilo_context();;
+        }
         namespace memory
         {
             template<::pilo::i64_t TA_UNIT_SIZE, ::pilo::i64_t TA_STEP, bool TA_BIGENDIAN>
             class linked_byte_buffer : public abstract_byte_buffer<TA_BIGENDIAN>
             {
-            public:
-                struct buffer_node : public ::pilo::core::memory::portable_compactable_object_pool<buffer_node, TA_STEP, ::pilo::core::threading::spin_mutex>
-                {                    
-                    buffer_node* m_next;
-                    char         data[TA_UNIT_SIZE - sizeof(buffer_node*) - sizeof(void*)];                    
-                };
 
-   
-                inline static ::pilo::i64_t piece_size() { return TA_UNIT_SIZE - sizeof(buffer_node*) - sizeof(void*); }
+            public:
+                typedef linked_buffer_node<TA_UNIT_SIZE> node_type;
+
+                inline static ::pilo::i64_t piece_size() { return TA_UNIT_SIZE; }
 
             public:
                 linked_byte_buffer() : _m_capacity(0), _m_begin_pos(0), _m_length(0), _m_saved_node_for_writing(nullptr), _m_saved_pos_for_writing(0)
@@ -70,7 +73,7 @@ namespace pilo
                         ::pilo::i64_t to_del_cnt = this->_m_node_list.size() - node_cnt;
                         if (to_del_cnt < 1)
                             return PILO_OK;
-                        buffer_node* pnode = nullptr;
+                        linked_buffer_node<TA_UNIT_SIZE>* pnode = nullptr;
                         if (node_cnt > 0)
                         {
                             pnode = this->_m_node_list.front();
@@ -80,14 +83,15 @@ namespace pilo
                             }
                         }
 
-                        buffer_node* del_pnode = nullptr;
+                        linked_buffer_node<TA_UNIT_SIZE>* del_pnode = nullptr;
                         while (to_del_cnt > 0)
                         {
                             if (!this->_m_node_list.erase_after(pnode, &del_pnode))
                             {
                                 return ::pilo::mk_perr( PERR_INC_DATA);
                             }
-                            buffer_node::deallocate(del_pnode);
+
+                            node_type::deallocate(del_pnode);
                             to_del_cnt--;
                             this->_m_capacity -= piece_size();
                         }
@@ -164,7 +168,7 @@ namespace pilo
                         ::pilo::i64_t rem = wp % piece_size();
                         if (rem > 0)
                             cnt++;
-                        buffer_node* next_node = this->_m_node_list.back();
+                        node_type* next_node = this->_m_node_list.back();
                         while (cnt > 0)
                         {
                             next_node = this->_get_next_node(next_node);
@@ -216,10 +220,10 @@ namespace pilo
                     this->_m_begin_pos = 0;
                     this->_m_length = 0;
                     this->_m_capacity = 0;
-                    buffer_node* node_ptr = this->_m_node_list.begin();
+                    node_type* node_ptr = this->_m_node_list.begin();
                     while ((node_ptr = this->_m_node_list.pop_front()) != nullptr)
                     {
-                        buffer_node::deallocate(node_ptr);
+                        node_type::deallocate(node_ptr);
                     }
                     this->_m_node_list.clear();
                 }
@@ -359,7 +363,7 @@ namespace pilo
                         }
 
                         ::pilo::i64_t neo_begin_pos = 0;
-                        buffer_node* node = this->_find_node(simu_begin_pos, neo_begin_pos);
+                        node_type* node = this->_find_node(simu_begin_pos, neo_begin_pos);
                         if (node == nullptr)
                         {
                             PMF_FREE_IF_DIFF_ADDR(dst_buffer, ret_buffer_ptr);
@@ -433,7 +437,7 @@ namespace pilo
                         return ::pilo::mk_perr( PERR_INV_OFF);
                     }
                     ::pilo::i64_t begpos = 0;
-                    buffer_node* next_node = this->_node_for_writing(begpos);
+                    node_type* next_node = this->_node_for_writing(begpos);
                     if (next_node == nullptr)
                     {
                         return ::pilo::mk_perr(PERR_NULL_PTR);
@@ -492,7 +496,7 @@ namespace pilo
                         return ::pilo::mk_perr( PERR_INV_OFF);
                     }
                     ::pilo::i64_t begpos = 0;
-                    buffer_node* next_node = this->_node_for_writing(begpos);
+                    node_type* next_node = this->_node_for_writing(begpos);
                     if (next_node == nullptr)
                     {
                         return ::pilo::mk_perr(PERR_NULL_PTR);
@@ -539,7 +543,7 @@ namespace pilo
                 virtual ::pilo::err_t set_raw_bytes(::pilo::i64_t buffer_off, const char* write_buffer, ::pilo::i64_t write_off, ::pilo::i64_t write_len)
                 {
                     ::pilo::i64_t neo_off = 0;
-                    buffer_node* node = this->_find_node(buffer_off, neo_off);
+                    node_type* node = this->_find_node(buffer_off, neo_off);
                     if (node == nullptr)
                     {
                         return ::pilo::mk_perr( PERR_INV_OFF);
@@ -553,7 +557,7 @@ namespace pilo
                     return _set_raw_bytes_by_node(this->_m_saved_node_for_writing, this->_m_saved_pos_for_writing, write_buffer, write_off, write_len);
                 }
 
-                virtual buffer_node* _node_for_writing(::pilo::i64_t& blen)
+                virtual node_type* _node_for_writing(::pilo::i64_t& blen)
                 {
                     if (this->_m_capacity - this->_m_begin_pos - this->_m_length >= piece_size())
                     {
@@ -565,7 +569,7 @@ namespace pilo
                     ::pilo::i64_t wp = _m_begin_pos + _m_length;
                     //::pilo::i64_t cur_node_count = wp / piece_size();
                     blen = wp % piece_size();
-                    buffer_node* node = this->_m_node_list.back();
+                    node_type* node = this->_m_node_list.back();
                     if (blen > 0)
                     {
                         return node;
@@ -931,13 +935,13 @@ namespace pilo
                 }
 
             protected:
-                buffer_node* _find_node(::pilo::i64_t begin_pos, ::pilo::i64_t& neo_pos)
+                node_type* _find_node(::pilo::i64_t begin_pos, ::pilo::i64_t& neo_pos)
                 {
                     if (begin_pos >= this->_m_begin_pos + this->_m_length)
                     {
                         return nullptr;
                     }
-                    buffer_node* node = this->_m_node_list.front();
+                    node_type* node = this->_m_node_list.front();
                     if (node == nullptr)
                         return nullptr;
                     ::pilo::i64_t skip_nodes = begin_pos / piece_size();
@@ -954,15 +958,15 @@ namespace pilo
                     return node;
                 }
 
-                buffer_node* _get_next_node(buffer_node* cur_node)
+                node_type* _get_next_node(node_type* cur_node)
                 {
-                    buffer_node* next_node = nullptr;
+                    node_type* next_node = nullptr;
                     if (cur_node != nullptr)
                     {
                         next_node = this->_m_node_list.next(cur_node);
                         if (next_node == nullptr)
                         {
-                            next_node = buffer_node::allocate();
+                            next_node = node_type::allocate();
                             if (next_node != nullptr)
                             {
                                 this->_m_node_list.push_back(next_node);
@@ -974,7 +978,7 @@ namespace pilo
                     }
                     else
                     {
-                        next_node = buffer_node::allocate();
+                        next_node = node_type::allocate();
                         if (next_node != nullptr)
                         {
                             this->_m_node_list.push_back(next_node);
@@ -986,7 +990,7 @@ namespace pilo
                     return next_node;
                 }
                 
-                ::pilo::err_t _set_raw_bytes_by_node(buffer_node* node, ::pilo::i64_t pos, const char* pbuf, ::pilo::i64_t offset, ::pilo::i64_t length)
+                ::pilo::err_t _set_raw_bytes_by_node(node_type* node, ::pilo::i64_t pos, const char* pbuf, ::pilo::i64_t offset, ::pilo::i64_t length)
                 {
                     ::pilo::i64_t remain_bs_in_cur_block = piece_size() - pos;
                     if (remain_bs_in_cur_block >= length)
@@ -1029,9 +1033,9 @@ namespace pilo
                 {
                     if (_m_node_list.front() != nullptr)
                     {                        
-                        buffer_node* head = _m_node_list.pop_front();
+                        node_type* head = _m_node_list.pop_front();
                         PMC_ASSERT(head != nullptr);
-                        buffer_node::deallocate(head);
+                        node_type::deallocate(head);
                         head = nullptr;
                         _m_begin_pos -= piece_size();
                         _m_capacity -= piece_size();
@@ -1087,7 +1091,7 @@ namespace pilo
                     ::pilo::i64_t total_bytes = 0;
                     ::pilo::i64_t rpos = 0;
                     ::pilo::i64_t remain_len = _m_length < max_bytes ? _m_length : max_bytes;
-                    buffer_node* p = _find_node(_m_begin_pos, rpos);
+                    node_type* p = _find_node(_m_begin_pos, rpos);
                     ::pilo::set_if_ptr_is_not_null(out_bytes, (::pilo::i64_t) 0);
                     if (p == nullptr)
                         return PILO_OK;
@@ -1122,11 +1126,13 @@ namespace pilo
                 ::pilo::i64_t _m_capacity;
                 ::pilo::i64_t _m_begin_pos;
                 ::pilo::i64_t _m_length;            
-                buffer_node  * _m_saved_node_for_writing;
+                node_type* _m_saved_node_for_writing;
                 ::pilo::i64_t _m_saved_pos_for_writing;
-                mutable ::pilo::core::container::singly_linked_selflist<buffer_node, pilo::core::threading::dummy_mutex> _m_node_list;
+                mutable ::pilo::core::container::singly_linked_selflist<node_type, pilo::core::threading::dummy_mutex> _m_node_list;
             };
 
+            typedef linked_byte_buffer<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE, SP_PMI_LBKBUF_NODE_4K_STEP_SIZE, true>  linked_byte_buffer_4k_be;
+            typedef linked_byte_buffer<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE, SP_PMI_LBKBUF_NODE_4K_STEP_SIZE, false>  linked_byte_buffer_4k_le;
         }
     }
 }

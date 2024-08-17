@@ -439,15 +439,15 @@ namespace pilo
 
                 ::pilo::err_t _read(::pilo::core::memory::byte_buffer_interface* buf, ::pilo::i64_t rbs, ::pilo::i64_t* n_read)
                 {
-                    char tmp_buff[SP_PMI_4K_BUFFER_NODE_SIZE] = { 0 };
-                    ::pilo::i64_t tmp_space = SP_PMI_4K_BUFFER_NODE_SIZE;
+                    char tmp_buff[SP_PMI_FILE_BUFRD_BUF_SIZE] = { 0 };
+                    ::pilo::i64_t tmp_space = SP_PMI_FILE_BUFRD_BUF_SIZE;
                     ::pilo::err_t err = PILO_OK;
                     ::pilo::i64_t rb = 0;
                     ::pilo::i64_t rb_total = 0;
                     while (rbs > 0)
                     {
-                        if (rbs > SP_PMI_4K_BUFFER_NODE_SIZE)
-                            tmp_space = SP_PMI_4K_BUFFER_NODE_SIZE;
+                        if (rbs > SP_PMI_FILE_BUFRD_BUF_SIZE)
+                            tmp_space = SP_PMI_FILE_BUFRD_BUF_SIZE;
                         else
                             tmp_space = rbs;
                         rbs -= tmp_space;

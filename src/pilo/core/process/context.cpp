@@ -4,6 +4,7 @@
 #include "../memory/linked_byte_buffer.hpp"
 #include "../string/fixed_width_line_formater.hpp"
 #include "process.hpp"
+#include "../memory/linked_buffer_node.hpp"
 
 namespace pilo
 {
@@ -11,127 +12,6 @@ namespace pilo
     {
         namespace process
         {
-
-#ifdef WINDOWS
-            char* xpf_get_proc_name(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t * rlen)
-            {
-                char tmp_buffer[PMI_PATH_MAX] = { 0 };
-                ::pilo::u32_t len = GetModuleFileName(NULL, tmp_buffer, sizeof(tmp_buffer));
-                ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
-
-                if (len > 0) {
-                    cb.check_space(len + 1);
-                    const char* lastSlash = ::pilo::core::string::rfind_char(tmp_buffer,  len, '\\');
-                    if (lastSlash != nullptr) {
-                        ::pilo::core::string::copyz(cb.begin(), cb.capacity(), lastSlash + 1);
-                        ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t) len - (::pilo::i32_t)(lastSlash - tmp_buffer + 1));
-                        return cb.begin();
-                    }
-                    else {
-                        ::pilo::core::string::copyz(cb.begin(), cb.capacity(), tmp_buffer);
-                        ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t) len);
-                        return cb.begin();
-                    }
-                }
-                else {
-                    return nullptr;
-                }
-
-            }
-
-            char* xpf_get_proc_basename(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen, const char* suffix, ::pilo::i32_t suffix_len)
-            {
-                char tmp_buffer[PMI_PATH_MAX] = { 0 };
-                ::pilo::u32_t len = GetModuleFileName(NULL, tmp_buffer, sizeof(tmp_buffer));
-                ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
-                ::pilo::i32_t delta = len;
-                if (suffix != nullptr && suffix_len < 0)
-                    suffix_len = (::pilo::i32_t) ::pilo::core::string::character_count(suffix);
-
-
-                if (len > 0) {
-                    cb.check_space(len + 1 + suffix_len);
-                    const char* lastSlash = ::pilo::core::string::rfind_char(tmp_buffer, len, '\\');
-                    if (lastSlash != nullptr) {
-                        ::pilo::core::string::copyz(cb.begin(), cb.capacity(), lastSlash + 1);
-                        delta = (::pilo::i32_t) len - (::pilo::i32_t) (lastSlash - tmp_buffer + 1);
-                        ::pilo::set_if_ptr_is_not_null(rlen, delta); 
-                    }
-                    else {
-                        delta = len;
-                        ::pilo::core::string::copyz(cb.begin(), cb.capacity(), tmp_buffer);
-                        ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)len);
-                    }
-
-                    const char* firstdot = ::pilo::core::string::find_char(cb.begin(), delta, '.');
-                    if (firstdot != nullptr) {
-                        ::pilo::i32_t base_len = (::pilo::i32_t)(firstdot - cb.begin());
-                        cb.set_value(base_len, 0);
-                        cb.set_size(base_len);
-                        ::pilo::core::string::n_copyz(cb.ptr(), cb.space_available(), suffix, suffix_len);
-                        cb.set_value(base_len + suffix_len, 0);
-                        cb.set_size(base_len + suffix_len);
-
-                        ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)(base_len + suffix_len));
-                    }
-                    return cb.begin();
-
-                }
-                else {
-                    return nullptr;
-                }
-            }
-#else
-
-            char* xpf_get_proc_name(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen)
-            {
-                char filename[PMI_PATH_MAX] = {0};
-                ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
-                int fd = -1;
-                fd = open("/proc/self/comm", O_RDONLY);
-                ssize_t n = ::read(fd, filename, sizeof(filename));
-                if (n < 0) {
-                    ::close(fd);
-                    return nullptr;
-                }
-                int len = (int) ::pilo::core::string::character_count(filename);
-                cb.check_space(len + 1);
-                ::pilo::core::string::copyz(cb.begin(), cb.capacity(), filename);
-                ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t) len);
-                return cb.begin();
-            }
-
-            char* xpf_get_proc_basename(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen, const char* suffix, ::pilo::i32_t suffix_len)
-            {
-                char filename[PMI_PATH_MAX] = { 0 };
-                ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
-                int fd = -1;
-                fd = open("/proc/self/comm", O_RDONLY);
-                ssize_t n = ::read(fd, filename, sizeof(filename));
-                if (n < 0) {
-                    ::close(fd);
-                    return nullptr;
-                }       
-                int len = (int) ::pilo::core::string::character_count(filename);
-                cb.check_space(len + 1);
-                ::pilo::core::string::copyz(cb.begin(), cb.capacity(), filename);
-                ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)len);
-
-                const char* firstdot = ::pilo::core::string::find_char(cb.begin(), len, '.');
-                if (firstdot != nullptr) {
-                    ::pilo::i32_t base_len = (::pilo::i32_t)(firstdot - cb.begin());
-                    cb.set_value(base_len, 0);
-                    cb.set_size(base_len);
-                    ::pilo::core::string::n_copyz(cb.ptr(), cb.space_available(), suffix, suffix_len);
-                    cb.set_value(base_len + suffix_len, 0);
-                    cb.set_size(base_len + suffix_len);
-
-                    ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)(base_len + suffix_len));
-                }
-                return cb.begin();
-            }
-#endif
-
             static void s_on_exit(void)
             {
                 printf("pilo on exit, finanlizing.....\n");
@@ -144,8 +24,8 @@ namespace pilo
                 ::pilo::i32_t rlen = 0;
 
                 _initialized = false;
-                _pid = ::pilo::core::process::current_process_id();
-                _ppid = ::pilo::core::process::current_parent_process_id();
+                _pid = ::pilo::core::process::xpf_current_process_id();
+                _ppid = ::pilo::core::process::xpf_current_parent_process_id();
                
                 char* cret = xpf_get_proc_name(buffer, sizeof(buffer), &rlen);
                 if (cret != nullptr) {
@@ -164,7 +44,9 @@ namespace pilo
                 }                                    
                 _core_config = ::std::make_shared<::pilo::core::config::core_config>();     
                 this->_system_information = new ::pilo::core::stat::system_information();
-                this->_wired_type_facotry = new ::pilo::core::rtti::wired_type_factory;
+                this->_wired_type_facotry = new ::pilo::core::rtti::wired_type_factory();
+
+                this->_linked_buffer_node_pool = new linked_buffer_node_4k_pool_type();
             }
 
             context::~context()
@@ -180,6 +62,16 @@ namespace pilo
             void context::deallocate_tlv(::pilo::tlv* tlvp)
             {
                 _tlv_pool.deallocate(tlvp);
+            }
+
+            ::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE> * context::allocate_linked_buffer_node_4k()
+            {
+                return this->_linked_buffer_node_pool->allocate();
+            }
+
+            void context::deallocate_linked_buffer_node_4k(::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>* node_ptr)
+            {
+                this->_linked_buffer_node_pool->deallocate(node_ptr);
             }
 
             std::string context::startup_info() const
@@ -254,9 +146,9 @@ namespace pilo
                         , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return ::pilo::tlv::update_pool_object_stat(si);}
                     , "pilo_tlv"
                 );
-                _pool_object_stat_mgr.register_item(::pilo::core::stat::pool_object_stat_manager::pool_object_key_code::local_buffer_node
-                    , sizeof(::pilo::core::memory::linked_byte_buffer<4096, 1024, false>::buffer_node), [](::pilo::core::stat::pool_object_stat_manager::pool_object_key_code
-                        , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return  ::pilo::core::memory::linked_byte_buffer<4096, 1024, false>::buffer_node::update_pool_object_stat(si); }
+                _pool_object_stat_mgr.register_item(::pilo::core::stat::pool_object_stat_manager::pool_object_key_code::linked_buffer_node_4k
+                    , sizeof(::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>), [](::pilo::core::stat::pool_object_stat_manager::pool_object_key_code
+                        , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return ::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>::update_pool_object_stat(si); }
                     , "local_bn"
                 );
 

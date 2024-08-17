@@ -285,6 +285,9 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\fixed_memory_piece.hpp">
       <Filter>pilo\core\memory</Filter>
     </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\linked_buffer_node.hpp">
+      <Filter>pilo\core\memory</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\linked_byte_buffer.hpp">
       <Filter>pilo\core\memory</Filter>
     </ClInclude>

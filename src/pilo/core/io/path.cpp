@@ -1721,7 +1721,7 @@ namespace pilo {
                 char tmp_buffer[128] = { 0 };
 
 
-                int pid = ::pilo::core::process::current_process_id();
+                int pid = ::pilo::core::process::xpf_current_process_id();
                 ::pilo::i32_t tmp_len = 0;
                 ::pilo::i32_t sub_tmp_len = 0;
                 if (suffix != nullptr) {
