@@ -95,7 +95,7 @@ namespace pilo
                 LONG                      status;
                 os_pid_t                     dwParentPID = PMI_INVALID_PROCESS_ID;
                 HANDLE                    hProcess;
-                PROCESS_BASIC_INFORMATION pbi;
+                PROCESS_BASIC_INFORMATION pbi = {0};
 
                 typedef LONG(WINAPI* PROCNTQSIP)(HANDLE, UINT, PVOID, ULONG, PULONG);
                 PROCNTQSIP NtQueryInformationProcess;

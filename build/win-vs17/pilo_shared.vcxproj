@@ -22,31 +22,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{98E858A3-4C9E-33D0-AE69-A011A32C98CB}</ProjectGuid>
+    <ProjectGuid>{4FDC0DD6-C634-3FB3-B4E9-BFC11FC81C4B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
-    <ProjectName>pilo_static</ProjectName>
+    <ProjectName>pilo_shared</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
@@ -60,22 +60,31 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pilo_static.dir\Debug\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">libpilo-static-debug</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pilo_shared.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">libpilo-shared-debug</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pilo_static.dir\Release\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">libpilo-static-release</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pilo_shared.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">libpilo-shared-release</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\MinSizeRel\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">pilo_static.dir\MinSizeRel\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">libpilo-static</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">pilo_shared.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">libpilo-shared</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\RelWithDebInfo\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">pilo_static.dir\RelWithDebInfo\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">libpilo-static</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">pilo_shared.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">libpilo-shared</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
   </PropertyGroup>
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -89,11 +98,11 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level4</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WINDOWS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WINDOWS;CMAKE_INTDIR="Debug";pilo_shared_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;WINDOWS;CMAKE_INTDIR=\"Debug\";pilo_shared_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -104,14 +113,35 @@
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <PreLinkEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Auto build dll exports</Message>
+      <Command>setlocal
+cd D:\projects\git_repo\libpilo\build\win-vs17
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E __create_def D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/Debug/exports.def D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/Debug//objects.txt
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreLinkEvent>
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Debug/libpilo-static-debug.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
+"C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Debug/libpilo-shared-debug.dll D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
-if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-static-debug.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-static-debug.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
 if %errorlevel% neq 0 goto :cmEnd
-if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-static-release.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-static-release.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if %errorlevel% neq 0 goto :cmEnd
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.lib copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.lib D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if %errorlevel% neq 0 goto :cmEnd
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.lib copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.lib D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
 if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files\CMake\bin\cmake.exe" -E remove_directory D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Debug
 if %errorlevel% neq 0 goto :cmEnd
@@ -128,9 +158,20 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
-    <Lib>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-    </Lib>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Debug/libpilo-shared-debug.lib</ImportLibrary>
+      <ModuleDefinitionFile>D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/Debug/exports.def</ModuleDefinitionFile>
+      <ProgramDataBaseFile>D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Debug/libpilo-shared-debug.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -145,11 +186,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatWarningAsError>true</TreatWarningAsError>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level4</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WINDOWS;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WINDOWS;CMAKE_INTDIR="Release";pilo_shared_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WINDOWS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WINDOWS;CMAKE_INTDIR=\"Release\";pilo_shared_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -160,14 +201,35 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <PreLinkEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Auto build dll exports</Message>
+      <Command>setlocal
+cd D:\projects\git_repo\libpilo\build\win-vs17
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E __create_def D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/Release/exports.def D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/Release//objects.txt
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreLinkEvent>
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Release/libpilo-static-release.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
+"C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Release/libpilo-shared-release.dll D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
-if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-static-debug.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-static-debug.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
 if %errorlevel% neq 0 goto :cmEnd
-if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-static-release.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-static-release.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if %errorlevel% neq 0 goto :cmEnd
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.lib copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.lib D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if %errorlevel% neq 0 goto :cmEnd
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.lib copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.lib D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
 if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files\CMake\bin\cmake.exe" -E remove_directory D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Debug
 if %errorlevel% neq 0 goto :cmEnd
@@ -184,9 +246,20 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
-    <Lib>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-    </Lib>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Release/libpilo-shared-release.lib</ImportLibrary>
+      <ModuleDefinitionFile>D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/Release/exports.def</ModuleDefinitionFile>
+      <ProgramDataBaseFile>D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Release/libpilo-shared-release.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
@@ -198,13 +271,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR="MinSizeRel";pilo_shared_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR=\"MinSizeRel\";pilo_shared_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -215,14 +288,35 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <PreLinkEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Auto build dll exports</Message>
+      <Command>setlocal
+cd D:\projects\git_repo\libpilo\build\win-vs17
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E __create_def D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/MinSizeRel/exports.def D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/MinSizeRel//objects.txt
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreLinkEvent>
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/MinSizeRel/libpilo-static.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
+"C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/MinSizeRel/libpilo-shared.dll D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
-if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-static-debug.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-static-debug.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
 if %errorlevel% neq 0 goto :cmEnd
-if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-static-release.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-static-release.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if %errorlevel% neq 0 goto :cmEnd
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.lib copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.lib D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if %errorlevel% neq 0 goto :cmEnd
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.lib copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.lib D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
 if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files\CMake\bin\cmake.exe" -E remove_directory D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Debug
 if %errorlevel% neq 0 goto :cmEnd
@@ -239,9 +333,20 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
-    <Lib>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-    </Lib>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/MinSizeRel/libpilo-shared.lib</ImportLibrary>
+      <ModuleDefinitionFile>D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/MinSizeRel/exports.def</ModuleDefinitionFile>
+      <ProgramDataBaseFile>D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/MinSizeRel/libpilo-shared.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
@@ -254,11 +359,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR="RelWithDebInfo";pilo_shared_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR=\"RelWithDebInfo\";pilo_shared_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -269,14 +374,35 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <PreLinkEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Auto build dll exports</Message>
+      <Command>setlocal
+cd D:\projects\git_repo\libpilo\build\win-vs17
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E __create_def D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/RelWithDebInfo/exports.def D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/RelWithDebInfo//objects.txt
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreLinkEvent>
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/RelWithDebInfo/libpilo-static.lib D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
+"C:\Program Files\CMake\bin\cmake.exe" -E copy D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/RelWithDebInfo/libpilo-shared.dll D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/
 if %errorlevel% neq 0 goto :cmEnd
-if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-static-debug.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-static-debug.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
 if %errorlevel% neq 0 goto :cmEnd
-if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-static-release.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-static-release.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.pdb copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.pdb D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if %errorlevel% neq 0 goto :cmEnd
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.lib copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Debug\libpilo-shared-debug.lib D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
+if %errorlevel% neq 0 goto :cmEnd
+if exist D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.lib copy D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib\Release\libpilo-shared-release.lib D:\projects\git_repo\libpilo\output\win-vs17\pilo\lib
 if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files\CMake\bin\cmake.exe" -E remove_directory D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/Debug
 if %errorlevel% neq 0 goto :cmEnd
@@ -293,9 +419,20 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
-    <Lib>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-    </Lib>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/RelWithDebInfo/libpilo-shared.lib</ImportLibrary>
+      <ModuleDefinitionFile>D:/projects/git_repo/libpilo/build/win-vs17/pilo_shared.dir/RelWithDebInfo/exports.def</ModuleDefinitionFile>
+      <ProgramDataBaseFile>D:/projects/git_repo/libpilo/output/win-vs17/pilo/lib/RelWithDebInfo/libpilo-shared.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CustomBuild Include="D:\projects\git_repo\libpilo\build\win-vs17\CMakeLists.txt">

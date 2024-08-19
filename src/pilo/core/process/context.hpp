@@ -24,7 +24,7 @@ namespace pilo
             class context
             {
             public:
-                typedef ::pilo::core::memory::compactable_autoreset_object_pool<::pilo::tlv, SP_PMI__TLV_STEP, ::pilo::core::threading::native_mutex>  tlv_pool_type;
+                typedef ::pilo::core::memory::compactable_autoreset_object_pool<::pilo::tlv, SP_PMI_TLV_STEP, ::pilo::core::threading::native_mutex>  tlv_pool_type;
                 typedef ::pilo::core::memory::compactable_object_pool<::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>, SP_PMI_LBKBUF_NODE_4K_STEP_SIZE, ::pilo::core::threading::spin_mutex> linked_buffer_node_4k_pool_type;
 
 

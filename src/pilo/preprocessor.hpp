@@ -11,7 +11,7 @@
 
 #define PMI_MEMORY_ALLOCATOR_RECORDER_ENABLE_LEVEL		(1)	
 
-#define SP_PMI__TLV_STEP                    (65536)
+#define SP_PMI_TLV_STEP                    (65536)
 #define SP_PMI_PATH_DEFAULT_LENGTH          (1)
 #define SP_PMS_PILO_PREDEF_DIR_CNF          "conf"
 #define SP_PMS_PILO_PREDEF_DIR_TMP          "tmp"

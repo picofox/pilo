@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.20)
 
-#set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-#set(CMAKE_SUPPORT_WINDOWS_EXPORT_ALL_SYMBOLS 1 )
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+set(CMAKE_SUPPORT_WINDOWS_EXPORT_ALL_SYMBOLS 1 )
 
 IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(PILO_ARCH x86_64)    
@@ -110,12 +110,12 @@ source_group_by_dir(PILO_LIBHS)
 add_library(pilo_static STATIC ${PILO_LIBCPPS} ${PILO_LIBHPPS} ${PILO_LIBHS})
 SET_TARGET_PROPERTIES(pilo_static PROPERTIES OUTPUT_NAME "libpilo-static")
 
-#add_library(pilo_shared SHARED ${PILO_LIBCPPS} ${PILO_LIBHPPS} ${PILO_LIBHS})
-#SET_TARGET_PROPERTIES(pilo_shared PROPERTIES OUTPUT_NAME "libpilo-shared")
+add_library(pilo_shared SHARED ${PILO_LIBCPPS} ${PILO_LIBHPPS} ${PILO_LIBHS})
+SET_TARGET_PROPERTIES(pilo_shared PROPERTIES OUTPUT_NAME "libpilo-shared")
 
 target_include_directories(pilo_static PUBLIC "${PILO_LIBSRC_DIR}/external/mysqlclient/8.0.19/include" "${PILO_LIBSRC_DIR}")
-#target_include_directories(pilo_shared PUBLIC "${PILO_LIBSRC_DIR}/external/mysqlclient/8.0.19/include" "${PILO_LIBSRC_DIR}")
-#target_link_libraries(pilo_shared PUBLIC "ws2_32.lib" "")
+target_include_directories(pilo_shared PUBLIC "${PILO_LIBSRC_DIR}/external/mysqlclient/8.0.19/include" "${PILO_LIBSRC_DIR}")
+target_link_libraries(pilo_shared PUBLIC "ws2_32.lib" "")
 
 string(REPLACE "/" "\\" PILO_LIBSRC_DIR_DOS ${PILO_LIBSRC_DIR})
 string(REPLACE "/" "\\" PILO_OUTPUT_DIR_DOS ${PILO_OUTPUT_DIR})
@@ -134,17 +134,17 @@ add_custom_command(TARGET pilo_static POST_BUILD
 	COMMAND del /f /s "${PILO_OUTPUT_DIR_DOS}\\include\\pilo\\*.cpp"
 )
 
-#add_custom_command(TARGET pilo_shared POST_BUILD		
-#	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pilo_shared> ${LIBRARY_OUTPUT_PATH}/
-#	COMMAND if exist ${LIBRARY_OUTPUT_PATH_DOS}\\Debug\\libpilo-shared-debug.pdb copy ${LIBRARY_OUTPUT_PATH_DOS}\\Debug\\libpilo-shared-debug.pdb ${LIBRARY_OUTPUT_PATH_DOS}
-#	COMMAND if exist ${LIBRARY_OUTPUT_PATH_DOS}\\Release\\libpilo-shared-release.pdb copy ${LIBRARY_OUTPUT_PATH_DOS}\\Release\\libpilo-shared-release.pdb ${LIBRARY_OUTPUT_PATH_DOS}
-#	COMMAND if exist ${LIBRARY_OUTPUT_PATH_DOS}\\Debug\\libpilo-shared-debug.lib copy ${LIBRARY_OUTPUT_PATH_DOS}\\Debug\\libpilo-shared-debug.lib ${LIBRARY_OUTPUT_PATH_DOS}
-#	COMMAND if exist ${LIBRARY_OUTPUT_PATH_DOS}\\Release\\libpilo-shared-release.lib copy ${LIBRARY_OUTPUT_PATH_DOS}\\Release\\libpilo-shared-release.lib ${LIBRARY_OUTPUT_PATH_DOS}
-#	COMMAND ${CMAKE_COMMAND} -E remove_directory ${LIBRARY_OUTPUT_PATH}/Debug
-#	COMMAND ${CMAKE_COMMAND} -E remove_directory ${LIBRARY_OUTPUT_PATH}/Release
-#	COMMAND xcopy /Y /E /I "${PILO_LIBSRC_DIR_DOS}" "${PILO_OUTPUT_DIR_DOS}\\include\\pilo"
-#	COMMAND del /f /s "${PILO_OUTPUT_DIR_DOS}\\include\\pilo\\*.cpp"
-#)
+add_custom_command(TARGET pilo_shared POST_BUILD		
+	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pilo_shared> ${LIBRARY_OUTPUT_PATH}/
+	COMMAND if exist ${LIBRARY_OUTPUT_PATH_DOS}\\Debug\\libpilo-shared-debug.pdb copy ${LIBRARY_OUTPUT_PATH_DOS}\\Debug\\libpilo-shared-debug.pdb ${LIBRARY_OUTPUT_PATH_DOS}
+	COMMAND if exist ${LIBRARY_OUTPUT_PATH_DOS}\\Release\\libpilo-shared-release.pdb copy ${LIBRARY_OUTPUT_PATH_DOS}\\Release\\libpilo-shared-release.pdb ${LIBRARY_OUTPUT_PATH_DOS}
+	COMMAND if exist ${LIBRARY_OUTPUT_PATH_DOS}\\Debug\\libpilo-shared-debug.lib copy ${LIBRARY_OUTPUT_PATH_DOS}\\Debug\\libpilo-shared-debug.lib ${LIBRARY_OUTPUT_PATH_DOS}
+	COMMAND if exist ${LIBRARY_OUTPUT_PATH_DOS}\\Release\\libpilo-shared-release.lib copy ${LIBRARY_OUTPUT_PATH_DOS}\\Release\\libpilo-shared-release.lib ${LIBRARY_OUTPUT_PATH_DOS}
+	COMMAND ${CMAKE_COMMAND} -E remove_directory ${LIBRARY_OUTPUT_PATH}/Debug
+	COMMAND ${CMAKE_COMMAND} -E remove_directory ${LIBRARY_OUTPUT_PATH}/Release
+	COMMAND xcopy /Y /E /I "${PILO_LIBSRC_DIR_DOS}" "${PILO_OUTPUT_DIR_DOS}\\include\\pilo"
+	COMMAND del /f /s "${PILO_OUTPUT_DIR_DOS}\\include\\pilo\\*.cpp"
+)
 
 set(PILO_LIBPILO_INCLUDE_DIR ${PILO_OUTPUT_DIR}/include)
 set(PILO_LIBPILO_LIB_DIR ${PILO_OUTPUT_DIR}/lib)
@@ -173,19 +173,19 @@ target_link_libraries(pilo_func_test-static PUBLIC "ws2_32.lib")
 target_link_directories(pilo_func_test-static PUBLIC ${PILO_OUTPUT_LIB_DIR})
 
 #dynamic func-test
-#add_executable(pilo_func_test-shared ${PILOFUNC_TEST_CPPS} ${PILOFUNC_TEST_PPS} ${PILOFUNC_TEST_HS})
-#set_target_properties(pilo_func_test-shared PROPERTIES OUTPUT_NAME "pilo_func_test-shared")
-#set_target_properties(pilo_func_test-shared PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
-#set_target_properties(pilo_func_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
-#set_target_properties(pilo_func_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PILO_OUTPUT_DIR}/bin)
-#set_target_properties(pilo_func_test-shared PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)..\\..\\output\\win-vs17\\pilo")
-#source_group_by_dir(PILOFUNC_TEST_CPPS)
-#source_group_by_dir(PILOFUNC_TEST_PPS)
-#source_group_by_dir(PILOFUNC_TEST_HS)
-#target_include_directories(pilo_func_test-shared PUBLIC "${PILO_PROJECT_DIR}/src")
-#target_link_libraries(pilo_func_test-shared PUBLIC debug "libpilo-shared-debug" optimized libpilo-shared-release)
-#target_link_libraries(pilo_func_test-shared PUBLIC "ws2_32.lib")
-#target_link_directories(pilo_func_test-shared PUBLIC ${PILO_OUTPUT_LIB_DIR})
+add_executable(pilo_func_test-shared ${PILOFUNC_TEST_CPPS} ${PILOFUNC_TEST_PPS} ${PILOFUNC_TEST_HS})
+set_target_properties(pilo_func_test-shared PROPERTIES OUTPUT_NAME "pilo_func_test-shared")
+set_target_properties(pilo_func_test-shared PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
+set_target_properties(pilo_func_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
+set_target_properties(pilo_func_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PILO_OUTPUT_DIR}/bin)
+set_target_properties(pilo_func_test-shared PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)..\\..\\output\\win-vs17\\pilo")
+source_group_by_dir(PILOFUNC_TEST_CPPS)
+source_group_by_dir(PILOFUNC_TEST_PPS)
+source_group_by_dir(PILOFUNC_TEST_HS)
+target_include_directories(pilo_func_test-shared PUBLIC "${PILO_PROJECT_DIR}/src")
+target_link_libraries(pilo_func_test-shared PUBLIC debug "libpilo-shared-debug" optimized libpilo-shared-release)
+target_link_libraries(pilo_func_test-shared PUBLIC "ws2_32.lib")
+target_link_directories(pilo_func_test-shared PUBLIC ${PILO_OUTPUT_LIB_DIR})
 
 
 #stable test
@@ -209,19 +209,19 @@ target_link_libraries(pilo_stable_test-static PUBLIC "ws2_32.lib")
 target_link_directories(pilo_stable_test-static PUBLIC ${PILO_OUTPUT_LIB_DIR})
 
 #dynamic stable-test
-#add_executable(pilo_stable_test-shared ${PILOSTABLE_TEST_CPPS} ${PILOSTABLE_TEST_PPS} ${PILOSTABLE_TEST_HS})
-#set_target_properties(pilo_stable_test-shared PROPERTIES OUTPUT_NAME "pilo_stable_test-shared")
-#set_target_properties(pilo_stable_test-shared PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
-#set_target_properties(pilo_stable_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
-#set_target_properties(pilo_stable_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PILO_OUTPUT_DIR}/bin)
-#set_target_properties(pilo_stable_test-shared PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)..\\..\\output\\win-vs17\\pilo")
-#source_group_by_dir(PILOSTABLE_TEST_CPPS)
-#source_group_by_dir(PILOSTABLE_TEST_PPS)
-#source_group_by_dir(PILOSTABLE_TEST_HS)
-#target_include_directories(pilo_stable_test-shared PUBLIC "${PILO_PROJECT_DIR}/src")
-#target_link_libraries(pilo_stable_test-shared PUBLIC debug "libpilo-shared-debug" optimized libpilo-shared-release)
-#target_link_libraries(pilo_stable_test-shared PUBLIC "ws2_32.lib")
-#target_link_directories(pilo_stable_test-shared PUBLIC ${PILO_OUTPUT_LIB_DIR})
+add_executable(pilo_stable_test-shared ${PILOSTABLE_TEST_CPPS} ${PILOSTABLE_TEST_PPS} ${PILOSTABLE_TEST_HS})
+set_target_properties(pilo_stable_test-shared PROPERTIES OUTPUT_NAME "pilo_stable_test-shared")
+set_target_properties(pilo_stable_test-shared PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
+set_target_properties(pilo_stable_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
+set_target_properties(pilo_stable_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PILO_OUTPUT_DIR}/bin)
+set_target_properties(pilo_stable_test-shared PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)..\\..\\output\\win-vs17\\pilo")
+source_group_by_dir(PILOSTABLE_TEST_CPPS)
+source_group_by_dir(PILOSTABLE_TEST_PPS)
+source_group_by_dir(PILOSTABLE_TEST_HS)
+target_include_directories(pilo_stable_test-shared PUBLIC "${PILO_PROJECT_DIR}/src")
+target_link_libraries(pilo_stable_test-shared PUBLIC debug "libpilo-shared-debug" optimized libpilo-shared-release)
+target_link_libraries(pilo_stable_test-shared PUBLIC "ws2_32.lib")
+target_link_directories(pilo_stable_test-shared PUBLIC ${PILO_OUTPUT_LIB_DIR})
 
 
 #performance test
@@ -245,19 +245,19 @@ target_link_libraries(pilo_performance_test-static PUBLIC "ws2_32.lib")
 target_link_directories(pilo_performance_test-static PUBLIC ${PILO_OUTPUT_LIB_DIR})
 
 #dynamic performance-test
-#add_executable(pilo_performance_test-shared ${PILOPERFORMANCE_TEST_CPPS} ${PILOPERFORMANCE_TEST_PPS} ${PILOPERFORMANCE_TEST_HS})
-#set_target_properties(pilo_performance_test-shared PROPERTIES OUTPUT_NAME "pilo_performance_test-shared")
-#set_target_properties(pilo_performance_test-shared PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
-#set_target_properties(pilo_performance_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
-#set_target_properties(pilo_performance_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PILO_OUTPUT_DIR}/bin)
-#set_target_properties(pilo_performance_test-shared PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)..\\..\\output\\win-vs17\\pilo")
-#source_group_by_dir(PILOPERFORMANCE_TEST_CPPS)
-#source_group_by_dir(PILOPERFORMANCE_TEST_PPS)
-#source_group_by_dir(PILOPERFORMANCE_TEST_HS)
-#target_include_directories(pilo_performance_test-shared PUBLIC "${PILO_PROJECT_DIR}/src")
-#target_link_libraries(pilo_performance_test-shared PUBLIC debug "libpilo-shared-debug" optimized libpilo-shared-release)
-#target_link_libraries(pilo_performance_test-shared PUBLIC "ws2_32.lib")
-#target_link_directories(pilo_performance_test-shared PUBLIC ${PILO_OUTPUT_LIB_DIR})
+add_executable(pilo_performance_test-shared ${PILOPERFORMANCE_TEST_CPPS} ${PILOPERFORMANCE_TEST_PPS} ${PILOPERFORMANCE_TEST_HS})
+set_target_properties(pilo_performance_test-shared PROPERTIES OUTPUT_NAME "pilo_performance_test-shared")
+set_target_properties(pilo_performance_test-shared PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
+set_target_properties(pilo_performance_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
+set_target_properties(pilo_performance_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PILO_OUTPUT_DIR}/bin)
+set_target_properties(pilo_performance_test-shared PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)..\\..\\output\\win-vs17\\pilo")
+source_group_by_dir(PILOPERFORMANCE_TEST_CPPS)
+source_group_by_dir(PILOPERFORMANCE_TEST_PPS)
+source_group_by_dir(PILOPERFORMANCE_TEST_HS)
+target_include_directories(pilo_performance_test-shared PUBLIC "${PILO_PROJECT_DIR}/src")
+target_link_libraries(pilo_performance_test-shared PUBLIC debug "libpilo-shared-debug" optimized libpilo-shared-release)
+target_link_libraries(pilo_performance_test-shared PUBLIC "ws2_32.lib")
+target_link_directories(pilo_performance_test-shared PUBLIC ${PILO_OUTPUT_LIB_DIR})
 
 
 
