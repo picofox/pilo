@@ -1,5 +1,5 @@
-﻿#ifndef _pilo_core_config_configuator_interface_h_
-#define _pilo_core_config_configuator_interface_h_
+﻿#ifndef _pilo_core_config_tlv_driver_interface_h_
+#define _pilo_core_config_tlv_driver_interface_h_
 
 
 #include "../../pilo.hpp"
@@ -18,15 +18,15 @@ namespace pilo {
 
         namespace config {
 
-            enum class configurator_type : ::pilo::i32_t
+            enum class driver_type : ::pilo::i32_t
             {
                 json = 0,
             };
 
-            class configuator_interface
+            class tlv_driver_interface
             {
             public:
-                virtual ~configuator_interface() {};
+                virtual ~tlv_driver_interface() {};
                 virtual ::pilo::err_t load(const::pilo::core::io::path* path_ptr) = 0;
                 virtual ::pilo::err_t load(const char* data, ::pilo::i64_t len) = 0;
                 virtual ::pilo::err_t save(const ::pilo::core::io::path * dest_path) = 0;

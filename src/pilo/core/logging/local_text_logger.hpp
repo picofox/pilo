@@ -27,7 +27,7 @@ namespace pilo {
                 typedef PLOCK process_lock_type;
 
             public:
-                local_text_logger(const ::pilo::core::config::core_config::logger& cfg)
+                local_text_logger(const ::pilo::core::config::logger& cfg)
                     : logger_interface(cfg)
                     , _m_last_ts(0)
                     , _m_open_ts(-1)

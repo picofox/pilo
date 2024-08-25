@@ -13,7 +13,7 @@ namespace pilo {
             class logger_interface
             {
             public:
-                logger_interface(const ::pilo::core::config::core_config::logger& logger_config) : _m_config(logger_config) {};
+                logger_interface(const ::pilo::core::config::logger& logger_config) : _m_config(logger_config) {};
                 virtual ~logger_interface() {};
 
             public:
@@ -24,7 +24,7 @@ namespace pilo {
                 virtual void set_level(::pilo::core::logging::level lv) { _m_config.set_level(lv); }
 
             protected:
-                ::pilo::core::config::core_config::logger   _m_config;
+                ::pilo::core::config::logger   _m_config;
 
             };
 

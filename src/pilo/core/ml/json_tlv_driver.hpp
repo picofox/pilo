@@ -1,7 +1,7 @@
-﻿#ifndef _pilo_core_config_json_configuator_h_
-#define _pilo_core_config_json_configuator_h_
+﻿#ifndef _pilo_core_config_json_tlv_driver_h_
+#define _pilo_core_config_json_tlv_driver_h_
 
-#include "./configuator_interface.hpp"
+#include "./tlv_driver_interface.hpp"
 
 #include "../../external/rapidjson/document.h"
 #include "../../tlv.hpp"
@@ -14,15 +14,15 @@ namespace pilo {
         namespace config {
         
         
-            class json_configuator : public configuator_interface
+            class json_tlv_driver : public tlv_driver_interface
             {
             public:
-                json_configuator() : _m_root_value(nullptr) {}
-                virtual ~json_configuator();
+                json_tlv_driver() : _m_root_value(nullptr) {}
+                virtual ~json_tlv_driver();
 
 
             public:
-                // Inherited via configuator_interface
+                // Inherited via tlv_driver_interface
                 ::pilo::err_t load(const::pilo::core::io::path* path_ptr) override;
                 ::pilo::err_t load(const char* data, ::pilo::i64_t len) override;
                 ::pilo::err_t save(const ::pilo::core::io::path* dest_path) override;
@@ -98,7 +98,7 @@ namespace pilo {
                 ::pilo::tlv* _m_root_value;
 
             private:
-            PMC_DISABLE_COPY(json_configuator)
+            PMC_DISABLE_COPY(json_tlv_driver)
 
    
             };

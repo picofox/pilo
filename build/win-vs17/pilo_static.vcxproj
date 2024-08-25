@@ -355,9 +355,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuator_interface.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.cpp" />
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\json_configuator.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\datetime.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\i18n\encoding_conversion.cpp" />
@@ -368,10 +367,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\logging\logger_manager.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\bits_operation.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\byte_buffer_interface.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\ml\json_tlv_driver.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\ml\tlv_driver_interface.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\cmdline_args.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\context.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\process.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_bool_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_bytes_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_conversion.cpp" />
@@ -412,9 +414,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuation_interface.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuator_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\json_configuator.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\auto_array.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrent_queue.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrentqueue_internal_debug.hpp" />
@@ -461,6 +462,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\serializable_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\std_memory_allocator.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\util.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\ml\json_tlv_driver.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\ml\tlv_driver_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\event_manager.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\function_dispatcher.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\resource_cleaner.hpp" />

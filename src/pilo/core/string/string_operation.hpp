@@ -1553,6 +1553,39 @@ namespace pilo
                 return pb;
             }
 
+
+
+            typedef ::pilo::err_t (*spliction_iterator_functype_a) (const char*src, const char* ptr, ::pilo::i64_t len, void* ctx);
+            typedef ::pilo::err_t (*spliction_iterator_functype_w) (const wchar_t*src, const wchar_t* ptr, ::pilo::i64_t len, void* ctx);
+
+            const ::pilo::i64_t iteratable_split(const wchar_t* src, ::pilo::i64_t srclen
+                , const wchar_t* delim, ::pilo::i64_t delimlen
+                , spliction_iterator_functype_w iter, void* ctx
+                , bool filter_empty
+                , bool whole_when_no_delim_found
+                , bool trim, bool trim_part
+
+            );
+
+            const ::pilo::i64_t iteratable_split(const char* src, ::pilo::i64_t srclen
+                , const char* delim, ::pilo::i64_t delimlen
+                , spliction_iterator_functype_a iter, void* ctx
+                , bool filter_empty
+                , bool whole_when_no_delim_found
+                , bool trim, bool trim_part
+
+            );
+
+
+
+
+
+
+
+
+
+
+
             template<typename CHAR_T>
             const ::pilo::i64_t split_fixed(const CHAR_T* src, ::pilo::i64_t srclen
                 , const CHAR_T* delim, ::pilo::i64_t delimlen
@@ -2131,7 +2164,7 @@ namespace pilo
                 return cb.begin();
             }
             
-
+            
             
         }
     }

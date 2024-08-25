@@ -19,11 +19,11 @@ namespace pilo {
                 _logger_by_names.clear();
             }
 
-            ::pilo::err_t logger_manager::initialize(const std::vector<::pilo::core::config::core_config::logger> &lgs)
+            ::pilo::err_t logger_manager::initialize(const std::vector<::pilo::core::config::logger> &lgs)
             {
                 ::pilo::i32_t id = 0;
                 for (::pilo::i32_t i = 0; i < lgs.size(); i++) {
-                    const ::pilo::core::config::core_config::logger& lg = lgs.at(i);
+                    const ::pilo::core::config::logger& lg = lgs.at(i);
                     ::pilo::err_t err = create_logger(id, lg, true);
                     if (err != PILO_OK) {
                         return err;
@@ -33,7 +33,7 @@ namespace pilo {
                 return PILO_OK;
             }
 
-            ::pilo::err_t logger_manager::create_logger(::pilo::i32_t & id, const::pilo::core::config::core_config::logger& logger_cfg, bool b_open)
+            ::pilo::err_t logger_manager::create_logger(::pilo::i32_t & id, const::pilo::core::config::logger& logger_cfg, bool b_open)
             {
                 if (_logger_by_names.count(logger_cfg.name()) > 0) {
                     return ::pilo::mk_perr(PERR_EXIST);

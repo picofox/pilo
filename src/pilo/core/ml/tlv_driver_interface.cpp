@@ -1,11 +1,11 @@
-﻿#include "./configuator_interface.hpp"
+﻿#include "./tlv_driver_interface.hpp"
 #include "../../tlv.hpp"
 
 namespace pilo {
     namespace core {
         namespace config {
            
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, ::pilo::i8_t& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, ::pilo::i8_t& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -18,7 +18,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, ::pilo::u8_t& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, ::pilo::u8_t& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -31,7 +31,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, ::pilo::i16_t& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, ::pilo::i16_t& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -44,7 +44,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, ::pilo::u16_t& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, ::pilo::u16_t& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -57,7 +57,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, ::pilo::i32_t& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, ::pilo::i32_t& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -70,7 +70,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, ::pilo::u32_t& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, ::pilo::u32_t& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -83,7 +83,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, ::pilo::i64_t& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, ::pilo::i64_t& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -96,7 +96,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, ::pilo::u64_t& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, ::pilo::u64_t& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -109,7 +109,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, ::pilo::f32_t& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, ::pilo::f32_t& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -122,7 +122,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, ::pilo::f64_t& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, ::pilo::f64_t& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -135,7 +135,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, std::string& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, std::string& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -150,7 +150,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, bool& v)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, bool& v)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
@@ -163,7 +163,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t configuator_interface::get_value(const char* fqn, const char*& cstr, ::pilo::i32_t& len, bool* is_bytes_as_cstr)
+            ::pilo::err_t tlv_driver_interface::get_value(const char* fqn, const char*& cstr, ::pilo::i32_t& len, bool* is_bytes_as_cstr)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);

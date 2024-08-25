@@ -1,13 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuator_interface.cpp">
-      <Filter>pilo\core\config</Filter>
-    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.cpp">
       <Filter>pilo\core\config</Filter>
     </ClCompile>
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\json_configuator.cpp">
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.cpp">
       <Filter>pilo\core\config</Filter>
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp">
@@ -40,6 +37,12 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\byte_buffer_interface.cpp">
       <Filter>pilo\core\memory</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\ml\json_tlv_driver.cpp">
+      <Filter>pilo\core\ml</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\ml\tlv_driver_interface.cpp">
+      <Filter>pilo\core\ml</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\cmdline_args.cpp">
       <Filter>pilo\core\process</Filter>
     </ClCompile>
@@ -51,6 +54,9 @@
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\process.cpp">
       <Filter>pilo\core\process</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type.cpp">
+      <Filter>pilo\core\rtti</Filter>
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_bool_conversion.cpp">
       <Filter>pilo\core\rtti</Filter>
@@ -174,13 +180,10 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuation_interface.hpp">
       <Filter>pilo\core\config</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuator_interface.hpp">
-      <Filter>pilo\core\config</Filter>
-    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.hpp">
       <Filter>pilo\core\config</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\json_configuator.hpp">
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.hpp">
       <Filter>pilo\core\config</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\auto_array.hpp">
@@ -320,6 +323,12 @@
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\memory\util.hpp">
       <Filter>pilo\core\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\ml\json_tlv_driver.hpp">
+      <Filter>pilo\core\ml</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\ml\tlv_driver_interface.hpp">
+      <Filter>pilo\core\ml</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\pattern\event_manager.hpp">
       <Filter>pilo\core\pattern</Filter>
@@ -682,6 +691,9 @@
     </Filter>
     <Filter Include="pilo\core\memory">
       <UniqueIdentifier>{6BD3C0C2-0905-3946-9490-6B24CB8773C2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\ml">
+      <UniqueIdentifier>{9B52B8EF-9A47-3DDA-85FE-152E235D004F}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo\core\pattern">
       <UniqueIdentifier>{9DA4EA00-0BE3-3DD5-8894-62E3D18A8B23}</UniqueIdentifier>

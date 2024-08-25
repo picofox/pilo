@@ -1,16 +1,27 @@
 ﻿#pragma once
 
 #include "../../types.hpp"
+#include "../../error.hpp"
 
 namespace pilo
 {
 	namespace core
 	{
 		namespace rtti
-		{
+		{			
+
 			class wired_type
 			{
+			public:
+				static ::pilo::u8_t s_char_to_wrapper_type(char ch);
+				static ::pilo::u8_t s_char_to_key_type(char ch);
+				static ::pilo::u16_t s_char_to_value_type(char ch);		
+				static char s_wrapper_type_to_char(::pilo::u8_t wt);
+				static char s_key_type_to_char(::pilo::u8_t kt);
+				static char s_val_type_to_char(::pilo::u16_t vt);
 
+				static ::pilo::err_t s_parse_cstr_type(::pilo::u8_t &wt, ::pilo::u8_t &kt, ::pilo::u16_t & vt, const char* cstr, ::pilo::i64_t len);
+				static ::pilo::err_t s_parse_cstr_bool(bool& bv, const char* cstr, ::pilo::i64_t len);
 
 			public:
 				const static ::pilo::u16_t value_type_na = 0;

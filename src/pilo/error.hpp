@@ -104,6 +104,7 @@
 #define PILO_ERRRET(e)         if (PILO_OK != (e)) { return e; }    
 
 #define PILO_ERRRET_NULL(e)         if (PILO_OK != (e)) { return nullptr; }    
+#define PILO_ERRRET_VOID(e)         if (PILO_OK != (e)) { return; }    
 
 namespace pilo
 {

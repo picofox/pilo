@@ -1,4 +1,4 @@
-﻿#include "json_configuator.hpp"
+﻿#include "json_tlv_driver.hpp"
 #include "../../external/rapidjson/document.h"
 #include "../../external/rapidjson/writer.h"
 #include "../../external/rapidjson/stringbuffer.h"
@@ -8,7 +8,7 @@
 namespace pilo {
     namespace core {
         namespace config {
-            json_configuator::~json_configuator()
+            json_tlv_driver::~json_tlv_driver()
             {
                 if (_m_root_value != nullptr) {
                     ::pilo::tlv::deallocate(_m_root_value);
@@ -16,7 +16,7 @@ namespace pilo {
                 }
             }
 
-            ::pilo::err_t core::config::json_configuator::load(const::pilo::core::io::path* path_ptr)
+            ::pilo::err_t core::config::json_tlv_driver::load(const::pilo::core::io::path* path_ptr)
             {
                 ::pilo::core::io::file<> f;
                 ::pilo::err_t err = f.open(path_ptr,::pilo::core::io::creation_mode::open_existing
@@ -46,7 +46,7 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t json_configuator::save(const::pilo::core::io::path* dest_path)
+            ::pilo::err_t json_tlv_driver::save(const::pilo::core::io::path* dest_path)
             {
                 if (this->_m_root_value == nullptr)
                     return ::pilo::mk_perr(PERR_NOOP);                
@@ -87,7 +87,7 @@ namespace pilo {
             }
 
 
-            ::pilo::err_t json_configuator::load(const char* data, ::pilo::i64_t len)
+            ::pilo::err_t json_tlv_driver::load(const char* data, ::pilo::i64_t len)
             {
                 ::pilo::err_t err = PILO_OK;
                 if (data == nullptr) {
@@ -156,7 +156,7 @@ namespace pilo {
                 return PILO_OK;
             }
 
-            ::pilo::err_t json_configuator::_parse_json_array(::rapidjson::Value& obj, ::pilo::tlv* parent_tlv)
+            ::pilo::err_t json_tlv_driver::_parse_json_array(::rapidjson::Value& obj, ::pilo::tlv* parent_tlv)
             {
                 ::pilo::err_t err = PILO_OK;
                 for (::rapidjson::SizeType i = 0; i < obj.Size(); i++) {
@@ -216,7 +216,7 @@ namespace pilo {
                 return PILO_OK;
             }
 
-            ::pilo::err_t json_configuator::_write_json_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            ::pilo::err_t json_tlv_driver::_write_json_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
             {
                 ::pilo::err_t err = PILO_OK;
                 if (tlvp->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_single)
@@ -340,7 +340,7 @@ namespace pilo {
                 return PILO_OK;
             }
 
-            ::pilo::err_t json_configuator::_parse_json_object(::rapidjson::Value& obj, ::pilo::tlv* parent_tlv)
+            ::pilo::err_t json_tlv_driver::_parse_json_object(::rapidjson::Value& obj, ::pilo::tlv* parent_tlv)
             {
                 ::pilo::err_t err = PILO_OK;
                 for (::rapidjson::Value::ConstMemberIterator itr = obj.MemberBegin(); itr != obj.MemberEnd(); ++itr) {
@@ -401,12 +401,12 @@ namespace pilo {
                 return PILO_OK;
             }
 
-            ::pilo::tlv* json_configuator::root()
+            ::pilo::tlv* json_tlv_driver::root()
             {
                 return _m_root_value;
             }
 
-            ::pilo::tlv* json_configuator::get_value_node(const char* fqn, ::pilo::err_t& err)
+            ::pilo::tlv* json_tlv_driver::get_value_node(const char* fqn, ::pilo::err_t& err)
             {                
                 if (_m_root_value == nullptr) {
                     err = ::pilo::mk_perr(PERR_NULL_PTR);
@@ -417,7 +417,7 @@ namespace pilo {
                 return tlv_p;
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, bool is_force)
             {
                 ::pilo::err_t err = PILO_OK;
                 if (_m_root_value == nullptr) {
@@ -427,67 +427,67 @@ namespace pilo {
                 return err;
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, bool iv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, bool iv, bool is_force)
             {
                 return _set_trivil_type(fqn, iv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::i8_t iv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, ::pilo::i8_t iv, bool is_force)
             {
                 return _set_trivil_type(fqn, iv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::i16_t iv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, ::pilo::i16_t iv, bool is_force)
             {
                 return _set_trivil_type(fqn, iv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::i32_t iv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, ::pilo::i32_t iv, bool is_force)
             {
                 return _set_trivil_type(fqn, iv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::i64_t iv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, ::pilo::i64_t iv, bool is_force)
             {
                 return _set_trivil_type(fqn, iv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::u8_t iv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, ::pilo::u8_t iv, bool is_force)
             {
                 return _set_trivil_type(fqn, iv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::u16_t iv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, ::pilo::u16_t iv, bool is_force)
             {
                 return _set_trivil_type(fqn, iv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::u32_t iv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, ::pilo::u32_t iv, bool is_force)
             {
                 return _set_trivil_type(fqn, iv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::u64_t iv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, ::pilo::u64_t iv, bool is_force)
             {
                 return _set_trivil_type(fqn, iv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::f32_t fv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, ::pilo::f32_t fv, bool is_force)
             {
                 return _set_trivil_type(fqn, fv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, ::pilo::f64_t fv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, ::pilo::f64_t fv, bool is_force)
             {
                 return _set_trivil_type(fqn, fv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, const std::string& sv, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, const std::string& sv, bool is_force)
             {
                 return _set_trivil_type(fqn, sv, is_force);
             }
 
-            ::pilo::err_t json_configuator::set_value(const char* fqn, const char* value, ::pilo::i32_t len, bool adopt, bool is_cstr, bool is_force)
+            ::pilo::err_t json_tlv_driver::set_value(const char* fqn, const char* value, ::pilo::i32_t len, bool adopt, bool is_cstr, bool is_force)
             {
                 ::pilo::err_t err = PILO_OK;
                 if (_m_root_value == nullptr) {

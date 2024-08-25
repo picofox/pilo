@@ -21,7 +21,7 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
 
-                json_configuator jct;
+                json_tlv_driver jct;
                err = jct.load(&_file_path);
                 if (err != PILO_OK)
                     return err;
@@ -51,7 +51,7 @@ namespace pilo {
                 ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "%s_prof", core_conf_file_name.c_str());
 
 
-                core_config::logger tmp_logger;
+                logger tmp_logger;
                 tmp_logger.set_type(::pilo::core::logging::logger_type::local_spmt_text);
                 tmp_logger.set_name(core_conf_file_name.c_str());
                 tmp_logger.set_bak_name_suffix(::pilo::core::logging::DefaultBakNameSuffix);
@@ -73,7 +73,7 @@ namespace pilo {
 
             ::pilo::err_t core_config::save()
             {
-                json_configuator jct;
+                json_tlv_driver jct;
 
                 ::pilo::err_t err = save_to_configurator(&jct);
                 if (err != PILO_OK) {
@@ -92,7 +92,7 @@ namespace pilo {
                 }
             }
 
-            ::pilo::err_t core_config::load_from_configurator(configuator_interface* configuator)
+            ::pilo::err_t core_config::load_from_configurator(tlv_driver_interface* configuator)
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = nullptr;
@@ -194,7 +194,7 @@ namespace pilo {
             }
 
 
-            ::pilo::err_t core_config::save_to_configurator(configuator_interface * configuator)
+            ::pilo::err_t core_config::save_to_configurator(tlv_driver_interface * configuator)
             {
                 ::pilo::err_t err = PILO_OK;
                 PILO_CHKERR_RET(err, configuator->set_value("cwd", _cwd.c_str(), (::pilo::i32_t) _cwd.size(), false, true, true));

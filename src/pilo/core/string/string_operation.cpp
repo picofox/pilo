@@ -537,7 +537,219 @@ namespace pilo
 #endif
 				}
 				return dst_buffer;
-			}			
+			}
+
+            const::pilo::i64_t iteratable_split(const wchar_t* src, ::pilo::i64_t srclen, const wchar_t* delim, ::pilo::i64_t delimlen, spliction_iterator_functype_w iter, void* ctx, bool filter_empty, bool whole_when_no_delim_found, bool trim, bool trim_part)
+            {
+                if (src == nullptr || *src == 0)
+                    return -1;
+                if (srclen == -1)
+                    srclen = ::pilo::core::string::character_count(src);
+                if (delimlen == -1)
+                    delimlen = ::pilo::core::string::character_count(delim);
+                bool has_found = false;
+                ::pilo::err_t err = PILO_OK;
+                ::pilo::i64_t src_rlen = srclen; //len after trimed, real length
+                ::pilo::i64_t trimmed_len = 0;
+                const wchar_t* pstr = nullptr;
+                if (trim)
+                {
+                    pstr = trim_readonly(src, srclen, trimmed_len);
+                    src_rlen -= trimmed_len;
+                }
+                else
+                    pstr = src;
+                const wchar_t* pend = pstr + src_rlen;
+
+                ::pilo::i64_t ret_count = 0;
+                while (true)
+                {
+                    wchar_t* ret_ptr = find_substring(pstr, src_rlen, delim, delimlen);
+                    if (ret_ptr == nullptr)
+                    {
+                        if ((!has_found) && (!whole_when_no_delim_found))
+                        {
+                            return ret_count;
+                        }
+                        else
+                        {
+                            if (trim_part)
+                            {
+                                ::pilo::i64_t tmppartlen = 0;
+                                pstr = trim_readonly(pstr, src_rlen, tmppartlen);
+                                src_rlen -= tmppartlen;
+                            }
+
+                            err = iter(src, pstr, src_rlen, ctx);
+                            if (err != PILO_OK)
+                                return ret_count;
+                            if (src_rlen <= 0 && filter_empty)
+                                return ret_count;
+                            ret_count++;
+                            return ret_count;
+                        }
+                    }
+                    else if (ret_ptr == pstr)
+                    {
+                        if (!filter_empty)
+                        {
+                            iter(src, pstr, ret_ptr - pstr, ctx);
+                            ret_count++;
+                        }
+                        ret_ptr++;
+                        if (ret_ptr >= pend)
+                        {
+                            return ret_count;
+                        }
+
+                        pstr = ret_ptr;
+                        if (ret_ptr >= pend)
+                        {
+                            return ret_count;
+                        }
+
+                        src_rlen--;
+                        if (src_rlen == 0)
+                            return ret_count;
+                    }
+                    else
+                    {
+                        has_found = true;
+                        if (trim_part)
+                        {
+                            ::pilo::i64_t tmppartlen = 0;
+                            pstr = trim_readonly(pstr, (ret_ptr - pstr) / sizeof(wchar_t), tmppartlen);
+                            src_rlen -= tmppartlen;
+                        }
+                        err = iter(src, pstr, ret_ptr - pstr, ctx);
+                        if (err != PILO_OK || pstr == nullptr)
+                            return ret_count;
+                        src_rlen -= (ret_ptr - pstr);
+                        if (src_rlen <= 0 || !filter_empty) {
+                            ret_count++;
+                        }
+
+                        pstr = ret_ptr + 1;
+                        if (ret_ptr >= pend)
+                        {
+                            return ret_count;
+                        }
+
+                        src_rlen--;
+                        if (src_rlen == 0)
+                            return ret_count;
+                    }
+                }
+
+                return ret_count;
+            }
+
+            const::pilo::i64_t iteratable_split(const char* src, ::pilo::i64_t srclen, const char* delim, ::pilo::i64_t delimlen, spliction_iterator_functype_a iter, void* ctx, bool filter_empty, bool whole_when_no_delim_found, bool trim, bool trim_part)
+
+            {
+                if (src == nullptr || *src == 0)
+                    return -1;
+                if (srclen == -1)
+                    srclen = ::pilo::core::string::character_count(src);
+                if (delimlen == -1)
+                    delimlen = ::pilo::core::string::character_count(delim);
+                bool has_found = false;
+                ::pilo::err_t err = PILO_OK;
+                ::pilo::i64_t src_rlen = srclen; //len after trimed, real length
+                ::pilo::i64_t trimmed_len = 0;
+                const char* pstr = nullptr;
+                if (trim)
+                {
+                    pstr = trim_readonly(src, srclen, trimmed_len);
+                    src_rlen -= trimmed_len;
+                }
+                else
+                    pstr = src;
+                const char* pend = pstr + src_rlen;
+
+                ::pilo::i64_t ret_count = 0;
+                while (true)
+                {
+                    char* ret_ptr = find_substring(pstr, src_rlen, delim, delimlen);
+                    if (ret_ptr == nullptr)
+                    {
+                        if ((!has_found) && (!whole_when_no_delim_found))
+                        {
+                            return ret_count;
+                        }
+                        else
+                        {
+                            if (trim_part)
+                            {
+                                ::pilo::i64_t tmppartlen = 0;
+                                pstr = trim_readonly(pstr, src_rlen, tmppartlen);
+                                src_rlen -= tmppartlen;
+                            }
+
+                            err = iter(src, pstr, src_rlen, ctx);
+                            if (err != PILO_OK)
+                                return ret_count;
+                            if (src_rlen <= 0 && filter_empty)
+                                return ret_count;
+                            ret_count++;
+                            return ret_count;
+                        }
+                    }
+                    else if (ret_ptr == pstr)
+                    {
+                        if (!filter_empty)
+                        {
+                            iter(src,pstr, ret_ptr - pstr, ctx);
+                            ret_count++;
+                        }
+                        ret_ptr++;
+                        if (ret_ptr >= pend)
+                        {
+                            return ret_count;
+                        }
+
+                        pstr = ret_ptr;
+                        if (ret_ptr >= pend)
+                        {
+                            return ret_count;
+                        }
+
+                        src_rlen--;
+                        if (src_rlen == 0)
+                            return ret_count;
+                    }
+                    else
+                    {
+                        has_found = true;
+                        if (trim_part)
+                        {
+                            ::pilo::i64_t tmppartlen = 0;
+                            pstr = trim_readonly(pstr, (ret_ptr - pstr) / sizeof(char), tmppartlen);
+                            src_rlen -= tmppartlen;
+                        }
+                        err = iter(src, pstr, ret_ptr - pstr, ctx);
+                        if (err != PILO_OK || pstr == nullptr)
+                            return ret_count;
+                        src_rlen -= (ret_ptr - pstr);
+                        if (src_rlen <= 0 || !filter_empty) {
+                            ret_count++;
+                        }
+
+                        pstr = ret_ptr + 1;
+                        if (ret_ptr >= pend)
+                        {
+                            return ret_count;
+                        }
+
+                        src_rlen--;
+                        if (src_rlen == 0)
+                            return ret_count;
+                    }
+                }
+
+                return ret_count;
+            }
+
 
 			void set_character(char* cstr, char ch, ::pilo::i64_t len)
             {

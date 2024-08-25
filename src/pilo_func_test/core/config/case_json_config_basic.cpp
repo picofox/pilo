@@ -2,7 +2,7 @@
 #include "pilo/core/testing/func_test_suite.hpp"
 #include "pilo/core/string/string_operation.hpp"
 #include "pilo/core/io/formatted_io.hpp"
-#include "pilo/core/config/json_configuator.hpp"
+#include "pilo/core/ml/json_tlv_driver.hpp"
 #include "pilo/core/process/context.hpp"
 
 using namespace ::pilo::func_test;
