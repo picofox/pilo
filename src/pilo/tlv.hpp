@@ -40,20 +40,20 @@ namespace pilo
 	public:
 		friend bool core::rtti::map_equals(::pilo::u8_t a_key_type, ::pilo::u16_t a_val_type, const char* a_data, ::pilo::u8_t b_key_type, ::pilo::u16_t b_val_type, const char* b_data, ::pilo::err_t* err);
 		friend class ::pilo::core::pattern::function_dispatcher<::pilo::err_t(::pilo::tlv*, ::pilo::core::memory::byte_buffer_interface*), ::pilo::core::rtti::wired_type::value_type_intrincs_count>;
-		friend void stc_wrapper_clear_bool(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_i8(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_u8(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_i16(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_u16(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_i32(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_u32(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_i64(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_u64(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_f32(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_f64(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_bytes(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_tlv(::pilo::tlv* t, bool compact);
-		friend void stc_wrapper_clear_str(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_bool(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_i8(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_u8(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_i16(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_u16(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_i32(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_u32(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_i64(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_u64(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_f32(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_f64(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_bytes(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_tlv(::pilo::tlv* t, bool compact);
+		//friend void stc_wrapper_clear_str(::pilo::tlv* t, bool compact);
 		friend ::pilo::err_t single_tlv_deserialize_na(::pilo::tlv*, ::pilo::core::memory::byte_buffer_interface*);
 		friend ::pilo::err_t single_tlv_deserialize_i8(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb);
 		friend ::pilo::err_t single_tlv_deserialize_u8(::pilo::tlv* t, ::pilo::core::memory::byte_buffer_interface* bb);
@@ -98,6 +98,33 @@ namespace pilo
 		tlv(std::string& str)
 		{
 			set(str);
+		}
+
+		inline ::pilo::err_t set_types(::pilo::u8_t wt, ::pilo::u8_t kt, ::pilo::u16_t vt)
+		{
+			if (wt == this->wrapper_type() && kt == this->key_type() && vt == this->value_type()) {
+				return ::pilo::mk_perr(PERR_NOOP);
+			}
+
+			this->reset();
+			if (wt != this->wrapper_type()) {
+				_type.set_wrapper_type(wt);
+			}
+			if (kt != this->key_type()) {
+				_type.set_key_type(kt);
+			}
+			if (vt != this->value_type()) {
+				_type.set_value_type(vt);
+			}
+
+			return PILO_OK;
+		}
+
+		inline ::pilo::err_t set_value_type(::pilo::u16_t vt)
+		{
+			::pilo::u8_t wt = this->wrapper_type();
+			::pilo::u8_t kt = this->key_type();
+			return set_types(wt, kt, vt);
 		}
 
 		inline void set_flag(::pilo::u8_t f)
@@ -865,7 +892,7 @@ namespace pilo
 
 
 		//common
-		void wrapper_clear(bool compact);
+		
 		inline bool valid() const
 		{
 			return _type.valid();
@@ -883,6 +910,11 @@ namespace pilo
 			_clear_dynamic_data();
 			_size = 0;
 			_type.reset();
+		}
+		void clear()
+		{
+			_clear_dynamic_data();
+			_size = 0;
 		}
 		void set_na()
 		{
@@ -913,8 +945,11 @@ namespace pilo
 
 
 		//static allocation
-		static ::pilo::tlv* allocate();
+		static ::pilo::tlv* allocate(::pilo::u8_t wt = ::pilo::core::rtti::wired_type::wrapper_na
+			, ::pilo::u8_t kt = ::pilo::core::rtti::wired_type::key_type_na
+			, ::pilo::u16_t vt = ::pilo::core::rtti::wired_type::value_type_na);
 		static void deallocate(::pilo::tlv*);
+
 
 
 		template<typename T> static ::pilo::tlv * allocate_single(T&& v)
@@ -964,6 +999,8 @@ namespace pilo
 
 		static ::pilo::err_t update_pool_object_stat(::pilo::core::stat::pool_object_stat_manager::stat_item * si);
 
+		::pilo::err_t set_value(const char* argv, ::pilo::i32_t len = -1);
+
 		//single manipulations
 		inline ::pilo::err_t set_single_type(::pilo::u16_t valtype)
 		{
@@ -979,6 +1016,7 @@ namespace pilo
 			_type.set_value_type(valtype);
 			return PILO_OK;
 		}
+
 		inline ::pilo::err_t set_cstr(const char* str, ::pilo::i32_t len, bool adopt)
 		{
 			if (_type.set_single_type(::pilo::core::rtti::wired_type::value_type_bytes) == PILO_OK)
@@ -1434,7 +1472,12 @@ namespace pilo
 			return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
 		}
 
+		
+
+
 		//dict manipulations		
+		::pilo::err_t insert_value(const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force);
+
 		inline ::pilo::err_t set_dict_type(::pilo::u8_t key_type, ::pilo::u16_t valtype)
 		{
 			if (this->valid())
@@ -1797,22 +1840,22 @@ namespace pilo
 			return PILO_OK;
 		}
 
-		template<typename T>
-		inline void _wrapper_clear(bool compact)
-		{
-			if (this->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_array)
-			{
-				if (_dynamic_data == nullptr)
-				{
-					return;
-				}
-				std::deque<T>* ptr = (std::deque<T>*) this->_dynamic_data;
-				ptr->clear();
-				if (compact)
-					ptr->shrink_to_fit();
-				_size = 0;
-			}
-		}
+		//template<typename T>
+		//inline void _wrapper_clear(bool compact)
+		//{
+		//	if (this->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_array)
+		//	{
+		//		if (_dynamic_data == nullptr)
+		//		{
+		//			return;
+		//		}
+		//		std::deque<T>* ptr = (std::deque<T>*) this->_dynamic_data;
+		//		ptr->clear();
+		//		if (compact)
+		//			ptr->shrink_to_fit();
+		//		_size = 0;
+		//	}
+		//}
 
 		::pilo::err_t _make_dynamic_data_array();		
 		::pilo::err_t _clone_data_array(const ::pilo::tlv * src_tlv);

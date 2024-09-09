@@ -8,6 +8,7 @@ namespace pilo
 	{		
 		
 		int case_base64_static(::pilo::core::testing::func_test_case* p_case);
+		int case_tlv_set_value(::pilo::core::testing::func_test_case* p_case);
 		int case_tlv_path_set(::pilo::core::testing::func_test_case* p_case);
 		int case_tlv_dict(::pilo::core::testing::func_test_case* p_case);
 		int case_tlv_clone(::pilo::core::testing::func_test_case* p_case);

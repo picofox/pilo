@@ -282,29 +282,416 @@ namespace pilo
         return PILO_OK;
     }
 
+    typedef ::pilo::err_t(*tlv_set_value_func_t)(::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len);
 
-    void stc_wrapper_clear_na(::pilo::tlv, bool ) {  }
-    void stc_wrapper_clear_i8(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i8_t>(compact); }
-    void stc_wrapper_clear_u8(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u8_t>(compact); }
-    void stc_wrapper_clear_i16(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i16_t>(compact); }
-    void stc_wrapper_clear_u16(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u16_t>(compact); }
-    void stc_wrapper_clear_i32(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i32_t>(compact); }
-    void stc_wrapper_clear_u32(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u32_t>(compact); }
-    void stc_wrapper_clear_i64(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i64_t>(compact); }
-    void stc_wrapper_clear_u64(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u64_t>(compact); }
-    void stc_wrapper_clear_bool(::pilo::tlv* t, bool compact) { t->_wrapper_clear<bool>(compact); }
-    void stc_wrapper_clear_f32(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::f32_t>(compact); }
-    void stc_wrapper_clear_f64(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::f64_t>(compact); }
-    void stc_wrapper_clear_bytes(::pilo::tlv* t, bool compact) { t->_wrapper_clear<char*>(compact); }    
-    void stc_wrapper_clear_str(::pilo::tlv* t, bool compact) { t->_wrapper_clear<std::string>(compact);  }
-    void stc_wrapper_clear_tlv(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::tlv*>(compact); }
+    typedef ::pilo::err_t(*tlv_set_dict_value_func_t)(::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force);
 
-    static ::pilo::core::pattern::function_dispatcher<void(::pilo::tlv*, bool), ::pilo::core::rtti::wired_type::value_type_intrincs_count> stc_wrapper_cleaner_dispatcher(
-        nullptr, stc_wrapper_clear_i8, stc_wrapper_clear_u8, stc_wrapper_clear_i16
-        , stc_wrapper_clear_u16, stc_wrapper_clear_i32, stc_wrapper_clear_u32, stc_wrapper_clear_i64
-        , stc_wrapper_clear_u64, stc_wrapper_clear_bool, stc_wrapper_clear_f32, stc_wrapper_clear_f64
-        , stc_wrapper_clear_bytes, stc_wrapper_clear_str, stc_wrapper_clear_tlv
+    static ::pilo::core::pattern::function_dispatcher<::pilo::err_t(::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len), ::pilo::core::rtti::wired_type::value_type_intrincs_count> stc_single_from_cstr_dispatcher
+    (
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set_bytes(cstr, len, false); },//0
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set((::pilo::i8_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::i8_t)0)); },//1
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set((::pilo::u8_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::u8_t)0));  },//2
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set((::pilo::i16_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::i16_t)0));  },//3
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set((::pilo::u16_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::u16_t)0));  },//4
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set((::pilo::i32_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::i32_t)0));  },//5
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set((::pilo::u32_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::u32_t)0));  },  //6     
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set((::pilo::i64_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::i64_t)0)); },//7
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set((::pilo::u64_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::u64_t)0)); },//8
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { bool b = ::pilo::core::string::string_to_bool(cstr, len, false); return tlvp->set((::pilo::u8_t) (b ? 1 : 0)); },//9
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set((::pilo::f32_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::f32_t)0));  },//10
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set((::pilo::f64_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::f64_t)0));  },//11
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set_bytes(cstr, len, false);  }, //12
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->set_string(cstr, len);  }, //13
+        [](::pilo::tlv* , const char* , ::pilo::i32_t ) -> ::pilo::err_t { PMC_ASSERT(false); return PILO_OK; }//14
     );
+
+    static ::pilo::core::pattern::function_dispatcher<::pilo::err_t(::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len), ::pilo::core::rtti::wired_type::value_type_intrincs_count> stc_array_from_cstr_dispatcher
+    (
+        [](::pilo::tlv* , const char* , ::pilo::i32_t ) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_NOOP); },//0
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->push_back((::pilo::i8_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::i8_t)0)); },//1
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->push_back((::pilo::u8_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::u8_t)0));  },//2
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->push_back((::pilo::i16_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::i16_t)0));  },//3
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->push_back((::pilo::u16_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::u16_t)0));  },//4
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->push_back((::pilo::i32_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::i32_t)0));  },//5
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->push_back((::pilo::u32_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::u32_t)0));  },  //6     
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->push_back((::pilo::i64_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::i64_t)0)); },//7
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->push_back((::pilo::u64_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::u64_t)0)); },//8
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { bool b = ::pilo::core::string::string_to_bool(cstr, len, false); return tlvp->push_back((::pilo::u8_t)(b ? 1 : 0)); },//9
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->push_back((::pilo::f32_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::f32_t)0));  },//10
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->push_back((::pilo::f64_t) ::pilo::core::string::string_to_decimal(cstr, len, (::pilo::f64_t)0));  },//11
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { return tlvp->push_back(cstr, len, false);  }, //12
+        [](::pilo::tlv* tlvp, const char* cstr, ::pilo::i32_t len) -> ::pilo::err_t { 
+            std::string s(cstr, len);
+            return tlvp->push_back(s, -1, false);  
+        }, //13
+        [](::pilo::tlv*, const char*, ::pilo::i32_t) -> ::pilo::err_t { PMC_ASSERT(false); return PILO_OK; }//14
+    );
+
+   
+    static tlv_set_dict_value_func_t stc_dict_from_cstr_dispatcher[::pilo::core::rtti::wired_type::key_type_count][::pilo::core::rtti::wired_type::value_type_intrincs_count] = 
+    {
+            {
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+                [](::pilo::tlv*, const char* , ::pilo::i32_t , const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+            },
+            {//i8
+                [](::pilo::tlv* , const char* , ::pilo::i32_t , const char* , ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },//0
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, ::pilo::i8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i8_t)0), is_force);  },//1
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, ::pilo::u8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u8_t)0), is_force);  },//2
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, ::pilo::i16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i16_t)0), is_force); },//3
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, ::pilo::u16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u16_t)0), is_force); },//4
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, ::pilo::i32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i32_t)0), is_force);  },//5
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, ::pilo::u32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u32_t)0), is_force);  },//6
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, ::pilo::i64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i64_t)0), is_force);  },//7
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, ::pilo::u64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u64_t)0), is_force); },//8
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, bool>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ::pilo::core::string::string_to_bool(value,vlen,false), is_force); },//9
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, ::pilo::f32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f32_t)0.0f), is_force); },//10
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, ::pilo::f64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f64_t)0.0f), is_force); },//11
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t 
+                { 
+                    if (value == nullptr) {
+                        return tlvp->insert<::pilo::i8_t, const char*>(::pilo::core::string::string_to_decimal(key, klen, (::pilo::i8_t)0), nullptr, is_force);
+                    }
+                    else {
+                        if (vlen < 0)
+                        vlen = (::pilo::i32_t) ::pilo::core::string::character_count(value);
+                        char* ptr = (char*)PMF_HEAP_MALLOC(vlen + 1);
+                        if (ptr == nullptr)
+                            return ::pilo::mk_perr(PERR_INSUF_HEAP);
+                        ptr[vlen] = 0;
+                        memcpy(ptr, value, vlen);
+                        return tlvp->insert<::pilo::i8_t, const char*>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), ptr, is_force);
+                    }
+                    
+                },//12
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i8_t, std::string>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i8_t)0), std::string(value, vlen), is_force); },//13
+                [](::pilo::tlv*, const char*, ::pilo::i32_t, const char*, ::pilo::i32_t, bool ) -> ::pilo::err_t { return pilo::mk_perr(PERR_OP_UNSUPPORT); },//14
+            },
+            {//u8
+                [](::pilo::tlv* , const char* , ::pilo::i32_t , const char* , ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },//0
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, ::pilo::i8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i8_t)0), is_force);  },//1
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, ::pilo::u8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u8_t)0), is_force);  },//2
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, ::pilo::i16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i16_t)0), is_force); },//3
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, ::pilo::u16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u16_t)0), is_force); },//4
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, ::pilo::i32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i32_t)0), is_force);  },//5
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, ::pilo::u32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u32_t)0), is_force);  },//6
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, ::pilo::i64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i64_t)0), is_force);  },//7
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, ::pilo::u64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u64_t)0), is_force); },//8
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, bool>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ::pilo::core::string::string_to_bool(value,vlen,false), is_force); },//9
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, ::pilo::f32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f32_t)0.0f), is_force); },//10
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, ::pilo::f64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f64_t)0.0f), is_force); },//11
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t
+                {
+                    if (value == nullptr) {
+                        return tlvp->insert<::pilo::u8_t, const char*>(::pilo::core::string::string_to_decimal(key, klen, (::pilo::u8_t)0), nullptr, is_force);
+                    }
+                    else {
+                        if (vlen < 0)
+                        vlen = (::pilo::i32_t) ::pilo::core::string::character_count(value);
+                        char* ptr = (char*)PMF_HEAP_MALLOC(vlen + 1);
+                        if (ptr == nullptr)
+                            return ::pilo::mk_perr(PERR_INSUF_HEAP);
+                        ptr[vlen] = 0;
+                        memcpy(ptr, value, vlen);
+                        return tlvp->insert<::pilo::u8_t, const char*>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), ptr, is_force);
+                    }
+
+                },//12
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u8_t, std::string>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u8_t)0), std::string(value, vlen), is_force); },//13
+                [](::pilo::tlv*, const char*, ::pilo::i32_t, const char*, ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_OP_UNSUPPORT); },//14
+            },
+            {//i16
+                [](::pilo::tlv* , const char* , ::pilo::i32_t , const char* , ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },//0
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, ::pilo::i8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i8_t)0), is_force);  },//1
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, ::pilo::u8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u8_t)0), is_force);  },//2
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, ::pilo::i16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i16_t)0), is_force); },//3
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, ::pilo::u16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u16_t)0), is_force); },//4
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, ::pilo::i32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i32_t)0), is_force);  },//5
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, ::pilo::u32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u32_t)0), is_force);  },//6
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, ::pilo::i64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i64_t)0), is_force);  },//7
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, ::pilo::u64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u64_t)0), is_force); },//8
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, bool>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ::pilo::core::string::string_to_bool(value,vlen,false), is_force); },//9
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, ::pilo::f32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f32_t)0.0f), is_force); },//10
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, ::pilo::f64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f64_t)0.0f), is_force); },//11
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t
+                {
+                    if (value == nullptr) {
+                        return tlvp->insert<::pilo::i16_t, const char*>(::pilo::core::string::string_to_decimal(key, klen, (::pilo::i16_t)0), nullptr, is_force);
+                    }
+                    else {
+                        if (vlen < 0)
+                        vlen = (::pilo::i32_t) ::pilo::core::string::character_count(value);
+                        char* ptr = (char*)PMF_HEAP_MALLOC(vlen + 1);
+                        if (ptr == nullptr)
+                            return ::pilo::mk_perr(PERR_INSUF_HEAP);
+                        ptr[vlen] = 0;
+                        memcpy(ptr, value, vlen);
+                        return tlvp->insert<::pilo::i16_t, const char*>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), ptr, is_force);
+                    }
+
+                },//12
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i16_t, std::string>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i16_t)0), std::string(value, vlen), is_force); },//13
+                [](::pilo::tlv*, const char*, ::pilo::i32_t, const char*, ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_OP_UNSUPPORT); },//14
+            },
+            {//u16
+                [](::pilo::tlv* , const char* , ::pilo::i32_t , const char* , ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },//0
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, ::pilo::i8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i8_t)0), is_force);  },//1
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, ::pilo::u8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u8_t)0), is_force);  },//2
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, ::pilo::i16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i16_t)0), is_force); },//3
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, ::pilo::u16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u16_t)0), is_force); },//4
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, ::pilo::i32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i32_t)0), is_force);  },//5
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, ::pilo::u32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u32_t)0), is_force);  },//6
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, ::pilo::i64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i64_t)0), is_force);  },//7
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, ::pilo::u64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u64_t)0), is_force); },//8
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, bool>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ::pilo::core::string::string_to_bool(value,vlen,false), is_force); },//9
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, ::pilo::f32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f32_t)0.0f), is_force); },//10
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, ::pilo::f64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f64_t)0.0f), is_force); },//11
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t
+                {
+                    if (value == nullptr) {
+                        return tlvp->insert<::pilo::u16_t, const char*>(::pilo::core::string::string_to_decimal(key, klen, (::pilo::u16_t)0), nullptr, is_force);
+                    }
+                    else {
+                        if (vlen < 0)
+                        vlen = (::pilo::i32_t) ::pilo::core::string::character_count(value);
+                        char* ptr = (char*)PMF_HEAP_MALLOC(vlen + 1);
+                        if (ptr == nullptr)
+                            return ::pilo::mk_perr(PERR_INSUF_HEAP);
+                        ptr[vlen] = 0;
+                        memcpy(ptr, value, vlen);
+                        return tlvp->insert<::pilo::u16_t, const char*>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), ptr, is_force);
+                    }
+
+                },//12
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u16_t, std::string>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u16_t)0), std::string(value, vlen), is_force); },//13
+                [](::pilo::tlv*, const char*, ::pilo::i32_t, const char*, ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_OP_UNSUPPORT); },//14
+            },
+            {//i32
+                [](::pilo::tlv* , const char* , ::pilo::i32_t , const char* , ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },//0
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, ::pilo::i8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i8_t)0), is_force);  },//1
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, ::pilo::u8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u8_t)0), is_force);  },//2
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, ::pilo::i16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i16_t)0), is_force); },//3
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, ::pilo::u16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u16_t)0), is_force); },//4
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, ::pilo::i32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i32_t)0), is_force);  },//5
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, ::pilo::u32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u32_t)0), is_force);  },//6
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, ::pilo::i64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i64_t)0), is_force);  },//7
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, ::pilo::u64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u64_t)0), is_force); },//8
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, bool>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ::pilo::core::string::string_to_bool(value,vlen,false), is_force); },//9
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, ::pilo::f32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f32_t)0.0f), is_force); },//10
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, ::pilo::f64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f64_t)0.0f), is_force); },//11
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t
+                {
+                    if (value == nullptr) {
+                        return tlvp->insert<::pilo::i32_t, const char*>(::pilo::core::string::string_to_decimal(key, klen, (::pilo::i32_t)0), nullptr, is_force);
+                    }
+                    else {
+                        if (vlen < 0)
+                        vlen = (::pilo::i32_t) ::pilo::core::string::character_count(value);
+                        char* ptr = (char*)PMF_HEAP_MALLOC(vlen + 1);
+                        if (ptr == nullptr)
+                            return ::pilo::mk_perr(PERR_INSUF_HEAP);
+                        ptr[vlen] = 0;
+                        memcpy(ptr, value, vlen);
+                        return tlvp->insert<::pilo::i32_t, const char*>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), ptr, is_force);
+                    }
+
+                },//12
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i32_t, std::string>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i32_t)0), std::string(value, vlen), is_force); },//13
+                [](::pilo::tlv*, const char*, ::pilo::i32_t, const char*, ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_OP_UNSUPPORT); },//14
+            },
+            {//u32
+                [](::pilo::tlv* , const char* , ::pilo::i32_t , const char* , ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },//0
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, ::pilo::i8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i8_t)0), is_force);  },//1
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, ::pilo::u8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u8_t)0), is_force);  },//2
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, ::pilo::i16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i16_t)0), is_force); },//3
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, ::pilo::u16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u16_t)0), is_force); },//4
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, ::pilo::i32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u32_t)0), is_force);  },//5
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, ::pilo::u32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u32_t)0), is_force);  },//6
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, ::pilo::i64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i64_t)0), is_force);  },//7
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, ::pilo::u64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u64_t)0), is_force); },//8
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, bool>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ::pilo::core::string::string_to_bool(value,vlen,false), is_force); },//9
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, ::pilo::f32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f32_t)0.0f), is_force); },//10
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, ::pilo::f64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f64_t)0.0f), is_force); },//11
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t
+                {
+                    if (value == nullptr) {
+                        return tlvp->insert<::pilo::u32_t, const char*>(::pilo::core::string::string_to_decimal(key, klen, (::pilo::u32_t)0), nullptr, is_force);
+                    }
+                    else {
+                        if (vlen < 0)
+                        vlen = (::pilo::i32_t) ::pilo::core::string::character_count(value);
+                        char* ptr = (char*)PMF_HEAP_MALLOC(vlen + 1);
+                        if (ptr == nullptr)
+                            return ::pilo::mk_perr(PERR_INSUF_HEAP);
+                        ptr[vlen] = 0;
+                        memcpy(ptr, value, vlen);
+                        return tlvp->insert<::pilo::u32_t, const char*>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), ptr, is_force);
+                    }
+
+                },//12
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u32_t, std::string>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u32_t)0), std::string(value, vlen), is_force); },//13
+                [](::pilo::tlv*, const char*, ::pilo::i32_t, const char*, ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_OP_UNSUPPORT); },//14
+            },
+            {//i64
+                [](::pilo::tlv* , const char* , ::pilo::i32_t , const char* , ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },//0
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, ::pilo::i8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i8_t)0), is_force);  },//1
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, ::pilo::u8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u8_t)0), is_force);  },//2
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, ::pilo::i16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i16_t)0), is_force); },//3
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, ::pilo::u16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u16_t)0), is_force); },//4
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, ::pilo::i32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i32_t)0), is_force);  },//5
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, ::pilo::u32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u32_t)0), is_force);  },//6
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, ::pilo::i64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i64_t)0), is_force);  },//7
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, ::pilo::u64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u64_t)0), is_force); },//8
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, bool>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ::pilo::core::string::string_to_bool(value,vlen,false), is_force); },//9
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, ::pilo::f32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f32_t)0.0f), is_force); },//10
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, ::pilo::f64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f64_t)0.0f), is_force); },//11
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t
+                {
+                    if (value == nullptr) {
+                        return tlvp->insert<::pilo::i64_t, const char*>(::pilo::core::string::string_to_decimal(key, klen, (::pilo::i64_t)0), nullptr, is_force);
+                    }
+                    else {
+                        if (vlen < 0)
+                        vlen = (::pilo::i32_t) ::pilo::core::string::character_count(value);
+                        char* ptr = (char*)PMF_HEAP_MALLOC(vlen + 1);
+                        if (ptr == nullptr)
+                            return ::pilo::mk_perr(PERR_INSUF_HEAP);
+                        ptr[vlen] = 0;
+                        memcpy(ptr, value, vlen);
+                        return tlvp->insert<::pilo::i64_t, const char*>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), ptr, is_force);
+                    }
+
+                },//12
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::i64_t, std::string>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::i64_t)0), std::string(value, vlen), is_force); },//13
+                [](::pilo::tlv*, const char*, ::pilo::i32_t, const char*, ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_OP_UNSUPPORT); },//14
+            },
+            {//u64
+                [](::pilo::tlv* , const char* , ::pilo::i32_t , const char* , ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },//0
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, ::pilo::i8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i8_t)0), is_force);  },//1
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, ::pilo::u8_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u8_t)0), is_force);  },//2
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, ::pilo::i16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i16_t)0), is_force); },//3
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, ::pilo::u16_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u16_t)0), is_force); },//4
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, ::pilo::i32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i32_t)0), is_force);  },//5
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, ::pilo::u32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u32_t)0), is_force);  },//6
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, ::pilo::i64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u64_t)0), is_force);  },//7
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, ::pilo::u64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u64_t)0), is_force); },//8
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, bool>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ::pilo::core::string::string_to_bool(value,vlen,false), is_force); },//9
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, ::pilo::f32_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f32_t)0.0f), is_force); },//10
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, ::pilo::f64_t>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f64_t)0.0f), is_force); },//11
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t
+                {
+                    if (value == nullptr) {
+                        return tlvp->insert<::pilo::u64_t, const char*>(::pilo::core::string::string_to_decimal(key, klen, (::pilo::u64_t)0), nullptr, is_force);
+                    }
+                    else {
+                        if (vlen < 0)
+                        vlen = (::pilo::i32_t) ::pilo::core::string::character_count(value);
+                        char* ptr = (char*)PMF_HEAP_MALLOC(vlen + 1);
+                        if (ptr == nullptr)
+                            return ::pilo::mk_perr(PERR_INSUF_HEAP);
+                        ptr[vlen] = 0;
+                        memcpy(ptr, value, vlen);
+                        return tlvp->insert<::pilo::u64_t, const char*>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), ptr, is_force);
+                    }
+
+                },//12
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<::pilo::u64_t, std::string>(::pilo::core::string::string_to_decimal(key,klen,(::pilo::u64_t)0), std::string(value, vlen), is_force); },//13
+                [](::pilo::tlv*, const char*, ::pilo::i32_t, const char*, ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_OP_UNSUPPORT); },//14
+            },
+            {//str
+                [](::pilo::tlv* , const char* , ::pilo::i32_t , const char* , ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_MIS_DATA_TYPE); },//0
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, ::pilo::i8_t>(std::string(key, klen), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i8_t)0), is_force);  },//1
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, ::pilo::u8_t>(std::string(key, klen), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u8_t)0), is_force);  },//2
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, ::pilo::i16_t>(std::string(key, klen), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i16_t)0), is_force); },//3
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, ::pilo::u16_t>(std::string(key, klen), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u16_t)0), is_force); },//4
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, ::pilo::i32_t>(std::string(key, klen), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::i32_t)0), is_force);  },//5
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, ::pilo::u32_t>(std::string(key, klen), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u32_t)0), is_force);  },//6
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, ::pilo::i64_t>(std::string(key, klen), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u64_t)0), is_force);  },//7
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, ::pilo::u64_t>(std::string(key, klen), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::u64_t)0), is_force); },//8
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, bool>(std::string(key, klen), ::pilo::core::string::string_to_bool(value,vlen,false), is_force); },//9
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, ::pilo::f32_t>(std::string(key, klen), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f32_t)0.0f), is_force); },//10
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, ::pilo::f64_t>(std::string(key, klen), ::pilo::core::string::string_to_decimal(value,vlen,(::pilo::f64_t)0.0f), is_force); },//11
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t
+                {
+                    if (value == nullptr) {
+                        return tlvp->insert<std::string, const char*>(std::string(key, klen), nullptr, is_force);
+                    }
+                    else {
+                        if (vlen < 0)
+                        vlen = (::pilo::i32_t) ::pilo::core::string::character_count(value);
+                        char* ptr = (char*)PMF_HEAP_MALLOC(vlen + 1);
+                        if (ptr == nullptr)
+                            return ::pilo::mk_perr(PERR_INSUF_HEAP);
+                        ptr[vlen] = 0;
+                        memcpy(ptr, value, vlen);
+                        return tlvp->insert<std::string, const char*>(std::string(key, klen), ptr, is_force);
+                    }
+
+                },//12
+                [](::pilo::tlv* tlvp, const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force) -> ::pilo::err_t { return tlvp->insert<std::string, std::string>(std::string(key,klen), std::string(value, vlen), is_force); },//13
+                [](::pilo::tlv*, const char*, ::pilo::i32_t, const char*, ::pilo::i32_t, bool) -> ::pilo::err_t { return pilo::mk_perr(PERR_OP_UNSUPPORT); },//14
+            },
+    };
+
+    ::pilo::err_t tlv::insert_value(const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force)
+    {
+        if (key == nullptr)
+            return ::pilo::mk_perr(PERR_NULL_PARAM);
+        if (klen < 0)
+            klen = (::pilo::i32_t) ::pilo::core::string::character_count(key);
+
+        if (this->value_type() != ::pilo::core::rtti::wired_type::value_type_bytes) {
+            if (value == nullptr) {
+                return ::pilo::mk_perr(PERR_NULL_PARAM);
+            }
+            if (vlen < 0)
+                vlen = (::pilo::i32_t) ::pilo::core::string::character_count(value);
+        }
+        return stc_dict_from_cstr_dispatcher[_type.key_type()][_type.value_type()](this, key, klen, value, vlen, is_force);
+
+    }
+
+   
+   
+    
+
+
+
+    //void stc_wrapper_clear_na(::pilo::tlv, bool ) {  }
+    //void stc_wrapper_clear_i8(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i8_t>(compact); }
+    //void stc_wrapper_clear_u8(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u8_t>(compact); }
+    //void stc_wrapper_clear_i16(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i16_t>(compact); }
+    //void stc_wrapper_clear_u16(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u16_t>(compact); }
+    //void stc_wrapper_clear_i32(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i32_t>(compact); }
+    //void stc_wrapper_clear_u32(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u32_t>(compact); }
+    //void stc_wrapper_clear_i64(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i64_t>(compact); }
+    //void stc_wrapper_clear_u64(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u64_t>(compact); }
+    //void stc_wrapper_clear_bool(::pilo::tlv* t, bool compact) { t->_wrapper_clear<bool>(compact); }
+    //void stc_wrapper_clear_f32(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::f32_t>(compact); }
+    //void stc_wrapper_clear_f64(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::f64_t>(compact); }
+    //void stc_wrapper_clear_bytes(::pilo::tlv* t, bool compact) { t->_wrapper_clear<char*>(compact); }    
+    //void stc_wrapper_clear_str(::pilo::tlv* t, bool compact) { t->_wrapper_clear<std::string>(compact);  }
+    //void stc_wrapper_clear_tlv(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::tlv*>(compact); }
+
+    //static ::pilo::core::pattern::function_dispatcher<void(::pilo::tlv*, bool), ::pilo::core::rtti::wired_type::value_type_intrincs_count> stc_wrapper_cleaner_dispatcher(
+    //    nullptr, stc_wrapper_clear_i8, stc_wrapper_clear_u8, stc_wrapper_clear_i16
+    //    , stc_wrapper_clear_u16, stc_wrapper_clear_i32, stc_wrapper_clear_u32, stc_wrapper_clear_i64
+    //    , stc_wrapper_clear_u64, stc_wrapper_clear_bool, stc_wrapper_clear_f32, stc_wrapper_clear_f64
+    //    , stc_wrapper_clear_bytes, stc_wrapper_clear_str, stc_wrapper_clear_tlv
+    //);
 
 
     static ::pilo::core::pattern::function_dispatcher<::pilo::err_t(const ::pilo::tlv*, ::pilo::core::memory::byte_buffer_interface*), ::pilo::core::rtti::wired_type::value_type_intrincs_count> stc_single_serialzer_dispatcher
@@ -351,8 +738,8 @@ namespace pilo
                 }
             }            
             return PILO_OK;
-        },
-        [](const ::pilo::tlv*, ::pilo::core::memory::byte_buffer_interface*) -> ::pilo::err_t { PMC_ASSERT(false); return PILO_OK; }//13
+        },//13
+        [](const ::pilo::tlv*, ::pilo::core::memory::byte_buffer_interface*) -> ::pilo::err_t { PMC_ASSERT(false); return PILO_OK; }//14
     );
 
     ::pilo::err_t single_tlv_deserialize_na(::pilo::tlv*, ::pilo::core::memory::byte_buffer_interface*) { return PILO_OK;  }
@@ -643,13 +1030,13 @@ namespace pilo
         return PILO_OK;
     }
 
-    void tlv::wrapper_clear(bool compact)
-    {
-        if (this->_type.value_type() < ::pilo::core::rtti::wired_type::value_type_intrincs_count)
-        {
-            stc_wrapper_cleaner_dispatcher.dispatch(this->_type.value_type())(this, compact);
-        }
-    }
+    //void tlv::wrapper_clear(bool compact)
+    //{
+    //    if (this->_type.value_type() < ::pilo::core::rtti::wired_type::value_type_intrincs_count)
+    //    {
+    //        stc_wrapper_cleaner_dispatcher.dispatch(this->_type.value_type())(this, compact);
+    //    }
+    //}
 
     ::pilo::err_t tlv::serialize(::pilo::core::memory::serializable_header_interface* header, ::pilo::core::memory::byte_buffer_interface* byte_buffer) const
     {
@@ -2346,9 +2733,21 @@ namespace pilo
         }
     }
 
-    ::pilo::tlv* tlv::allocate()
+    ::pilo::tlv* tlv::allocate(::pilo::u8_t wt, ::pilo::u8_t kt, ::pilo::u16_t vt )
     {
-        return PILO_CONTEXT->allocate_tlv();
+        ::pilo::tlv* tlvp = PILO_CONTEXT->allocate_tlv();
+        if (tlvp != nullptr) {
+            if (wt != ::pilo::core::rtti::wired_type::wrapper_na) {
+                tlvp->_type.set_wrapper_type(wt);
+            }
+            if (kt != ::pilo::core::rtti::wired_type::key_type_na) {
+                tlvp->_type.set_key_type(kt);
+            }
+            if (vt != ::pilo::core::rtti::wired_type::value_type_na) {
+                tlvp->_type.set_value_type(vt);
+            }
+        }
+        return tlvp;
     }
 
     void tlv::deallocate(::pilo::tlv* tlvp) 
@@ -2380,6 +2779,68 @@ namespace pilo
         ::pilo::i64_t total = 0;
         PILO_CONTEXT->tlv_pool()->m_memory_pool.calc_available_units_nolock(avail, total, 0);
         si->set(total, avail);
+        return PILO_OK;
+    }
+
+    static ::pilo::err_t s_fill_tlv_arr_by_cstr (const char* src, const char* cstr, ::pilo::i64_t len, void* ctx)
+    {
+        PMC_UNUSED(src);
+        ::pilo::tlv* tlvp = (::pilo::tlv*)ctx;
+        stc_array_from_cstr_dispatcher.dispatch(tlvp->value_type())(tlvp, cstr, (::pilo::i32_t) len);
+        return PILO_OK;
+    }
+
+    static ::pilo::err_t s_fill_tlv_dict_by_cstr(const char* src, const char* cstr, ::pilo::i64_t len,  void* ctx)
+    {
+        PMC_UNUSED(src);
+        ::pilo::cstr_ref<char> ret_parts[2];        
+        ::pilo::tlv* tlvp = (::pilo::tlv*)ctx;
+        ::pilo::i64_t cnt = ::pilo::core::string::split_fixed(cstr, len, ":", 1, ret_parts, 2, false, true, true, true);
+        if (cnt != 2)
+            return ::pilo::mk_perr(PERR_INVALID_PARAM);
+        
+        return tlvp->insert_value(ret_parts[0].ptr, (::pilo::i32_t) ret_parts[0].length, ret_parts[1].ptr, (::pilo::i32_t) ret_parts[1].length, true);
+
+    }
+
+    ::pilo::err_t tlv::set_value(const char* cstr, ::pilo::i32_t len)
+    {
+        if (this->_type.wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_na) {
+            return ::pilo::mk_perr(PERR_INC_DATA);
+        }
+
+        this->clear();
+        if (cstr == nullptr) {
+            _type.set_single_type(::pilo::core::rtti::wired_type::value_type_na);
+            return PILO_OK;
+        }
+
+        if (len < 0)
+            len = (::pilo::i32_t) ::pilo::core::string::character_count(cstr);
+            
+        if (this->_type.is_single()) {
+            return stc_single_from_cstr_dispatcher.dispatch(this->value_type())(this, cstr, len);
+        }
+        else if (this->_type.is_array()) {
+            if (cstr == nullptr)
+                return ::pilo::mk_perr(PERR_NULL_PARAM);
+            if (len <= 0 || cstr[0] == 0) {
+                return PILO_OK;
+            }  
+            ::pilo::core::string::iteratable_split(cstr, len, ",", 1, s_fill_tlv_arr_by_cstr, this, false, true, true, true);
+        }
+        else if (this->_type.is_dict()) {
+            if (cstr == nullptr)
+                return ::pilo::mk_perr(PERR_NULL_PARAM);
+            if (len <= 0 || cstr[0] == 0) {
+                return PILO_OK;
+            }
+            ::pilo::core::string::iteratable_split(cstr, len, ",", 1, s_fill_tlv_dict_by_cstr, this, false, true, true, true);
+        }
+        else {
+            return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
+        }
+
         return PILO_OK;
     }
 

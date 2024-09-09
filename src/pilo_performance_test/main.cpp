@@ -19,15 +19,7 @@ void load_cases(performance_test_suite* suite);
 
 int main(int argc, char * argv[])
 {
-	PMC_UNUSED(argc);
-	PMC_UNUSED(argv);
-
-	::pilo::err_t err = PILO_STARTUP_INIT;
-
-	if (err != PILO_OK) {
-		fprintf(stderr, "PILO Initilization Failed: %s", ::pilo::str_err(err, nullptr, true).c_str());
-		return -1;
-	}
+	PILO_STARTUP_INIT(argc, argv);
 
 	performance_test_suite suite_default;
 

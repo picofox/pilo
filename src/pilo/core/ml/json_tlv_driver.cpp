@@ -1,13 +1,13 @@
 ﻿#include "json_tlv_driver.hpp"
 #include "../../external/rapidjson/document.h"
-#include "../../external/rapidjson/writer.h"
+#include "../../external/rapidjson/prettywriter.h"
 #include "../../external/rapidjson/stringbuffer.h"
 #include "../../tlv.hpp"
 #include "../io/file.hpp"
 
 namespace pilo {
     namespace core {
-        namespace config {
+        namespace ml {
             json_tlv_driver::~json_tlv_driver()
             {
                 if (_m_root_value != nullptr) {
@@ -16,7 +16,7 @@ namespace pilo {
                 }
             }
 
-            ::pilo::err_t core::config::json_tlv_driver::load(const::pilo::core::io::path* path_ptr)
+            ::pilo::err_t json_tlv_driver::load(const::pilo::core::io::path* path_ptr)
             {
                 ::pilo::core::io::file<> f;
                 ::pilo::err_t err = f.open(path_ptr,::pilo::core::io::creation_mode::open_existing
@@ -68,7 +68,7 @@ namespace pilo {
                     , ::pilo::core::io::access_permission::write
                     , ::pilo::core::io::dev_open_flags::append);
                 rapidjson::StringBuffer jbuffer;
-                rapidjson::Writer<rapidjson::StringBuffer> writer(jbuffer);
+                rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(jbuffer);
                 root_jdoc.Accept(writer);
                 ::pilo::i64_t wlen = (::pilo::i64_t)jbuffer.GetSize();
                 ::pilo::i64_t rlen = 0;
@@ -214,6 +214,11 @@ namespace pilo {
                 }
 
                 return PILO_OK;
+            }
+
+            ::pilo::tlv* json_tlv_driver::make_value_node(const char* fqn, ::pilo::err_t& err)
+            {
+                return this->_m_root_value->set_tlv(fqn, err);
             }
 
             ::pilo::err_t json_tlv_driver::_write_json_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)

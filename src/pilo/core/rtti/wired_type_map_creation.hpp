@@ -15,6 +15,8 @@ namespace pilo
 		namespace rtti
 		{
 
+
+
 			template<typename TA_KEY, typename TA_VALUE> inline ::pilo::err_t map_ptr_insert(char* &map_char_ptr
 				, std::initializer_list<std::pair<TA_KEY, TA_VALUE>> list, bool is_force)
 			{

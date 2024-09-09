@@ -16,7 +16,7 @@ namespace pilo {
             class path;
         }
 
-        namespace config {
+        namespace ml {
 
             enum class driver_type : ::pilo::i32_t
             {
@@ -49,6 +49,7 @@ namespace pilo {
 
 
             public:
+                virtual ::pilo::tlv* make_value_node(const char* fqn, ::pilo::err_t& err) = 0;
                 virtual ::pilo::err_t get_value(const char* fqn, ::pilo::i8_t& v);
                 virtual ::pilo::err_t get_value(const char* fqn, ::pilo::u8_t& v);
                 virtual ::pilo::err_t get_value(const char* fqn, ::pilo::i16_t& v);

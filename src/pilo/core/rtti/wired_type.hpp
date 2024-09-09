@@ -21,6 +21,7 @@ namespace pilo
 				static char s_val_type_to_char(::pilo::u16_t vt);
 
 				static ::pilo::err_t s_parse_cstr_type(::pilo::u8_t &wt, ::pilo::u8_t &kt, ::pilo::u16_t & vt, const char* cstr, ::pilo::i64_t len);
+				static ::pilo::err_t s_to_wired_type_cstr(char * buffer, ::pilo::i64_t capa, ::pilo::u8_t wt, ::pilo::u8_t kt, ::pilo::u16_t vt);
 				static ::pilo::err_t s_parse_cstr_bool(bool& bv, const char* cstr, ::pilo::i64_t len);
 
 			public:
@@ -185,6 +186,11 @@ namespace pilo
 				bool is_array() const
 				{
 					return ((::pilo::u8_t)((_attribute >> 4) & 0xF) == wrapper_array);
+				}
+
+				bool is_dict() const
+				{
+					return ((::pilo::u8_t)((_attribute >> 4) & 0xF) == wrapper_dict);
 				}
 
 				bool value_type_in_range(::pilo::u16_t low, ::pilo::u16_t high) const

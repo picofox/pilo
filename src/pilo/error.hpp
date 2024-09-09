@@ -106,6 +106,8 @@
 #define PILO_ERRRET_NULL(e)         if (PILO_OK != (e)) { return nullptr; }    
 #define PILO_ERRRET_VOID(e)         if (PILO_OK != (e)) { return; }    
 
+
+
 namespace pilo
 {
     __inline os_error_number_t get_os_last_err()

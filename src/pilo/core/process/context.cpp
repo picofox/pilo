@@ -134,12 +134,26 @@ namespace pilo
                 return ss.str();
             }
 
-            ::pilo::i32_t context::initialize()
+            ::pilo::i32_t context::initialize(int argc, char* argv[])
             {
                 if (_initialized)
                     return PILO_OK;
 
-                _core_config->load_or_save_default();
+                ::pilo::err_t err = PILO_OK;
+
+                err = _core_config->load_or_save_default();
+                if (err != PILO_OK) {
+                    ::pilo::core::io::file_formatted_output(stderr, "load_or_save_default core config failed. (%s)", ::pilo::str_err(err, nullptr, true).c_str());
+                    return err;
+                }
+
+                err = _cmdline_arg.parse(argc, argv);
+                if (err != PILO_OK) {
+                    ::pilo::core::io::file_formatted_output(stderr, "Parse cmdline arguments failed. (%s)", ::pilo::str_err(err,nullptr, true).c_str());
+                    return err;
+                }
+
+                
 
                 _pool_object_stat_mgr.register_item(::pilo::core::stat::pool_object_stat_manager::pool_object_key_code::key_tlv
                     , sizeof(::pilo::tlv), [](::pilo::core::stat::pool_object_stat_manager::pool_object_key_code 
@@ -152,8 +166,6 @@ namespace pilo
                     , "local_bn"
                 );
 
-
-                ::pilo::err_t err = PILO_OK;
                 err = this->_proc_paths[(int) ::pilo::predefined_pilo_dir::cwd].fill_with_cwd(0);
                 if (err != PILO_OK)
                     return err;
@@ -186,10 +198,6 @@ namespace pilo
                 if (err != PILO_OK)
                     return err;
 
-                std::string si = startup_info();                
-                printf("%s\n",si.c_str());
-
-
                 _initialized = true;
 
                 return PILO_OK;
@@ -204,7 +212,7 @@ namespace pilo
 
             static ::pilo::core::process::context* _s_pilo_context_instance = nullptr;
 
-            ::pilo::err_t startup_initialize()
+            ::pilo::err_t pilo_startup(int argc, char* argv[])
             {
                 if (_s_pilo_context_instance != nullptr)
                     return PILO_OK;
@@ -213,10 +221,15 @@ namespace pilo
                 if (_s_pilo_context_instance == nullptr)
                     return ::pilo::mk_perr(PERR_INSUF_HEAP);
 
-                ::pilo::err_t err = _s_pilo_context_instance->initialize();
+                ::pilo::err_t err = _s_pilo_context_instance->initialize(argc, argv);
                 if (err != PILO_OK) {
+                    fprintf(stderr, "PILO Initilization Failed. (%s)", ::pilo::str_err(err, nullptr, true).c_str());
                     return err;
                 }
+
+                std::string si = _s_pilo_context_instance->startup_info();
+                printf("%s\n", si.c_str());
+
                 return PILO_OK;
             }
 

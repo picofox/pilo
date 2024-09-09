@@ -492,6 +492,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\cmdline_args_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp" />
@@ -550,6 +551,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\cmdline_args_config.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuation_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.hpp" />

@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\cmdline_args_config.cpp">
+      <Filter>pilo\core\config</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.cpp">
       <Filter>pilo\core\config</Filter>
     </ClCompile>
@@ -176,6 +179,9 @@
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp">
       <Filter>pilo\core\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\cmdline_args_config.hpp">
+      <Filter>pilo\core\config</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuation_interface.hpp">
       <Filter>pilo\core\config</Filter>

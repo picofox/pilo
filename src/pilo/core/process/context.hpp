@@ -8,6 +8,7 @@
 #include "../logging/logger_manager.hpp"
 #include "../rtti/wired_type_factory.hpp"
 #include "../threading/spin_mutex.hpp"
+#include "./cmdline_args.hpp"
 
 namespace pilo
 {
@@ -33,7 +34,7 @@ namespace pilo
                 context();
                 ~context();
                 ::pilo::core::stat::pool_object_stat_manager& pool_object_stat_mgr() { return _pool_object_stat_mgr;}
-                ::pilo::i32_t initialize();
+                ::pilo::i32_t initialize(int argc, char* argv[]);
                 void finalize();
                 inline ::pilo::u32_t version() const
                 {
@@ -166,6 +167,8 @@ namespace pilo
  
                 std::string startup_info() const;
 
+                inline const cmdline_arg& cmdline_args() const { return _cmdline_arg;  }
+
             private:
                 ::pilo::core::io::path _proc_paths[(int)::pilo::predefined_pilo_dir::count];
                 bool                _initialized;
@@ -184,13 +187,16 @@ namespace pilo
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;
 
 
+                cmdline_arg                                          _cmdline_arg;
                 ::std::shared_ptr<::pilo::core::config::core_config> _core_config;
                 ::pilo::core::logging::logger_manager _logger_manager;
                 
             };
 
-            ::pilo::err_t startup_initialize();
+            ::pilo::err_t pilo_startup(int argc, char*argv[]);
             core::process::context* pilo_context();
         }
     }
 }
+
+#define PLOG(lv, fmt, args, ...)   do {::pilo::core::process::pilo_context()->logger(0)->log(lv, fmt, ##args);} while(0)

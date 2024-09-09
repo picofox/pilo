@@ -8,6 +8,7 @@
 #include "../logging/logger_def.hpp"
 #include "../io/path.hpp"
 #include "./logger_config.hpp"
+#include "./cmdline_args_config.hpp"
 
 
 namespace pilo {
@@ -27,8 +28,8 @@ namespace pilo {
                 virtual ::pilo::err_t save() override;
                 virtual void clear(bool purge = true);
                 virtual ::pilo::err_t set_default() override;
-                virtual ::pilo::err_t save_to_configurator(tlv_driver_interface* configuator);
-                virtual ::pilo::err_t load_from_configurator(tlv_driver_interface* configuator);
+                virtual ::pilo::err_t save_to_configurator(const char* fqdn_path, ::pilo::core::ml::tlv_driver_interface* driver);
+                virtual ::pilo::err_t load_from_configurator(const char* fqdn_path, ::pilo::core::ml::tlv_driver_interface* driver);
                 virtual ::pilo::err_t load_or_save_default()
                 {
                     ::pilo::err_t err = load();
@@ -52,6 +53,7 @@ namespace pilo {
                     return &_file_path;
                 }
 
+                virtual bool invalid() const;
 
             public:
                 const logger* logger_at(::pilo::u32_t idx) const
@@ -70,6 +72,8 @@ namespace pilo {
                 {
                     return _loggers;
                 }
+
+                const cmdline_args_config& cmdline_arg_spec() const { return _cmdline_args;  }
                 
             
             public:
@@ -80,15 +84,10 @@ namespace pilo {
                 ::pilo::core::io::path  _file_path;
                 
                 ::std::string           _cwd;
-                ::std::vector<logger> _loggers;
-
-
-                
+                ::std::vector<logger>   _loggers;      
+                cmdline_args_config     _cmdline_args;
 
             };
-
-
-
 
 
         }

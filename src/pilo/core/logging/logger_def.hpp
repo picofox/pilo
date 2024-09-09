@@ -9,9 +9,9 @@ namespace pilo {
     namespace core {
         namespace logging {
 
-            const ::pilo::u64_t FlagBak = 0x0000000000000001;
-            const ::pilo::u64_t FlagZip = 0x0000000000000002;
-            const ::pilo::u64_t DefaultFlags = (FlagBak);
+            const ::pilo::u32_t FlagBak = 0x00000001;
+            const ::pilo::u32_t FlagZip = 0x00000002;
+            const ::pilo::u32_t DefaultFlags = (FlagBak);
 
 
             const ::pilo::u32_t Date = 0x00000001;

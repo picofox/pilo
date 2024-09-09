@@ -37,19 +37,9 @@ void load_cases(func_test_suite* suite);
 
 int main(int argc, char * argv[])
 {
-	PMC_UNUSED(argc);
-	PMC_UNUSED(argv);
+	PILO_STARTUP_INIT(argc, argv);
 
-	::pilo::err_t err = PILO_STARTUP_INIT;
-
-	if (err != PILO_OK) {
-		fprintf(stderr, "PILO Initilization Failed: %s", ::pilo::str_err(err, nullptr, true).c_str());
-		return -1;
-	}
-
-	
-
-	func_test_suite suite_default;
+ 	func_test_suite suite_default;
 
 	load_cases(&suite_default);
 
@@ -61,6 +51,8 @@ int main(int argc, char * argv[])
 
 void load_cases(func_test_suite * suite)
 {		
+	suite->register_case("case_tlv_set_value", ::pilo::func_test::case_tlv_set_value, nullptr);
+
 	suite->register_case("case_core_config", ::pilo::func_test::core::config::case_core_config, nullptr);	
 	suite->register_case("json_config_basic", ::pilo::func_test::core::config::case_json_config_basic, nullptr);
 	suite->register_case("text_logger_basic", ::pilo::func_test::core::logging::case_text_logger_basic, nullptr);

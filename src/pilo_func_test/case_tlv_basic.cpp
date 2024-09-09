@@ -50,6 +50,203 @@ namespace pilo
 			return true;
 		}
 
+		int case_tlv_set_value(::pilo::core::testing::func_test_case* p_case)
+		{
+			::pilo::err_t err = PILO_OK;
+			::pilo::tlv* tlvp = ::pilo::tlv::allocate(::pilo::core::rtti::wired_type::wrapper_single
+				, ::pilo::core::rtti::wired_type::key_type_na
+				, ::pilo::core::rtti::wired_type::value_type_i8);
+
+			tlvp->set_value("-128", 4);
+			if (tlvp->as_i8(&err) != -128) {
+				return p_case->error(err, "set i8 from str failed.");
+			}
+
+			tlvp->set_types(::pilo::core::rtti::wired_type::wrapper_single
+				, ::pilo::core::rtti::wired_type::key_type_na
+				, ::pilo::core::rtti::wired_type::value_type_u8);
+			tlvp->set_value("255", -1);
+			if (tlvp->as_u8(&err) != 255) {
+				return p_case->error(err, "set u8 from str failed.");
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_i16);
+			tlvp->set_value("-32768", 4);
+			if (tlvp->as_i16(&err) != -32768) {
+				return p_case->error(err, "set i16 from str failed.");
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_u16);
+			tlvp->set_value("32767", -1);
+			if (tlvp->as_u16(&err) != 32767) {
+				return p_case->error(err, "set u16 from str failed.");
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_i32);
+			tlvp->set_value("-2000000000", -1);
+			if (tlvp->as_i32(&err) != -2000000000) {
+				return p_case->error(err, "set i32 from str failed.");
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_u32);
+			tlvp->set_value("2000000000", -1);
+			if (tlvp->as_u32(&err) != 2000000000) {
+				return p_case->error(err, "set u32 from str failed.");
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_i64);
+			tlvp->set_value("-9223372036854775808", -1);
+			if (tlvp->as_i64(&err) != PILO_INT64_MIN) {
+				return p_case->error(err, "set i64 from str failed.");
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_u64);
+			tlvp->set_value("2000000000000000", -1);
+			if (tlvp->as_u64(&err) != 2000000000000000) {
+				return p_case->error(err, "set u64 from str failed.");
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_boolean);
+			tlvp->set_value("true");
+			if (!tlvp->as_bool(&err)) {
+				return p_case->error(err, "set bool from str failed.");
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_bytes);
+			tlvp->set_value("abcdefghij");
+			if (tlvp->size() != 10 || ::pilo::core::string::strict_compare(tlvp->daynamic_data(), 0, "abcdefghij", 0, 10) != 0) {
+				return p_case->error(err, "set bytes from str failed.");
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_str);
+			tlvp->set_value("abcdefghij");
+			if (tlvp->as_str(&err) != std::string("abcdefghij")) {
+				return p_case->error(err, "set str from str failed.");
+			}
+
+
+			tlvp->set_types(::pilo::core::rtti::wired_type::wrapper_array
+				, ::pilo::core::rtti::wired_type::key_type_na
+				, ::pilo::core::rtti::wired_type::value_type_i8);
+
+			tlvp->set_value("-128,-78,-28, 22, 72, 122", -1);
+			if (tlvp->size() != 6) {
+				return p_case->error(err, "set arr of i8 from str failed.");
+			}
+			for (::pilo::i32_t i = 0; i < tlvp->size(); i++) {
+				::pilo::i8_t v = tlvp->get<::pilo::i8_t>(i, nullptr);
+				if (v != -128 + i * 50) {
+					return p_case->error(err, "set arr of i8 from str failed.");
+				}
+
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_i16);
+			tlvp->set_value("-32768,-22768,-12768, -2768,7232,17232,27232", -1);
+			if (tlvp->size() != 7) {
+				return p_case->error(err, "set arr of i8 from str failed.");
+			}
+			for (::pilo::i32_t i = 0; i < tlvp->size(); i++) {
+				::pilo::i16_t v = tlvp->get<::pilo::i16_t>(i, nullptr);
+				if (v != -32768 + i * 10000) {
+					return p_case->error(err, "set arr of i8 from str failed.");
+				}
+
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_i32);
+			tlvp->set_value("-32768000,-22768000,-12768000, -2768000,7232000,17232000,27232000", -1);
+			if (tlvp->size() != 7) {
+				return p_case->error(err, "set arr of i8 from str failed.");
+			}
+			for (::pilo::i32_t i = 0; i < tlvp->size(); i++) {
+				::pilo::i32_t v = tlvp->get<::pilo::i32_t>(i, nullptr);
+				if (v != -32768000 + i * 10000000) {
+					return p_case->error(err, "set arr of i8 from str failed.");
+				}
+
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_i64);
+			tlvp->set_value("-327680000000,-227680000000,-127680000000, -27680000000,72320000000,172320000000,272320000000", -1);
+			if (tlvp->size() != 7) {
+				return p_case->error(err, "set arr of i8 from str failed.");
+			}
+			for (::pilo::i32_t i = 0; i < tlvp->size(); i++) {
+				::pilo::i64_t v = tlvp->get<::pilo::i64_t>(i, nullptr);
+				if (v != -327680000000 + i * 100000000000) {
+					return p_case->error(err, "set arr of i8 from str failed.");
+				}
+
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_str);
+			tlvp->set_value("fox,kaoru,alexie,colorsnow", -1);
+			if (tlvp->size() != 4) {
+				return p_case->error(PERR_TESTCASE_FAIL, "set arr of str from str failed.");
+			}
+			if (::pilo::core::string::strict_compare(tlvp->get<std::string>(0, &err).c_str(), 0, "fox", 0, -1) != 0) {
+				return p_case->error(PERR_TESTCASE_FAIL, "set arr of str (fox) from str failed.");
+			}
+			if (::pilo::core::string::strict_compare(tlvp->get<std::string>(1, &err).c_str(), 0, "kaoru", 0, -1) != 0) {
+				return p_case->error(PERR_TESTCASE_FAIL, "set arr of str (kaoru) from str failed.");
+			}
+			if (::pilo::core::string::strict_compare(tlvp->get<std::string>(2, &err).c_str(), 0, "alexie", 0, -1) != 0) {
+				return p_case->error(PERR_TESTCASE_FAIL, "set arr of str (alexie) from str failed.");
+			}
+			if (::pilo::core::string::strict_compare(tlvp->get<std::string>(3, &err).c_str(), 0, "colorsnow", 0, -1) != 0) {
+				return p_case->error(PERR_TESTCASE_FAIL, "set arr of str (colorsnow) from str failed.");
+			}
+
+			tlvp->set_value_type(::pilo::core::rtti::wired_type::value_type_bytes);
+			tlvp->set_value("fox,kaoru,alexie,colorsnow", -1);
+			if (tlvp->size() != 4) {
+				return p_case->error(PERR_TESTCASE_FAIL, "set arr of str from str failed.");
+			}
+			if (::pilo::core::string::strict_compare(tlvp->get<char*>(0, &err), 0, "fox", 0, -1) != 0) {
+				return p_case->error(PERR_TESTCASE_FAIL, "set arr of str (fox) from str failed.");
+			}
+			if (::pilo::core::string::strict_compare(tlvp->get<char*>(1, &err), 0, "kaoru", 0, -1) != 0) {
+				return p_case->error(PERR_TESTCASE_FAIL, "set arr of str (kaoru) from str failed.");
+			}
+			if (::pilo::core::string::strict_compare(tlvp->get<char*>(2, &err), 0, "alexie", 0, -1) != 0) {
+				return p_case->error(PERR_TESTCASE_FAIL, "set arr of str (alexie) from str failed.");
+			}
+			if (::pilo::core::string::strict_compare(tlvp->get<char*>(3, &err), 0, "colorsnow", 0, -1) != 0) {
+				return p_case->error(PERR_TESTCASE_FAIL, "set arr of str (colorsnow) from str failed.");
+			}
+
+
+			tlvp->set_types(::pilo::core::rtti::wired_type::wrapper_dict
+				, ::pilo::core::rtti::wired_type::key_type_str
+				, ::pilo::core::rtti::wired_type::value_type_str);
+			tlvp->set_value("name:fox,sex:girl,job:god,sal:1000", -1);
+			
+			std::string v;
+			tlvp->get<std::string, std::string>(std::string("name"), v);
+			if (v != "fox") {
+				return p_case->error(PERR_TESTCASE_FAIL, "val name from dict failed.");
+			}
+			tlvp->get<std::string, std::string>(std::string("sex"), v);
+			if (v != "girl") {
+				return p_case->error(PERR_TESTCASE_FAIL, "val name from dict failed.");
+			}
+			tlvp->get<std::string, std::string>(std::string("job"), v);
+			if (v != "god") {
+				return p_case->error(PERR_TESTCASE_FAIL, "val name from dict failed.");
+			}
+			tlvp->get<std::string, std::string>(std::string("sal"), v);
+			if (v != "1000") {
+				return p_case->error(PERR_TESTCASE_FAIL, "val name from dict failed.");
+			}
+
+
+
+			::pilo::tlv::deallocate(tlvp);
+			p_case->set_result(PILO_OK);
+			return PILO_OK;
+		}
+
 		int case_tlv_basic(::pilo::core::testing::func_test_case* p_case)
 		{
 			::pilo::tlv* t = (::pilo::tlv*) PILO_CONTEXT->wired_type_factory()->allocate(0, ::pilo::core::rtti::wired_type::value_type_tlv);
@@ -346,6 +543,7 @@ namespace pilo
 				p_case->set_desc(errbuf);
 				return PILO_OK;
 			}
+
 
 			::pilo::tlv::deallocate(tlv_0);
 			p_case->set_result(PILO_OK);
@@ -760,7 +958,8 @@ namespace pilo
 			tlv->push_back(0);
 
 
-			tlv->wrapper_clear(true);
+			//tlv->wrapper_clear(true);
+			tlv->clear();
 
 			std::deque<::pilo::tlv*> vec2;
 			err = tlv->set(vec2);			
@@ -858,7 +1057,8 @@ namespace pilo
 				cv = cv ? false : true;
 			}
 
-			tlv->wrapper_clear(true);
+			//tlv->wrapper_clear(true);
+			tlv->clear();
 			if (tlv->size() != 0)
 			{
 				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
@@ -918,7 +1118,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(false);
+			//tlv->wrapper_clear(false);
+			tlv->clear();
 			if (tlv->size() != 0)
 			{
 				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
@@ -943,7 +1144,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(true);
+			//tlv->wrapper_clear(true);
+			tlv->clear();
 			p_case->set_result(PILO_OK);
 			return PILO_OK;
 		}
@@ -995,7 +1197,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(false);
+			//tlv->wrapper_clear(false);
+			tlv->clear();
 			if (tlv->size() != 0)
 			{
 				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
@@ -1020,7 +1223,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(true);
+			//tlv->wrapper_clear(true);
+			tlv->clear();
 			p_case->set_result(PILO_OK);
 			return PILO_OK;
 		}
@@ -1072,7 +1276,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(false);
+			//tlv->wrapper_clear(false);
+			tlv->clear();
 			if (tlv->size() != 0)
 			{
 				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
@@ -1097,7 +1302,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(true);
+			//tlv->wrapper_clear(true);
+			tlv->clear();
 			p_case->set_result(PILO_OK);
 			return PILO_OK;
 		}
@@ -1149,7 +1355,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(false);
+			//tlv->wrapper_clear(false);
+			tlv->clear();
 			if (tlv->size() != 0)
 			{
 				p_case->set_result(::pilo::mk_perr(PERR_TESTCASE_FAIL));
@@ -1174,7 +1381,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(true);
+			//tlv->wrapper_clear(true);
+			tlv->clear();
 			p_case->set_result(PILO_OK);
 			return PILO_OK;
 		}
@@ -1407,7 +1615,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(false);
+			//tlv->wrapper_clear(false);
+			tlv->clear();
 			for (::pilo::i32_t i = 0; i < 10000; i++)
 			{
 				tlv->push_front(i*10000.f);
@@ -1463,7 +1672,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(false);
+			//tlv->wrapper_clear(false);
+			tlv->clear();
 			for (::pilo::i32_t i = 0; i < 10000; i++)
 			{
 				tlv->push_front(i * 10000.f);
@@ -1525,7 +1735,8 @@ namespace pilo
 				tlv->push_back(strbuff);
 			}
 
-			tlv->wrapper_clear(false);
+			//tlv->wrapper_clear(false);
+			tlv->clear();
 			for (::pilo::i32_t i = 0; i < 10000; i++)
 			{
 				memset(strbuff, i % 255, 128);
@@ -1547,8 +1758,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(false);
-
+			//tlv->wrapper_clear(false);
+			tlv->clear();
 			p_case->set_result(PILO_OK);
 			return PILO_OK;
 		}
@@ -1590,7 +1801,8 @@ namespace pilo
 				}
 			}
 
-			tlv->wrapper_clear(false);
+			//tlv->wrapper_clear(false);
+			tlv->clear();
 			for (::pilo::i32_t i = 0; i < 10000; i++)
 			{
 				memset(strbuff, i % 255, 128);

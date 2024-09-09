@@ -120,16 +120,18 @@ namespace pilo
         ex_err(err, &perr, &os_err);
         if (prefix == nullptr)
             prefix = "";
-        ::pilo::core::io::string_formated_output(buffer, buffer_capacity, "%s: %d : %d / %u: "
-            ,prefix, perr, g_error_messages[perr], os_err);
 
         if (os_err != 0)
         {
-            ::pilo::i64_t poff = ::pilo::core::string::character_count(buffer);
-            if (poff + 8 < buffer_capacity)
-            {
-                cstr_os_err(buffer + poff, buffer_capacity - poff, os_err);
-            }
+            char os_errbuf[128] = { 0 };
+            cstr_os_err(os_errbuf, sizeof(os_errbuf), os_err);
+
+            ::pilo::core::io::string_formated_output(buffer, buffer_capacity, "%s%s (%d) / %s (%u): "
+                , prefix, g_error_messages[perr], perr, os_errbuf, os_err);
+        }
+        else {
+            ::pilo::core::io::string_formated_output(buffer, buffer_capacity, "%s%s (%d)"
+                , prefix, g_error_messages[perr], perr);
         }
 
         return buffer;

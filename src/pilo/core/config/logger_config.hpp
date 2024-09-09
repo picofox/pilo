@@ -3,13 +3,15 @@
 
 #include "../logging/logger_def.hpp"
 #include "../io/path.hpp"
+#include "../ml/json_tlv_driver.hpp"
+#include "./configuation_interface.hpp"
 
 namespace pilo {
     namespace core {
         namespace config {
 
 
-            class logger {
+            class logger : public configuation_interface {
             public:
                 friend class core_config;
             public:
@@ -41,6 +43,10 @@ namespace pilo {
                 {
                     _name = n;
                 }
+
+                ::pilo::err_t save_to_configurator(const char* fqdn_path, ::pilo::core::ml::tlv_driver_interface * driver);
+                ::pilo::err_t load_from_configurator(const char* fqdn_path, ::pilo::core::ml::tlv_driver_interface* configuator);
+
                 inline ::pilo::err_t set_bak_dir(const char* dn, ::pilo::pathlen_t len, ::pilo::predefined_pilo_dir predir)
                 {
                     ::pilo::core::io::path p(dn, len, predir);
@@ -102,6 +108,14 @@ namespace pilo {
                         buffer[0] = 0;
                     return ::pilo::core::string::extract_flags_to_strlist(buffer, capacity, this->_outputs.data(), ",", 1
                         , ::pilo::core::logging::g_output_dev_names, PMF_COUNT_OF(::pilo::core::logging::g_output_dev_names));
+                }
+                inline char* get_flags(char* buffer, ::pilo::i32_t capacity) const
+                {
+                    if (buffer != nullptr)
+                        buffer[0] = 0;
+                    return ::pilo::core::string::extract_flags_to_strlist(buffer, capacity, this->_flags.data(), ",", 1
+                        , ::pilo::core::logging::g_flags, PMF_COUNT_OF(::pilo::core::logging::g_flags));
+
                 }
                 inline char* get_predef_elements(::pilo::u32_t v, char* buffer, ::pilo::i32_t capacity) const
                 {
@@ -171,15 +185,15 @@ namespace pilo {
                     _outputs = ::pilo::core::logging::DevLogFile;
                     _name_suffix = 0;
                     _headers = ::pilo::core::logging::DefaultHeaders;
-                    _split_every = 0;
+                    _split_every = 1;
                     _flags = ::pilo::core::logging::DefaultFlags;
                     _bak_name_suffix = 0;
-                    _size_quota = 0;
+                    _size_quota = BGIGA(1);
                     _piece_quota = 0;
                     _name = "";
-                    _bak_dir = "";
+                    _bak_dir = "baks";
                     _line_sep = "\n";
-                    _field_sep = ", ";
+                    _field_sep = SP_PMS_LOG_FILE_DFL_FLD_SEP;
                 }
 
             private:
@@ -203,6 +217,19 @@ namespace pilo {
                 std::string _line_sep;
                 std::string _field_sep;
 
+
+
+                // Inherited via configuation_interface
+                ::pilo::err_t load() override;
+
+                ::pilo::err_t save() override;
+
+                ::pilo::err_t set_default() override;
+
+                void clear(bool purge) override;
+
+                const ::pilo::core::io::path* file_path() const override;
+                bool invalid() const;
 
             };
         }

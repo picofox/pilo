@@ -109,10 +109,7 @@ namespace pilo {
                         iret = this->_m_file.v_formatted_output(true, fmt, args);
                         va_end(args);
                         this->_m_total_size += iret;
-                    }
-                    
-                    
-
+                    }    
                     
                     return PILO_OK;
                 }

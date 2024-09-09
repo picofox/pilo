@@ -11,7 +11,7 @@ namespace pilo {
     class tlv;
 
     namespace core {
-        namespace config {
+        namespace ml {
         
         
             class json_tlv_driver : public tlv_driver_interface
@@ -61,8 +61,7 @@ namespace pilo {
 
                     if (fqn == nullptr || *fqn == 0)
                     {
-                        err = _m_root_value->set(value);
-                        return ::pilo::mk_perr(PERR_NON_EXIST);
+                        return _m_root_value->set(value);
                     }
 
                     if (!is_force)
@@ -80,7 +79,6 @@ namespace pilo {
                     {
                         err = t->set(value);
                     }
-
 
                     return err;
                 }
@@ -101,6 +99,10 @@ namespace pilo {
             PMC_DISABLE_COPY(json_tlv_driver)
 
    
+
+                // Inherited via tlv_driver_interface
+                ::pilo::tlv* make_value_node(const char* fqn, ::pilo::err_t& err) override;
+
             };
         
         }

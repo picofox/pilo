@@ -21,6 +21,9 @@ namespace pilo {
 
             ::pilo::err_t logger_manager::initialize(const std::vector<::pilo::core::config::logger> &lgs)
             {
+                if (lgs.size() < 1)
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+
                 ::pilo::i32_t id = 0;
                 for (::pilo::i32_t i = 0; i < lgs.size(); i++) {
                     const ::pilo::core::config::logger& lg = lgs.at(i);

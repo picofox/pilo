@@ -22,9 +22,10 @@ namespace pilo {
                 virtual ::pilo::err_t save() = 0;
                 virtual ::pilo::err_t set_default() = 0;
                 virtual void clear(bool purge = true) = 0;
-                virtual ::pilo::err_t save_to_configurator(tlv_driver_interface * configuator_driver) = 0;
-                virtual ::pilo::err_t load_from_configurator(tlv_driver_interface* configuator_driver) = 0;
+                virtual ::pilo::err_t save_to_configurator(const char* fqdn_path, ::pilo::core::ml::tlv_driver_interface * configuator_driver) = 0;
+                virtual ::pilo::err_t load_from_configurator(const char* fqdn_path, ::pilo::core::ml::tlv_driver_interface* configuator_driver) = 0;
                 virtual const ::pilo::core::io::path* file_path() const = 0;
+                virtual bool invalid() const = 0;
             };
         }
     }

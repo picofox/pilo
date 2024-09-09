@@ -539,7 +539,7 @@ namespace pilo
 				return dst_buffer;
 			}
 
-            const::pilo::i64_t iteratable_split(const wchar_t* src, ::pilo::i64_t srclen, const wchar_t* delim, ::pilo::i64_t delimlen, spliction_iterator_functype_w iter, void* ctx, bool filter_empty, bool whole_when_no_delim_found, bool trim, bool trim_part)
+            ::pilo::i64_t iteratable_split(const wchar_t* src, ::pilo::i64_t srclen, const wchar_t* delim, ::pilo::i64_t delimlen, spliction_iterator_functype_w iter, void* ctx, bool filter_empty, bool whole_when_no_delim_found, bool trim, bool trim_part)
             {
                 if (src == nullptr || *src == 0)
                     return -1;
@@ -644,7 +644,7 @@ namespace pilo
                 return ret_count;
             }
 
-            const::pilo::i64_t iteratable_split(const char* src, ::pilo::i64_t srclen, const char* delim, ::pilo::i64_t delimlen, spliction_iterator_functype_a iter, void* ctx, bool filter_empty, bool whole_when_no_delim_found, bool trim, bool trim_part)
+            ::pilo::i64_t iteratable_split(const char* src, ::pilo::i64_t srclen, const char* delim, ::pilo::i64_t delimlen, spliction_iterator_functype_a iter, void* ctx, bool filter_empty, bool whole_when_no_delim_found, bool trim, bool trim_part)
 
             {
                 if (src == nullptr || *src == 0)
@@ -1176,6 +1176,96 @@ namespace pilo
                 return PILO_OK;
             }
 
-		}
+            ::pilo::f32_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::f32_t dflval)
+            {
+                ::pilo::f32_t ret = 0;
+                ::pilo::err_t err = string_to_number(ret, pc, len);
+                if (err != PILO_OK)
+                    ret = dflval;
+                return ret;
+            }
+
+            ::pilo::f64_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::f64_t dflval)
+            {
+                ::pilo::f64_t ret = 0;
+                ::pilo::err_t err = string_to_number(ret, pc, len);
+                if (err != PILO_OK)
+                    ret = dflval;
+                return ret;
+            }
+
+            ::pilo::i8_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::i8_t dflval)
+            {
+                ::pilo::i32_t ret = 0;
+                ::pilo::err_t err = string_to_number(ret, pc, len);
+                if (err != PILO_OK)
+                    return dflval;
+                return (::pilo::i8_t)ret;
+            }
+
+            ::pilo::u8_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::u8_t dflval)
+            {
+                ::pilo::i32_t ret = 0;
+                ::pilo::err_t err = string_to_number(ret, pc, len);
+                if (err != PILO_OK)
+                    return dflval;
+                return (::pilo::u8_t)ret;
+            }
+
+            ::pilo::i16_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::i16_t dflval)
+            {
+                ::pilo::i32_t ret = 0;
+                ::pilo::err_t err = string_to_number(ret, pc, len);
+                if (err != PILO_OK)
+                    return dflval;
+                return (::pilo::i16_t)ret;
+            }
+
+            ::pilo::u16_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::u16_t dflval)
+            {
+                ::pilo::i32_t ret = 0;
+                ::pilo::err_t err = string_to_number(ret, pc, len);
+                if (err != PILO_OK)
+                    return dflval;
+                return (::pilo::u16_t)ret;
+            }
+
+            ::pilo::i32_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::i32_t dflval)
+            {
+                ::pilo::i64_t ret = 0;
+                ::pilo::err_t err = string_to_number(ret, pc, len);
+                if (err != PILO_OK)
+                    return dflval;
+                return (::pilo::i32_t)ret;
+            }
+
+            ::pilo::u32_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::u32_t dflval)
+            {
+                ::pilo::i64_t ret = 0;
+                ::pilo::err_t err = string_to_number(ret, pc, len);
+                if (err != PILO_OK)
+                    return dflval;
+                return (::pilo::u32_t)ret;
+            }
+
+            ::pilo::i64_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::i64_t dflval)
+            {
+                ::pilo::i64_t ret = 0;
+                ::pilo::err_t err = string_to_number(ret, pc, len);
+                if (err != PILO_OK)
+                    return dflval;
+                return (::pilo::i64_t)ret;
+            }
+
+            ::pilo::u64_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::u64_t dflval)
+            {
+                ::pilo::i64_t ret = 0;
+                ::pilo::err_t err = string_to_number(ret, pc, len);
+                if (err != PILO_OK)
+                    return dflval;
+                return (::pilo::u64_t)ret;
+            }
+
+}
     }
 }

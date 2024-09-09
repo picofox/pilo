@@ -355,6 +355,21 @@ namespace pilo
             ::pilo::err_t string_to_number(::pilo::f32_t& v, const wchar_t* pc, ::pilo::i64_t len = -1);
             ::pilo::err_t string_to_number(::pilo::f64_t& v, const wchar_t* pc, ::pilo::i64_t len = -1);
 
+          
+
+            ::pilo::i8_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::i8_t dflval);
+            ::pilo::u8_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::u8_t dflval);
+            ::pilo::i16_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::i16_t dflval);
+            ::pilo::u16_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::u16_t dflval);
+            ::pilo::i32_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::i32_t dflval);
+            ::pilo::u32_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::u32_t dflval);
+            ::pilo::i64_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::i64_t dflval);
+            ::pilo::u64_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::u64_t dflval);
+
+            ::pilo::f32_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::f32_t dflval);
+            ::pilo::f64_t string_to_decimal(const char* pc, ::pilo::i64_t len, ::pilo::f64_t dflval);
+
+
             template<typename T>
             const char* number_to_string_adv(char* dst_buffer, ::pilo::i64_t dst_len, T value, const char* fmt, const char* readable_fmt)
             {
@@ -776,6 +791,17 @@ namespace pilo
 				return ::pilo::mk_perr(PERR_NOOP);
 			}
 
+            template<typename CHAR_T>
+            bool string_to_bool(const CHAR_T* pc, ::pilo::i64_t len, bool defval)
+            {
+                bool b = false;
+                if (pc == nullptr) return false;
+                if (len < 0)
+                    len = ::pilo::core::string::character_count(pc);
+                if (string_to_bool(b, pc, len) != PILO_OK)
+                    return defval;
+                return b;
+            }
 
             /**
             * @brief                    trim white char from the both side of a string [NPC-Free]
@@ -1558,7 +1584,7 @@ namespace pilo
             typedef ::pilo::err_t (*spliction_iterator_functype_a) (const char*src, const char* ptr, ::pilo::i64_t len, void* ctx);
             typedef ::pilo::err_t (*spliction_iterator_functype_w) (const wchar_t*src, const wchar_t* ptr, ::pilo::i64_t len, void* ctx);
 
-            const ::pilo::i64_t iteratable_split(const wchar_t* src, ::pilo::i64_t srclen
+            ::pilo::i64_t iteratable_split(const wchar_t* src, ::pilo::i64_t srclen
                 , const wchar_t* delim, ::pilo::i64_t delimlen
                 , spliction_iterator_functype_w iter, void* ctx
                 , bool filter_empty
@@ -1567,7 +1593,7 @@ namespace pilo
 
             );
 
-            const ::pilo::i64_t iteratable_split(const char* src, ::pilo::i64_t srclen
+            ::pilo::i64_t iteratable_split(const char* src, ::pilo::i64_t srclen
                 , const char* delim, ::pilo::i64_t delimlen
                 , spliction_iterator_functype_a iter, void* ctx
                 , bool filter_empty
