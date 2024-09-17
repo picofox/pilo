@@ -911,11 +911,8 @@ namespace pilo
 			_size = 0;
 			_type.reset();
 		}
-		void clear()
-		{
-			_clear_dynamic_data();
-			_size = 0;
-		}
+
+		::pilo::err_t clear(bool compact = false);
 		void set_na()
 		{
 			_clear_dynamic_data();
@@ -1354,6 +1351,10 @@ namespace pilo
 			if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
 			return nullptr;
 		}
+
+		::pilo::err_t push_back_value(const char* cstr, ::pilo::i64_t len);
+
+
 		template<typename T> inline ::pilo::err_t push_back(T value, ::pilo::i32_t size = -1, bool adopt = false)
 		{
 			::pilo::err_t err = PILO_OK;
@@ -1704,6 +1705,14 @@ namespace pilo
 			return ss.str();
 		}
 
+		::pilo::err_t _value_to_string(std::stringstream& ss) const;
+		std::string value_to_string()
+		{
+			std::stringstream ss;
+			_value_to_string(ss);
+			return ss.str();
+		}
+
 	private:
 		tlv(const ::pilo::tlv& other) = delete;
 		::pilo::tlv operator=(const ::pilo::tlv& other) = delete;
@@ -1839,23 +1848,6 @@ namespace pilo
 			}
 			return PILO_OK;
 		}
-
-		//template<typename T>
-		//inline void _wrapper_clear(bool compact)
-		//{
-		//	if (this->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_array)
-		//	{
-		//		if (_dynamic_data == nullptr)
-		//		{
-		//			return;
-		//		}
-		//		std::deque<T>* ptr = (std::deque<T>*) this->_dynamic_data;
-		//		ptr->clear();
-		//		if (compact)
-		//			ptr->shrink_to_fit();
-		//		_size = 0;
-		//	}
-		//}
 
 		::pilo::err_t _make_dynamic_data_array();		
 		::pilo::err_t _clone_data_array(const ::pilo::tlv * src_tlv);

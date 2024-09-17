@@ -58,64 +58,77 @@ namespace pilo
 			static handle_deque_delete_func_type stc_handle_deque_delete_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
 				[](char**) -> ::pilo::err_t { return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);  },
-				[](char** deque_char_pptr) -> ::pilo::err_t	{ destroy_deque((std::deque<::pilo::i8_t>**) deque_char_pptr);return PILO_OK;}, //i8
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::u8_t>**) deque_char_pptr); return PILO_OK; }, //u8 2
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::i16_t>**) deque_char_pptr); return PILO_OK; }, //i16 3
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::u16_t>**) deque_char_pptr); return PILO_OK; }, //u16 4
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::i32_t>**) deque_char_pptr); return PILO_OK; }, //i32 5
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::u32_t>**) deque_char_pptr); return PILO_OK; }, //u32 6
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::i64_t>**) deque_char_pptr); return PILO_OK; }, //i64 7
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::u64_t>**) deque_char_pptr); return PILO_OK; }, //u64 8
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<bool>**) deque_char_pptr); return PILO_OK; }, //bool 9
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::f32_t>**) deque_char_pptr); return PILO_OK; }, //f32 10
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::f64_t>**) deque_char_pptr); return PILO_OK; }, //f64 11
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<char*>**) deque_char_pptr); return PILO_OK; }, //bytes 12
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<std::string>**) deque_char_pptr); return PILO_OK; }, //str 13
-				[](char** deque_char_pptr) -> ::pilo::err_t { destroy_deque((std::deque<::pilo::tlv*>**) deque_char_pptr); return PILO_OK; }, //tlv 14
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<::pilo::i8_t>**) deque_char_pptr);  *((std::deque<::pilo::i8_t>**) deque_char_pptr)  = nullptr; return PILO_OK; }, //i8
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<::pilo::u8_t>**) deque_char_pptr);  *((std::deque<::pilo::u8_t>**) deque_char_pptr)  = nullptr; return PILO_OK; }, //u8 2
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<::pilo::i16_t>**) deque_char_pptr); *((std::deque<::pilo::i16_t>**) deque_char_pptr) = nullptr; return PILO_OK; }, //i16 3
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<::pilo::u16_t>**) deque_char_pptr); *((std::deque<::pilo::u16_t>**) deque_char_pptr) = nullptr; return PILO_OK; }, //u16 4
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<::pilo::i32_t>**) deque_char_pptr); *((std::deque<::pilo::i32_t>**) deque_char_pptr) = nullptr; return PILO_OK; }, //i32 5
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<::pilo::u32_t>**) deque_char_pptr); *((std::deque<::pilo::u32_t>**) deque_char_pptr) = nullptr; return PILO_OK; }, //u32 6
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<::pilo::i64_t>**) deque_char_pptr); *((std::deque<::pilo::i64_t>**) deque_char_pptr) = nullptr; return PILO_OK; }, //i64 7
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<::pilo::u64_t>**) deque_char_pptr); *((std::deque<::pilo::u64_t>**) deque_char_pptr) = nullptr; return PILO_OK; }, //u64 8
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<bool>**) deque_char_pptr); *((std::deque<bool>**) deque_char_pptr) = nullptr; return PILO_OK; }, //bool 9
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<::pilo::f32_t>**) deque_char_pptr); *((std::deque<::pilo::f32_t>**) deque_char_pptr) = nullptr; return PILO_OK; }, //f32 10
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<::pilo::f64_t>**) deque_char_pptr); *((std::deque<::pilo::f64_t>**) deque_char_pptr) = nullptr; return PILO_OK; }, //f64 11
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete * ((std::deque<char*>**) deque_char_pptr); *((std::deque<char*>**) deque_char_pptr) = nullptr; return PILO_OK; }, //bytes 12
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete* ((std::deque<std::string>**) deque_char_pptr); *((std::deque<std::string>**) deque_char_pptr) = nullptr; return PILO_OK; }, //str 13
+				[](char** deque_char_pptr) -> ::pilo::err_t { delete* ((std::deque<::pilo::tlv*>**) deque_char_pptr); *((std::deque<::pilo::tlv*>**) deque_char_pptr) = nullptr; return PILO_OK; }, //tlv 14
 			};
 
-			void clear_deque(std::deque<char*>* deq, bool compact)
+			typedef ::pilo::err_t (*handle_deque_clear_func_type)(char* deque_char_pptr, bool compact);
+			static handle_deque_clear_func_type stc_handle_deque_clear_func[::pilo::core::rtti::wired_type::value_type_intrincs_count] =
 			{
-				if (deq != nullptr)
-				{
-					for (::pilo::i64_t idx = 0; idx < (::pilo::i64_t)(deq)->size(); idx++)
-					{
-						if ((deq)->at(idx) != nullptr)
-						{
-							PMF_HEAP_FREE((deq)->at(idx));
-							(deq)->at(idx) = nullptr;
-						}
+				[](char*, bool ) -> ::pilo::err_t {return ::pilo::mk_perr(PERR_MIS_DATA_TYPE); },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<::pilo::i8_t>*) deque_char_pptr)->clear();  if (compact) ((std::deque<::pilo::i8_t>*)  deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<::pilo::u8_t>*) deque_char_pptr)->clear();  if (compact) ((std::deque<::pilo::u8_t>*)  deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<::pilo::i16_t>*) deque_char_pptr)->clear(); if (compact) ((std::deque<::pilo::i16_t>*) deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<::pilo::u16_t>*) deque_char_pptr)->clear(); if (compact) ((std::deque<::pilo::u16_t>*) deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<::pilo::i32_t>*) deque_char_pptr)->clear(); if (compact) ((std::deque<::pilo::i32_t>*) deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<::pilo::u32_t>*) deque_char_pptr)->clear(); if (compact) ((std::deque<::pilo::u32_t>*) deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<::pilo::i64_t>*) deque_char_pptr)->clear(); if (compact) ((std::deque<::pilo::i64_t>*) deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<::pilo::u64_t>*) deque_char_pptr)->clear(); if (compact) ((std::deque<::pilo::u64_t>*) deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<bool>*) deque_char_pptr)->clear(); if (compact) ((std::deque<bool>*) deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<::pilo::f32_t>*) deque_char_pptr)->clear(); if (compact) ((std::deque<::pilo::f32_t>*) deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<::pilo::f64_t>*) deque_char_pptr)->clear(); if (compact) ((std::deque<::pilo::f64_t>*) deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t {
+					std::deque<char*>* deq = (std::deque<char*>*) deque_char_pptr;
+					for (std::deque<char*>::const_iterator cit = deq->cbegin(); cit != deq->cend(); cit++) {
+						::pilo::core::rtti::wired_type_deleter<char*>(*cit);
 					}
-					(deq)->clear();
+					deq->clear();
 					if (compact)
 						(deq)->shrink_to_fit();
-				}
+					return PILO_OK;
+				},
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t { ((std::deque<std::string>*) deque_char_pptr)->clear(); if (compact) ((std::deque<std::string>*) deque_char_pptr)->shrink_to_fit(); return PILO_OK; },
+				[](char* deque_char_pptr, bool compact) -> ::pilo::err_t {
+					std::deque<::pilo::tlv*>* deq = (std::deque<::pilo::tlv*> *) deque_char_pptr;
+					for (std::deque <::pilo::tlv*>::const_iterator cit = deq->cbegin(); cit != deq->cend(); cit++) {
+						::pilo::core::rtti::wired_type_deleter<::pilo::tlv*>(*cit);
+					}
+					deq->clear();
+					if (compact)
+						(deq)->shrink_to_fit();
+					return PILO_OK; 
+				},
+			};
+
+			::pilo::err_t  clear_deque(::pilo::u16_t vt, char* deq_ptr, bool compact)
+			{
+				return stc_handle_deque_clear_func[vt](deq_ptr, compact);
 			}
 
-			void clear_deque(std::deque<::pilo::tlv*>* deq, bool compact)
-			{
-				if (deq != nullptr)
-				{
-					for (::pilo::i64_t idx = 0; idx < (::pilo::i64_t) (deq)->size(); idx++)
-					{
-						if ((deq)->at(idx) != nullptr)
-						{
-							::pilo::tlv::deallocate(deq->at(idx));
-							(deq)->at(idx) = nullptr;
-						}
-					}
-					(deq)->clear();
-					if (compact)
-						(deq)->shrink_to_fit();
-				}
-			}
 			::pilo::err_t destroy_deque(::pilo::u16_t vt, char** data_pptr)
 			{
 				if (vt >= ::pilo::core::rtti::wired_type::value_type_intrincs_count)
 				{
 					PMC_ASSERT(false);
-					return 0;
+					return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
 				}
+
+				if (data_pptr == nullptr)
+					return ::pilo::mk_perr(PERR_NULL_PARAM);
+
+				clear_deque(vt, *data_pptr, false);
 
 				return stc_handle_deque_delete_func[vt](data_pptr);
 			}
@@ -186,9 +199,13 @@ namespace pilo
 					else
 					{
 						tmp = ::pilo::core::string::duplicate(val, -1);
-						if (tmp == nullptr)
-						{
-							destroy_deque(&deq);
+						if (tmp == nullptr)	{
+							for (std::deque<char*>::const_iterator cit = deq->cbegin(); cit != deq->cend(); cit++) {
+								::pilo::core::rtti::wired_type_deleter<char*>(*cit);
+							}
+							deq->clear();
+							delete deq;
+							return nullptr;
 						}
 						deq->push_back(tmp);
 					}
@@ -221,9 +238,13 @@ namespace pilo
 						else
 						{
 							tmp = ::pilo::core::string::duplicate(val, -1);
-							if (tmp == nullptr)
-							{
-								destroy_deque(&deq);
+							if (tmp == nullptr)	{
+								for (std::deque<char*>::const_iterator cit = deq->cbegin(); cit != deq->cend(); cit++) {
+									::pilo::core::rtti::wired_type_deleter<char*>(*cit);
+								}
+								deq->clear();
+								delete deq;
+								return nullptr;
 							}
 							deq->push_back(tmp);
 						}
@@ -257,9 +278,13 @@ namespace pilo
 						else
 						{
 							tmp = val->clone();
-							if (tmp == nullptr)
-							{
-								destroy_deque(&deq);
+							if (tmp == nullptr)	{
+								for (std::deque<::pilo::tlv*>::const_iterator cit = deq->cbegin(); cit != deq->cend(); cit++) {
+									::pilo::core::rtti::wired_type_deleter<::pilo::tlv*>(*cit);
+								}
+								deq->clear();
+								delete deq;
+								return nullptr;
 							}
 							deq->push_back(tmp);
 						}
@@ -294,7 +319,12 @@ namespace pilo
 						{
 							if (err != nullptr)
 								*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
-							destroy_deque((std::deque<char*>**) & cloned_deque);
+
+							for (std::deque<char*>::const_iterator cit = cloned_deque->cbegin(); cit != cloned_deque->cend(); cit++) {
+								::pilo::core::rtti::wired_type_deleter<char*>(*cit);
+							}
+							cloned_deque->clear();
+							delete cloned_deque;
 							return nullptr;
 						}
 						cloned_deque->push_back(tmp_ptr);
@@ -329,7 +359,11 @@ namespace pilo
 						{
 							if (err != nullptr)
 								*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
-							destroy_deque((std::deque<char*>**) & cloned_deque);
+							for (std::deque<char*>::const_iterator cit = cloned_deque->cbegin(); cit != cloned_deque->cend(); cit++) {
+								::pilo::core::rtti::wired_type_deleter<char*>(*cit);
+							}
+							cloned_deque->clear();
+							delete cloned_deque;
 							return nullptr;
 						}
 						cloned_deque->push_back(tmp_ptr);
@@ -360,11 +394,16 @@ namespace pilo
 					else
 					{
 						::pilo::tlv* cloned_tlv = (*it)->clone();
-						if (cloned_tlv == nullptr)
-						{
+						if (cloned_tlv == nullptr) {
 							if (err != nullptr)
 								*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
-							destroy_deque((std::deque<::pilo::tlv*>**) &cloned_deque);
+							if (err != nullptr)
+								*err = ::pilo::mk_perr(PERR_INSUF_HEAP);
+							for (std::deque<::pilo::tlv*>::const_iterator cit = cloned_deque->cbegin(); cit != cloned_deque->cend(); cit++) {
+								::pilo::core::rtti::wired_type_deleter<::pilo::tlv*>(*cit);
+							}
+							cloned_deque->clear();
+							delete cloned_deque;
 							return nullptr;
 						}
 						cloned_deque->push_back(cloned_tlv);

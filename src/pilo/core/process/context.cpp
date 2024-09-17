@@ -5,6 +5,7 @@
 #include "../string/fixed_width_line_formater.hpp"
 #include "process.hpp"
 #include "../memory/linked_buffer_node.hpp"
+#include <cstdlib>
 
 namespace pilo
 {
@@ -12,12 +13,20 @@ namespace pilo
     {
         namespace process
         {
-            static void s_on_exit(void)
+            static ::pilo::core::process::context* _s_pilo_context_instance = nullptr;
+
+            static int s_on_exit(void)
             {
                 printf("pilo on exit, finanlizing.....\n");
-
                 PILO_CONTEXT->finalize();
+
+
+                delete _s_pilo_context_instance;
+                return PILO_OK;
             }
+
+            
+
             context::context()
             {
                 char buffer[PMI_PATH_MAX] = { 0 };
@@ -51,7 +60,7 @@ namespace pilo
 
             context::~context()
             {
-                s_on_exit();
+                
             }
 
             ::pilo::tlv* context::allocate_tlv()
@@ -79,9 +88,6 @@ namespace pilo
                 char buffer[64] = {0};
                 std::stringstream ss;
                 ::pilo::core::string::fixed_width_line_formater formater;
-
-
-
 
                 formater.add_meta_field(16, PMI_FIXED_WIDTH_LINE_FMT_LEFT_ALIGH, "Item ");
                 formater.add_meta_field(56, PMI_FIXED_WIDTH_LINE_FMT_LEFT_ALIGH, "Info");
@@ -130,6 +136,12 @@ namespace pilo
                 formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_dir::tmp).fullpath());
                 ss << std::endl;
 
+                formater.format_field(ss, (::pilo::i64_t)0, (const char*)"Cmd-Args");
+                formater.format_field(ss, 1, this->_cmdline_arg.args_to_string().c_str());
+                ss << std::endl;
+                formater.format_field(ss, (::pilo::i64_t)0, (const char*)"Cmd-Targets");
+                formater.format_field(ss, 1, this->_cmdline_arg.targets_to_string().c_str());
+                ss << std::endl;
 
                 return ss.str();
             }
@@ -143,13 +155,14 @@ namespace pilo
 
                 err = _core_config->load_or_save_default();
                 if (err != PILO_OK) {
-                    ::pilo::core::io::file_formatted_output(stderr, "load_or_save_default core config failed. (%s)", ::pilo::str_err(err, nullptr, true).c_str());
+                    ::pilo::core::io::file_formatted_output(stderr, "load_or_save_default core config failed. (%s)\n", ::pilo::str_err(err, nullptr, true).c_str());
                     return err;
                 }
 
-                err = _cmdline_arg.parse(argc, argv);
+                std::string errmsg;
+                err = _cmdline_arg.parse(argc, argv, errmsg);
                 if (err != PILO_OK) {
-                    ::pilo::core::io::file_formatted_output(stderr, "Parse cmdline arguments failed. (%s)", ::pilo::str_err(err,nullptr, true).c_str());
+                    ::pilo::core::io::file_formatted_output(stderr, "Parse cmdline arguments failed. (%s)\n", errmsg.c_str());
                     return err;
                 }
 
@@ -198,6 +211,8 @@ namespace pilo
                 if (err != PILO_OK)
                     return err;
 
+
+                _onexit(s_on_exit);
                 _initialized = true;
 
                 return PILO_OK;
@@ -210,7 +225,7 @@ namespace pilo
             }
 
 
-            static ::pilo::core::process::context* _s_pilo_context_instance = nullptr;
+            
 
             ::pilo::err_t pilo_startup(int argc, char* argv[])
             {

@@ -97,6 +97,9 @@
 
 #define PERR_FILE_SETSIZE_FAIL  (80)
 #define PERR_PARSE_JSON_FAIL    (81)
+#define PERR_CREATE_TLV_FAIL    (82)
+#define PERR_CREATE_OBJ_FAIL    (83)
+#define PERR_UNDEF              (84)
 
 
 #define PILO_CHKERR_RET(err, exp)         do {if ( (err = (exp)) != PILO_OK ) { return err; }} while(0);

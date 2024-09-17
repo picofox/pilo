@@ -47,9 +47,20 @@ namespace pilo {
                 bool is_single() const { return _wrapper_type == ::pilo::core::rtti::wired_type::wrapper_single; }
                 bool is_list() const { return _wrapper_type == ::pilo::core::rtti::wired_type::wrapper_array; }
                 bool is_dict() const { return _wrapper_type == ::pilo::core::rtti::wired_type::wrapper_dict; }
+                ::pilo::u8_t wrapper_type() const { return _wrapper_type; }
+                ::pilo::u8_t key_type() const { return _key_type; }
                 ::pilo::u16_t value_type() const { return this->_val_type;  }
                 ::pilo::i32_t min_count() const { return _min_sub_arg_count; }
                 ::pilo::i32_t max_count() const { return _max_sub_arg_count; }
+
+                ::pilo::err_t can_append_sub_arg(::pilo::i32_t current_cnt) const
+                {
+                    if (_max_sub_arg_count >= 0 && current_cnt >= _max_sub_arg_count) {
+
+                        return ::pilo::mk_perr(PERR_LEN_TOO_LARGE);
+                    }
+                    return PILO_OK;
+                }
 
                 //l:log-level:u8:1:1:true
 
@@ -67,6 +78,23 @@ namespace pilo {
                 inline const std::string& long_name() const { return _long_name; }
                 inline bool required() const { return _flags.test_value(Required);  }
 
+                std::string name() const
+                {
+                    std::string str;
+                    if (_short_name >= 0 && !_long_name.empty()) {
+                        str += _short_name;
+                        str += ":";
+                        str += _long_name;
+                    }
+                    else if (_short_name >= 0) {
+                        str += _short_name;
+                    }
+                    else if (!_long_name.empty()) {
+                        str += _long_name;
+                    }
+                    return str;
+                }
+                
             private:
                 char                            _short_name;
                 ::pilo::u8_t                    _wrapper_type;
@@ -132,7 +160,14 @@ namespace pilo {
 
 
                 bool has_arg() const;
-
+                const cmdline_spec* spec(char c) const { return _short_specs[c]; }
+                const cmdline_spec* spec(const std::string& l) const 
+                { 
+                    std::unordered_map<std::string, cmdline_spec*>::const_iterator it = _long_specs.find(l);
+                    if (it == _long_specs.end())
+                        return nullptr;
+                    return it->second; 
+                }
 
             private:
                 cmdline_spec* _short_specs[128];

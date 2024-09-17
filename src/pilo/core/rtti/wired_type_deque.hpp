@@ -13,30 +13,9 @@ namespace pilo
 	{
 		namespace rtti
 		{
-
-			template<typename TA_VALUE>	inline void clear_deque(std::deque<TA_VALUE>* deq, bool compact)
-			{
-				if (deq != nullptr)
-				{
-					(deq)->clear();
-					if (compact)
-						(deq)->shrink_to_fit();
-				}
-			}
-			void clear_deque(std::deque<char*>* deq, bool compact);
-			void clear_deque(std::deque<::pilo::tlv*>* deq, bool compact);
-			
+			::pilo::err_t  clear_deque(::pilo::u16_t vt, char* deq_ptr, bool compact);
 
 			::pilo::err_t destroy_deque(::pilo::u16_t vt, char** data_pptr);
-			template<typename TA_VALUE>	inline void destroy_deque(std::deque<TA_VALUE>** deq)
-			{
-				if (deq != nullptr && *deq != nullptr)
-				{
-					clear_deque(*deq, true);
-					delete* deq;
-					*deq = nullptr;
-				}				
-			}
 
 
 			char* create_deque(::pilo::u16_t valtype, ::pilo::err_t*);
@@ -70,7 +49,6 @@ namespace pilo
 				{
 					if (err != nullptr)
 						*err = ::pilo::mk_perr( PERR_INSUF_HEAP);
-					destroy_deque((std::deque<TA_VALUE>**) &cloned_deque);
 					return nullptr;
 				}
 				return cloned_deque;
@@ -79,6 +57,7 @@ namespace pilo
 			std::deque<char*>* clone_deque(std::deque<char*>* src, ::pilo::err_t* err);
 			std::deque<char*>* clone_deque(std::deque<const char*>* src, ::pilo::err_t* err);
 			std::deque<::pilo::tlv*>* clone_deque(std::deque<::pilo::tlv*>* src, ::pilo::err_t* err);
+
 			char* clone_deque(::pilo::u16_t vt, char*, pilo::err_t*);
 
 

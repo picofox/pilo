@@ -11,7 +11,8 @@ namespace pilo
 		{
 
 			void delete_tlv(::pilo::tlv* t);
-			
+
+			void array_clear();
 
 			template <typename T>
 			inline void wired_type_deleter(T)

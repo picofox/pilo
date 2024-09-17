@@ -183,12 +183,11 @@ namespace pilo
 
                 tlv_pool_type _tlv_pool;
                 linked_buffer_node_4k_pool_type *_linked_buffer_node_pool;
-
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;
 
-
-                cmdline_arg                                          _cmdline_arg;
                 ::std::shared_ptr<::pilo::core::config::core_config> _core_config;
+                cmdline_arg                                          _cmdline_arg;
+                
                 ::pilo::core::logging::logger_manager _logger_manager;
                 
             };

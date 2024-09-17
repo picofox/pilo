@@ -14,8 +14,37 @@ namespace pilo
 	{
 		namespace rtti
 		{
+			template<typename TA_KEY>
+			::pilo::err_t _map_ptr_clear_char_ptr(std::map<TA_KEY, char*> * map_ptr)
+			{
+				typename std::map<TA_KEY, char*>::iterator it = map_ptr->begin();
+				for (; it != map_ptr->end(); it++)
+				{
+					if (it->second != nullptr)
+					{
+						PMF_HEAP_FREE(it->second);
+					}
+				}
+				map_ptr->clear();
+				return PILO_OK;
+			}
 
+			template<typename TA_KEY>
+			::pilo::err_t _map_ptr_clear_tlv(std::map<TA_KEY, ::pilo::tlv*>* map_ptr)
+			{
+				typename std::map<TA_KEY, ::pilo::tlv*>::iterator it = map_ptr->begin();
+				for (; it != map_ptr->end(); it++)
+				{
+					if (it->second != nullptr)
+					{
+						delete_tlv(it->second);
+					}
+				}
+				map_ptr->clear();
+				return PILO_OK;
+			}
 
+			::pilo::err_t clear_map(::pilo::u8_t kt, ::pilo::i16_t vt, char* map_pptr);
 
 			template<typename TA_KEY, typename TA_VALUE> inline ::pilo::err_t map_ptr_insert(char* &map_char_ptr
 				, std::initializer_list<std::pair<TA_KEY, TA_VALUE>> list, bool is_force)

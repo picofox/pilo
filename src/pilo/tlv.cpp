@@ -646,6 +646,12 @@ namespace pilo
             },
     };
 
+    ::pilo::err_t tlv::push_back_value(const char* cstr, ::pilo::i64_t len)
+    {
+        stc_array_from_cstr_dispatcher.dispatch(this->value_type())(this, cstr, (::pilo::i32_t)len);
+        return PILO_OK;
+    }
+
     ::pilo::err_t tlv::insert_value(const char* key, ::pilo::i32_t klen, const char* value, ::pilo::i32_t vlen, bool is_force)
     {
         if (key == nullptr)
@@ -664,34 +670,6 @@ namespace pilo
 
     }
 
-   
-   
-    
-
-
-
-    //void stc_wrapper_clear_na(::pilo::tlv, bool ) {  }
-    //void stc_wrapper_clear_i8(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i8_t>(compact); }
-    //void stc_wrapper_clear_u8(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u8_t>(compact); }
-    //void stc_wrapper_clear_i16(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i16_t>(compact); }
-    //void stc_wrapper_clear_u16(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u16_t>(compact); }
-    //void stc_wrapper_clear_i32(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i32_t>(compact); }
-    //void stc_wrapper_clear_u32(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u32_t>(compact); }
-    //void stc_wrapper_clear_i64(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::i64_t>(compact); }
-    //void stc_wrapper_clear_u64(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::u64_t>(compact); }
-    //void stc_wrapper_clear_bool(::pilo::tlv* t, bool compact) { t->_wrapper_clear<bool>(compact); }
-    //void stc_wrapper_clear_f32(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::f32_t>(compact); }
-    //void stc_wrapper_clear_f64(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::f64_t>(compact); }
-    //void stc_wrapper_clear_bytes(::pilo::tlv* t, bool compact) { t->_wrapper_clear<char*>(compact); }    
-    //void stc_wrapper_clear_str(::pilo::tlv* t, bool compact) { t->_wrapper_clear<std::string>(compact);  }
-    //void stc_wrapper_clear_tlv(::pilo::tlv* t, bool compact) { t->_wrapper_clear<::pilo::tlv*>(compact); }
-
-    //static ::pilo::core::pattern::function_dispatcher<void(::pilo::tlv*, bool), ::pilo::core::rtti::wired_type::value_type_intrincs_count> stc_wrapper_cleaner_dispatcher(
-    //    nullptr, stc_wrapper_clear_i8, stc_wrapper_clear_u8, stc_wrapper_clear_i16
-    //    , stc_wrapper_clear_u16, stc_wrapper_clear_i32, stc_wrapper_clear_u32, stc_wrapper_clear_i64
-    //    , stc_wrapper_clear_u64, stc_wrapper_clear_bool, stc_wrapper_clear_f32, stc_wrapper_clear_f64
-    //    , stc_wrapper_clear_bytes, stc_wrapper_clear_str, stc_wrapper_clear_tlv
-    //);
 
 
     static ::pilo::core::pattern::function_dispatcher<::pilo::err_t(const ::pilo::tlv*, ::pilo::core::memory::byte_buffer_interface*), ::pilo::core::rtti::wired_type::value_type_intrincs_count> stc_single_serialzer_dispatcher
@@ -1030,14 +1008,6 @@ namespace pilo
         return PILO_OK;
     }
 
-    //void tlv::wrapper_clear(bool compact)
-    //{
-    //    if (this->_type.value_type() < ::pilo::core::rtti::wired_type::value_type_intrincs_count)
-    //    {
-    //        stc_wrapper_cleaner_dispatcher.dispatch(this->_type.value_type())(this, compact);
-    //    }
-    //}
-
     ::pilo::err_t tlv::serialize(::pilo::core::memory::serializable_header_interface* header, ::pilo::core::memory::byte_buffer_interface* byte_buffer) const
     {
         ::pilo::i64_t header_begin_pos = byte_buffer->write_pos();
@@ -1204,6 +1174,224 @@ namespace pilo
         }
 
         return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
+    }
+
+    ::pilo::err_t tlv::_value_to_string(std::stringstream& ss) const
+    {
+        ::pilo::err_t err = PILO_OK;
+        if (this->_type.wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_single)
+        {            
+            if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_na)
+            {
+                ss << "";
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_boolean)
+            {
+                ss << (_i8 == 0 ? "false" : "true");
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_i8)
+            {
+                ss << (int)_i8;
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_u8)
+            {
+                ss << (int)_u8;
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_i16)
+            {
+                ss << _i16;
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_u16)
+            {
+                ss << _u16;
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_i32)
+            {
+                ss << _i32;
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_u32)
+            {
+                ss << _u32;
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_i64)
+            {
+                ss << _i64;
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_u64)
+            {
+                ss << _u64;
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_f32)
+            {
+                ss << _f32;
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_f64)
+            {
+                ss << _f64;
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_str)
+            {
+                if (_dynamic_data != nullptr)
+                {
+                    ss << "\"";
+                    ss << * ((std::string*) this->_dynamic_data);
+                    ss << "\"";
+                }
+                else
+                {
+                    ss << "null";
+                }
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_bytes)
+            {
+                if (this->_dynamic_data == nullptr)
+                {
+                    ss << "null";
+                }
+                else
+                {
+                    ss << "\"";
+                    ss << this->_dynamic_data;
+                    ss << "\"";
+                }
+            }
+            else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_tlv)
+            {
+                if (this->_dynamic_data == nullptr)
+                {
+                    ss << "null";
+                }
+                else
+                {
+                    err = _value_to_string(ss);
+                }
+            }
+            else
+            {
+
+            }
+
+        }
+        else if (this->_type.wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_array)
+        {
+            if (this->_dynamic_data == nullptr)
+            {
+                ss << "[]";
+            }
+            else
+            {
+                ss <<"[";
+                for (::pilo::i32_t i = 0; i < _size; i++)
+                {
+                    if (i > 0)
+                    {
+                        ss << ",";
+                    }
+                    if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_na)
+                    {
+                        ss << "";
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_boolean)
+                    {
+                        ss << (this->get<bool>(i, &err) ? "true" : "false");
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_i8)
+                    {
+                        ss << (int)this->get<::pilo::i8_t>(i, &err);
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_u8)
+                    {
+                        ss << (unsigned int)this->get<::pilo::u8_t>(i, &err);
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_i16)
+                    {
+                        ss << this->get<::pilo::i16_t>(i, &err);
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_u16)
+                    {
+                        ss << this->get<::pilo::u16_t>(i, &err);
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_i32)
+                    {
+                        ss << this->get<::pilo::i32_t>(i, &err);
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_u32)
+                    {
+                        ss << this->get<::pilo::u32_t>(i, &err);
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_i64)
+                    {
+                        ss << this->get<::pilo::i64_t>(i, &err);
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_u64)
+                    {
+                        ss << this->get<::pilo::u64_t>(i, &err);
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_f32)
+                    {
+                        ss << this->get<::pilo::f32_t>(i, &err);
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_f64)
+                    {
+                        ss << this->get<::pilo::f64_t>(i, &err);
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_str)
+                    {
+                        std::string str0 = this->get<std::string>(i, &err);
+                        ss << "\"";
+                        ss << str0;
+                        ss << "\"";
+
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_bytes)
+                    {
+                        char* ptr = this->get<char*>(i, &err);
+
+                        if (ptr == nullptr)
+                            ss << "\"\"";
+                        else
+                        {
+                            ss << "\"";
+                            ss << ptr;
+                            ss << "\"";
+                        }
+                    }
+                    else if (this->_type.value_type() == ::pilo::core::rtti::wired_type::value_type_tlv)
+                    {
+                        this->get<tlv*>(i, &err)->_to_string(ss);
+                    }
+                    else
+                    {
+                        ss << "<invalid value type>" << ",";
+                    }
+                }
+                ss << "]";
+            }
+        }
+        else if (this->_type.wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_dict)
+        {
+            if (this->_dynamic_data == nullptr)
+            {
+                ss << "";
+            }
+            else
+            {
+                ss << ",\"v\":{";
+                err = this->_internal_map_travelsal(0, false, nullptr, nullptr, (void*)&ss);
+                ss << "}";
+                if (err != PILO_OK)
+                {
+                    return err;
+                }
+            }
+        }
+        else
+        {
+            ss << "[Invalid Wrapper Type]";
+        }
+
+        return PILO_OK;
+    
     }
 
     ::pilo::err_t tlv::_to_string(std::stringstream& ss) const
@@ -2800,6 +2988,33 @@ namespace pilo
             return ::pilo::mk_perr(PERR_INVALID_PARAM);
         
         return tlvp->insert_value(ret_parts[0].ptr, (::pilo::i32_t) ret_parts[0].length, ret_parts[1].ptr, (::pilo::i32_t) ret_parts[1].length, true);
+
+    }
+
+    ::pilo::err_t tlv::clear(bool compact)
+    {
+        if (this->_type.is_single()) {
+            _clear_dynamic_data();
+            _size = 0;
+        }
+        else if (this->_type.is_array()) {
+            if (this->_dynamic_data != nullptr) {
+                _size = 0;
+                return ::pilo::core::rtti::clear_deque(this->value_type(), this->_dynamic_data, compact);
+            }
+
+        }
+        else if (this->_type.is_dict()) {
+            if (this->_dynamic_data != nullptr) {
+                _size = 0;
+                return ::pilo::core::rtti::clear_map(this->key_type(), this->value_type(), this->_dynamic_data);
+            }
+        }
+        else {
+            return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
+        }
+
+        return PILO_OK;
 
     }
 

@@ -37,7 +37,7 @@ namespace pilo
         , "has previous error", "invalid io state", "fs node not a regular file", "io seek failed", "lock file failed"
         , "unlock file failed", "not initialized.", "already initialized.", "end of file", "tell file pos failed."
 
-        , "set file size failed.", "parse json fail", "", "", ""
+        , "set file size failed.", "parse json fail", "create tlv failed", "create object failed", "undefined."
         , "", "", "", "", ""
         , "", "", "", "", ""
         , "", "", "", "", ""
