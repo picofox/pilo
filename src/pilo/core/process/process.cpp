@@ -152,16 +152,29 @@ namespace pilo
             {
                 char filename[PMI_PATH_MAX] = { 0 };
                 ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
-                int fd = -1;
-                fd = open("/proc/self/comm", O_RDONLY);
-                ssize_t n = ::read(fd, filename, sizeof(filename));
-                if (n < 0) {
-                    ::close(fd);
+                ssize_t len = readlink("/proc/self/exe", filename, sizeof(filename) - 1);
+                if (len < 0 || (size_t) len >= sizeof(filename)) {
                     return nullptr;
                 }
-                int len = (int) ::pilo::core::string::character_count(filename);
-                cb.check_space(len + 1);
-                ::pilo::core::string::copyz(cb.begin(), cb.capacity(), filename);
+                filename[len] = '\0';
+                const char* p0 = ::pilo::core::string::rfind_char(filename, len, '/');
+                const char* p1 = ::pilo::core::string::rfind_char(filename, len, '\\');
+                if (p0 == nullptr && p1 == nullptr) {
+                    p0 = filename;
+                } else if (p0 == nullptr) {
+                    p0 = p1 + 1;
+                } else if (p1 == nullptr) {
+                    p0 ++;
+                } else {
+                    if (p0 < p1) {
+                        p0 = p1 + 1;
+                    } else {
+                        p0 ++;
+                    }
+                }
+                len = len - (p0 - filename);
+                cb.check_space((int) (len + 1));
+                ::pilo::core::string::copyz(cb.begin(), cb.capacity(), p0);
                 ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)len);
                 return cb.begin();
             }
@@ -170,28 +183,51 @@ namespace pilo
             {
                 char filename[PMI_PATH_MAX] = { 0 };
                 ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
-                int fd = -1;
-                fd = open("/proc/self/comm", O_RDONLY);
-                ssize_t n = ::read(fd, filename, sizeof(filename));
-                if (n < 0) {
-                    ::close(fd);
+                ssize_t len = readlink("/proc/self/exe", filename, sizeof(filename) - 1);
+                if (len < 0 || (size_t) len >= sizeof(filename)) {
                     return nullptr;
                 }
-                int len = (int) ::pilo::core::string::character_count(filename);
-                cb.check_space(len + 1);
-                ::pilo::core::string::copyz(cb.begin(), cb.capacity(), filename);
+                filename[len] = '\0';
+                const char* p0 = ::pilo::core::string::rfind_char(filename, len, '/');
+                const char* p1 = ::pilo::core::string::rfind_char(filename, len, '\\');
+                if (p0 == nullptr && p1 == nullptr) {
+                    p0 = filename;
+                } else if (p0 == nullptr) {
+                    p0 = p1 + 1;
+                } else if (p1 == nullptr) {
+                    p0 ++;
+                } else {
+                    if (p0 < p1) {
+                        p0 = p1 + 1;
+                    } else {
+                        p0 ++;
+                    }
+                }
+                len = len - (p0 - filename);
+                if (suffix == nullptr)
+                    suffix_len = 0;
+                else if (suffix_len < 0)
+                    suffix_len = (int) ::pilo::core::string::character_count(suffix);
+                cb.check_space((int) (len + suffix_len + 1));
+                ::pilo::core::string::copyz(cb.begin(), cb.capacity(), p0);
                 ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)len);
 
-                const char* firstdot = ::pilo::core::string::find_char(cb.begin(), len, '.');
+                const char * firstdot = ::pilo::core::string::find_char(cb.begin(), len, '.');
                 if (firstdot != nullptr) {
-                    ::pilo::i32_t base_len = (::pilo::i32_t)(firstdot - cb.begin());
+                    auto base_len = (::pilo::i32_t)(firstdot - cb.begin());
                     cb.set_value(base_len, 0);
                     cb.set_size(base_len);
                     ::pilo::core::string::n_copyz(cb.ptr(), cb.space_available(), suffix, suffix_len);
                     cb.set_value(base_len + suffix_len, 0);
                     cb.set_size(base_len + suffix_len);
-
                     ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)(base_len + suffix_len));
+                } else {
+                    cb.set_value((int)len, 0);
+                    cb.set_size((int)len);
+                    ::pilo::core::string::n_copyz(cb.ptr(), cb.space_available(), suffix, suffix_len);
+                    cb.set_value((int)len + suffix_len, 0);
+                    cb.set_size((int)len + suffix_len);
+                    ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)(len + suffix_len));
                 }
                 return cb.begin();
             }

@@ -15,16 +15,22 @@ namespace pilo
         {
             static ::pilo::core::process::context* _s_pilo_context_instance = nullptr;
 
+#ifdef WINDOWS
             static int s_on_exit(void)
             {
                 printf("pilo on exit, finanlizing.....\n");
                 PILO_CONTEXT->finalize();
-
-
                 delete _s_pilo_context_instance;
                 return PILO_OK;
             }
-
+#else
+            static void s_on_exit(void)
+            {
+                printf("pilo on exit, finanlizing.....\n");
+                PILO_CONTEXT->finalize();
+                delete _s_pilo_context_instance;
+            }
+#endif
             
 
             context::context()
@@ -153,6 +159,7 @@ namespace pilo
 
                 ::pilo::err_t err = PILO_OK;
 
+
                 err = _core_config->load_or_save_default();
                 if (err != PILO_OK) {
                     ::pilo::core::io::file_formatted_output(stderr, "load_or_save_default core config failed. (%s)\n", ::pilo::str_err(err, nullptr, true).c_str());
@@ -211,8 +218,11 @@ namespace pilo
                 if (err != PILO_OK)
                     return err;
 
-
+#ifdef WINDOWS
                 _onexit(s_on_exit);
+#else
+                atexit(s_on_exit);
+#endif
                 _initialized = true;
 
                 return PILO_OK;

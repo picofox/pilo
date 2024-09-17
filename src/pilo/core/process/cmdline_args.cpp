@@ -130,35 +130,50 @@ namespace pilo
                                 if (err != PILO_OK) {
                                     return err;
                                 }
-                                bool is_all_flag = _is_all_flag(argv[i] + 2, arg_len - 2);
-                                if (is_all_flag) {
-                                    for (int k = 0; k < arg_len - 2; k++) {
-                                        char sc = argv[i][2 + k];
-                                        spec = PILO_CONTEXT->core_config()->cmdline_arg_spec().spec(sc);
-                                        if (spec == nullptr) {
-                                            _compose_errmsg(errmsg, "Spec for Short-arg ", "", "not found.", nullptr);
-                                            return ::pilo::mk_perr(PERR_INVALID_PARAM);
+                                if (spec->is_flag()) { //-f??
+                                    bool is_all_flag = _is_all_flag(argv[i] + 2, arg_len - 2);
+                                    if (is_all_flag) { //-fgh
+                                        for (int k = 0; k < arg_len - 2; k++) {
+                                            char sc = argv[i][2 + k];
+                                            spec = PILO_CONTEXT->core_config()->cmdline_arg_spec().spec(sc);
+                                            if (spec == nullptr) {
+                                                _compose_errmsg(errmsg, "Spec for Short-arg ", "", "not found.", nullptr);
+                                                return ::pilo::mk_perr(PERR_INVALID_PARAM);
+                                            }
+                                            err = _set_arg(spec, errmsg, nullptr, 0, &is_all_set);
+                                            if (err != PILO_OK) {
+                                                return err;
+                                            }
                                         }
-                                        err = _set_arg(spec, errmsg, nullptr, 0, &is_all_set);
-                                        if (err != PILO_OK) {
-                                            return err;
-                                        }
+                                        spec = nullptr;
                                     }
-                                    spec = nullptr;
-                                }
-                                else {                                    
+                                    else { // -fsubarg err
+                                        _compose_errmsg(errmsg, "Spec for Short-arg ", spec->name().c_str(), "is flag can't have sub arg:", argv[i]+2);
+                                        return ::pilo::mk_perr(PERR_INVALID_PARAM);
+                                    }
+                                } else { //-a
                                     err = _set_arg(spec, errmsg, argv[i] + 2, arg_len - 2, &is_all_set);
                                     if (err != PILO_OK) {
                                         return err;
                                     }
                                 }
+
+
                             }
                         }
                         else {
                             do_targets = true;
                             spec = nullptr;
-                            PILO_CHKERR_RET(err, PILO_CONTEXT->core_config()->cmdline_arg_spec().target_spec().can_append_sub_arg((::pilo::i32_t)this->_targets.size()));
-                            PILO_CHKERR_RET(err, _make_target(argv[i], arg_len));
+                            err = PILO_CONTEXT->core_config()->cmdline_arg_spec().target_spec().can_append_sub_arg((::pilo::i32_t)this->_targets.size());
+                            if (err != PILO_OK) {
+                                _compose_errmsg(errmsg, "Target full, can not add ", argv[i], nullptr, nullptr);
+                                return err;
+                            }
+                            err = _make_target(argv[i], arg_len);
+                            if (err != PILO_OK) {
+                                _compose_errmsg(errmsg, "make target ", argv[i], "failed", nullptr);
+                                return err;
+                            }
                         }
                     }
                     else { //spec is valid

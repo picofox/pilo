@@ -25,7 +25,7 @@ namespace pilo {
                     , _val_type(::pilo::core::rtti::wired_type::value_type_na)
                     , _flags(0)
                     , _min_sub_arg_count(0)
-                    , _max_sub_arg_count(0)
+                    , _max_sub_arg_count(-1)
                     , _long_name("")
                 {}
 
@@ -39,7 +39,7 @@ namespace pilo {
                     _val_type = ::pilo::core::rtti::wired_type::value_type_na;
                     _flags = 0;
                     _min_sub_arg_count = 0;
-                    _max_sub_arg_count = 0;
+                    _max_sub_arg_count = -1;
                     _long_name = "";
                 }
 

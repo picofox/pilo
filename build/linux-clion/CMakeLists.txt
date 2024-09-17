@@ -106,7 +106,8 @@ set_target_properties(pilo_func_test-static PROPERTIES
     COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
 )
 add_custom_command(TARGET pilo_func_test-static PRE_BUILD
-        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_func_test-static*
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_func_test-static-debug
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_func_test-static-release
 )
 
 add_executable(pilo_func_test-shared ${PILOFUNC_TEST_CPPS} ${PILOFUNC_TEST_PPS} ${PILOFUNC_TEST_HS})
@@ -123,8 +124,9 @@ set_target_properties(pilo_func_test-shared PROPERTIES
     COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
     COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
 )
-add_custom_command(TARGET pilo_func_test-static PRE_BUILD
-        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_func_test-shared*
+add_custom_command(TARGET pilo_func_test-shared PRE_BUILD
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_func_test-shared-debug
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_func_test-shared-release
 )
 # for stable-test
 set(PILO_STABLE_DIR "${PILO_PROJECT_DIR}/src/pilo_stable_test")
@@ -148,7 +150,8 @@ set_target_properties(pilo_stable_test-static PROPERTIES
     COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
 )
 add_custom_command(TARGET pilo_stable_test-static PRE_BUILD
-        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_stable_test-static*
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_stable_test-static-debug
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_stable_test-static-release
 )
 
 add_executable(pilo_stable_test-shared ${PILOSTABLE_TEST_CPPS} ${PILOSTABLE_TEST_PPS} ${PILOSTABLE_TEST_HS})
@@ -166,7 +169,8 @@ set_target_properties(pilo_stable_test-shared PROPERTIES
     COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
 )
 add_custom_command(TARGET pilo_stable_test-shared PRE_BUILD
-        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_stable_test-shared*
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_stable_test-shared-debug
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_stable_test-shared-release
 )
 
 # for performance-test
@@ -191,7 +195,8 @@ set_target_properties(pilo_performance_test-static PROPERTIES
     COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
 )
 add_custom_command(TARGET pilo_performance_test-static PRE_BUILD
-        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_performance_test-static*
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_performance_test-static-debug
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_performance_test-static-release
 )
 
 
@@ -211,5 +216,6 @@ set_target_properties(pilo_performance_test-shared PROPERTIES
     COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
 )
 add_custom_command(TARGET pilo_performance_test-shared PRE_BUILD
-        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_performance_test-shared*
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_performance_test-shared-debug
+        COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_performance_test-shared-release
 )
