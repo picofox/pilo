@@ -5,7 +5,12 @@
 #ifdef WINDOWS
 #include <windows.h>
 #include <winternl.h>
+
+#else
+extern char** environ;
 #endif
+
+#include <cstdlib>
 
 namespace pilo
 {
@@ -17,7 +22,7 @@ namespace pilo
 
 #ifdef WINDOWS
             char* xpf_get_proc_name(char* buffer, ::pilo::i32_t bufsz, ::pilo::i32_t* rlen)
-            {
+            {               
                 char tmp_buffer[PMI_PATH_MAX] = { 0 };
                 ::pilo::u32_t len = GetModuleFileName(NULL, tmp_buffer, sizeof(tmp_buffer));
                 ::pilo::char_buffer_t   cb(buffer, bufsz, 0, false);
@@ -83,6 +88,47 @@ namespace pilo
                 else {
                     return nullptr;
                 }
+            }
+
+            ::pilo::err_t xpf_iterate_enviroment_variable(env_iter_func_type func, void* ctx, bool ignore_err)
+            {
+                char** env = *__p__environ();
+                while (env != nullptr) 
+                {
+                    ::pilo::i64_t tmplen = ::pilo::core::string::character_count(*env);
+                    if (tmplen < 0) {
+                        if (!ignore_err) {
+                            return ::pilo::mk_perr(PERR_NULL_PTR);
+                        }
+                        continue;
+                    }
+
+                    const char* delim = ::pilo::core::string::find_char(*env, tmplen,  '=');
+                    if (delim == nullptr) {
+                        if (!ignore_err) {
+                            return ::pilo::mk_perr(PERR_NULL_PTR);
+                        }
+                        continue;
+                    }
+                    ::pilo::i32_t key_len = (::pilo::i32_t)(delim - *env);
+                    if (key_len <= 0) {
+                        if (!ignore_err) {
+                            return ::pilo::mk_perr(PERR_INV_LEN);
+                        }
+                        continue;
+                    }
+                    const char* val = delim + 1;
+                    ::pilo::err_t err = func(*env, key_len, val, (::pilo::i32_t) (tmplen - key_len - 1), ctx);
+                    if (err != PILO_OK) {
+                        if (!ignore_err) {
+                            return err;
+                        }
+                        continue;
+                    }
+
+                    env++;
+                }
+                return ::pilo::err_t();
             }
 
             os_pid_t xpf_current_process_id()
@@ -230,6 +276,47 @@ namespace pilo
                     ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)(len + suffix_len));
                 }
                 return cb.begin();
+            }
+
+            ::pilo::err_t xpf_iterate_enviroment_variable(env_iter_func_type func, void* ctx, bool ignore_err)
+            {
+                char** env = environ;
+                while (env != nullptr)
+                {
+                    ::pilo::i64_t tmplen = ::pilo::core::string::character_count(*env);
+                    if (tmplen < 0) {
+                        if (!ignore_err) {
+                            return ::pilo::mk_perr(PERR_NULL_PTR);
+                        }
+                        continue;
+                    }
+
+                    const char* delim = ::pilo::core::string::find_char(*env, tmplen, '=');
+                    if (delim == nullptr) {
+                        if (!ignore_err) {
+                            return ::pilo::mk_perr(PERR_NULL_PTR);
+                        }
+                        continue;
+                    }
+                    ::pilo::i32_t key_len = (::pilo::i32_t)(delim - *env);
+                    if (key_len <= 0) {
+                        if (!ignore_err) {
+                            return ::pilo::mk_perr(PERR_INV_LEN);
+                        }
+                        continue;
+                    }
+                    const char* val = delim + 1;
+                    ::pilo::err_t err = func(*env, key_len, val, (::pilo::i32_t)(tmplen - key_len - 1), ctx);
+                    if (err != PILO_OK) {
+                        if (!ignore_err) {
+                            return err;
+                        }
+                        continue;
+                    }
+
+                    env++;
+                }
+                return ::pilo::err_t();
             }
 
 #endif
