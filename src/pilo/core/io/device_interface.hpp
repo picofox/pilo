@@ -60,7 +60,7 @@ namespace pilo
             public:
                 virtual ::pilo::err_t initialize(::pilo::tlv * param) = 0; 
                 virtual ::pilo::err_t open(creation_mode cm, access_permission perm, dev_open_flags f) = 0;
-                virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, predefined_pilo_dir prefix, dev_open_flags f) = 0;
+                virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, predefined_pilo_path prefix, dev_open_flags f) = 0;
                 virtual ::pilo::err_t open(const ::pilo::core::io::path* p, creation_mode cm, access_permission perm, dev_open_flags f) = 0;
                 virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, dev_open_flags f) = 0;
                 virtual ::pilo::err_t read(char * buffer, ::pilo::i64_t rbs, ::pilo::i64_t * n_read) = 0;

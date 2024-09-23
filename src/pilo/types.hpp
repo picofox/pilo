@@ -663,7 +663,7 @@ namespace pilo
 		typedef _pilo_truetype     is_basetype;
 	};
 
-	enum class predefined_pilo_dir
+	enum class predefined_pilo_path
 	{
 		cwd = 0,
 		exe,
@@ -672,6 +672,7 @@ namespace pilo
 		cnf,
 		log,
 		tmp,
+		core_cfg,
 		count,
 	};
 

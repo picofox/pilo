@@ -110,7 +110,7 @@ namespace pilo
                 ss << std::endl;
 
                 formater.format_field(ss, (::pilo::i64_t) 0, (const char*) "Executable");
-                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_dir::exe).fullpath());
+                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_path::exe).fullpath());
                 ss << std::endl;
 
                 ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "%d (%d)", _pid, _ppid);
@@ -119,27 +119,31 @@ namespace pilo
                 ss << std::endl;
 
                 formater.format_field(ss, (::pilo::i64_t)0, (const char*)"CWD");
-                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_dir::cwd).fullpath());
+                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_path::cwd).fullpath());
                 ss << std::endl;
 
                 formater.format_field(ss, (::pilo::i64_t)0, (const char*)"Home");
-                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_dir::home).fullpath());
+                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_path::home).fullpath());
                 ss << std::endl;
 
                 formater.format_field(ss, (::pilo::i64_t)0, (const char*)"Bin");
-                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_dir::bin).fullpath());
+                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_path::bin).fullpath());
                 ss << std::endl;
 
                 formater.format_field(ss, (::pilo::i64_t)0, (const char*)"Cnf");
-                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_dir::cnf).fullpath());
+                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_path::cnf).fullpath());
                 ss << std::endl;
 
                 formater.format_field(ss, (::pilo::i64_t)0, (const char*)"Log");
-                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_dir::log).fullpath());
+                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_path::log).fullpath());
                 ss << std::endl;
 
                 formater.format_field(ss, (::pilo::i64_t)0, (const char*)"Tmp");
-                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_dir::tmp).fullpath());
+                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_path::tmp).fullpath());
+                ss << std::endl;
+
+                formater.format_field(ss, (::pilo::i64_t)0, (const char*)"Core-CFG");
+                formater.format_field(ss, 1, proc_path(::pilo::predefined_pilo_path::core_cfg).fullpath());
                 ss << std::endl;
 
                 formater.format_field(ss, (::pilo::i64_t)0, (const char*)"Cmd-Args");
@@ -159,33 +163,38 @@ namespace pilo
 
                 ::pilo::err_t err = PILO_OK;
 
-                err = this->_proc_paths[(int) ::pilo::predefined_pilo_dir::cwd].fill_with_cwd(0);
+                err = this->_proc_paths[(int) ::pilo::predefined_pilo_path::cwd].fill_with_cwd(0);
                 if (err != PILO_OK)
                     return err;
 
-                err = this->_proc_paths[(int) ::pilo::predefined_pilo_dir::exe].fill_with_exe(0);
+                err = this->_proc_paths[(int) ::pilo::predefined_pilo_path::exe].fill_with_exe(0);
                 if (err != PILO_OK)
                     return err;
 
-                err = this->_proc_paths[(int) ::pilo::predefined_pilo_dir::bin].fill_with_bin(0);
+                err = this->_proc_paths[(int) ::pilo::predefined_pilo_path::bin].fill_with_bin(0);
                 if (err != PILO_OK)
                     return err;
 
-                err = this->_proc_paths[(int) ::pilo::predefined_pilo_dir::home].fill_with_home(0);
+                err = this->_proc_paths[(int) ::pilo::predefined_pilo_path::home].fill_with_home(0);
                 if (err != PILO_OK)
                     return err;
 
-                err = this->_proc_paths[(int) ::pilo::predefined_pilo_dir::cnf].fill_with_cnf(0);
+                err = this->_proc_paths[(int) ::pilo::predefined_pilo_path::cnf].fill_with_cnf(0);
                 if (err != PILO_OK)
                     return err;
 
-                err = this->_proc_paths[(int) ::pilo::predefined_pilo_dir::log].fill_with_log(0);
+                err = this->_proc_paths[(int) ::pilo::predefined_pilo_path::log].fill_with_log(0);
                 if (err != PILO_OK)
                     return err;
 
-                err = this->_proc_paths[(int) ::pilo::predefined_pilo_dir::tmp].fill_with_tmp(0);
+                err = this->_proc_paths[(int) ::pilo::predefined_pilo_path::tmp].fill_with_tmp(0);
                 if (err != PILO_OK)
                     return err;
+
+                err = this->_proc_paths[(int) ::pilo::predefined_pilo_path::core_cfg].fill_with_core_cfg(0);
+                if (err != PILO_OK)
+                    return err;
+
 
                 err = _core_config->load_or_save_default();
                 if (err != PILO_OK) {

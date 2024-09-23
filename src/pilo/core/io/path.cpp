@@ -68,7 +68,7 @@ namespace pilo {
 
 
             ::pilo::err_t path::set(const char *p, ::pilo::i64_t len, ::pilo::pathlen_t extra,
-                                    predefined_pilo_dir rel_to_abs_basis) {
+                                    predefined_pilo_path rel_to_abs_basis) {
                 if (p == nullptr) return ::pilo::mk_perr(PERR_NULL_PARAM);
                 bool isabs = false;
                 char sb[1] = {0};
@@ -311,14 +311,16 @@ namespace pilo {
                 if (err != PILO_OK)
                     return err;
 
-                return this->set(buffer.begin(), buffer.size(), extra, ::pilo::predefined_pilo_dir::cwd);
+                return this->set(buffer.begin(), buffer.size(), extra, ::pilo::predefined_pilo_path::cwd);
             }
 
-            ::pilo::err_t path::fill_with_exe(::pilo::pathlen_t extra) {
+            ::pilo::err_t path::fill_with_exe(::pilo::pathlen_t extra) 
+            {
                 return path::get_executable_path(this, extra);
             }
 
-            ::pilo::err_t path::fill_with_home(::pilo::pathlen_t extra) {
+            ::pilo::err_t path::fill_with_home(::pilo::pathlen_t extra) 
+            {
                 path p;
                 ::pilo::err_t err = p.fill_with_bin(extra);
                 if (err != PILO_OK)
@@ -328,7 +330,8 @@ namespace pilo {
                 return this->set(par, rlen, extra);
             }
 
-            ::pilo::err_t path::fill_with_bin(::pilo::pathlen_t extra) {
+            ::pilo::err_t path::fill_with_bin(::pilo::pathlen_t extra)
+            {
                 path p;
                 ::pilo::err_t err = p.fill_with_exe(extra);
                 if (err != PILO_OK)
@@ -338,29 +341,45 @@ namespace pilo {
                 return this->set(par, rlen, extra);
             }
 
-            ::pilo::err_t path::fill_with_cnf(::pilo::pathlen_t extra) {
+            ::pilo::err_t path::fill_with_cnf(::pilo::pathlen_t extra) 
+            {
                 ::pilo::err_t err = fill_with_home(extra);
                 if (err != PILO_OK)
                     return err;
                 return append(SP_PMS_PILO_PREDEF_DIR_CNF, path::unknow_length, extra);
             }
 
-            ::pilo::err_t path::fill_with_log(::pilo::pathlen_t extra) {
+            ::pilo::err_t path::fill_with_log(::pilo::pathlen_t extra) 
+            {
                 ::pilo::err_t err = fill_with_home(extra);
                 if (err != PILO_OK)
                     return err;
                 return append(SP_PMS_PILO_PREDEF_DIR_LOG, path::unknow_length, extra);
             }
 
-            ::pilo::err_t path::fill_with_tmp(::pilo::pathlen_t extra) {
+            ::pilo::err_t path::fill_with_tmp(::pilo::pathlen_t extra) 
+            {
                 ::pilo::err_t err = fill_with_home(extra);
                 if (err != PILO_OK)
                     return err;
                 return append(SP_PMS_PILO_PREDEF_DIR_TMP, path::unknow_length, extra);
             }
+            
+            ::pilo::err_t path::fill_with_core_cfg(::pilo::pathlen_t ) 
+            {
+                char buffer[128] = { 0 };
+                ::pilo::i32_t rlen = 0;
+                char ext_buf[16] = { 0 };
+                ::pilo::core::io::string_formated_output(ext_buf, sizeof(ext_buf), "-%s.json", PMS_OS_TYPE_NAME);
+                char* cret = ::pilo::core::process::xpf_get_proc_fullbasename(buffer, sizeof(buffer), &rlen, ext_buf, -1);
+                ::pilo::err_t err = set(cret, rlen, 0, ::pilo::predefined_pilo_path::bin);
+                PMF_COMPARE_HEAP_FREE(cret, buffer);
+                return err;
+            }
+
 
             ::pilo::err_t path::append(const char *p, ::pilo::i64_t len, ::pilo::pathlen_t extra,
-                                       predefined_pilo_dir rel_to_abs_basis) {
+                                       predefined_pilo_path rel_to_abs_basis) {
                 if (p == nullptr) return ::pilo::mk_perr(PERR_NULL_PARAM);
 
                 if (len == path::unknow_length)
@@ -437,7 +456,7 @@ namespace pilo {
 
 
 #ifdef WINDOWS
-            ::pilo::err_t path::validate_path(::pilo::char_buffer_t* buffer, const char* path_str, ::pilo::i64_t path_str_len, ::pilo::pathlen_t extra, ::pilo::i8_t& fs_type, bool& isabs, predefined_pilo_dir rel_to_abs_basis)
+            ::pilo::err_t path::validate_path(::pilo::char_buffer_t* buffer, const char* path_str, ::pilo::i64_t path_str_len, ::pilo::pathlen_t extra, ::pilo::i8_t& fs_type, bool& isabs, predefined_pilo_path rel_to_abs_basis)
             {
                 if (buffer == nullptr)
                     return ::pilo::mk_perr(PERR_NULL_PARAM);
@@ -465,7 +484,7 @@ namespace pilo {
                 ::pilo::i8_t abs_type = path::absolute_type(path_str, nullptr, (::pilo::pathlen_t)path_str_len);
                 if (abs_type == path::relative)
                 {
-                    if (rel_to_abs_basis != predefined_pilo_dir::count)
+                    if (rel_to_abs_basis != predefined_pilo_path::count)
                     {
                         path prefix;
                         if (prefix.fill_with_predef_path(rel_to_abs_basis, 0) != PILO_OK)
@@ -777,7 +796,7 @@ namespace pilo {
 #else
             ::pilo::err_t path::validate_path(::pilo::char_buffer_t *buffer, const char *path_str, ::pilo::i64_t path_str_len,
                                 ::pilo::pathlen_t extra, ::pilo::i8_t &fs_type, bool &isabs,
-                                predefined_pilo_dir rel_to_abs_basis)
+                                predefined_pilo_path rel_to_abs_basis)
            {
                 if (buffer == nullptr)
                     return ::pilo::mk_perr(PERR_NULL_PARAM);
@@ -804,7 +823,7 @@ namespace pilo {
                 ::pilo::core::memory::object_array<char, 64> tmp_path;
                 ::pilo::i8_t abs_type = path::absolute_type(path_str, nullptr, (::pilo::pathlen_t) path_str_len);
                 if (abs_type == path::relative) {
-                    if (rel_to_abs_basis != predefined_pilo_dir::count) {
+                    if (rel_to_abs_basis != predefined_pilo_path::count) {
                         path prefix;
                         if (prefix.fill_with_predef_path(rel_to_abs_basis, 0) != PILO_OK) {
                             return ::pilo::mk_perr(PERR_INVALID_PATH);
@@ -1742,7 +1761,7 @@ namespace pilo {
                 cb.check_space(this->length() + tmp_len + 1);
                 ::pilo::core::io::string_formated_output(cb.begin(), cb.capacity(), "%s%s", this->fullpath(), tmp_buffer);
 
-                return p.set(cb.begin(), ::pilo::predefined_pilo_dir::count);
+                return p.set(cb.begin(), ::pilo::predefined_pilo_path::count);
             }
 
             ::pilo::err_t

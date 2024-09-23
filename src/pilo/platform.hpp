@@ -159,17 +159,17 @@ typedef unsigned __int64 uint64_t;
 #	endif
 #	define	PMI_OS_TYPE	PMI_OS_WINDOWS
 #   define  PMS_OS_UNICODE_NAME PMS_CODE_PAGE_WINDOWS_UNICODE_NAME
-#	define  PMS_PFD_ATOMIC_API_H	"atomic_capi_msvc.h"
+#	define	PMS_OS_TYPE_NAME		"windows"
 
 #elif __linux__
 #	define	PMI_OS_TYPE	PMI_OS_LINUX
 #   define  PMS_OS_UNICODE_NAME PMS_CODE_PAGE_LINUX_UNICODE_NAME
-#	define  PMS_PFD_ATOMIC_API_H	"atomic_capi_gcc_x86-64.h"
+#	define	PMS_OS_TYPE_NAME		"linux"
 
 #elif __APPLE__
 #	define	PMI_OS_TYPE	PMI_OS_APPLE
 #   define  PMS_OS_UNICODE_NAME PMS_CODE_PAGE_MACOS_UNICODE_NAME
-#	define  PMS_PFD_ATOMIC_API_H	"atomic_capi_gcc_x86-64.h"
+#	define	PMS_OS_TYPE_NAME		"macos"
 
 #else
 #	define	PMI_OS_TYPE	PMI_OS_UNSUPPORT

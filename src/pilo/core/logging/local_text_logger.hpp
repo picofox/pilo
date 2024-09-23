@@ -202,7 +202,7 @@ namespace pilo {
                     ::pilo::err_t err = this->_m_file.open(this->_m_filename.c_str()
                         , ::pilo::core::io::creation_mode::open_always
                         , ::pilo::core::io::access_permission::write
-                        , ::pilo::predefined_pilo_dir::log
+                        , ::pilo::predefined_pilo_path::log
                         , ::pilo::core::io::dev_open_flags::append);
                     if (err != PILO_OK) {
                         return err;
@@ -256,7 +256,7 @@ namespace pilo {
                     char buffer[16] = { 0 };
                     _m_bak_path.clear();
                     if (!_m_config.bak_dir().empty()) {
-                        ::pilo::err_t err = _m_bak_path.set(_m_config.bak_dir().c_str(), _m_config.bak_dir().size(), 0, ::pilo::predefined_pilo_dir::log);
+                        ::pilo::err_t err = _m_bak_path.set(_m_config.bak_dir().c_str(), _m_config.bak_dir().size(), 0, ::pilo::predefined_pilo_path::log);
                         if (err != PILO_OK)
                             return err;
                     }
@@ -317,7 +317,7 @@ namespace pilo {
 
                     str += ".log";
 
-                    ::pilo::err_t err = _m_bak_path.append(str.c_str(), str.size(), 0, ::pilo::predefined_pilo_dir::log);
+                    ::pilo::err_t err = _m_bak_path.append(str.c_str(), str.size(), 0, ::pilo::predefined_pilo_path::log);
                     PILO_ERRRET(err);
 
                     _m_file.close();                    

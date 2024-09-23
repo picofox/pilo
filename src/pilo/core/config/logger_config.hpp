@@ -47,7 +47,7 @@ namespace pilo {
                 ::pilo::err_t save_to_configurator(const char* fqdn_path, ::pilo::core::ml::tlv_driver_interface * driver);
                 ::pilo::err_t load_from_configurator(const char* fqdn_path, ::pilo::core::ml::tlv_driver_interface* configuator);
 
-                inline ::pilo::err_t set_bak_dir(const char* dn, ::pilo::pathlen_t len, ::pilo::predefined_pilo_dir predir)
+                inline ::pilo::err_t set_bak_dir(const char* dn, ::pilo::pathlen_t len, ::pilo::predefined_pilo_path predir)
                 {
                     ::pilo::core::io::path p(dn, len, predir);
                     if (p.invalid()) {

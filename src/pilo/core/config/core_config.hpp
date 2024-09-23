@@ -49,11 +49,7 @@ namespace pilo {
                     return this->save();                    
                 }
 
-                virtual const ::pilo::core::io::path* file_path() const
-                {
-                    return &_file_path;
-                }
-
+                virtual const ::pilo::core::io::path* file_path() const;
                 virtual bool invalid() const;
 
             public:
@@ -83,9 +79,7 @@ namespace pilo {
                 inline void set_cwd(const char* cwd_cstr) { _cwd = cwd_cstr; }
 
 
-            private:
-                ::pilo::core::io::path  _file_path;
-                
+            private:                
                 ::std::string           _cwd;
                 ::std::vector<logger>   _loggers;      
                 cmdline_args_config     _cmdline_args;

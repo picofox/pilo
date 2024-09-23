@@ -18,24 +18,19 @@ namespace pilo {
                 _vars_to_append.clear();
                 _vars_to_remove.clear();
                 _vars_to_unset.clear();   
+                _vars_sync.clear();
 
                 char buffer[4][16] = { 0 };
                 ::pilo::core::string::number_to_string(buffer[0], sizeof(buffer[0]), PILO_CONTEXT->major_version(), nullptr);
                 ::pilo::core::string::number_to_string(buffer[1], sizeof(buffer[0]), PILO_CONTEXT->minor_version(), nullptr);
-                ::pilo::core::string::number_to_string(buffer[2], sizeof(buffer[0]), PILO_CONTEXT->revision(), nullptr);                
-                const ::pilo::core::io::path& tmp_path_tlv = PILO_CONTEXT->tmp_path(false);
-                set_vars_to_set("PILO_VERSION", { std::string(buffer[0]),std::string(buffer[1]),std::string(buffer[2]), std::string(PILO_CONTEXT->stage_cstr())});
-                
-                set_vars_to_append("PATH", { PILO_CONTEXT->bin_path(false).fullpath(), PILO_CONTEXT->tmp_path(false).fullpath() });
-
-                
-                set_vars_to_remove("PATH", { tmp_path_tlv.fullpath() });
-                set_vars_to_unset({"PILO"});
-
-                //_vars_sync.clear();
-
-                _vars_sync.insert("PATH");
-                _vars_sync.insert("NAME");
+                ::pilo::core::string::number_to_string(buffer[2], sizeof(buffer[0]), PILO_CONTEXT->revision(), nullptr);     
+    
+                //set_vars_to_set("PILO_VERSION", { std::string(buffer[0]),std::string(buffer[1]),std::string(buffer[2]), std::string(PILO_CONTEXT->stage_cstr())});                
+                //set_vars_to_append("PATH", { PILO_CONTEXT->bin_path(false).fullpath(), PILO_CONTEXT->tmp_path(false).fullpath() });
+                //_vars_sync.insert("PATH");
+                //set_vars_to_remove("PATH", { tmp_path_tlv.fullpath() });
+                //set_vars_to_unset({"PILO"});                
+                //_vars_sync.insert("NAME");
 
                 return PILO_OK;
             }

@@ -73,59 +73,68 @@ namespace pilo
                 {
                     if (update)
                     {
-                        _proc_paths[(int)::pilo::predefined_pilo_dir::cwd].fill_with_cwd(0);
+                        _proc_paths[(int)::pilo::predefined_pilo_path::cwd].fill_with_cwd(0);
                     }
-                    return _proc_paths[(int)::pilo::predefined_pilo_dir::cwd];
+                    return _proc_paths[(int)::pilo::predefined_pilo_path::cwd];
                 }
                 inline const ::pilo::core::io::path& exec_path(bool update = false)
                 { 
                     if (update)
                     {
-                        _proc_paths[(int)::pilo::predefined_pilo_dir::exe].fill_with_exe(0);
+                        _proc_paths[(int)::pilo::predefined_pilo_path::exe].fill_with_exe(0);
                     }
-                    return _proc_paths[(int)::pilo::predefined_pilo_dir::exe]; 
+                    return _proc_paths[(int)::pilo::predefined_pilo_path::exe]; 
                 }
                 inline const ::pilo::core::io::path& bin_path(bool update = false)
                 {
                     if (update)
                     {
-                        _proc_paths[(int)::pilo::predefined_pilo_dir::bin].fill_with_bin(0);
+                        _proc_paths[(int)::pilo::predefined_pilo_path::bin].fill_with_bin(0);
                     }
-                    return _proc_paths[(int)::pilo::predefined_pilo_dir::bin];
+                    return _proc_paths[(int)::pilo::predefined_pilo_path::bin];
                 }
                 inline const ::pilo::core::io::path& home_path(bool update = false)
                 { 
                     if (update)
                     {
-                        _proc_paths[(int)::pilo::predefined_pilo_dir::home].fill_with_home(0);
+                        _proc_paths[(int)::pilo::predefined_pilo_path::home].fill_with_home(0);
                     }
-                    return _proc_paths[(int)::pilo::predefined_pilo_dir::home]; 
+                    return _proc_paths[(int)::pilo::predefined_pilo_path::home]; 
                 }
                 inline const ::pilo::core::io::path& cnf_path(bool update = false)
                 {
                     if (update)
                     {
-                        _proc_paths[(int)::pilo::predefined_pilo_dir::cnf].fill_with_cnf(0);
+                        _proc_paths[(int)::pilo::predefined_pilo_path::cnf].fill_with_cnf(0);
                     }
-                    return _proc_paths[(int)::pilo::predefined_pilo_dir::cnf];
+                    return _proc_paths[(int)::pilo::predefined_pilo_path::cnf];
                 }
                 inline const ::pilo::core::io::path& log_path(bool update = false)
                 {
                     if (update)
                     {
-                        _proc_paths[(int)::pilo::predefined_pilo_dir::log].fill_with_log(0);
+                        _proc_paths[(int)::pilo::predefined_pilo_path::log].fill_with_log(0);
                     }
-                    return _proc_paths[(int)::pilo::predefined_pilo_dir::log];
+                    return _proc_paths[(int)::pilo::predefined_pilo_path::log];
                 }
                 inline const ::pilo::core::io::path& tmp_path(bool update = false)
                 {
                     if (update)
                     {
-                        _proc_paths[(int)::pilo::predefined_pilo_dir::tmp].fill_with_tmp(0);
+                        _proc_paths[(int)::pilo::predefined_pilo_path::tmp].fill_with_tmp(0);
                     }
-                    return _proc_paths[(int)::pilo::predefined_pilo_dir::tmp];
+                    return _proc_paths[(int)::pilo::predefined_pilo_path::tmp];
                 }
-                inline const ::pilo::core::io::path& proc_path(::pilo::predefined_pilo_dir which) const { return _proc_paths[(int)which];}
+                inline const ::pilo::core::io::path& core_cfg_path(bool update = false)
+                {
+                    if (update)
+                    {
+                        _proc_paths[(int)::pilo::predefined_pilo_path::tmp].fill_with_core_cfg(0);
+                    }
+                    return _proc_paths[(int)::pilo::predefined_pilo_path::core_cfg];
+                }
+
+                inline const ::pilo::core::io::path& proc_path(::pilo::predefined_pilo_path which) const { return _proc_paths[(int)which];}
                 inline const ::pilo::core::stat::system_information* system_information() const
                 {
                     return _system_information;
@@ -171,7 +180,7 @@ namespace pilo
                 inline const cmdline_arg& cmdline_args() const { return _cmdline_arg;  }
 
             private:
-                ::pilo::core::io::path _proc_paths[(int)::pilo::predefined_pilo_dir::count];
+                ::pilo::core::io::path _proc_paths[(int)::pilo::predefined_pilo_path::count];
                 bool                _initialized;
                 ::pilo::os_pid_t    _pid;
                 ::pilo::os_pid_t    _ppid;

@@ -81,7 +81,7 @@ namespace pilo
                     return err;
                 }
 
-                virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, predefined_pilo_dir prefix, dev_open_flags f)
+                virtual ::pilo::err_t open(const char* path_str, creation_mode cm, access_permission perm, predefined_pilo_path prefix, dev_open_flags f)
                 {
                     ::pilo::err_t err = file<PLOCK, TLOCK>::open(path_str, cm, perm, prefix, f);
                     return err;

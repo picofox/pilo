@@ -11,11 +11,7 @@ namespace pilo {
             core_config::core_config()
                 : _cwd("")
             {
-                char buffer[128] = { 0 };
-                ::pilo::i32_t rlen = 0;
-                char* cret = ::pilo::core::process::xpf_get_proc_basename(buffer, sizeof(buffer), &rlen, ".json", 5);
-                this->_file_path.set(cret, rlen, 0, ::pilo::predefined_pilo_dir::bin);
-                PMF_COMPARE_HEAP_FREE(cret, buffer);
+
             }
 
             ::pilo::err_t core_config::load()
@@ -23,7 +19,7 @@ namespace pilo {
                 ::pilo::err_t err = PILO_OK;
 
                 ::pilo::core::ml::json_tlv_driver jct;
-                err = jct.load(&_file_path);
+                err = jct.load(file_path());
                 if (err != PILO_OK)
                     return err;
                
@@ -60,6 +56,11 @@ namespace pilo {
                 return PILO_OK;
             }
 
+            const ::pilo::core::io::path* core_config::file_path() const
+            {
+                return &(PILO_CONTEXT->core_cfg_path());
+            }
+
             ::pilo::err_t core_config::save()
             {
                 ::pilo::core::ml::json_tlv_driver jct;
@@ -69,7 +70,7 @@ namespace pilo {
                     return err;
                 }
 
-                return jct.save(&_file_path);
+                return jct.save(file_path());
             }
 
             bool core_config::invalid() const
