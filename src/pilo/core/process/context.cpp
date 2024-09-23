@@ -204,6 +204,12 @@ namespace pilo
 
                 std::string errmsg;
                 if (!_core_config->cwd().empty()) {
+
+                    for (int i =0; i < (int) _core_config->cwd().size(); i ++) {
+                        printf("%03d ", (unsigned char)_core_config->cwd().c_str()[i]);
+                    }
+                    printf("\n");
+
                     ::pilo::core::io::path tmp_cwd(_core_config->cwd().c_str(), (::pilo::pathlen_t) _core_config->cwd().size());
                     if (tmp_cwd.invalid()) {
                         errmsg = "cwd -> ";
