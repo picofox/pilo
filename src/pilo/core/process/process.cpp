@@ -341,7 +341,7 @@ namespace pilo
                 else if (suffix_len < 0)
                     suffix_len = (int) ::pilo::core::string::character_count(suffix);
                 cb.check_space((int)(len + suffix_len + 1));
-                ::pilo::core::string::copyz(cb.begin(), cb.capacity(), p0);
+                ::pilo::core::string::copyz(cb.begin(), cb.capacity(), filename);
                 ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)len);
 
                 const char* firstdot = ::pilo::core::string::find_char(cb.begin(), len, '.');

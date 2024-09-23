@@ -25,12 +25,12 @@ namespace pilo {
                 ::pilo::core::string::number_to_string(buffer[1], sizeof(buffer[0]), PILO_CONTEXT->minor_version(), nullptr);
                 ::pilo::core::string::number_to_string(buffer[2], sizeof(buffer[0]), PILO_CONTEXT->revision(), nullptr);     
     
-                //set_vars_to_set("PILO_VERSION", { std::string(buffer[0]),std::string(buffer[1]),std::string(buffer[2]), std::string(PILO_CONTEXT->stage_cstr())});                
-                //set_vars_to_append("PATH", { PILO_CONTEXT->bin_path(false).fullpath(), PILO_CONTEXT->tmp_path(false).fullpath() });
-                //_vars_sync.insert("PATH");
-                //set_vars_to_remove("PATH", { tmp_path_tlv.fullpath() });
-                //set_vars_to_unset({"PILO"});                
-                //_vars_sync.insert("NAME");
+                set_vars_to_set("PILO_VERSION", { std::string(buffer[0]),std::string(buffer[1]),std::string(buffer[2]), std::string(PILO_CONTEXT->stage_cstr())});
+                set_vars_to_append("PATH", { PILO_CONTEXT->bin_path(false).fullpath(), PILO_CONTEXT->tmp_path(false).fullpath() });
+                _vars_sync.insert("PATH");
+                set_vars_to_remove("PATH", { {PILO_CONTEXT->tmp_path().fullpath()} });
+                set_vars_to_unset({"PILO"});
+                _vars_sync.insert("NAME");
 
                 return PILO_OK;
             }
