@@ -159,33 +159,6 @@ namespace pilo
 
                 ::pilo::err_t err = PILO_OK;
 
-
-                err = _core_config->load_or_save_default();
-                if (err != PILO_OK) {
-                    ::pilo::core::io::file_formatted_output(stderr, "load_or_save_default core config failed. (%s)\n", ::pilo::str_err(err, nullptr, true).c_str());
-                    return err;
-                }
-
-                std::string errmsg;
-                err = _cmdline_arg.parse(argc, argv, errmsg);
-                if (err != PILO_OK) {
-                    ::pilo::core::io::file_formatted_output(stderr, "Parse cmdline arguments failed. (%s)\n", errmsg.c_str());
-                    return err;
-                }
-
-                
-
-                _pool_object_stat_mgr.register_item(::pilo::core::stat::pool_object_stat_manager::pool_object_key_code::key_tlv
-                    , sizeof(::pilo::tlv), [](::pilo::core::stat::pool_object_stat_manager::pool_object_key_code 
-                        , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return ::pilo::tlv::update_pool_object_stat(si);}
-                    , "pilo_tlv"
-                );
-                _pool_object_stat_mgr.register_item(::pilo::core::stat::pool_object_stat_manager::pool_object_key_code::linked_buffer_node_4k
-                    , sizeof(::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>), [](::pilo::core::stat::pool_object_stat_manager::pool_object_key_code
-                        , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return ::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>::update_pool_object_stat(si); }
-                    , "local_bn"
-                );
-
                 err = this->_proc_paths[(int) ::pilo::predefined_pilo_dir::cwd].fill_with_cwd(0);
                 if (err != PILO_OK)
                     return err;
@@ -213,6 +186,36 @@ namespace pilo
                 err = this->_proc_paths[(int) ::pilo::predefined_pilo_dir::tmp].fill_with_tmp(0);
                 if (err != PILO_OK)
                     return err;
+
+                err = _core_config->load_or_save_default();
+                if (err != PILO_OK) {
+                    ::pilo::core::io::file_formatted_output(stderr, "load_or_save_default core config failed. (%s)\n", ::pilo::str_err(err, nullptr, true).c_str());
+                    return err;
+                }
+
+                std::string errmsg;
+                err = _cmdline_arg.parse(argc, argv, errmsg);
+                if (err != PILO_OK) {
+                    ::pilo::core::io::file_formatted_output(stderr, "Parse cmdline arguments failed. (%s)\n", errmsg.c_str());
+                    return err;
+                }
+
+                
+
+                _pool_object_stat_mgr.register_item(::pilo::core::stat::pool_object_stat_manager::pool_object_key_code::key_tlv
+                    , sizeof(::pilo::tlv), [](::pilo::core::stat::pool_object_stat_manager::pool_object_key_code 
+                        , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return ::pilo::tlv::update_pool_object_stat(si);}
+                    , "pilo_tlv"
+                );
+                _pool_object_stat_mgr.register_item(::pilo::core::stat::pool_object_stat_manager::pool_object_key_code::linked_buffer_node_4k
+                    , sizeof(::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>), [](::pilo::core::stat::pool_object_stat_manager::pool_object_key_code
+                        , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return ::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>::update_pool_object_stat(si); }
+                    , "local_bn"
+                );
+
+                
+
+                _environment_variable_manager.initialize();
 
                 err = _logger_manager.initialize(_core_config->loggers());
                 if (err != PILO_OK)

@@ -7,6 +7,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.cpp">
       <Filter>pilo\core\config</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\env_vars_config.cpp">
+      <Filter>pilo\core\config</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.cpp">
       <Filter>pilo\core\config</Filter>
     </ClCompile>
@@ -50,6 +53,9 @@
       <Filter>pilo\core\process</Filter>
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\context.cpp">
+      <Filter>pilo\core\process</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\environment_variable_manager.cpp">
       <Filter>pilo\core\process</Filter>
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock.cpp">
@@ -187,6 +193,9 @@
       <Filter>pilo\core\config</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.hpp">
+      <Filter>pilo\core\config</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\env_vars_config.hpp">
       <Filter>pilo\core\config</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.hpp">
@@ -355,6 +364,9 @@
       <Filter>pilo\core\process</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\dummy_file_lock.hpp">
+      <Filter>pilo\core\process</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\environment_variable_manager.hpp">
       <Filter>pilo\core\process</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock.hpp">

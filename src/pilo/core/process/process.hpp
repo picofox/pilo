@@ -19,6 +19,8 @@ namespace pilo
             typedef ::pilo::err_t(*env_iter_func_type) (const char* key, ::pilo::i32_t key_len, const char* val, ::pilo::i32_t val_len, void* ctx);
             ::pilo::err_t xpf_iterate_enviroment_variable(env_iter_func_type func, void* ctx, bool ignore_err);
 
+            ::pilo::err_t xpf_set_environment_variable(const char* name, const char* value);
+            ::pilo::err_t xpf_unset_environment_variable(const char* name);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace pilo {
                 this->_loggers.emplace_back(std::move(tmp_logger));
 
                 this->_cmdline_args.set_default();
-                
+                this->_env_vars.set_default();
 
 
 
@@ -127,7 +127,8 @@ namespace pilo {
                     this->_loggers.push_back(tmp_logger);
                 }
 
-                this->_cmdline_args.load_from_configurator("cmdline_args.", driver);
+                PILO_CHKERR_RET(err, this->_cmdline_args.load_from_configurator("cmdline_args", driver));
+                PILO_CHKERR_RET(err, this->_env_vars.load_from_configurator("env_vars", driver));
 
                 return PILO_OK;
             }
@@ -145,8 +146,8 @@ namespace pilo {
                     _loggers[i].save_to_configurator(buffer, driver);
                 }
 
-                this->_cmdline_args.save_to_configurator("cmdline_args.", driver);
-
+                this->_cmdline_args.save_to_configurator("cmdline_args", driver);
+                this->_env_vars.save_to_configurator("env_vars", driver);
 
                 return PILO_OK;
             }

@@ -494,6 +494,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\cmdline_args_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\env_vars_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\datetime.cpp" />
@@ -509,6 +510,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\ml\tlv_driver_interface.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\cmdline_args.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\context.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\environment_variable_manager.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\process.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type.cpp" />
@@ -554,6 +556,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\cmdline_args_config.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuation_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\env_vars_config.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\auto_array.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrent_queue.hpp" />
@@ -610,6 +613,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\cmdline_args.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\context.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\dummy_file_lock.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\environment_variable_manager.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\file_lock_guard.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\process.hpp" />

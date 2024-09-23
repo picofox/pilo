@@ -109,6 +109,12 @@ namespace pilo
                 add_spec(sp);
                 sp = new cmdline_spec(":ext-vars:#ss:1:-1:false", -1);
                 add_spec(sp);
+                sp = new cmdline_spec("z:::0:0:false", -1);
+                add_spec(sp);
+                sp = new cmdline_spec("m:multi-thread::0:0:false", -1);
+                add_spec(sp);
+
+                _targets.from_cstring("::s:1:-1:true", -1);
 
                 return PILO_OK;
             }
@@ -170,7 +176,7 @@ namespace pilo
                 cb.add_size(-5);
                 ::pilo::core::string::n_copyz(cb.ptr(), cb.space_available(), ".targets", 8);
 
-                if (!_targets.invalid()) {
+                if (_targets.is_single()) {
                     _targets.to_cstring(one_arg_sp_buf, sizeof(one_arg_sp_buf));
                     PILO_CHKERR_RET(err, driver->set_value(cb.begin(), one_arg_sp_buf, (::pilo::i32_t)-1, false, true, true));
                 }

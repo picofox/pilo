@@ -9,6 +9,7 @@
 #include "../rtti/wired_type_factory.hpp"
 #include "../threading/spin_mutex.hpp"
 #include "./cmdline_args.hpp"
+#include "./environment_variable_manager.hpp"
 
 namespace pilo
 {
@@ -120,7 +121,7 @@ namespace pilo
                 {
                     if (update)
                     {
-                        _proc_paths[(int)::pilo::predefined_pilo_dir::cnf].fill_with_tmp(0);
+                        _proc_paths[(int)::pilo::predefined_pilo_dir::tmp].fill_with_tmp(0);
                     }
                     return _proc_paths[(int)::pilo::predefined_pilo_dir::tmp];
                 }
@@ -187,6 +188,7 @@ namespace pilo
 
                 ::std::shared_ptr<::pilo::core::config::core_config> _core_config;
                 cmdline_arg                                          _cmdline_arg;
+                environment_variable_manager                         _environment_variable_manager;
                 
                 ::pilo::core::logging::logger_manager _logger_manager;
                 

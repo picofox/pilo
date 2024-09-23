@@ -104,6 +104,8 @@
 #   define PMI_INVALID_THREAD_HANDLE    INVALID_HANDLE_VALUE
 #   define PMI_INVALID_FILE_HANDLE		INVALID_HANDLE_VALUE
 #   define PMS_NEW_LINE_SEQ             "\r\n"
+#   define PMI_ENV_VAR_SEP              ';'
+#   define PMI_ENV_VAR_SEP_STR          ";"
 
 #else
 #   define PMC_UNUSED(x) (void)x
@@ -122,6 +124,8 @@
 #   define PMI_INVALID_THREAD_HANDLE    0
 #   define PMI_INVALID_FILE_HANDLE    (-1)
 #   define PMS_NEW_LINE_SEQ             "\n"
+#   define PMI_ENV_VAR_SEP              ':'
+#   define PMI_ENV_VAR_SEP_STR          ":"
 
 #   if defined(_UNICODE) || defined (UNICODE)
 #       define  TCHAR       wchar_t

@@ -128,7 +128,21 @@ namespace pilo
 
                     env++;
                 }
-                return ::pilo::err_t();
+                return PILO_OK;
+            }
+
+            ::pilo::err_t xpf_set_environment_variable(const char* name, const char* value)
+            {
+                if (!SetEnvironmentVariable(name, value))
+                    return ::pilo::mk_err(PERR_SET_ENV_FAIL);
+                return PILO_OK;
+            }
+
+            ::pilo::err_t xpf_unset_environment_variable(const char* name)
+            {
+                if (!SetEnvironmentVariable(name, nullptr))
+                    return ::pilo::mk_err(PERR_SET_ENV_FAIL);
+                return PILO_OK;
             }
 
             os_pid_t xpf_current_process_id()
@@ -316,7 +330,21 @@ namespace pilo
 
                     env++;
                 }
-                return ::pilo::err_t();
+                return PILO_OK;
+            }
+
+            ::pilo::err_t xpf_set_environment_variable(const char* name, const char* value)
+            {
+                if (0 != setenv(name, value, 1))
+                    return ::pilo::mk_err(PERR_SET_ENV_FAIL);
+                return PILO_OK;
+            }
+
+            ::pilo::err_t xpf_unset_environment_variable(const char* name)
+            {
+                if (0 != unsetenv(name))
+                    return ::pilo::mk_err(PERR_SET_ENV_FAIL);
+                return PILO_OK;
             }
 
 #endif
