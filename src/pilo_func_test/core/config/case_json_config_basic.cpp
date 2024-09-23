@@ -22,7 +22,7 @@ namespace pilo
 					const char* str = "放浪no贵公子!";
 					int len = (int)::pilo::core::string::character_count(str);
 					for (int i = 0; i < len; i++) {
-						printf("%02x ", (unsigned char) str[i]);
+						printf("%02d ", (unsigned char) str[i]);
 					}
 					
 					printf("\n");
