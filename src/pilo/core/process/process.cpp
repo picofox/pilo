@@ -358,7 +358,7 @@ namespace pilo
                 if (len < 0 || (size_t)len >= sizeof(filename)) {
                     return nullptr;
                 }
-                filename[len] = 'changedir\0';
+                filename[len] = '\0';
                 if (suffix == nullptr)
                     suffix_len = 0;
                 else if (suffix_len < 0)
