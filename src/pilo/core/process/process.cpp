@@ -2,6 +2,7 @@
 #include "../memory/util.hpp"
 #include "../string/string_operation.hpp"
 #include "../io/path.hpp"
+#include "../i18n/encoding_conversion.hpp"
 
 #ifdef WINDOWS
 #include <windows.h>
@@ -130,19 +131,19 @@ namespace pilo
             {
                 if (dir == nullptr)
                     return ::pilo::mk_err(PERR_NULL_PARAM);
-                    
                 if (len == ::pilo::core::io::path::unknow_length) {
-                    if (!SetCurrentDirectory(dir)) {
-                        return ::pilo::mk_err(PERR_INVALID_PATH);
-                    }
+                    len = (::pilo::pathlen_t) ::pilo::core::string::character_count(dir);
                 }
-                else {
-                    ::pilo::core::memory::object_array<char, 128> cb;
-                    cb.check_space(len + 1);
-                    ::pilo::core::string::copyz(cb.begin(), cb.capacity(), dir);
-                    if (!SetCurrentDirectory(cb.begin())) {
-                        return ::pilo::mk_err(PERR_INVALID_PATH);
-                    }
+
+                char buffer[128] = { 0 };
+                ::pilo::char_buffer_t cb(buffer, PMF_COUNT_OF(buffer));
+                ::pilo::err_t err = ::pilo::core::i18n::utf8_to_ansi(cb, dir, len, 0);
+                if (err != PILO_OK) {
+                    return err;
+                }
+
+                if (!SetCurrentDirectory(cb.begin())) {
+                    return ::pilo::mk_err(PERR_INVALID_PATH);
                 }
 
                 return PILO_OK;

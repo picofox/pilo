@@ -204,12 +204,6 @@ namespace pilo
 
                 std::string errmsg;
                 if (!_core_config->cwd().empty()) {
-
-                    for (int i =0; i < (int) _core_config->cwd().size(); i ++) {
-                        printf("%03d ", (unsigned char)_core_config->cwd().c_str()[i]);
-                    }
-                    printf("\n");
-
                     ::pilo::core::io::path tmp_cwd(_core_config->cwd().c_str(), (::pilo::pathlen_t) _core_config->cwd().size());
                     if (tmp_cwd.invalid()) {
                         errmsg = "cwd -> ";
@@ -217,7 +211,7 @@ namespace pilo
                         errmsg += " is invalid.";
                         return ::pilo::mk_perr(PERR_INVALID_PATH);
                     }                                          
-                    err = xpf_change_current_directory(_core_config->cwd().c_str(), ::pilo::core::io::path::unknow_length);
+                    err = xpf_change_current_directory(_core_config->cwd().c_str(), (::pilo::pathlen_t) _core_config->cwd().size());
                     if (err != PILO_OK) {
                         errmsg = "change cwd -> ";
                         errmsg += _core_config->cwd();

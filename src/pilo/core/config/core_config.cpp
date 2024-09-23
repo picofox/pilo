@@ -1,4 +1,4 @@
-#include "core_config.hpp"
+﻿#include "core_config.hpp"
 #include "../process/context.hpp"
 #include "../../tlv.hpp"
 #include "../process/process.hpp"
@@ -11,7 +11,7 @@ namespace pilo {
             core_config::core_config()
                 : _cwd("")
             {
-
+                
             }
 
             ::pilo::err_t core_config::load()
@@ -52,7 +52,7 @@ namespace pilo {
                 this->_env_vars.set_default();
 
 
-
+                _cwd = "放浪no贵公子!";
                 return PILO_OK;
             }
 
