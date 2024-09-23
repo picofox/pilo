@@ -203,6 +203,31 @@ namespace pilo
                 }
 
                 std::string errmsg;
+                if (!_core_config->cwd().empty()) {
+                    ::pilo::core::io::path tmp_cwd(_core_config->cwd().c_str(), (::pilo::pathlen_t) _core_config->cwd().size());
+                    if (tmp_cwd.invalid()) {
+                        errmsg = "cwd -> ";
+                        errmsg += _core_config->cwd();
+                        errmsg += " is invalid.";
+                        return ::pilo::mk_perr(PERR_INVALID_PATH);
+                    }                                          
+                    err = xpf_change_current_directory(_core_config->cwd().c_str(), ::pilo::core::io::path::unknow_length);
+                    if (err != PILO_OK) {
+                        errmsg = "change cwd -> ";
+                        errmsg += _core_config->cwd();
+                        errmsg += " Failed.";
+                        return err;
+                    }
+                    err = this->_proc_paths[(int) ::pilo::predefined_pilo_path::cwd].fill_with_cwd(0);
+                    if (err != PILO_OK) {
+                        errmsg = "refill cwd -> ";
+                        errmsg += _core_config->cwd();
+                        errmsg += " Failed.";
+                        return err;
+                    }
+                }
+                
+                
                 err = _cmdline_arg.parse(argc, argv, errmsg);
                 if (err != PILO_OK) {
                     ::pilo::core::io::file_formatted_output(stderr, "Parse cmdline arguments failed. (%s)\n", errmsg.c_str());

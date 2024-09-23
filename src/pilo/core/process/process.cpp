@@ -1,6 +1,7 @@
 ﻿#include "process.hpp"
 #include "../memory/util.hpp"
 #include "../string/string_operation.hpp"
+#include "../io/path.hpp"
 
 #ifdef WINDOWS
 #include <windows.h>
@@ -123,6 +124,28 @@ namespace pilo
                 else {
                     return nullptr;
                 }
+            }
+
+            ::pilo::err_t xpf_change_current_directory(const char* dir, ::pilo::pathlen_t len)
+            {
+                if (dir == nullptr)
+                    return ::pilo::mk_err(PERR_NULL_PARAM);
+                    
+                if (len == ::pilo::core::io::path::unknow_length) {
+                    if (!SetCurrentDirectory(dir)) {
+                        return ::pilo::mk_err(PERR_INVALID_PATH);
+                    }
+                }
+                else {
+                    ::pilo::core::memory::object_array<char, 128> cb;
+                    cb.check_space(len + 1);
+                    ::pilo::core::string::copyz(cb.begin(), cb.capacity(), dir);
+                    if (!SetCurrentDirectory(cb.begin())) {
+                        return ::pilo::mk_err(PERR_INVALID_PATH);
+                    }
+                }
+
+                return PILO_OK;
             }
 
             ::pilo::err_t xpf_iterate_enviroment_variable(env_iter_func_type func, void* ctx, bool ignore_err)
@@ -335,7 +358,7 @@ namespace pilo
                 if (len < 0 || (size_t)len >= sizeof(filename)) {
                     return nullptr;
                 }
-                filename[len] = '\0';
+                filename[len] = 'changedir\0';
                 if (suffix == nullptr)
                     suffix_len = 0;
                 else if (suffix_len < 0)
@@ -363,6 +386,28 @@ namespace pilo
                     ::pilo::set_if_ptr_is_not_null(rlen, (::pilo::i32_t)(len + suffix_len));
                 }
                 return cb.begin();
+            }
+
+            ::pilo::err_t xpf_change_current_directory(const char* dir, ::pilo::pathlen_t len)
+            {
+                if (dir == nullptr)
+                    return ::pilo::mk_err(PERR_NULL_PARAM);
+
+                if (len == ::pilo::core::io::path::unknow_length) {
+                    if (0 != chdir(dir)) {
+                        return ::pilo::mk_err(PERR_INVALID_PATH);
+                    }
+                }
+                else {
+                    ::pilo::core::memory::object_array<char, 128> cb;
+                    cb.check_space(len + 1);
+                    ::pilo::core::string::copyz(cb.begin(), cb.capacity(), dir);
+                    if (0 != chdir(cb.begin())) {
+                        return ::pilo::mk_err(PERR_INVALID_PATH);
+                    }
+                }
+
+                return PILO_OK;
             }
 
             ::pilo::err_t xpf_iterate_enviroment_variable(env_iter_func_type func, void* ctx, bool ignore_err)
