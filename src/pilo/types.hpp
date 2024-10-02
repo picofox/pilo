@@ -1,9 +1,10 @@
 ﻿#ifndef __pilo_types_hpp_
 #define __pilo_types_hpp_
 
-#include "os_headers.hpp"
+
 #include <string>
 #include <sstream>
+#include "./platform.hpp"
 
 #ifdef WINDOWS
 #define PILO_INT8_MIN         (-127i8 - 1)

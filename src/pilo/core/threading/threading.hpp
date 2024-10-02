@@ -19,7 +19,14 @@ namespace pilo
             {
                 return  ::GetCurrentThreadId();
             }
+
+            void xpf_sleep(::pilo::i64_t  secs);
+            void xpf_msleep(::pilo::i64_t  msecs);
+            void xpf_usleep(::pilo::i64_t  usecs);
+
+
 #else
+
             __inline ::pilo::os_thread_id_t xpf_current_thread_id()
             {
 #       ifdef __linux__
@@ -27,7 +34,11 @@ namespace pilo
 #       else
                 return pthread_self();
 #       endif
-        }
+            }
+
+            void xpf_sleep(::pilo::i64_t  secs);
+            void xpf_msleep(::pilo::i64_t  msecs);
+            void xpf_usleep(::pilo::i64_t  usecs);
 
 #endif
         }

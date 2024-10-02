@@ -37,6 +37,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\string\case_basic.cpp">
       <Filter>pilo_func_test\core\string</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\core\threading\case_efficeint_thread_pool_basic.cpp">
+      <Filter>pilo_func_test\core\threading</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_func_test\main.cpp">
       <Filter>pilo_func_test</Filter>
     </ClCompile>
@@ -76,6 +79,9 @@
     </Filter>
     <Filter Include="pilo_func_test\core\string">
       <UniqueIdentifier>{55B65BEB-6509-3F9F-9E19-3ED7757B7E79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo_func_test\core\threading">
+      <UniqueIdentifier>{A14AF32B-6EDD-3212-A345-FDC10394B9F5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

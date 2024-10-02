@@ -79,6 +79,23 @@ namespace pilo
                 _tlv_pool.deallocate(tlvp);
             }
 
+            ::pilo::task* context::allocate_task()
+            {
+                return _task_pool.allocate();
+            }
+
+            ::pilo::task* context::allocate_task(thread_callback_func_type f_func, void* obj, ::pilo::tlv* param, object_dealloc_func_type d_func)
+            {
+                ::pilo::task* task = _task_pool.allocate();
+                task->set(f_func, obj, param, d_func);
+                return task;
+            }
+
+            void context::deallocate_task(::pilo::task* task)
+            {
+                _task_pool.deallocate(task);
+            }
+
             ::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE> * context::allocate_linked_buffer_node_4k()
             {
                 return this->_linked_buffer_node_pool->allocate();

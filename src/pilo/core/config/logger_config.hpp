@@ -218,7 +218,6 @@ namespace pilo {
                 std::string _field_sep;
 
 
-
                 // Inherited via configuation_interface
                 ::pilo::err_t load() override;
 

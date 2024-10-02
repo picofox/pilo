@@ -7,6 +7,7 @@
 
 #include "error.hpp"
 #include "preprocessor.hpp"
+#include "atomic_capi.hpp"
 
 #ifdef WINDOWS
 #   ifdef pilo_shared_EXPORTS

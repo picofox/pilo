@@ -121,7 +121,7 @@
 
 #else
 #error "Unrecognized compiler!"
-#endif
+#endif //defined(__INTEL_COMPILER)
 
 
 #include <stddef.h>
@@ -160,16 +160,19 @@ typedef unsigned __int64 uint64_t;
 #	define	PMI_OS_TYPE	PMI_OS_WINDOWS
 #   define  PMS_OS_UNICODE_NAME PMS_CODE_PAGE_WINDOWS_UNICODE_NAME
 #	define	PMS_OS_TYPE_NAME		"windows"
+#	define  PMS_PFD_ATOMIC_API_H	"atomic_capi_msvc.hpp"
 
 #elif __linux__
 #	define	PMI_OS_TYPE	PMI_OS_LINUX
 #   define  PMS_OS_UNICODE_NAME PMS_CODE_PAGE_LINUX_UNICODE_NAME
 #	define	PMS_OS_TYPE_NAME		"linux"
+#	define  PMS_PFD_ATOMIC_API_H	"atomic_capi_gcc_x86-64.hpp"
 
 #elif __APPLE__
 #	define	PMI_OS_TYPE	PMI_OS_APPLE
 #   define  PMS_OS_UNICODE_NAME PMS_CODE_PAGE_MACOS_UNICODE_NAME
 #	define	PMS_OS_TYPE_NAME		"macos"
+#	define  PMS_PFD_ATOMIC_API_H	"atomic_capi_gcc_x86-64.hpp"
 
 #else
 #	define	PMI_OS_TYPE	PMI_OS_UNSUPPORT
@@ -213,6 +216,45 @@ typedef unsigned __int64 uint64_t;
 #else
 #	    error "Unknown Arch"
 #endif
+
+#ifdef WINDOWS
+#if defined(WIN32)
+#   include <intrin.h>
+#else
+#endif
+
+#   include <windows.h>
+#   include <wchar.h>
+#   include <tchar.h>
+#   include <mbstring.h>
+#   include <new.h>
+#   include <malloc.h>
+#   include <Strsafe.h>
+#   include <process.h>
+#   include <WinSock2.h>
+
+
+
+#else
+
+#   include <unistd.h>
+#   include <ctype.h>
+#   include <wctype.h>
+#   include <stdarg.h>
+#   include <wchar.h>
+#   include <errno.h>
+#   include <pthread.h>
+#   include <fcntl.h>
+#   include <limits.h>
+#   include <arpa/inet.h>
+
+#if defined __linux__
+#   include <sys/syscall.h>
+#   endif
+
+#endif
+
+#include <float.h>
 
 
 #ifndef BYTE_ORDER
@@ -330,11 +372,137 @@ constexpr endianness_enum getEndianOrder()
 #define PMD_PFD_MAYBE_ALIGN_TO_CACHELINE PMF_ALIGN(PMI_PFD_CACHE_LINE_SIZE)
 #endif
 
-
 #ifdef __cplusplus
 #define PMC_INLINE inline
 #else
 #define PMC_INLINE __inline
 #endif
+
+
+
+
+
+
+
+
+// AE_NO_TSAN/AE_TSAN_ANNOTATE_*
+#if defined(__has_feature)
+#   if __has_feature(thread_sanitizer)
+#       if __cplusplus >= 201703L  // inline variables require C++17
+namespace pilo { inline int pilo_tsan_global; }
+#           define PMF_TSAN_ANNOTATE_RELEASE() AnnotateHappensBefore(__FILE__, __LINE__, (void *)(&::pilo::pilo_tsan_global))
+#           define PMF_TSAN_ANNOTATE_ACQUIRE() AnnotateHappensAfter(__FILE__, __LINE__, (void *)(&::pilo::pilo_tsan_global))
+extern "C" void AnnotateHappensBefore(const char*, int, void*);
+extern "C" void AnnotateHappensAfter(const char*, int, void*);
+#       else  // when we can't work with tsan, attempt to disable its warnings
+#           define PMC_NO_TSAN __attribute__((no_sanitize("thread")))
+#       endif
+#   endif
+#endif
+
+#ifndef PMC_NO_TSAN
+#   define PMC_NO_TSAN
+#endif
+
+#ifndef PMF_TSAN_ANNOTATE_RELEASE
+#   define PMF_TSAN_ANNOTATE_RELEASE()
+#   define PMF_TSAN_ANNOTATE_ACQUIRE()
+#endif
+
+
+#define PMC_FORCE_INLINE __forceinline
+#define PMC_NO_INLINE __declspec(noinline)
+
+
+
+
+
+
+
+
+
+//----------------------------------- compiler
+#if (PMI_PFD_COMPILER_GCC == 1)
+
+//-------------------------------------
+//  Alignment
+//-------------------------------------
+// Note: May not work on local variables.
+// http://gcc.gnu.org/bugzilla/show_bug.cgi?id=24691
+#define PMC_DECL_ALIGNED(declaration, amt) declaration __attribute__((aligned(amt)))
+
+//-------------------------------------
+//  Inlining
+//-------------------------------------
+#define PMC_INLINE static inline
+#define PMC_FORCE_INLINE inline __attribute__((always_inline))
+#define PMC_NO_INLINE __attribute__((noinline))
+
+//-------------------------------------
+//  Thread local
+//-------------------------------------
+#define PMC_THREAD_LOCAL __thread
+
+//-------------------------------------
+//  CPU intrinsics
+//-------------------------------------
+PMC_INLINE void cc_yield_hw_thread() {
+#if MINT_CPU_X86 || MINT_CPU_X64
+	// Only implemented on x86/64
+	asm volatile("pause");
+#endif
+}
+
+#define PMC_DEBUG_BREAK() __builtin_trap()
+
+
+#elif defined PMI_PFD_COMPILER_MSVC
+#include <intrin.h>
+//-------------------------------------
+//  Alignment
+//-------------------------------------
+#define PMC_DECL_ALIGNED(declaration, amt) __declspec(align(amt)) declaration
+
+//-------------------------------------
+//  Inlining
+//-------------------------------------
+#ifdef __cplusplus
+#define PMC_INLINE inline
+#else
+#define PMC_INLINE __inline
+#endif
+
+#define PMC_FORCE_INLINE __forceinline
+#define PMC_NO_INLINE __declspec(noinline)
+
+//-------------------------------------
+//  Thread local
+//-------------------------------------
+#define PMC_THREAD_LOCAL __declspec(thread)
+
+//-------------------------------------
+//  Debug break
+//-------------------------------------
+#define PMC_DEBUG_BREAK() __debugbreak()
+
+
+#if (PMI_PFD_CPU_X64 != 0) || (PMI_PFD_CPU_X86 != 0)
+#   define PMC_FULL_SYNC _mm_mfence
+#   define PMC_LITE_SYNC _mm_mfence
+
+#elif defined(_M_IA64)
+#   define PMC_FULL_SYNC __mf
+#   define PMC_LITE_SYNC __mf
+
+#elif (PMI_PFD_CPU_POWERPC != 0)
+#   include <ppcintrinsics.h>
+#   define PMC_FULL_SYNC __sync
+#   define PMC_LITE_SYNC __lwsync
+#endif
+
+
+
+#endif
+
 
 #endif //__pilo_platform_hpp_

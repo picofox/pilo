@@ -36,6 +36,7 @@ namespace pilo
     {
 	public:
 		const static ::pilo::u8_t	FlagBytesAsCStr = 0x01;
+		const static ::pilo::u8_t	FlagNoDealloc = 0x02;
 
 	public:
 		friend bool core::rtti::map_equals(::pilo::u8_t a_key_type, ::pilo::u16_t a_val_type, const char* a_data, ::pilo::u8_t b_key_type, ::pilo::u16_t b_val_type, const char* b_data, ::pilo::err_t* err);

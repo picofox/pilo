@@ -24,7 +24,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{98E858A3-4C9E-33D0-AE69-A011A32C98CB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
     <ProjectName>pilo_static</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
@@ -81,16 +81,20 @@
       <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /utf-8</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <MinimalRebuild></MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level4</WarningLevel>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WINDOWS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
@@ -137,16 +141,20 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /utf-8</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <MinimalRebuild></MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level4</WarningLevel>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WINDOWS;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WINDOWS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
@@ -192,16 +200,20 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile>
       <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MinimalRebuild></MinimalRebuild>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
@@ -247,15 +259,19 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile>
       <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MinimalRebuild></MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
@@ -310,7 +326,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeCXXCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeRCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeCXXCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeRCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/projects/git_repo/libpilo/build/win-vs17/CMakeLists.txt</Message>
@@ -323,7 +339,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeCXXCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeRCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeCXXCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeRCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/projects/git_repo/libpilo/build/win-vs17/CMakeLists.txt</Message>
@@ -336,7 +352,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeCXXCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeRCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeCXXCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeRCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/projects/git_repo/libpilo/build/win-vs17/CMakeLists.txt</Message>
@@ -349,7 +365,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeCXXCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeRCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.27.6\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeCXXCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeRCCompiler.cmake;D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\3.30.3\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\projects\git_repo\libpilo\build\win-vs17\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
@@ -359,6 +375,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\env_vars_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\thread_pool_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\datetime.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\i18n\encoding_conversion.cpp" />
@@ -409,11 +426,19 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\performance_test_suite.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\stable_test_case.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\stable_test_suite.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\efficient_thread_pool.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\performance_thread_pool.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_hybrid_worker.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_worker.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\read_write_mutex.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_task_executor.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\error.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\pilo.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi_gcc_x86-64.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi_msvc.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\cmdline_args_config.hpp" />
@@ -421,7 +446,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\env_vars_config.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\thread_pool_config.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\auto_array.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\blocking_concurrent_queue.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrent_queue.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrentqueue_internal_debug.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\singly_linked_selflist.hpp" />
@@ -519,25 +546,36 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\small_sample_object.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\stable_test_case.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\stable_test_suite.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\atomic.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\atomic_cpp11.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\auto_join_thread.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\dummy_mutex.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\dummy_read_write_lock.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\efficient_thread_pool.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\exclusive_mutex_guard.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\native_mutex.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\order_awared_mutex_adaptor.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\performance_thread_pool.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_hybrid_worker.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_worker.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\read_write_mutex.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\shared_mutex_guard.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\spin_mutex.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_lw_semaphore.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_lw_semaphore_n.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_interface.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_task_executor.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_semaphore.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\error.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml_iterators.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml_print.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml_utils.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\os_headers.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\pilo.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\platform.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\preprocessor.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\task.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\tlv.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\types.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\allocators.h" />

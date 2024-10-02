@@ -50,9 +50,8 @@ namespace pilo {
 
                 this->_cmdline_args.set_default();
                 this->_env_vars.set_default();
+                this->_thread_pool.set_default();
 
-
-                _cwd = "放浪no贵公子!";
                 return PILO_OK;
             }
 
@@ -91,6 +90,7 @@ namespace pilo {
                 this->_cwd.clear();
                 this->_loggers.clear();
                 this->_cmdline_args.clear(false);
+                this->_thread_pool.clear(false);
 
                 if (purge) {
                     this->_loggers.shrink_to_fit();
@@ -130,6 +130,7 @@ namespace pilo {
 
                 PILO_CHKERR_RET(err, this->_cmdline_args.load_from_configurator("cmdline_args", driver));
                 PILO_CHKERR_RET(err, this->_env_vars.load_from_configurator("env_vars", driver));
+                PILO_CHKERR_RET(err, this->_thread_pool.load_from_configurator("thread_pool", driver));
 
                 return PILO_OK;
             }
@@ -149,7 +150,7 @@ namespace pilo {
 
                 this->_cmdline_args.save_to_configurator("cmdline_args", driver);
                 this->_env_vars.save_to_configurator("env_vars", driver);
-
+                this->_thread_pool.save_to_configurator("thread_pool", driver);
                 return PILO_OK;
             }
 

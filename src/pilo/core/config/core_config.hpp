@@ -10,6 +10,7 @@
 #include "./logger_config.hpp"
 #include "./cmdline_args_config.hpp"
 #include "./env_vars_config.hpp"
+#include "./thread_pool_config.hpp"
 
 
 namespace pilo {
@@ -73,7 +74,7 @@ namespace pilo {
                 const cmdline_args_config& cmdline_arg_spec() const { return _cmdline_args;  }
 
                 const env_vars_config& env_vars() const { return _env_vars;  }
-                
+                const thread_pool_config& thread_pool() const { return _thread_pool;  }
             
             public:
                 inline void set_cwd(const char* cwd_cstr) { _cwd = cwd_cstr; }
@@ -84,6 +85,7 @@ namespace pilo {
                 ::std::vector<logger>   _loggers;      
                 cmdline_args_config     _cmdline_args;
                 env_vars_config         _env_vars;
+                thread_pool_config      _thread_pool;
 
             };
 

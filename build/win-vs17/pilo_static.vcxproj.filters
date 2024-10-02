@@ -13,6 +13,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.cpp">
       <Filter>pilo\core\config</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\thread_pool_config.cpp">
+      <Filter>pilo\core\config</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp">
       <Filter>pilo\core\crypto</Filter>
     </ClCompile>
@@ -163,7 +166,22 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\stable_test_suite.cpp">
       <Filter>pilo\core\testing</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\efficient_thread_pool.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\performance_thread_pool.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_hybrid_worker.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_worker.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\read_write_mutex.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_task_executor.cpp">
       <Filter>pilo\core\threading</Filter>
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.cpp">
@@ -180,6 +198,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi.hpp">
+      <Filter>pilo</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi_gcc_x86-64.hpp">
+      <Filter>pilo</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi_msvc.hpp">
+      <Filter>pilo</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp">
       <Filter>pilo\core\algorithm</Filter>
     </ClInclude>
@@ -201,7 +228,13 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.hpp">
       <Filter>pilo\core\config</Filter>
     </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\thread_pool_config.hpp">
+      <Filter>pilo\core\config</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\auto_array.hpp">
+      <Filter>pilo\core\container</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\blocking_concurrent_queue.hpp">
       <Filter>pilo\core\container</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrent_queue.hpp">
@@ -495,6 +528,12 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\stable_test_suite.hpp">
       <Filter>pilo\core\testing</Filter>
     </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\atomic.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\atomic_cpp11.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\auto_join_thread.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
@@ -502,6 +541,9 @@
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\dummy_read_write_lock.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\efficient_thread_pool.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\exclusive_mutex_guard.hpp">
@@ -513,6 +555,15 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\order_awared_mutex_adaptor.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\performance_thread_pool.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_hybrid_worker.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_worker.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\read_write_mutex.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
@@ -520,6 +571,21 @@
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\spin_mutex.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_lw_semaphore.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_lw_semaphore_n.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_interface.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_task_executor.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_semaphore.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.hpp">
@@ -540,9 +606,6 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml_utils.hpp">
       <Filter>pilo\external\rapidxml</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\os_headers.hpp">
-      <Filter>pilo</Filter>
-    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\pilo.hpp">
       <Filter>pilo</Filter>
     </ClInclude>
@@ -550,6 +613,9 @@
       <Filter>pilo</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\preprocessor.hpp">
+      <Filter>pilo</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\task.hpp">
       <Filter>pilo</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\tlv.hpp">

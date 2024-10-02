@@ -87,6 +87,11 @@ namespace pilo
 				int case_linked_byte_buffer_basic(::pilo::core::testing::func_test_case* p_case);
 				int case_linked_byte_buffer_mt_4k_net(::pilo::core::testing::func_test_case* p_case);
 			}
+
+			namespace threading
+			{
+				int case_efficeint_thread_pool_basic(::pilo::core::testing::func_test_case* p_case);
+			}
 		}
 	}
 }

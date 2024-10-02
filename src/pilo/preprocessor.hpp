@@ -12,6 +12,7 @@
 #define PMI_MEMORY_ALLOCATOR_RECORDER_ENABLE_LEVEL		(1)	
 
 #define SP_PMI_TLV_STEP                    (65536)
+#define SP_PMI_TASK_STEP                   (65536)
 #define SP_PMI_PATH_DEFAULT_LENGTH          (1)
 #define SP_PMS_PILO_PREDEF_DIR_CNF          "conf"
 #define SP_PMS_PILO_PREDEF_DIR_TMP          "tmp"
@@ -24,6 +25,8 @@
 #define SP_PMS_TEXT_FILE_DFL_LINE_WSEP      "\n"
 #define SP_PMS_LOG_FILE_DFL_FLD_SEP         "\t"
 #define SP_PMI_FILE_BUFRD_BUF_SIZE          (4096)
+#define SP_PMI_THREAD_POOL_WORKER_COUNT		(4)
+#define SP_PMI_THREAD_TASK_EXECUTOR_COUNT	(1)
 
 #define SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE     (BKILO(4))
 #define SP_PMI_LBKBUF_NODE_4K_STEP_SIZE     (1024)

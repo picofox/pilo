@@ -10,6 +10,7 @@
 #include "../threading/spin_mutex.hpp"
 #include "./cmdline_args.hpp"
 #include "./environment_variable_manager.hpp"
+#include "../../task.hpp"
 
 namespace pilo
 {
@@ -28,7 +29,7 @@ namespace pilo
             public:
                 typedef ::pilo::core::memory::compactable_autoreset_object_pool<::pilo::tlv, SP_PMI_TLV_STEP, ::pilo::core::threading::native_mutex>  tlv_pool_type;
                 typedef ::pilo::core::memory::compactable_object_pool<::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>, SP_PMI_LBKBUF_NODE_4K_STEP_SIZE, ::pilo::core::threading::spin_mutex> linked_buffer_node_4k_pool_type;
-
+                typedef ::pilo::core::memory::compactable_autoreset_object_pool<::pilo::task, SP_PMI_TASK_STEP, ::pilo::core::threading::native_mutex>  task_pool_type;
 
             public:
                 const static ::pilo::u32_t s_pilo_version = PMF_MAKE_U32_BY_BYTES_BE(1,0,35,0);
@@ -169,6 +170,10 @@ namespace pilo
                 ::pilo::tlv* allocate_tlv();
                 void deallocate_tlv(::pilo::tlv* tlvp);                
                 tlv_pool_type* tlv_pool() { return &_tlv_pool;  }
+                task_pool_type* task_pool() { return &_task_pool;  }
+                ::pilo::task* allocate_task();
+                ::pilo::task* allocate_task(thread_callback_func_type f_func, void* obj = nullptr, ::pilo::tlv* param = nullptr, object_dealloc_func_type d_func = nullptr);
+                void deallocate_task(::pilo::task* task);
 
 
                 ::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>* allocate_linked_buffer_node_4k();
@@ -192,7 +197,10 @@ namespace pilo
 
 
                 tlv_pool_type _tlv_pool;
+                task_pool_type _task_pool;
                 linked_buffer_node_4k_pool_type *_linked_buffer_node_pool;
+                
+
                 ::pilo::core::stat::pool_object_stat_manager _pool_object_stat_mgr;
 
                 ::std::shared_ptr<::pilo::core::config::core_config> _core_config;
@@ -209,4 +217,4 @@ namespace pilo
     }
 }
 
-#define PLOG(lv, fmt, args, ...)   do {::pilo::core::process::pilo_context()->logger(0)->log(lv, fmt, ##args);} while(0)
+#define PLOG(lv, fmt, ...)   do {::pilo::core::process::pilo_context()->logger(0)->log(lv, fmt, ##__VA_ARGS__);} while(0)
