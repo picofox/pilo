@@ -30,6 +30,7 @@ namespace pilo
                 virtual ::pilo::err_t stop() = 0;
                 virtual const std::string& name() const = 0;    
                 virtual void post_task(::pilo::task* task) = 0;
+                
             };
 
             typedef ::pilo::core::container::concurrent_queue<::pilo::task*> pool_task_queue_type;
@@ -50,7 +51,7 @@ namespace pilo
                 virtual ::pilo::err_t set_worker_count(::pilo::i32_t total, ::pilo::i32_t n_executor) = 0;
                 virtual const ::pilo::core::config::thread_pool_config* config() const = 0;
                 virtual ::pilo::i32_t task_executor_count() const = 0;
-
+                virtual bool stopped() const = 0;
             };
         }
     }

@@ -172,7 +172,7 @@ namespace pilo
                 tlv_pool_type* tlv_pool() { return &_tlv_pool;  }
                 task_pool_type* task_pool() { return &_task_pool;  }
                 ::pilo::task* allocate_task();
-                ::pilo::task* allocate_task(thread_callback_func_type f_func, void* obj = nullptr, ::pilo::tlv* param = nullptr, object_dealloc_func_type d_func = nullptr);
+                ::pilo::task* allocate_task(thread_callback_func_type f_func, void* obj, ::pilo::tlv* param, object_dealloc_func_type d_func, ::pilo::i8_t flag);
                 void deallocate_task(::pilo::task* task);
 
 

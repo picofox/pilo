@@ -109,7 +109,6 @@ namespace pilo
             {
                 ::pilo::task* task_ptr = nullptr;
                 bool has_task = false;
-
                 do {
                     if (this->_task_queue_owner) {
                         has_task = this->_task_queue->wait_dequeue_timed(task_ptr, 1000);
@@ -128,7 +127,6 @@ namespace pilo
                         }                        
                     }
                 } while (has_task);
-
                 return;
             }
 

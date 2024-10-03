@@ -18,7 +18,7 @@ namespace pilo
     class task
     {
     public:
-        task() :_func(nullptr),_object(nullptr), _param(nullptr), _object_dealloc(nullptr){}
+        task() :_func(nullptr),_object(nullptr), _param(nullptr), _object_dealloc(nullptr), _flags(PMB_TASK_DEFAULT_FLAG){}
         ~task()
         {
             reset();

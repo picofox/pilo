@@ -34,6 +34,20 @@ namespace pilo
                 bool global_task_queue() const { return _global_task_queue; }
                 ::pilo::i64_t task_dequeue_block_msec() const { return _task_dequeue_block_msec; }
 
+                void set(bool performance_mode, bool global_task_queue
+                    , ::pilo::i32_t workers_count, ::pilo::i32_t task_executor_count
+                    , ::pilo::i64_t  pulse_delay_usec, ::pilo::i64_t task_dequeue_block_msec
+                    , const char *  name)
+                {
+                    _performance_mode = performance_mode;
+                    _global_task_queue = global_task_queue;
+                    _workers_count = workers_count;
+                    _task_executor_count = task_executor_count;
+                    _pulse_delay_usec = pulse_delay_usec;
+                    _task_dequeue_block_msec = task_dequeue_block_msec;
+                    _name = name;
+                }
+
             public:
                 // Inherited via configuation_interface
                 ::pilo::err_t load() override;

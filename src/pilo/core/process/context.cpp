@@ -84,10 +84,10 @@ namespace pilo
                 return _task_pool.allocate();
             }
 
-            ::pilo::task* context::allocate_task(thread_callback_func_type f_func, void* obj, ::pilo::tlv* param, object_dealloc_func_type d_func)
+            ::pilo::task* context::allocate_task(thread_callback_func_type f_func, void* obj, ::pilo::tlv* param, object_dealloc_func_type d_func, ::pilo::i8_t flag)
             {
                 ::pilo::task* task = _task_pool.allocate();
-                task->set(f_func, obj, param, d_func);
+                task->set(f_func, obj, param, d_func, flag);
                 return task;
             }
 

@@ -58,6 +58,7 @@ namespace pilo
                 const::pilo::core::config::thread_pool_config* config() const override;
                 ::pilo::i32_t task_executor_count() const override;
                 const std::string& name() const { return _config->name();  }
+                bool stopped() const override  { return _workers.empty(); }
 
             private:
                 const ::pilo::core::config::thread_pool_config* _config;  

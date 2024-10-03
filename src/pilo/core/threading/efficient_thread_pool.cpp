@@ -54,14 +54,16 @@ namespace pilo
                 return set_worker_count(0, 0);
             }
 
-            void efficient_thread_pool::post_task(::pilo::task* task)
-            {                
-                if (_task_queue != nullptr) {
-                    _task_queue->enqueue(task);
+            void efficient_thread_pool::post_task(::pilo::task* t)
+            {      
+                if (_task_queue != nullptr) {                    
+                    if (!_task_queue->enqueue(t)) {
+                        PLOG(::pilo::core::logging::level::error, "post task to g-b-queue failed %x", &t);
+                    }
                 }
                 else {
                     ::pilo::i32_t idx = ::rand() % this->task_executor_count();
-                    _workers[idx]->post_task(task);
+                    _workers[idx]->post_task(t);
                 }                    
             }
             bool efficient_thread_pool::get_task(::pilo::task*& task)
