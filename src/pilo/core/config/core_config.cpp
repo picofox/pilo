@@ -3,6 +3,7 @@
 #include "../../tlv.hpp"
 #include "../process/process.hpp"
 #include "../ml/json_tlv_driver.hpp"
+#include "../service/services_def.hpp"
 
 namespace pilo {
     namespace core {
@@ -50,6 +51,10 @@ namespace pilo {
 
                 this->_cmdline_args.set_default();
                 this->_env_vars.set_default();
+
+                service_config svc_cfg(PMS_BUILTIN_SERVICE_TIMER, 100, PMI_BUILTIN_SERVICE_TIMER, nullptr);
+                _core_services.insert(std::pair<::pilo::i16_t, service_config>((::pilo::i16_t)0, std::move(svc_cfg)));
+
                 this->_thread_pool.set_default();
 
                 return PILO_OK;
@@ -90,6 +95,7 @@ namespace pilo {
                 this->_cwd.clear();
                 this->_loggers.clear();
                 this->_cmdline_args.clear(false);
+                this->_core_services.clear();
                 this->_thread_pool.clear(false);
 
                 if (purge) {
@@ -99,7 +105,6 @@ namespace pilo {
 
             ::pilo::err_t core_config::load_from_configurator(const char* fqdn_path, ::pilo::core::ml::tlv_driver_interface* driver)
             {
-                PMC_UNUSED(fqdn_path);
                 ::pilo::err_t err = PILO_OK;
                 logger tmp_logger;
                 char fqdn_buffer[64] = { 0 };
@@ -130,6 +135,28 @@ namespace pilo {
 
                 PILO_CHKERR_RET(err, this->_cmdline_args.load_from_configurator("cmdline_args", driver));
                 PILO_CHKERR_RET(err, this->_env_vars.load_from_configurator("env_vars", driver));
+
+                char buffer[128] = { 0 };
+                vp = driver->get_value_node("core_services", err);
+                if (vp != nullptr && vp->daynamic_data() != nullptr && vp->size() > 0) {
+                    if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_dict) {
+                        return ::pilo::mk_err(PERR_MIS_DATA_TYPE);
+                    }                    
+                    const std::map<std::string, ::pilo::tlv*>* mptr = (std::map<std::string, ::pilo::tlv*>*) vp->daynamic_data();
+                    std::map<std::string, ::pilo::tlv*>::const_iterator svc_it = mptr->cbegin();
+                    for (; svc_it != mptr->cend(); svc_it++) {
+                        ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "core_services.%s", svc_it->first.c_str());
+                        service_config tmp_svc_cfg;
+                        tmp_svc_cfg.set_type_id(::pilo::core::string::string_to_decimal(svc_it->first.c_str(), svc_it->first.size(), (::pilo::i16_t)-1));
+                        if (tmp_svc_cfg.type_id() < 0)
+                            return ::pilo::mk_err(PERR_INC_DATA);
+                        tmp_svc_cfg.load_from_configurator(buffer, driver);
+                        _core_services.insert(std::pair<::pilo::i16_t, service_config>(tmp_svc_cfg.type_id(), std::move(tmp_svc_cfg)));
+                    }                
+                }
+
+
+
                 PILO_CHKERR_RET(err, this->_thread_pool.load_from_configurator("thread_pool", driver));
 
                 return PILO_OK;
@@ -150,6 +177,15 @@ namespace pilo {
 
                 this->_cmdline_args.save_to_configurator("cmdline_args", driver);
                 this->_env_vars.save_to_configurator("env_vars", driver);
+
+                std::map<::pilo::i16_t, service_config>::iterator it = _core_services.begin();
+                for (; it != _core_services.end(); it++) {
+                    ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "core_services.%d",it->first);
+                    it->second.save_to_configurator(buffer, driver);
+                }
+
+
+
                 this->_thread_pool.save_to_configurator("thread_pool", driver);
                 return PILO_OK;
             }

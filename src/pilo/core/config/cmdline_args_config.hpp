@@ -163,7 +163,7 @@ namespace pilo {
                 const cmdline_spec* spec(char c) const { return _short_specs[c]; }
                 const cmdline_spec* spec(const std::string& l) const 
                 { 
-                    std::unordered_map<std::string, cmdline_spec*>::const_iterator it = _long_specs.find(l);
+                    std::map<std::string, cmdline_spec*>::const_iterator it = _long_specs.find(l);
                     if (it == _long_specs.end())
                         return nullptr;
                     return it->second; 
@@ -171,7 +171,7 @@ namespace pilo {
 
             private:
                 cmdline_spec* _short_specs[128];
-                std::unordered_map<std::string, cmdline_spec*>      _long_specs;
+                std::map<std::string, cmdline_spec*>      _long_specs;
                 cmdline_spec    _targets;
             };
 

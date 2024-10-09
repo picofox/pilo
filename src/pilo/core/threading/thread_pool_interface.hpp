@@ -21,6 +21,9 @@ namespace pilo
                 blocking = 2,
             };
 
+            class thread_pool_worker_interface;
+            typedef void (*pool_callback_func_type)(thread_pool_worker_interface*);
+
             class thread_pool_worker_interface
             {
             public:
@@ -30,13 +33,14 @@ namespace pilo
                 virtual ::pilo::err_t stop() = 0;
                 virtual const std::string& name() const = 0;    
                 virtual void post_task(::pilo::task* task) = 0;
+                virtual void set_running_handler(pool_callback_func_type hdl) = 0;
                 
             };
 
             typedef ::pilo::core::container::concurrent_queue<::pilo::task*> pool_task_queue_type;
             typedef ::pilo::core::container::blocking_concurrent_queue<::pilo::task*> pool_task_blocking_queue_type;
 
-            typedef void (*pool_callback_func_type)(thread_pool_worker_interface*);
+            
 
             class thread_pool_interface
             {
@@ -52,6 +56,7 @@ namespace pilo
                 virtual const ::pilo::core::config::thread_pool_config* config() const = 0;
                 virtual ::pilo::i32_t task_executor_count() const = 0;
                 virtual bool stopped() const = 0;
+                virtual void set_running_handler(pool_callback_func_type hdl) = 0;
             };
         }
     }

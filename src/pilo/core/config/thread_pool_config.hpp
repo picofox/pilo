@@ -29,10 +29,10 @@ namespace pilo
                 ::pilo::i64_t pulse_delay_usec() const {return _pulse_delay_usec;}
                 ::pilo::i32_t workers_count() const;
                 ::pilo::i32_t task_executor_count() const;
-                const std::string& name() const { return _name;  }
-                bool performance_mode() const { return _performance_mode;  }
-                bool global_task_queue() const { return _global_task_queue; }
-                ::pilo::i64_t task_dequeue_block_msec() const { return _task_dequeue_block_msec; }
+                inline const std::string& name() const { return _name;  }
+                inline bool performance_mode() const { return _performance_mode;  }
+                inline bool global_task_queue() const { return _global_task_queue; }
+                inline ::pilo::i64_t task_dequeue_block_msec() const { return _task_dequeue_block_msec; }
 
                 void set(bool performance_mode, bool global_task_queue
                     , ::pilo::i32_t workers_count, ::pilo::i32_t task_executor_count

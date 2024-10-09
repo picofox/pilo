@@ -12,9 +12,6 @@ namespace pilo
         {
             ::pilo::err_t polled_thread_pool_hybrid_worker::start()
             {
-                if (_task_queue == nullptr)
-                    return ::pilo::mk_perr(PERR_NULL_PTR);
-
                 if (this->_worker_thread != nullptr) {
                     return ::pilo::mk_perr(PERR_EXIST);
                 }
@@ -127,18 +124,22 @@ namespace pilo
                         return;
                     }
                     else {
-                        (*task_ptr)();
-                        if (!task_ptr->keep_task_after_invoke()) {
-                            PILO_CONTEXT->deallocate_task(task_ptr);
-                        }                  
+                        (*task_ptr)();            
                     }
                 } while (has_task);
 
                 return;
             }
 
+            void polled_thread_pool_hybrid_worker::set_running_handler(pool_callback_func_type hdl)
+            {
+                this->_on_running_handler = hdl;
+            }
+
             void polled_thread_pool_hybrid_worker::post_task(::pilo::task* task)
             {
+                PMC_ASSERT(_task_queue != nullptr);
+                _task_queue->enqueue(task);
             }
 
             pool_worker_type polled_thread_pool_hybrid_worker::type() const

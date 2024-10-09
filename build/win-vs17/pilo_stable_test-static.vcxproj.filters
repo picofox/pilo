@@ -22,6 +22,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\threading\case_efficient_thread_pool.cpp">
       <Filter>pilo_stable_test\core\threading</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\threading\case_performance_thread_pool.cpp">
+      <Filter>pilo_stable_test\core\threading</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\main.cpp">
       <Filter>pilo_stable_test</Filter>
     </ClCompile>

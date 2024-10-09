@@ -35,6 +35,8 @@ namespace pilo
 
 			namespace threading
 			{
+				int case_performance_thread_pool_global_nqueue(::pilo::core::testing::stable_test_case* p_case);
+				int case_performance_thread_pool_global_queue(::pilo::core::testing::stable_test_case* p_case);
 				int case_effcient_thread_pool_global_queue(::pilo::core::testing::stable_test_case* p_case);
 				int case_effcient_thread_pool_global_nqueue(::pilo::core::testing::stable_test_case* p_case);
 			}

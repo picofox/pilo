@@ -37,7 +37,7 @@ namespace pilo
                  
             private:
                 ::pilo::tlv*                                        _short_args[128];
-                std::unordered_map<std::string, ::pilo::tlv*>       _long_args;
+                std::map<std::string, ::pilo::tlv*>       _long_args;
                 std::vector<::pilo::tlv*>                           _targets;
             };
         }

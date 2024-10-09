@@ -13,12 +13,12 @@ namespace pilo
     {
         namespace threading
         {
-            ::pilo::err_t performance_thread_pool::initialize()
+            ::pilo::err_t performance_thread_pool::start()
             {
                 ::pilo::i32_t gw_cnt = _config->workers_count();
                 ::pilo::i32_t te_cnt = _config->task_executor_count();
                 thread_pool_worker_interface* worker = nullptr;
-
+                ::pilo::err_t err = PILO_OK;
                 for (::pilo::i32_t i = 0; i < gw_cnt; i++)
                 {
                     if (i < te_cnt) {
@@ -30,23 +30,52 @@ namespace pilo
                     if (worker == nullptr) {
                         return ::pilo::mk_err(PERR_CREATE_OBJ_FAIL);
                     }
+                    err = worker->start();
+                    if (err != PILO_OK)
+                        return err;
                     _workers.push_back(worker);
                 }
 
                 _task_executor_count = te_cnt;
 
                 return PILO_OK;
-                
             }
-            bool performance_thread_pool::has_task_queue() const
+
+            ::pilo::err_t performance_thread_pool::stop()
             {
-                return (this->_task_queue != nullptr);
+                return set_worker_count(0,0);
+            }
+
+            void performance_thread_pool::post_task(::pilo::task* t)
+            {
+                if (_task_queue != nullptr) {
+                    if (! _task_queue->enqueue(t)) {
+                        PLOG(::pilo::core::logging::level::error, "post task to g-queue failed %x", &t);
+                    }
+                }
+                else {
+                    ::pilo::i32_t idx = ::rand() % this->task_executor_count();
+                    _workers[idx]->post_task(t);
+                }
+            }
+
+            void performance_thread_pool::set_running_handler(pool_callback_func_type hdl)
+            {
+                this->_on_running_handler = hdl;
+                for (::pilo::i32_t i = 0; i < this->_workers.size(); i++) {
+                    this->_workers[i]->set_running_handler(hdl);
+                }
             }
 
             bool performance_thread_pool::get_task(::pilo::task*& task)
             {
                 PMC_ASSERT(_task_queue != nullptr);
                 return _task_queue->try_dequeue(task);
+            }
+
+            bool performance_thread_pool::has_task_queue() const
+            {
+                return (this->_task_queue != nullptr);
             }
 
             ::pilo::err_t performance_thread_pool::set_worker_count(::pilo::i32_t total, ::pilo::i32_t n_executor)
@@ -99,17 +128,7 @@ namespace pilo
                 
 
                 return ::pilo::err_t();
-            }
-
-            ::pilo::err_t performance_thread_pool::start()
-            {
-                return ::pilo::err_t();
-            }
-
-            ::pilo::err_t performance_thread_pool::stop()
-            {
-                return ::pilo::err_t();
-            }
+            }           
 
             const::pilo::core::config::thread_pool_config* performance_thread_pool::config() const
             {
@@ -119,17 +138,6 @@ namespace pilo
             ::pilo::i32_t performance_thread_pool::task_executor_count() const
             {
                 return this->_task_executor_count;
-            }
-
-            void performance_thread_pool::post_task(::pilo::task* task)
-            {
-                if (_task_queue != nullptr) {
-                    _task_queue->enqueue(task);
-                }
-                else {
-                    ::pilo::i32_t idx = ::rand() % this->task_executor_count();
-                    _workers[idx]->post_task(task);
-                }
             }
         }
     }

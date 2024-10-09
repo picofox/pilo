@@ -36,6 +36,7 @@ namespace pilo
                 ::pilo::err_t stop() override;
                 const std::string& name() const { return _name; }
                 void post_task(::pilo::task* task) override;
+                void set_running_handler(pool_callback_func_type hdl) override;
 
             private:
                 void _on_running();
@@ -55,9 +56,6 @@ namespace pilo
                 auto_join_thread*       _worker_thread;
                 pool_task_blocking_queue_type*   _task_queue;
                 std::string             _name;
-
-
-                
             };
 
         }

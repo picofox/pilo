@@ -11,6 +11,8 @@
 #include "./cmdline_args.hpp"
 #include "./environment_variable_manager.hpp"
 #include "../../task.hpp"
+#include "../threading/thread_pool_interface.hpp"
+#include "../service/service_manager.hpp"
 
 namespace pilo
 {
@@ -172,7 +174,7 @@ namespace pilo
                 tlv_pool_type* tlv_pool() { return &_tlv_pool;  }
                 task_pool_type* task_pool() { return &_task_pool;  }
                 ::pilo::task* allocate_task();
-                ::pilo::task* allocate_task(thread_callback_func_type f_func, void* obj, ::pilo::tlv* param, object_dealloc_func_type d_func, ::pilo::i8_t flag);
+                ::pilo::task* allocate_task(task_func_type f_func, void* obj, ::pilo::tlv* param, task_destructor_func_type dtor);
                 void deallocate_task(::pilo::task* task);
 
 
@@ -183,6 +185,12 @@ namespace pilo
                 std::string startup_info() const;
 
                 inline const cmdline_arg& cmdline_args() const { return _cmdline_arg;  }
+
+                inline void post_task(::pilo::task* task_ptr)
+                {
+                    this->_thread_pool->post_task(task_ptr);
+                }
+
 
             private:
                 ::pilo::core::io::path _proc_paths[(int)::pilo::predefined_pilo_path::count];
@@ -207,7 +215,15 @@ namespace pilo
                 cmdline_arg                                          _cmdline_arg;
                 environment_variable_manager                         _environment_variable_manager;
                 
+
+                ::pilo::core::service::service_manager *        _service_manager;
+                ::pilo::core::threading::thread_pool_interface* _thread_pool;
+
+
                 ::pilo::core::logging::logger_manager _logger_manager;
+
+
+                
                 
             };
 

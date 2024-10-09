@@ -111,7 +111,7 @@ namespace pilo
                 bool has_task = false;
                 do {
                     if (this->_task_queue_owner) {
-                        has_task = this->_task_queue->wait_dequeue_timed(task_ptr, 1000);
+                        has_task = this->_task_queue->wait_dequeue_timed(task_ptr, _task_dequeue_block_msec);
                     }
                     else {
                         has_task = this->_pool->get_task(task_ptr);
@@ -121,12 +121,14 @@ namespace pilo
                         return;
                     }
                     else {
-                        (*task_ptr)();
-                        if (! task_ptr->keep_task_after_invoke()) {
-                            PILO_CONTEXT->deallocate_task(task_ptr);
-                        }                        
+                        (*task_ptr)();                      
                     }
                 } while (has_task);
+                return;
+            }
+
+            void thread_pool_task_executor::set_running_handler(pool_callback_func_type)
+            {
                 return;
             }
 

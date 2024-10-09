@@ -69,6 +69,10 @@ namespace pilo
                 pool_task_blocking_queue_type*                  _task_queue;
                 std::vector<thread_pool_worker_interface*>      _workers;  
 
+
+                // Inherited via thread_pool_interface
+                void set_running_handler(pool_callback_func_type hdl) override;
+
             };
         }
     }

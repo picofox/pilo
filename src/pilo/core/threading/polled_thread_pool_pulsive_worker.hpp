@@ -58,6 +58,7 @@ namespace pilo
                 ::pilo::err_t stop() override;
                 const std::string& name() const { return _name; }
                 void post_task(::pilo::task* task) override;
+                void set_running_handler(pool_callback_func_type hdl) override;
 
             private:
                 void _on_running();

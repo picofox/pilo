@@ -13,6 +13,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.cpp">
       <Filter>pilo\core\config</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\service_config.cpp">
+      <Filter>pilo\core\config</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\thread_pool_config.cpp">
       <Filter>pilo\core\config</Filter>
     </ClCompile>
@@ -130,6 +133,30 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.cpp">
       <Filter>pilo\core\rtti</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_compensable_fixed_frequency_service.cpp">
+      <Filter>pilo\core\service</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_fixed_frequency_service.cpp">
+      <Filter>pilo\core\service</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_fixed_interval_service.cpp">
+      <Filter>pilo\core\service</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\mono_service_group.cpp">
+      <Filter>pilo\core\service</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\rac_service_group.cpp">
+      <Filter>pilo\core\service</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\service_interface.cpp">
+      <Filter>pilo\core\service</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\service_manager.cpp">
+      <Filter>pilo\core\service</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\services_def.cpp">
+      <Filter>pilo\core\service</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\stat\system_information.cpp">
       <Filter>pilo\core\stat</Filter>
     </ClCompile>
@@ -226,6 +253,9 @@
       <Filter>pilo\core\config</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\logger_config.hpp">
+      <Filter>pilo\core\config</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\service_config.hpp">
       <Filter>pilo\core\config</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\thread_pool_config.hpp">
@@ -476,6 +506,33 @@
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.hpp">
       <Filter>pilo\core\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_compensable_fixed_frequency_service.hpp">
+      <Filter>pilo\core\service</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_fixed_frequency_service.hpp">
+      <Filter>pilo\core\service</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_fixed_interval_service.hpp">
+      <Filter>pilo\core\service</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\mono_service_group.hpp">
+      <Filter>pilo\core\service</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\rac_service_group.hpp">
+      <Filter>pilo\core\service</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\service_group_interface.hpp">
+      <Filter>pilo\core\service</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\service_interface.hpp">
+      <Filter>pilo\core\service</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\service_manager.hpp">
+      <Filter>pilo\core\service</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\services_def.hpp">
+      <Filter>pilo\core\service</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\stat\pool_object_stat_info.hpp">
       <Filter>pilo\core\stat</Filter>
@@ -787,6 +844,9 @@
     </Filter>
     <Filter Include="pilo\core\rtti">
       <UniqueIdentifier>{CCE9DA97-C4A7-3435-BE19-CEE5D2653ED4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\service">
+      <UniqueIdentifier>{0B31018B-295D-309B-AA2D-C7E2CE9B5E6E}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo\core\stat">
       <UniqueIdentifier>{0459F3A1-5CE6-39C2-86B1-233A082C1A02}</UniqueIdentifier>

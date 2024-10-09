@@ -2,6 +2,7 @@
 #define _pilo_core_config_core_config_h_
 
 #include <vector>
+#include <map>
 #include "../ml/json_tlv_driver.hpp"
 #include "./configuation_interface.hpp"
 #include "../string/string_operation.hpp"
@@ -11,7 +12,7 @@
 #include "./cmdline_args_config.hpp"
 #include "./env_vars_config.hpp"
 #include "./thread_pool_config.hpp"
-
+#include "./service_config.hpp"
 
 namespace pilo {
     namespace core {
@@ -74,6 +75,7 @@ namespace pilo {
                 const cmdline_args_config& cmdline_arg_spec() const { return _cmdline_args;  }
 
                 const env_vars_config& env_vars() const { return _env_vars;  }
+                const std::map<::pilo::i16_t, service_config>& core_services() const { return _core_services; }
                 const thread_pool_config& thread_pool() const { return _thread_pool;  }
             
             public:
@@ -81,11 +83,12 @@ namespace pilo {
 
 
             private:                
-                ::std::string           _cwd;
-                ::std::vector<logger>   _loggers;      
-                cmdline_args_config     _cmdline_args;
-                env_vars_config         _env_vars;
-                thread_pool_config      _thread_pool;
+                ::std::string                           _cwd;
+                ::std::vector<logger>                   _loggers;      
+                cmdline_args_config                     _cmdline_args;
+                env_vars_config                         _env_vars;
+                std::map<::pilo::i16_t, service_config> _core_services;
+                thread_pool_config                      _thread_pool;
 
             };
 

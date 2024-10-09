@@ -6,6 +6,8 @@
 #include "process.hpp"
 #include "../memory/linked_buffer_node.hpp"
 #include <cstdlib>
+#include "../threading/efficient_thread_pool.hpp"
+#include "../threading/performance_thread_pool.hpp"
 
 namespace pilo
 {
@@ -32,6 +34,10 @@ namespace pilo
             }
 #endif
             
+            static void _s_dummy_thread_cb(::pilo::core::threading::thread_pool_worker_interface* w)
+            {
+                PMC_UNUSED(w);
+            }
 
             context::context()
             {
@@ -62,6 +68,10 @@ namespace pilo
                 this->_wired_type_facotry = new ::pilo::core::rtti::wired_type_factory();
 
                 this->_linked_buffer_node_pool = new linked_buffer_node_4k_pool_type();
+                
+                this->_service_manager = nullptr;
+                this->_thread_pool = nullptr;
+
             }
 
             context::~context()
@@ -84,10 +94,10 @@ namespace pilo
                 return _task_pool.allocate();
             }
 
-            ::pilo::task* context::allocate_task(thread_callback_func_type f_func, void* obj, ::pilo::tlv* param, object_dealloc_func_type d_func, ::pilo::i8_t flag)
+            ::pilo::task* context::allocate_task(task_func_type f_func, void* obj, ::pilo::tlv* param, task_destructor_func_type d_func)
             {
                 ::pilo::task* task = _task_pool.allocate();
-                task->set(f_func, obj, param, d_func, flag);
+                task->set(f_func, obj, param, d_func);
                 return task;
             }
 
@@ -251,8 +261,6 @@ namespace pilo
                     return err;
                 }
 
-                
-
                 _pool_object_stat_mgr.register_item(::pilo::core::stat::pool_object_stat_manager::pool_object_key_code::key_tlv
                     , sizeof(::pilo::tlv), [](::pilo::core::stat::pool_object_stat_manager::pool_object_key_code 
                         , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return ::pilo::tlv::update_pool_object_stat(si);}
@@ -263,8 +271,6 @@ namespace pilo
                         , ::pilo::core::stat::pool_object_stat_manager::stat_item* si) -> ::pilo::err_t { return ::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>::update_pool_object_stat(si); }
                     , "local_bn"
                 );
-
-                
 
                 _environment_variable_manager.initialize();
 
@@ -277,6 +283,22 @@ namespace pilo
 #else
                 atexit(s_on_exit);
 #endif
+
+                if (!core_config()->thread_pool().name().empty()) {
+                    if (core_config()->thread_pool().performance_mode()) {
+                        _thread_pool = new ::pilo::core::threading::performance_thread_pool(&core_config()->thread_pool(), nullptr, _s_dummy_thread_cb, nullptr);
+                    }
+                    else {
+                        _thread_pool = new ::pilo::core::threading::efficient_thread_pool(&core_config()->thread_pool(), nullptr, _s_dummy_thread_cb, nullptr);
+                    }
+                    if (_thread_pool == nullptr) {
+                        errmsg = "create thread pool failed.";
+                        return ::pilo::mk_perr(PERR_CREATE_OBJ_FAIL);
+                    }
+                }
+                
+
+
                 _initialized = true;
 
                 return PILO_OK;
@@ -287,9 +309,6 @@ namespace pilo
                 std::string str = this->_pool_object_stat_mgr.to_string();
                 std::cout << str << std::endl;
             }
-
-
-            
 
             ::pilo::err_t pilo_startup(int argc, char* argv[])
             {

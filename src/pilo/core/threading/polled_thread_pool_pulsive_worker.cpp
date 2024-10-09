@@ -106,6 +106,11 @@ namespace pilo
                 }                
             }
 
+            void polled_thread_pool_pulsive_worker::set_running_handler(pool_callback_func_type hdl)
+            {
+                this->_on_running_handler = hdl;
+            }
+
             void polled_thread_pool_pulsive_worker::post_task(::pilo::task* task)
             {
                 PMC_ASSERT(false);

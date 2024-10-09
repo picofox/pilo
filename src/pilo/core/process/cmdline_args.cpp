@@ -53,7 +53,7 @@ namespace pilo
                         }
                     }
                 }
-                std::unordered_map<std::string, ::pilo::tlv*>::const_iterator cit = _long_args.cbegin();
+                std::map<std::string, ::pilo::tlv*>::const_iterator cit = _long_args.cbegin();
                 for (; cit != _long_args.cend(); cit++) {
                     ::pilo::tlv::deallocate(cit->second);
                 }
@@ -253,7 +253,7 @@ namespace pilo
                     }
                 }
 
-                std::unordered_map<std::string, ::pilo::tlv*>::const_iterator cit = _long_args.cbegin();
+                std::map<std::string, ::pilo::tlv*>::const_iterator cit = _long_args.cbegin();
                 for (; cit != _long_args.cend(); cit++) {
 
                     const ::pilo::core::config::cmdline_spec* sp = PILO_CONTEXT->core_config()->cmdline_arg_spec().spec(cit->first);
@@ -300,7 +300,7 @@ namespace pilo
                         return _short_args[s_name];
                 }
                 if (!str.empty()) {
-                    std::unordered_map<std::string, ::pilo::tlv*>::const_iterator it = _long_args.find(str);
+                    std::map<std::string, ::pilo::tlv*>::const_iterator it = _long_args.find(str);
                     if (it != _long_args.cend())
                         return it->second;
                 }
@@ -345,7 +345,7 @@ namespace pilo
                         }
                     }
                 }
-                std::unordered_map<std::string, ::pilo::tlv*>::const_iterator cit = _long_args.cbegin();
+                std::map<std::string, ::pilo::tlv*>::const_iterator cit = _long_args.cbegin();
                 for (; cit != _long_args.cend(); cit++) {
                     spec = PILO_CONTEXT->core_config()->cmdline_arg_spec().spec(cit->first);
                     if (spec == nullptr) {

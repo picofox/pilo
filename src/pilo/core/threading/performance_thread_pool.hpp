@@ -17,7 +17,7 @@ namespace pilo
             class performance_thread_pool : public thread_pool_interface
             {
             public:
-                performance_thread_pool(::pilo::core::config::thread_pool_config* cfg
+                performance_thread_pool(const ::pilo::core::config::thread_pool_config* cfg
                     , pool_callback_func_type on_start_cb
                     , pool_callback_func_type on_run_cb
                     , pool_callback_func_type on_clean_cb
@@ -54,9 +54,9 @@ namespace pilo
                 const::pilo::core::config::thread_pool_config* config() const override;
                 ::pilo::i32_t task_executor_count() const override;
                 void post_task(::pilo::task* task) override;
-
+                bool stopped() const override { return _workers.empty(); }
             private:
-                ::pilo::core::config::thread_pool_config*       _config;
+                const ::pilo::core::config::thread_pool_config*       _config;
                 ::pilo::i32_t                                   _task_executor_count;
                 pool_callback_func_type                         _on_starting_handler;
                 pool_callback_func_type                         _on_running_handler;
@@ -64,14 +64,8 @@ namespace pilo
                 pool_task_queue_type*                           _task_queue;
                 std::vector<thread_pool_worker_interface*>      _workers;
 
-
-
-                
-
-
-
-                
-
+                // Inherited via thread_pool_interface
+                void set_running_handler(pool_callback_func_type hdl) override;
             };
         }
     }

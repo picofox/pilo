@@ -47,6 +47,8 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
                 }
+
+
                 return PILO_OK;
             }
             ::pilo::err_t efficient_thread_pool::stop()
@@ -69,7 +71,7 @@ namespace pilo
             bool efficient_thread_pool::get_task(::pilo::task*& task)
             {
                 PMC_ASSERT(_task_queue != nullptr);
-                return _task_queue->wait_dequeue_timed(task, 1000);
+                return _task_queue->wait_dequeue_timed(task, this->_config->task_dequeue_block_msec());
             }
             bool efficient_thread_pool::has_task_queue() const
             {
@@ -135,6 +137,14 @@ namespace pilo
             ::pilo::i32_t efficient_thread_pool::task_executor_count() const
             {
                 return this->_task_executor_count;
+            }
+
+            void efficient_thread_pool::set_running_handler(pool_callback_func_type hdl)
+            {
+                this->_on_running_handler = hdl;
+                for (::pilo::i32_t i = this->_task_executor_count; i < this->_workers.size(); i++) {
+                    this->_workers[i]->set_running_handler(hdl);
+                }
             }
            
         }

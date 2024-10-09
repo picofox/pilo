@@ -132,7 +132,7 @@ namespace pilo
                     }
                 }
 
-                std::unordered_map<std::string, cmdline_spec*>::const_iterator cit = _long_specs.cbegin();
+                std::map<std::string, cmdline_spec*>::const_iterator cit = _long_specs.cbegin();
                 for (; cit != _long_specs.cend(); cit++) {
                     delete cit->second;
                 }
@@ -161,7 +161,7 @@ namespace pilo
                         PILO_CHKERR_RET(err, driver->set_value(cb.begin(), one_arg_sp_buf, (::pilo::i32_t)-1, false, true, true));
                     }
                 }
-                std::unordered_map<std::string, cmdline_spec*>::const_iterator cit = _long_specs.cbegin();
+                std::map<std::string, cmdline_spec*>::const_iterator cit = _long_specs.cbegin();
                 for (; cit != _long_specs.cend(); cit++) {
                     if (cit->second->short_name() >= 0) {
                         continue;

@@ -102,6 +102,8 @@
 #define PERR_UNDEF              (84)
 
 #define PERR_SET_ENV_FAIL       (85)
+#define PERR_INV_SV_STATE       (86)
+
 
 
 #define PILO_CHKERR_RET(err, exp)         do {if ( (err = (exp)) != PILO_OK ) { return err; }} while(0);

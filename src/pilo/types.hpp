@@ -113,6 +113,14 @@ namespace pilo
     typedef ::pilo::u16_t                   pathlen_t;
 	typedef i32_t err_t;
 
+	typedef ::pilo::i16_t					service_id;
+	typedef ::pilo::i16_t					service_group_id;
+
+#define	PMI_INVALID_SERVICE_ID				((service_id) ~0)
+#define	PMI_INVALID_SERVICE_GROUP_ID		((service_group_id) ~0)
+#define PMI_MAX_SERVICE_ID					(32767)
+#define PMI_MAX_SERVICE_GROUP_ID			(32767)
+
 
 	template <typename CHAR_T>
 	class cstr_ref

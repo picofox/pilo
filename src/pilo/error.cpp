@@ -38,7 +38,7 @@ namespace pilo
         , "unlock file failed", "not initialized.", "already initialized.", "end of file", "tell file pos failed."
 
         , "set file size failed.", "parse json fail", "create tlv failed", "create object failed", "undefined."
-        , "set env failed.", "", "", "", ""
+        , "set env failed.", "invalid service state", "", "", ""
         , "", "", "", "", ""
         , "", "", "", "", ""
         , "", "", "", "", ""
