@@ -34,10 +34,17 @@ namespace pilo
             }
 #endif
             
-            static void _s_dummy_thread_cb(::pilo::core::threading::thread_pool_worker_interface* w)
+            static void _s_service_manager_pulse_func(::pilo::core::threading::thread_pool_worker_interface* w)
+            {
+                PMC_UNUSED(w);
+                _s_pilo_context_instance->service_manger()->pulse();
+            }
+
+            static void _s_dummy_thread_func(::pilo::core::threading::thread_pool_worker_interface* w)
             {
                 PMC_UNUSED(w);
             }
+
 
             context::context()
             {
@@ -285,16 +292,36 @@ namespace pilo
 #endif
 
                 if (!core_config()->thread_pool().name().empty()) {
-                    if (core_config()->thread_pool().performance_mode()) {
-                        _thread_pool = new ::pilo::core::threading::performance_thread_pool(&core_config()->thread_pool(), nullptr, _s_dummy_thread_cb, nullptr);
+                    if (!core_config()->core_services().empty()) {
+                        if (core_config()->thread_pool().performance_mode()) {
+                            _thread_pool = new ::pilo::core::threading::performance_thread_pool(&core_config()->thread_pool(), nullptr, _s_service_manager_pulse_func, nullptr);
+                        }
+                        else {
+                            _thread_pool = new ::pilo::core::threading::efficient_thread_pool(&core_config()->thread_pool(), nullptr, _s_service_manager_pulse_func, nullptr);
+                        }
+                        if (_thread_pool == nullptr) {
+                            errmsg = "create thread pool failed.";
+                            return ::pilo::mk_perr(PERR_CREATE_OBJ_FAIL);
+                        }
+
+                        _service_manager = new ::pilo::core::service::service_manager();
                     }
                     else {
-                        _thread_pool = new ::pilo::core::threading::efficient_thread_pool(&core_config()->thread_pool(), nullptr, _s_dummy_thread_cb, nullptr);
+                        if (core_config()->thread_pool().performance_mode()) {
+                            _thread_pool = new ::pilo::core::threading::performance_thread_pool(&core_config()->thread_pool(), nullptr, _s_dummy_thread_func, nullptr);
+                        }
+                        else {
+                            _thread_pool = new ::pilo::core::threading::efficient_thread_pool(&core_config()->thread_pool(), nullptr, _s_dummy_thread_func, nullptr);
+                        }
+                        if (_thread_pool == nullptr) {
+                            errmsg = "create thread pool failed.";
+                            return ::pilo::mk_perr(PERR_CREATE_OBJ_FAIL);
+                        }
+                        _service_manager = nullptr;
                     }
-                    if (_thread_pool == nullptr) {
-                        errmsg = "create thread pool failed.";
-                        return ::pilo::mk_perr(PERR_CREATE_OBJ_FAIL);
-                    }
+                }
+                else {
+                    _thread_pool = nullptr;
                 }
                 
 
@@ -302,6 +329,18 @@ namespace pilo
                 _initialized = true;
 
                 return PILO_OK;
+            }
+
+            ::pilo::err_t context::start()
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (_service_manager != nullptr)
+                    err = _service_manager->start();
+                if (err != PILO_OK)
+                    return err;
+                if (_thread_pool != nullptr)
+                    return _thread_pool->start();
+                return PILO_OK;                    
             }
 
             void context::finalize()

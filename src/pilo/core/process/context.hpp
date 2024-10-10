@@ -185,6 +185,10 @@ namespace pilo
                 std::string startup_info() const;
 
                 inline const cmdline_arg& cmdline_args() const { return _cmdline_arg;  }
+                inline ::pilo::core::service::service_manager* service_manger() { return _service_manager;  }
+                inline ::pilo::core::threading::thread_pool_interface* thread_pool() { return _thread_pool;  }
+
+                ::pilo::err_t start();
 
                 inline void post_task(::pilo::task* task_ptr)
                 {

@@ -19,6 +19,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\io\case_path.cpp">
       <Filter>pilo_stable_test\core\io</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\service\case_timer_service.cpp">
+      <Filter>pilo_stable_test\core\service</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\threading\case_efficient_thread_pool.cpp">
       <Filter>pilo_stable_test\core\threading</Filter>
     </ClCompile>
@@ -52,6 +55,9 @@
     </Filter>
     <Filter Include="pilo_stable_test\core\io">
       <UniqueIdentifier>{A7D9E5C6-9433-3D9B-B252-E909BAAB4997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo_stable_test\core\service">
+      <UniqueIdentifier>{7DDD4076-C615-3799-98C9-DB12583E72AB}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo_stable_test\core\threading">
       <UniqueIdentifier>{79B84656-3B78-3337-9666-DE7E0A61C358}</UniqueIdentifier>

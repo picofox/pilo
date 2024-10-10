@@ -1,6 +1,7 @@
 ﻿#include "./services_def.hpp"
 #include <unordered_map>
-#include <algorithm>
+#include "../string/string_operation.hpp"
+
 
 namespace pilo
 {
@@ -23,10 +24,12 @@ namespace pilo
 			::pilo::service_group_id service_name_to_id(const char* name)
 			{
 				std::string key;
-				std::transform(key.begin(), key.end(), name,
-					[](unsigned char c) { return std::tolower(c); });
+				::pilo::i64_t sz = ::pilo::core::string::character_count(name);
+				key.reserve(sz+1);
+				for (::pilo::i64_t i = 0; i < sz; i++) {
+					key.push_back((char)tolower(name[i]));
+				}
 
-				std::string key(name);
 				const std::unordered_map<std::string, ::pilo::service_group_id>::const_iterator it = s_service_name_id_map.find(key);
 				if (it == s_service_name_id_map.cend()) {
 					return -1;

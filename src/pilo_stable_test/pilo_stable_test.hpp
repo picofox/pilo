@@ -33,6 +33,11 @@ namespace pilo
 				int case_utf8_unicode(::pilo::core::testing::stable_test_case* p_case);
 			}
 
+			namespace service
+			{
+				int case_timer_service(::pilo::core::testing::stable_test_case* p_case);
+			}
+
 			namespace threading
 			{
 				int case_performance_thread_pool_global_nqueue(::pilo::core::testing::stable_test_case* p_case);
