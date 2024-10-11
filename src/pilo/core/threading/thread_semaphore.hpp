@@ -129,7 +129,7 @@ namespace pilo
                     return timed_wait(0);
                 }
 
-                bool timed_wait(::pilo::ts64_t ms) PMC_NO_TSAN
+                bool timed_wait(::pilo::i64_t ms) PMC_NO_TSAN
                 {
                     mach_timespec_t ts;
                     ts.tv_sec = static_cast<unsigned int>(ms / 1000);
@@ -189,7 +189,7 @@ namespace pilo
                     return xSemaphoreTake(m_sema, 0) == pdTRUE;
                 }
 
-                bool timed_wait(s::pilo::ts64_t msecs) PMC_NO_TSAN
+                bool timed_wait(s::pilo::i64_t msecs) PMC_NO_TSAN
                 {
                    // std::uint64_t msecs = usecs / 1000;
                     TickType_t ticks = static_cast<TickType_t>(msecs / portTICK_PERIOD_MS);
@@ -255,7 +255,7 @@ namespace pilo
                     return rc == 0;
                 }
 
-                bool timed_wait(::pilo::ts64_t ms) PMC_NO_TSAN
+                bool timed_wait(::pilo::i64_t ms) PMC_NO_TSAN
                 {
                     struct timespec ts;
                     clock_gettime(CLOCK_REALTIME, &ts);

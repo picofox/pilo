@@ -8,7 +8,7 @@
 
 #define PMS_CODE_PAGE_LINUX_UNICODE_NAME "UCS-4LE"
 #define PMS_CODE_PAGE_MACOS_UNICODE_NAME "UCS-4LE"
-#define PMS_CODE_PAGE_WINDOWS_UNICODE_NAME "UCS-2LE"
+#define PMS_CODE_PAGE_WINDOWS_UNICODE_NAME "UCS-2LE"z
 
 #if defined(__INTEL_COMPILER)
 #	define PMI_PFD_COMPILER_INTEL 1
@@ -372,17 +372,6 @@ constexpr endianness_enum getEndianOrder()
 #define PMD_PFD_MAYBE_ALIGN_TO_CACHELINE PMF_ALIGN(PMI_PFD_CACHE_LINE_SIZE)
 #endif
 
-#ifdef __cplusplus
-#define PMC_INLINE inline
-#else
-#define PMC_INLINE __inline
-#endif
-
-
-
-
-
-
 
 
 // AE_NO_TSAN/AE_TSAN_ANNOTATE_*
@@ -409,19 +398,7 @@ extern "C" void AnnotateHappensAfter(const char*, int, void*);
 #   define PMF_TSAN_ANNOTATE_ACQUIRE()
 #endif
 
-
-#define PMC_FORCE_INLINE __forceinline
-#define PMC_NO_INLINE __declspec(noinline)
-
-
-
-
-
-
-
-
-
-//----------------------------------- compiler
+//-------------------------------------------------------------------- compiler
 #if (PMI_PFD_COMPILER_GCC == 1)
 
 //-------------------------------------
@@ -448,7 +425,7 @@ extern "C" void AnnotateHappensAfter(const char*, int, void*);
 //-------------------------------------
 PMC_INLINE void cc_yield_hw_thread() {
 #if MINT_CPU_X86 || MINT_CPU_X64
-	// Only implemented on x86/64
+    // Only implemented on x86/64
 	asm volatile("pause");
 #endif
 }
@@ -458,6 +435,7 @@ PMC_INLINE void cc_yield_hw_thread() {
 
 #elif defined PMI_PFD_COMPILER_MSVC
 #include <intrin.h>
+
 //-------------------------------------
 //  Alignment
 //-------------------------------------
@@ -485,6 +463,10 @@ PMC_INLINE void cc_yield_hw_thread() {
 //-------------------------------------
 #define PMC_DEBUG_BREAK() __debugbreak()
 
+PMC_INLINE void cc_yield_hw_thread() {
+	YieldProcessor();
+}
+
 
 #if (PMI_PFD_CPU_X64 != 0) || (PMI_PFD_CPU_X86 != 0)
 #   define PMC_FULL_SYNC _mm_mfence
@@ -500,9 +482,29 @@ PMC_INLINE void cc_yield_hw_thread() {
 #   define PMC_LITE_SYNC __lwsync
 #endif
 
-
+//-------------------------------------------------------------------- compiler
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #endif //__pilo_platform_hpp_

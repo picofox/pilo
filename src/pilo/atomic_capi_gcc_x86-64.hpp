@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "../../pilo.hpp"
+#include "./pilo.hpp"
 #if (PMI_PFD_COMPILER_GCC == 1)
 
 #ifdef __cplusplus
