@@ -105,6 +105,7 @@ namespace pilo {
 
             ::pilo::err_t core_config::load_from_configurator(const char* fqdn_path, ::pilo::core::ml::tlv_driver_interface* driver)
             {
+                PMC_UNUSED(fqdn_path);
                 ::pilo::err_t err = PILO_OK;
                 logger tmp_logger;
                 char fqdn_buffer[64] = { 0 };

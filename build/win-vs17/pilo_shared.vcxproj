@@ -582,9 +582,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\error.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\pilo.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi_gcc_x86-64.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi_msvc.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\cmdline_args_config.hpp" />
@@ -597,7 +594,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\auto_array.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\blocking_concurrent_queue.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrent_queue.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrentqueue_internal_debug.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\singly_linked_selflist.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\trivil_concurrent_queue.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.hpp" />
@@ -703,7 +699,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\stable_test_case.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\testing\stable_test_suite.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\atomic.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\atomic_cpp11.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\auto_join_thread.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\dummy_mutex.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\dummy_read_write_lock.hpp" />
@@ -717,11 +712,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\read_write_mutex.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\shared_mutex_guard.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\spin_mutex.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_lw_semaphore.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_lw_semaphore_n.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_task_executor.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_semaphore.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\error.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml.hpp" />
@@ -734,6 +726,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\task.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\tlv.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\types.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\concurrentqueue\blockingconcurrentqueue.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\concurrentqueue\concurrentqueue.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\concurrentqueue\internal\concurrentqueue_internal_debug.h" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\concurrentqueue\lightweightsemaphore.h" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\allocators.h" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\cursorstreamwrapper.h" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\document.h" />

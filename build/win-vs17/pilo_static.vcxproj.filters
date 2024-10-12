@@ -225,15 +225,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi.hpp">
-      <Filter>pilo</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi_gcc_x86-64.hpp">
-      <Filter>pilo</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\atomic_capi_msvc.hpp">
-      <Filter>pilo</Filter>
-    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp">
       <Filter>pilo\core\algorithm</Filter>
     </ClInclude>
@@ -268,9 +259,6 @@
       <Filter>pilo\core\container</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrent_queue.hpp">
-      <Filter>pilo\core\container</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrentqueue_internal_debug.hpp">
       <Filter>pilo\core\container</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\singly_linked_selflist.hpp">
@@ -588,9 +576,6 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\atomic.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\atomic_cpp11.hpp">
-      <Filter>pilo\core\threading</Filter>
-    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\auto_join_thread.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
@@ -630,19 +615,10 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\spin_mutex.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_lw_semaphore.hpp">
-      <Filter>pilo\core\threading</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_lw_semaphore_n.hpp">
-      <Filter>pilo\core\threading</Filter>
-    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_interface.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_task_executor.hpp">
-      <Filter>pilo\core\threading</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_semaphore.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.hpp">
@@ -680,6 +656,18 @@
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\types.hpp">
       <Filter>pilo</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\concurrentqueue\blockingconcurrentqueue.h">
+      <Filter>pilo\external\concurrentqueue</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\concurrentqueue\concurrentqueue.h">
+      <Filter>pilo\external\concurrentqueue</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\concurrentqueue\internal\concurrentqueue_internal_debug.h">
+      <Filter>pilo\external\concurrentqueue\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\concurrentqueue\lightweightsemaphore.h">
+      <Filter>pilo\external\concurrentqueue</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidjson\allocators.h">
       <Filter>pilo\external\rapidjson</Filter>
@@ -862,6 +850,12 @@
     </Filter>
     <Filter Include="pilo\external">
       <UniqueIdentifier>{FD50F290-5B81-33CE-BCCE-ACA0BB3B349F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\external\concurrentqueue">
+      <UniqueIdentifier>{EC89B2F3-E40A-339A-A9F3-9A0F83FA346E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\external\concurrentqueue\internal">
+      <UniqueIdentifier>{04CA378A-041D-3BA0-BDEC-8C4DA7F17F5A}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo\external\rapidjson">
       <UniqueIdentifier>{E7E264E9-92A0-389D-A6E3-8DF6CB44FE6C}</UniqueIdentifier>

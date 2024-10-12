@@ -19,15 +19,15 @@ namespace pilo
 			{
 				static void start_cb(::pilo::core::threading::thread_pool_worker_interface* )
 				{
-					printf("start_cb\n");
+					//printf("start_cb\n");
 				}
-				static void run_cb(::pilo::core::threading::thread_pool_worker_interface* worker)
+				static void run_cb(::pilo::core::threading::thread_pool_worker_interface* )
 				{
-					printf("%s running\n", worker->name().c_str());
+					//printf("%s running\n", worker->name().c_str());
 				}
-				static void stop_cb(::pilo::core::threading::thread_pool_worker_interface* worker)
+				static void stop_cb(::pilo::core::threading::thread_pool_worker_interface* )
 				{
-					printf("%s _on_cleaning\n", worker->name().c_str());
+					//printf("%s _on_cleaning\n", worker->name().c_str());
 				}
 
 				int case_efficeint_thread_pool_basic(::pilo::core::testing::func_test_case* p_case)

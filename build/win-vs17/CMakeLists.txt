@@ -3,6 +3,7 @@
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_SUPPORT_WINDOWS_EXPORT_ALL_SYMBOLS 1 )
 
+
 IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(PILO_ARCH x86_64)    
 ELSE(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -42,6 +43,8 @@ get_filename_component(PFC_NAME ${PFC_NAME} NAME)
 set(PILO_OUTPUT_DIR ${PILO_PROJECT_DIR}/output/${PFC_NAME}/pilo)
 set(PILO_LIBSRC_DIR "${PILO_PROJECT_DIR}/src/pilo")
 set(PILO_OUTPUT_LIB_DIR ${PILO_PROJECT_DIR}/output/${PFC_NAME}/pilo/lib)
+
+#set(ENV{Path} "${PILO_OUTPUT_LIB_DIR};%Path%")
 
 message("PFC_NAME is -> <${PFC_NAME}>")
 message("PILO_LIBSRC_DIR is -> <${PILO_LIBSRC_DIR}>")
@@ -222,6 +225,8 @@ target_include_directories(pilo_stable_test-shared PUBLIC "${PILO_PROJECT_DIR}/s
 target_link_libraries(pilo_stable_test-shared PUBLIC debug "libpilo-shared-debug" optimized libpilo-shared-release)
 target_link_libraries(pilo_stable_test-shared PUBLIC "ws2_32.lib")
 target_link_directories(pilo_stable_test-shared PUBLIC ${PILO_OUTPUT_LIB_DIR})
+target_link_libraries(pilo_stable_test-shared PRIVATE $ENV{ENV_VARIABLE_NAME})
+#target_link_libraries(pilo_stable_test-shared PRIVATE $ENV{Path})
 
 
 #performance test
