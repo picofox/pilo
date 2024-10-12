@@ -28,7 +28,7 @@ namespace pilo
                                                 , _pulse_delay(pool->config()->pulse_delay_usec())
                                                 , _shutting(false)
                                                 , _stop(true)
-                                                , _worker_thread(false)
+                                                , _worker_thread(nullptr )
                 {                    
 
                     if (name_stub == nullptr)

@@ -37,7 +37,7 @@ namespace pilo
 
 
 			public:
-				inline service_manager*  service_manager() { return _m_mgr_ref;  }
+				inline service_manager*  services() { return _m_mgr_ref;  }
 				inline ::pilo::service_group_id id() const { return _m_id;  }
 
 			protected:

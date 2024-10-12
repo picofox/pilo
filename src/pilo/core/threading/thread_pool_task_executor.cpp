@@ -148,7 +148,7 @@ namespace pilo
                 , _task_queue_owner(pool->has_task_queue() ? false : true)
                 , _shutting(false)
                 , _stop(true)
-                , _worker_thread(false)
+                , _worker_thread(nullptr)
             {
                 if (name_stub == nullptr)
                     name_stub = "task_executor";

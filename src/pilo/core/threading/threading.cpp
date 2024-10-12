@@ -21,12 +21,12 @@
 #else
 	void pilo::core::threading::xpf_sleep(::pilo::i64_t secs)
 	{
-		::sleep(secs)
+		::sleep(secs);
 	}
 
 	void pilo::core::threading::xpf_msleep(::pilo::i64_t msecs)
 	{
-		::usleep(usecs*1000);
+		::usleep(msecs*1000);
 	}
 
 	void pilo::core::threading::xpf_usleep(::pilo::i64_t usecs)
