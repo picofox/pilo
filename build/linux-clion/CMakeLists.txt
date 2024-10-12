@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
+
+
 IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(PILO_ARCH x86_64)
 ELSE(CMAKE_SIZEOF_VOID_P EQUAL 8)
