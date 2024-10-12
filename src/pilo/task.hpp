@@ -1,5 +1,5 @@
-#ifndef _pilo_core_threading_task_hpp_
-#define _pilo_core_threading_task_hpp_
+#ifndef _pilo_task_hpp_
+#define _pilo_task_hpp_
 
 #include    "./tlv.hpp"
 

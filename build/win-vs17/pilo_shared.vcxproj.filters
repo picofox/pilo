@@ -220,6 +220,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\pilo.cpp">
       <Filter>pilo</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\timer.cpp">
+      <Filter>pilo</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp">
       <Filter>pilo</Filter>
     </ClCompile>
@@ -229,6 +232,9 @@
       <Filter>pilo\core\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp">
+      <Filter>pilo\core\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\uint_sequence_generator.hpp">
       <Filter>pilo\core\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\cmdline_args_config.hpp">
@@ -649,6 +655,9 @@
       <Filter>pilo</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\task.hpp">
+      <Filter>pilo</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\timer.hpp">
       <Filter>pilo</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\tlv.hpp">

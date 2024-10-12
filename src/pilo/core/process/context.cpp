@@ -46,8 +46,14 @@ namespace pilo
             }
 
 
-            context::context()
+            context::context()   
+                : _initialized(false), _pid(0), _ppid(0), _proc_name(""), _proc_basename("")
+                , _system_information(nullptr), _wired_type_facotry(nullptr)
+                , _linked_buffer_node_pool(nullptr)
+                , _service_manager(nullptr), _thread_pool(nullptr)
             {
+
+
                 char buffer[PMI_PATH_MAX] = { 0 };
                 ::pilo::i32_t rlen = 0;
 
@@ -111,6 +117,16 @@ namespace pilo
             void context::deallocate_task(::pilo::task* task)
             {
                 _task_pool.deallocate(task);
+            }
+
+            ::pilo::timer* context::allocate_timer()
+            {
+                return _timer_pool.allocate();
+            }
+
+            void context::deallocate_timer(::pilo::timer* t)
+            {
+                _timer_pool.deallocate(t);
             }
 
             ::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE> * context::allocate_linked_buffer_node_4k()

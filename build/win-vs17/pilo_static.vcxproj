@@ -444,9 +444,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\error.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\pilo.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\timer.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\uint_sequence_generator.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\cmdline_args_config.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\configuation_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\core_config.hpp" />
@@ -587,6 +589,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\platform.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\preprocessor.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\task.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\timer.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\tlv.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\types.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\concurrentqueue\blockingconcurrentqueue.h" />
