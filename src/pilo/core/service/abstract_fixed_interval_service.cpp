@@ -1,5 +1,9 @@
 ﻿#include "./abstract_fixed_interval_service.hpp"
 #include "../datetime/timestamp.hpp"
+#include "./service_group_interface.hpp"
+#include "../logging/logger_interface.hpp"
+#include "../process/context.hpp"
+
 
 namespace pilo
 {
@@ -7,22 +11,17 @@ namespace pilo
 	{
 		namespace service
 		{
-			abstract_fixed_interval_service::abstract_fixed_interval_service(service_group_interface* grp, ::pilo::service_id id, const::pilo::core::config::service_config* cfg)
+			abstract_fixed_interval_service::abstract_fixed_interval_service(service_group_interface* grp, ::pilo::service_id id)
 				: service_interface(grp, id)
 			{
-				_pulse_msec = cfg->pulse_msec();
+				_pulse_msec = grp->config()->pulse_msec();
 			}
 
-			void abstract_fixed_interval_service::pulse(::pilo::i64_t )
-			{
-				return;
-			}
 
 			void abstract_fixed_interval_service::check_pulse(::pilo::i64_t now_ts)
 			{
 				::pilo::i64_t dist = now_ts - _m_last_pulse;
-
-				if (dist > _m_last_pulse) {
+				if (dist >= this->_pulse_msec) {
 					this->pulse(now_ts);
 					_m_last_pulse = PILO_TIMESTAMP;
 				}

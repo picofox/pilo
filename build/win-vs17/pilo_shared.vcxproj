@@ -552,9 +552,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u32_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u64_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\time_wheel.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\timer.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_compensable_fixed_frequency_service.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_fixed_frequency_service.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_fixed_interval_service.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\builtin\timer_service.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\mono_service_group.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\rac_service_group.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\service_interface.cpp" />
@@ -581,7 +584,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\error.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\pilo.cpp" />
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\timer.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\minmax.hpp" />
@@ -674,9 +676,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u32_conversion.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u64_conversion.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\task.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\time_wheel.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\timer.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_compensable_fixed_frequency_service.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_fixed_frequency_service.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_fixed_interval_service.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\builtin\timer_service.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\builtin\timer_service_group.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\mono_service_group.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\rac_service_group.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\service\service_group_interface.hpp" />
@@ -725,8 +732,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\pilo.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\platform.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\preprocessor.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\task.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\timer.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\tlv.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\types.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\concurrentqueue\blockingconcurrentqueue.h" />

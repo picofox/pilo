@@ -109,7 +109,7 @@ namespace pilo
 
             void polled_thread_pool_hybrid_worker::_process_task()
             {
-                ::pilo::task* task_ptr = nullptr;
+                ::pilo::core::sched::task* task_ptr = nullptr;
                 bool has_task = false;
 
                 do {
@@ -136,7 +136,7 @@ namespace pilo
                 this->_on_running_handler = hdl;
             }
 
-            void polled_thread_pool_hybrid_worker::post_task(::pilo::task* task)
+            void polled_thread_pool_hybrid_worker::post_task(::pilo::core::sched::task* task)
             {
                 PMC_ASSERT(_task_queue != nullptr);
                 _task_queue->enqueue(task);

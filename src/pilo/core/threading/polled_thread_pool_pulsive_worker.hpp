@@ -1,7 +1,7 @@
 #ifndef _pilo_core_threading_polled_thread_pool_pulsive_worker_hpp_
 #define _pilo_core_threading_polled_thread_pool_pulsive_worker_hpp_
 
-#include "../../task.hpp"
+#include "../sched/task.hpp"
 #include "./thread_pool_interface.hpp"
 #include "./auto_join_thread.hpp"
 #include "../container/concurrent_queue.hpp"
@@ -57,7 +57,7 @@ namespace pilo
                 ::pilo::err_t start() override;
                 ::pilo::err_t stop() override;
                 const std::string& name() const { return _name; }
-                void post_task(::pilo::task* task) override;
+                void post_task(::pilo::core::sched::task* task) override;
                 void set_running_handler(pool_callback_func_type hdl) override;
 
             private:

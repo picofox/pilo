@@ -24,7 +24,7 @@ namespace pilo
 				}
 
 
-				static void tsr(::pilo::task * t)
+				static void tsr(::pilo::core::sched::task * t)
 				{
 					::pilo::core::testing::stable_test_case* p_case = (::pilo::core::testing::stable_test_case*) (t->object());
 
@@ -33,11 +33,11 @@ namespace pilo
 					p_case->inc_trans_count();
 				}
 
-				static void s_dtor(::pilo::task* task_ptr)
+				static void s_dtor(::pilo::core::sched::task* task_ptr)
 				{
 					if (task_ptr->param() != nullptr)
 					{
-						::pilo::tlv::deallocate(task_ptr->param());
+						::pilo::tlv::deallocate((::pilo::tlv*)task_ptr->param());
 					}
 				}
 
@@ -52,7 +52,7 @@ namespace pilo
 
 					for (::pilo::i64_t i = 0; i < p_case->target_trans_count(); i++) {
 						param = ::pilo::tlv::allocate_single(i);
-						::pilo::task* t = PILO_CONTEXT->allocate_task(tsr, p_case, param, s_dtor);
+						::pilo::core::sched::task* t = PILO_CONTEXT->allocate_task(tsr, p_case, param, nullptr, s_dtor);
 						pool->post_task(t);
 					}
 
@@ -84,7 +84,7 @@ namespace pilo
 
 					for (::pilo::i64_t i = 0; i < p_case->target_trans_count(); i++) {
 						param = ::pilo::tlv::allocate_single(i);
-						::pilo::task* t = PILO_CONTEXT->allocate_task(tsr, p_case, param, s_dtor);
+						::pilo::core::sched::task* t = PILO_CONTEXT->allocate_task(tsr, p_case, param, nullptr, s_dtor);
 						pool->post_task(t);
 					}
 

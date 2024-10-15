@@ -10,10 +10,10 @@
 #include "../threading/spin_mutex.hpp"
 #include "./cmdline_args.hpp"
 #include "./environment_variable_manager.hpp"
-#include "../../task.hpp"
+#include "../sched/task.hpp"
 #include "../threading/thread_pool_interface.hpp"
 #include "../service/service_manager.hpp"
-#include "../../timer.hpp"
+#include "../sched/timer.hpp"
 
 namespace pilo
 {
@@ -32,8 +32,8 @@ namespace pilo
             public:
                 typedef ::pilo::core::memory::compactable_autoreset_object_pool<::pilo::tlv, SP_PMI_TLV_STEP, ::pilo::core::threading::native_mutex>  tlv_pool_type;
                 typedef ::pilo::core::memory::compactable_object_pool<::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>, SP_PMI_LBKBUF_NODE_4K_STEP_SIZE, ::pilo::core::threading::spin_mutex> linked_buffer_node_4k_pool_type;
-                typedef ::pilo::core::memory::compactable_autoreset_object_pool<::pilo::task, SP_PMI_TASK_STEP, ::pilo::core::threading::native_mutex>  task_pool_type;
-                typedef ::pilo::core::memory::compactable_autoreset_object_pool<::pilo::timer, SP_PMI_TIMER_STEP, ::pilo::core::threading::native_mutex>  timer_pool_type;
+                typedef ::pilo::core::memory::compactable_autoreset_object_pool<::pilo::core::sched::task, SP_PMI_TASK_STEP, ::pilo::core::threading::native_mutex>  task_pool_type;
+                typedef ::pilo::core::memory::compactable_autoreset_object_pool<::pilo::core::sched::timer, SP_PMI_TIMER_STEP, ::pilo::core::threading::native_mutex>  timer_pool_type;
 
             public:
                 const static ::pilo::u32_t s_pilo_version = PMF_MAKE_U32_BY_BYTES_BE(1,0,35,0);
@@ -175,11 +175,11 @@ namespace pilo
                 void deallocate_tlv(::pilo::tlv* tlvp);                
                 tlv_pool_type* tlv_pool() { return &_tlv_pool;  }
                 task_pool_type* task_pool() { return &_task_pool;  }
-                ::pilo::task* allocate_task();
-                ::pilo::task* allocate_task(task_func_type f_func, void* obj, ::pilo::tlv* param, task_destructor_func_type dtor);
-                void deallocate_task(::pilo::task* task);
-                ::pilo::timer* allocate_timer();
-                void deallocate_timer(::pilo::timer * ptimer);
+                ::pilo::core::sched::task* allocate_task();
+                ::pilo::core::sched::task* allocate_task(::pilo::core::sched::task_func_type f_func, void* obj, void* param, void * context, ::pilo::core::sched::task_destructor_func_type dtor);
+                void deallocate_task(::pilo::core::sched::task* task);
+                ::pilo::core::sched::timer* allocate_timer();
+                void deallocate_timer(::pilo::core::sched::timer * ptimer);
 
 
                 ::pilo::core::memory::linked_buffer_node<SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE>* allocate_linked_buffer_node_4k();
@@ -194,7 +194,7 @@ namespace pilo
 
                 ::pilo::err_t start();
 
-                inline void post_task(::pilo::task* task_ptr)
+                inline void post_task(::pilo::core::sched::task* task_ptr)
                 {
                     this->_thread_pool->post_task(task_ptr);
                 }

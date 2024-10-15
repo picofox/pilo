@@ -1,7 +1,7 @@
 #ifndef _pilo_core_threading_efficient_thread_pool_hpp_
 #define _pilo_core_threading_efficient_thread_pool_hpp_
 
-#include "../../task.hpp"
+#include "../sched/task.hpp"
 #include "./thread_pool_interface.hpp"
 #include "./auto_join_thread.hpp"
 #include "../container/concurrent_queue.hpp"
@@ -51,8 +51,8 @@ namespace pilo
                 // Inherited via thread_pool_interface
                 ::pilo::err_t start() override;
                 ::pilo::err_t stop() override;
-                void post_task(::pilo::task* task) override;
-                bool get_task(::pilo::task*& task) override;
+                void post_task(::pilo::core::sched::task* task) override;
+                bool get_task(::pilo::core::sched::task*& task) override;
                 bool has_task_queue() const override;                
                 ::pilo::err_t set_worker_count(::pilo::i32_t total, ::pilo::i32_t n_executor) override;
                 const::pilo::core::config::thread_pool_config* config() const override;

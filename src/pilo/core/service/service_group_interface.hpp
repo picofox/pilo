@@ -35,10 +35,13 @@ namespace pilo
 				virtual ::pilo::err_t stop(::pilo::i64_t now_ts) = 0;
 				virtual bool all_stopped() const = 0;
 
+				virtual ::pilo::i16_t initial_service_count() const = 0;
+
 
 			public:
 				inline service_manager*  services() { return _m_mgr_ref;  }
 				inline ::pilo::service_group_id id() const { return _m_id;  }
+				inline const ::pilo::core::config::service_config* config() const { return _config; }
 
 			protected:
 				::pilo::core::service::service_manager* const			_m_mgr_ref;

@@ -75,7 +75,7 @@ namespace pilo {
                 const cmdline_args_config& cmdline_arg_spec() const { return _cmdline_args;  }
 
                 const env_vars_config& env_vars() const { return _env_vars;  }
-                const std::map<::pilo::i16_t, service_config>& core_services() const { return _core_services; }
+                const std::map<::pilo::service_group_id, service_config>& core_services() const { return _core_services; }
                 const thread_pool_config& thread_pool() const { return _thread_pool;  }
             
             public:

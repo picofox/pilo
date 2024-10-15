@@ -107,7 +107,7 @@ namespace pilo
 
             void thread_pool_task_executor::_process_task()
             {
-                ::pilo::task* task_ptr = nullptr;
+                ::pilo::core::sched::task* task_ptr = nullptr;
                 bool has_task = false;
                 do {
                     if (this->_task_queue_owner) {
@@ -132,7 +132,7 @@ namespace pilo
                 return;
             }
 
-            void thread_pool_task_executor::post_task(::pilo::task* task)
+            void thread_pool_task_executor::post_task(::pilo::core::sched::task* task)
             {
                 PMC_ASSERT(_task_queue != nullptr);
                 _task_queue->enqueue(task);

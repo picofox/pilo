@@ -4,6 +4,7 @@
 #include "./service_interface.hpp"
 #include "../config/service_config.hpp"
 
+
 namespace pilo
 {
 	namespace core
@@ -13,11 +14,10 @@ namespace pilo
 			class abstract_compensable_fixed_frequency_service : public service_interface
 			{
 			public:
-				abstract_compensable_fixed_frequency_service(service_group_interface* grp, ::pilo::service_id id, const ::pilo::core::config::service_config * cfg);
+				abstract_compensable_fixed_frequency_service(service_group_interface* grp, ::pilo::service_id id);
 
 			public:
 				// Inherited via service_interface
-				void pulse(::pilo::i64_t now_ts) override;
 				void check_pulse(::pilo::i64_t now_ts) override;
 				void set_pulse(::pilo::i64_t i) override;
 				~abstract_compensable_fixed_frequency_service();

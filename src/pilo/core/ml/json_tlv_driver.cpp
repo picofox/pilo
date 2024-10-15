@@ -116,14 +116,15 @@ namespace pilo {
                 else if (jdoc_root.IsBool()) {                    
                     _m_root_value->set(jdoc_root.GetBool());
                 }
+                
                 else if (jdoc_root.IsInt()) {
-                    _m_root_value->set(jdoc_root.GetInt());
+                    _m_root_value->set((::pilo::i64_t)jdoc_root.GetInt());
                 }
                 else if (jdoc_root.IsInt64()) {
                     _m_root_value->set((::pilo::i64_t )jdoc_root.GetInt64());
                 }
                 else if (jdoc_root.IsUint()) {
-                    _m_root_value->set(jdoc_root.GetUint());
+                    _m_root_value->set((::pilo::u64_t)jdoc_root.GetUint());
                 }
                 else if (jdoc_root.IsUint64()) {
                     _m_root_value->set((::pilo::u64_t)jdoc_root.GetUint64());
@@ -358,10 +359,10 @@ namespace pilo {
                         tlv->set(itr->value.GetBool());  
                     }  
                     else if (itr->value.IsInt()) {
-                        tlv->set(itr->value.GetInt());
+                        tlv->set((::pilo::i64_t)itr->value.GetInt());
                     }
                     else if (itr->value.IsUint()) {
-                        tlv->set(itr->value.GetUint());
+                        tlv->set((::pilo::u64_t)itr->value.GetUint());
                     }
                     else if (itr->value.IsInt64()) {
                         tlv->set((::pilo::i64_t) itr->value.GetInt64());
@@ -373,7 +374,7 @@ namespace pilo {
                         tlv->set(itr->value.GetDouble());
                     }
                     else if (itr->value.IsFloat()) {
-                        tlv->set(itr->value.GetFloat());
+                        tlv->set((::pilo::f32_t)itr->value.GetFloat());
                     }
                     else if (itr->value.IsString()) {
                         if (itr->value.GetString() == nullptr) {

@@ -10,7 +10,8 @@ namespace pilo
     namespace core
     {
         namespace container
-        {                                                    
+        {                   
+
             template <typename T> struct singly_linked_list_node
             {
                 typedef T value_type;

@@ -103,7 +103,18 @@
 
 #define PERR_SET_ENV_FAIL       (85)
 #define PERR_INV_SV_STATE       (86)
+#define PERR_SVCGRP_EXIST       (87)
+#define PERR_SVCGRP_NON_EXIST   (88)
+#define PERR_SVCGRP_CREATE_FAIL (89)
 
+#define PERR_SVCGRP_REMOVE_FAIL (90)
+#define PERR_SVC_EXIST          (91)
+#define PERR_SVC_NON_EXIST      (92)
+#define PERR_SVC_CREATE_FAIL    (93)
+#define PERR_SVC_REMOVE_FAIL    (94)
+
+#define PERR_SVCGRP_NO_CRTOR    (95)
+#define PERR_SVC_NO_CRTOR       (96)
 
 
 #define PILO_CHKERR_RET(err, exp)         do {if ( (err = (exp)) != PILO_OK ) { return err; }} while(0);

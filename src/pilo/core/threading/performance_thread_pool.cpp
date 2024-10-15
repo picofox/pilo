@@ -46,7 +46,7 @@ namespace pilo
                 return set_worker_count(0,0);
             }
 
-            void performance_thread_pool::post_task(::pilo::task* t)
+            void performance_thread_pool::post_task(::pilo::core::sched::task* t)
             {
                 if (_task_queue != nullptr) {
                     if (! _task_queue->enqueue(t)) {
@@ -67,7 +67,7 @@ namespace pilo
                 }
             }
 
-            bool performance_thread_pool::get_task(::pilo::task*& task)
+            bool performance_thread_pool::get_task(::pilo::core::sched::task*& task)
             {
                 PMC_ASSERT(_task_queue != nullptr);
                 return _task_queue->try_dequeue(task);

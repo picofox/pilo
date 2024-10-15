@@ -75,11 +75,8 @@ namespace pilo
 					return PILO_OK;
 				}
 
-				virtual ::pilo::err_t start(::pilo::i64_t now_ts)
-				{
-					_m_last_pulse = now_ts;
-					return this->set_running();
-				}
+				virtual ::pilo::err_t start(::pilo::i64_t now_ts);
+				
 				virtual ::pilo::err_t stop(::pilo::i64_t now_ts)
 				{
 					_m_last_pulse = now_ts;

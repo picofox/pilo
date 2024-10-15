@@ -102,29 +102,29 @@ namespace pilo
                 _tlv_pool.deallocate(tlvp);
             }
 
-            ::pilo::task* context::allocate_task()
+            ::pilo::core::sched::task* context::allocate_task()
             {
                 return _task_pool.allocate();
             }
 
-            ::pilo::task* context::allocate_task(task_func_type f_func, void* obj, ::pilo::tlv* param, task_destructor_func_type d_func)
+            ::pilo::core::sched::task* context::allocate_task(::pilo::core::sched::task_func_type f_func, void* obj, void* param, void* ctx, ::pilo::core::sched::task_destructor_func_type d_func)
             {
-                ::pilo::task* task = _task_pool.allocate();
-                task->set(f_func, obj, param, d_func);
+                ::pilo::core::sched::task* task = _task_pool.allocate();
+                task->set(f_func, obj, param, ctx, d_func);
                 return task;
             }
 
-            void context::deallocate_task(::pilo::task* task)
+            void context::deallocate_task(::pilo::core::sched::task* task)
             {
                 _task_pool.deallocate(task);
             }
 
-            ::pilo::timer* context::allocate_timer()
+            ::pilo::core::sched::timer* context::allocate_timer()
             {
                 return _timer_pool.allocate();
             }
 
-            void context::deallocate_timer(::pilo::timer* t)
+            void context::deallocate_timer(::pilo::core::sched::timer* t)
             {
                 _timer_pool.deallocate(t);
             }
@@ -321,6 +321,7 @@ namespace pilo
                         }
 
                         _service_manager = new ::pilo::core::service::service_manager();
+                        err = _service_manager->initialize(&core_config()->core_services());
                     }
                     else {
                         if (core_config()->thread_pool().performance_mode()) {

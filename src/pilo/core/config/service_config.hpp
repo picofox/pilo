@@ -113,15 +113,15 @@ namespace pilo
                     return _pulse_msec;
                 }
 
-                inline ::pilo::i16_t type_id() const { return _type_id;  }
-                inline void set_type_id(::pilo::i16_t id) { _type_id = id;  }
+                inline ::pilo::service_group_id type_id() const { return _type_id;  }
+                inline void set_type_id(::pilo::service_group_id id) { _type_id = id;  }
                 inline const std::string& name() const { return _name; }
                 inline const ::pilo::tlv* param() const { return _param;  }
 
             private:
                 std::string     _name;
                 ::pilo::i64_t	_pulse_msec;
-                ::pilo::i16_t   _type_id;
+                ::pilo::service_group_id   _type_id;
                 ::pilo::tlv*    _param;
             };
         }

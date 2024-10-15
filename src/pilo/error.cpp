@@ -38,9 +38,13 @@ namespace pilo
         , "unlock file failed", "not initialized.", "already initialized.", "end of file", "tell file pos failed."
 
         , "set file size failed.", "parse json fail", "create tlv failed", "create object failed", "undefined."
-        , "set env failed.", "invalid service state", "", "", ""
-        , "", "", "", "", ""
-        , "", "", "", "", ""
+        , "set env failed.", "invalid service state", "service group exist", "service group not exist", "create service group failed"
+
+
+        , "remove service group failed", "service exist", "service not exist", "create service failed", "remove service failed"
+        , "service group creator not found", "service creator not found", "", "", ""
+
+
         , "", "", "", "", ""
         , "", "", "", "", ""
         , "", "", "", "", ""

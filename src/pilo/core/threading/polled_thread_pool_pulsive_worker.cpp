@@ -111,7 +111,7 @@ namespace pilo
                 this->_on_running_handler = hdl;
             }
 
-            void polled_thread_pool_pulsive_worker::post_task(::pilo::task* )
+            void polled_thread_pool_pulsive_worker::post_task(::pilo::core::sched::task* )
             {
                 PMC_ASSERT(false);
             }

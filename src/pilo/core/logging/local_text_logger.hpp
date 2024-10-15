@@ -98,18 +98,35 @@ namespace pilo {
                     va_list args;
                     _m_last_ts = ts;
                     _write_header(lv);
-                    va_start(args, fmt);
-                    if (this->_m_config.headers().test_value(::pilo::core::logging::SrcFile) || this->_m_config.headers().test_value(::pilo::core::logging::SrcLine)) {
+
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
+                        va_start(args, fmt);
                         iret = this->_m_file.v_formatted_output(false, fmt, args);
                         va_end(args);
                         this->_m_total_size += iret;
-                        this->_write_footer();
                     }
-                    else {
-                        iret = this->_m_file.v_formatted_output(true, fmt, args);
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
+                        va_start(args, fmt);
+#if defined(WINDOWS)
+                        iret = vfprintf_s(stdout, fmt, args);
+#else
+                        iret = vfprintf(stdout, fmt, args);
+#endif
                         va_end(args);
-                        this->_m_total_size += iret;
-                    }    
+
+                    }
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
+                        va_start(args, fmt);
+#if defined(WINDOWS)
+                        iret = vfprintf_s(stderr, fmt, args);
+#else
+                        iret = vfprintf(stderr, fmt, args);
+#endif
+                        va_end(args);
+
+                    }
+
+                    _write_footer();
                     
                     return PILO_OK;
                 }
@@ -363,45 +380,58 @@ namespace pilo {
 
                 void _write_footer()
                 {
-                    ::pilo::i64_t hlen = 0;
                     ::pilo::i64_t tlen = 0;
-                    const char* cstr = nullptr;
-                    const char* cstr2 = nullptr;
-                    if (this->_m_config.headers().test_value(::pilo::core::logging::SrcFile) || this->_m_config.headers().test_value(::pilo::core::logging::SrcFile)) {
-                        cstr = ::pilo::core::string::rfind_char(__FILE__, -1, PMI_PATH_SEP);
-                        if (cstr == nullptr)
-                            cstr = __FILE__;
-                        else {
-                            cstr++;
-                            if (*cstr == 0) {
+                    if (this->_m_config.headers().test_value(::pilo::core::logging::SrcFile) || this->_m_config.headers().test_value(::pilo::core::logging::SrcLine)) {                        
+                        const char* cstr = nullptr;
+                        const char* cstr2 = nullptr;
+                        if (this->_m_config.headers().test_value(::pilo::core::logging::SrcFile) || this->_m_config.headers().test_value(::pilo::core::logging::SrcFile)) {
+                            cstr = ::pilo::core::string::rfind_char(__FILE__, -1, PMI_PATH_SEP);
+                            if (cstr == nullptr)
                                 cstr = __FILE__;
-                            }
                             else {
-                                cstr2 = ::pilo::core::string::find_char(cstr, -1, PMI_PATH_OTHER_SEP);
-                                if (cstr2 != nullptr && (*(cstr2+1) != 0)) {
-                                    cstr = cstr2+1;
+                                cstr++;
+                                if (*cstr == 0) {
+                                    cstr = __FILE__;
+                                }
+                                else {
+                                    cstr2 = ::pilo::core::string::find_char(cstr, -1, PMI_PATH_OTHER_SEP);
+                                    if (cstr2 != nullptr && (*(cstr2 + 1) != 0)) {
+                                        cstr = cstr2 + 1;
+                                    }
                                 }
                             }
-                        }                       
+                        }
+
+                        if (this->_m_config.headers().test_value(::pilo::core::logging::SrcFile)) {
+
+                            if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
+                                tlen = this->_m_file.formatted_output(false, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, __LINE__, this->_m_config.line_sep().c_str());
+                                this->_m_total_size += tlen;
+                            }
+                            if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
+                                ::pilo::core::io::file_formatted_output(stdout, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, __LINE__, this->_m_config.line_sep().c_str());
+                            }
+                            if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
+                                ::pilo::core::io::file_formatted_output(stderr, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, __LINE__, this->_m_config.line_sep().c_str());
+                            }
+
+                        }
+
+                        
                     }
-
-                    if (this->_m_config.headers().test_value(::pilo::core::logging::SrcFile)) {                      
-
+                    else {
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
-                            tlen = this->_m_file.formatted_output(false, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, __LINE__, this->_m_config.line_sep().c_str());
+                            tlen = this->_m_file.formatted_output(false, "%s", this->_m_config.line_sep().c_str());
+                            this->_m_total_size += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, __LINE__, this->_m_config.line_sep().c_str());
+                            fprintf(stdout, "%s", this->_m_config.line_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, __LINE__,  this->_m_config.line_sep().c_str());
+                            fprintf(stderr, "%s", this->_m_config.line_sep().c_str());
                         }
-                        hlen += tlen;
                     }
-
-
-
-                    this->_m_total_size += hlen;
+                    
                 }
 
                 void _write_header(::pilo::core::logging::level lv)
@@ -429,148 +459,149 @@ namespace pilo {
                     if (this->_m_config.headers().test_value(::pilo::core::logging::Date)) {
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                             tlen = this->_m_file.formatted_output(false, "%04d-%02d-%02d%s", lt.tm_year + 1900, lt.tm_mon + 1, lt.tm_mday, this->_m_config.field_sep().c_str());
+                            hlen += tlen;
                         } 
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%04d-%02d-%02d%s", lt.tm_year + 1900, lt.tm_mon + 1, lt.tm_mday, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%04d-%02d-%02d%s", lt.tm_year + 1900, lt.tm_mon + 1, lt.tm_mday, this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%04d-%02d-%02d%s", lt.tm_year + 1900, lt.tm_mon + 1, lt.tm_mday, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stderr, "%04d-%02d-%02d%s", lt.tm_year + 1900, lt.tm_mon + 1, lt.tm_mday, this->_m_config.field_sep().c_str());
                         }
-                        hlen += tlen;
+                        
                     } 
 
                     if (this->_m_config.headers().test_value(::pilo::core::logging::Time)) {
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                             tlen = this->_m_file.formatted_output(false, "%02d:%02d:%02d.%06d%s", lt.tm_hour, lt.tm_min, lt.tm_sec, micro_seconds, this->_m_config.field_sep().c_str());
+                            hlen += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%02d:%02d:%02d.%06d%s", lt.tm_hour, lt.tm_min, lt.tm_sec, micro_seconds, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%02d:%02d:%02d.%06d%s", lt.tm_hour, lt.tm_min, lt.tm_sec, micro_seconds, this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%02d:%02d:%02d.%06d%s", lt.tm_hour, lt.tm_min, lt.tm_sec, micro_seconds, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%02d:%02d:%02d.%06d%s", lt.tm_hour, lt.tm_min, lt.tm_sec, micro_seconds, this->_m_config.field_sep().c_str());
                         }
-                        hlen += tlen;
+                        
                     }
 
 
                     if (this->_m_config.headers().test_value(::pilo::core::logging::Seq)) {
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                             tlen = this->_m_file.formatted_output(false, "%lld%s", this->_m_line_count, this->_m_config.field_sep().c_str());
+                            hlen += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%lld%s", this->_m_line_count, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%lld%s", this->_m_line_count, this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%lld%s", this->_m_line_count, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stderr, "%lld%s", this->_m_line_count, this->_m_config.field_sep().c_str());
                         }
-                        hlen += tlen;
                     }
 
                     if (this->_m_config.headers().test_value(::pilo::core::logging::TotalSeq)) {
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                             tlen = this->_m_file.formatted_output(false, "%lld%s",  this->_m_total_count, this->_m_config.field_sep().c_str());
+                            hlen += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%lld%s",  this->_m_total_count, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%lld%s",  this->_m_total_count, this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%lld%s", this->_m_total_count, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stderr, "%lld%s", this->_m_total_count, this->_m_config.field_sep().c_str());
                         }
-                        hlen += tlen;
                     }
 
                     if (this->_m_config.headers().test_value(::pilo::core::logging::TimeStamp)) {
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                             tlen = this->_m_file.formatted_output(false, "%lld%s", _m_last_ts, this->_m_config.field_sep().c_str());
+                            hlen += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%lld%s", _m_last_ts, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%lld%s", _m_last_ts, this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%lld%s", _m_last_ts, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stderr, "%lld%s", _m_last_ts, this->_m_config.field_sep().c_str());
                         }
-                        hlen += tlen;
                     }
 
                     if (this->_m_config.headers().test_value(::pilo::core::logging::Level)) {
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                             tlen = this->_m_file.formatted_output(false, "%s%s", g_level_names[(::pilo::u8_t)lv], this->_m_config.field_sep().c_str());
+                            hlen += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%s%s", g_level_names[(::pilo::u8_t)lv], this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%s%s", g_level_names[(::pilo::u8_t)lv], this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%s%s", g_level_names[(::pilo::u8_t)lv], this->_m_config.field_sep().c_str());
-                        }
-                        hlen += tlen;
-                
+                            ::pilo::core::io::file_formatted_output(stderr, "%s%s", g_level_names[(::pilo::u8_t)lv], this->_m_config.field_sep().c_str());
+                        }                
                     }
 
                     if (this->_m_config.headers().test_value(::pilo::core::logging::Pid)) {
 
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                             tlen = this->_m_file.formatted_output(false, "%d%s", PILO_CONTEXT->process_id(), this->_m_config.field_sep().c_str());
+                            hlen += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%d%s", PILO_CONTEXT->process_id(), this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%d%s", PILO_CONTEXT->process_id(), this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%d%s", PILO_CONTEXT->process_id(), this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stderr, "%d%s", PILO_CONTEXT->process_id(), this->_m_config.field_sep().c_str());
                         }
-                        hlen += tlen;
                     }
                     if (this->_m_config.headers().test_value(::pilo::core::logging::PPid)) {
 
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                             tlen = this->_m_file.formatted_output(false, "%d%s", PILO_CONTEXT->xpf_parent_process_id(), this->_m_config.field_sep().c_str());
+                            hlen += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%d%s", PILO_CONTEXT->xpf_parent_process_id(), this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%d%s", PILO_CONTEXT->xpf_parent_process_id(), this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%d%s", PILO_CONTEXT->xpf_parent_process_id(), this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stderr, "%d%s", PILO_CONTEXT->xpf_parent_process_id(), this->_m_config.field_sep().c_str());
                         }
-                        hlen += tlen;
                     }
                     if (this->_m_config.headers().test_value(::pilo::core::logging::StdTid)) {
                         std::stringstream ss;
                         ss << std::this_thread::get_id();
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                             tlen = this->_m_file.formatted_output(false, "%s%s", ss.str().c_str(), this->_m_config.field_sep().c_str());
+                            hlen += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%s%s", ss.str().c_str(), this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%s%s", ss.str().c_str(), this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%s%s", ss.str().c_str(), this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stderr, "%s%s", ss.str().c_str(), this->_m_config.field_sep().c_str());
                         }
-                        hlen += tlen;
                     }
                     if (this->_m_config.headers().test_value(::pilo::core::logging::LocalTid)) {
                         ::pilo::os_thread_id_t tid = ::pilo::core::threading::xpf_current_thread_id();                        
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                             tlen = this->_m_file.formatted_output(false, "%d%s", (::pilo::i32_t) tid, this->_m_config.field_sep().c_str());
+                            hlen += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%d%s", (::pilo::i32_t)tid, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%d%s", (::pilo::i32_t)tid, this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%d%s", (::pilo::i32_t) tid, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stderr, "%d%s", (::pilo::i32_t) tid, this->_m_config.field_sep().c_str());
                         }
-                        hlen += tlen;
                     }
                     if (this->_m_config.headers().test_value(::pilo::core::logging::ProcName)) {
 
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                             tlen = this->_m_file.formatted_output(false, "%s%s", PILO_CONTEXT->process_name().c_str(), this->_m_config.field_sep().c_str());
+                            hlen += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stdout, "%s%s", PILO_CONTEXT->process_name().c_str(), this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%s%s", PILO_CONTEXT->process_name().c_str(), this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            tlen = ::pilo::core::io::file_formatted_output(stderr, "%s%s", PILO_CONTEXT->process_name().c_str(), this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stderr, "%s%s", PILO_CONTEXT->process_name().c_str(), this->_m_config.field_sep().c_str());
                         }
-                        hlen += tlen;
                     }
 
 

@@ -16,7 +16,7 @@ namespace pilo
 			{		
 			public:
 				mono_service_group(::pilo::core::service::service_manager* mgr, const ::pilo::core::config::service_config* cfg)
-					: service_group_interface(mgr, cfg), _service(nullptr)
+					: service_group_interface(mgr, cfg), _m_service(nullptr)
 				{
 					
 				}
@@ -46,7 +46,7 @@ namespace pilo
 				bool all_stopped() const override;
 
 			protected:
-				service_interface* _service;
+				service_interface* _m_service;
 
 			};
 
