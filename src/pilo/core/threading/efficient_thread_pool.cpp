@@ -6,6 +6,7 @@
 #include "./polled_thread_pool_pulsive_worker.hpp"
 #include "./thread_pool_task_executor.hpp"
 #include "../container/concurrent_queue.hpp"
+#include "../threading/polled_thread_pool_pulsive_tick_worker.hpp"
 
 namespace pilo
 {
@@ -38,7 +39,13 @@ namespace pilo
                 _task_executor_count = te_cnt;
                 for (::pilo::i32_t i = te_cnt; i < gw_cnt; i++)
                 {
-                    worker = new polled_thread_pool_pulsive_worker(this, _on_starting_handler, _on_running_handler, _on_cleaning_handler, name().c_str());
+                    if (i == te_cnt) {
+                        worker = new polled_thread_pool_pulsive_tick_worker(this, _on_starting_handler, _on_running_handler, _on_cleaning_handler, name().c_str());
+                    }
+                    else {
+                        worker = new polled_thread_pool_pulsive_worker(this, _on_starting_handler, _on_running_handler, _on_cleaning_handler, name().c_str());
+                    }
+                    
                     if (worker == nullptr) {
                         return ::pilo::mk_err(PERR_CREATE_OBJ_FAIL);
                     }
@@ -71,7 +78,7 @@ namespace pilo
             bool efficient_thread_pool::get_task(::pilo::core::sched::task*& task)
             {
                 PMC_ASSERT(_task_queue != nullptr);
-                return _task_queue->wait_dequeue_timed(task, this->_config->task_dequeue_block_msec());
+                return _task_queue->wait_dequeue_timed(task, this->_config->task_dequeue_block_usec());
             }
             bool efficient_thread_pool::has_task_queue() const
             {

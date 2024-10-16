@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include "../threading/efficient_thread_pool.hpp"
 #include "../threading/performance_thread_pool.hpp"
+#include "../logging/logger_interface.hpp"
 
 namespace pilo
 {
@@ -60,7 +61,7 @@ namespace pilo
                 _initialized = false;
                 _pid = ::pilo::core::process::xpf_current_process_id();
                 _ppid = ::pilo::core::process::xpf_current_parent_process_id();
-               
+                _timestamp = -1;
                 char* cret = xpf_get_proc_name(buffer, sizeof(buffer), &rlen);
                 if (cret != nullptr) {
                     _proc_name.assign(cret, rlen);
@@ -341,7 +342,8 @@ namespace pilo
                     _thread_pool = nullptr;
                 }
                 
-
+                if (_thread_pool != nullptr)
+                    return _thread_pool->start();
 
                 _initialized = true;
 
@@ -355,8 +357,7 @@ namespace pilo
                     err = _service_manager->start();
                 if (err != PILO_OK)
                     return err;
-                if (_thread_pool != nullptr)
-                    return _thread_pool->start();
+                
                 return PILO_OK;                    
             }
 
@@ -366,7 +367,7 @@ namespace pilo
                 std::cout << str << std::endl;
             }
 
-            ::pilo::err_t pilo_startup(int argc, char* argv[])
+            ::pilo::err_t pilo_startup_initialize(int argc, char* argv[])
             {
                 if (_s_pilo_context_instance != nullptr)
                     return PILO_OK;
@@ -382,7 +383,7 @@ namespace pilo
                 }
 
                 std::string si = _s_pilo_context_instance->startup_info();
-                printf("%s\n", si.c_str());
+                _s_pilo_context_instance->logger(0)->log_raw(si.c_str(), (::pilo::i64_t) si.size());
 
                 return PILO_OK;
             }

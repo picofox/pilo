@@ -1,5 +1,5 @@
-#ifndef _pilo_core_threading_polled_thread_pool_pulsive_worker_hpp_
-#define _pilo_core_threading_polled_thread_pool_pulsive_worker_hpp_
+#ifndef _pilo_core_threading_polled_thread_pool_pulsive_tick_worker_hpp_
+#define _pilo_core_threading_polled_thread_pool_pulsive_tick_worker_hpp_
 
 #include "../sched/task.hpp"
 #include "./thread_pool_interface.hpp"
@@ -14,10 +14,10 @@ namespace pilo
         namespace threading 
         {           
             
-            class polled_thread_pool_pulsive_worker : public thread_pool_worker_interface
+            class polled_thread_pool_pulsive_tick_worker : public thread_pool_worker_interface
             {
             public:
-                polled_thread_pool_pulsive_worker(thread_pool_interface* pool
+                polled_thread_pool_pulsive_tick_worker(thread_pool_interface* pool
                     , pool_callback_func_type on_start_cb
                     , pool_callback_func_type on_run_cb
                     , pool_callback_func_type on_clean_cb
@@ -39,7 +39,7 @@ namespace pilo
                     _name = buffer;
                 }
 
-                ~polled_thread_pool_pulsive_worker()
+                ~polled_thread_pool_pulsive_tick_worker()
                 {
                     stop();
                 }
@@ -60,13 +60,13 @@ namespace pilo
                 void post_task(::pilo::core::sched::task* task) override;
                 void set_running_handler(pool_callback_func_type hdl) override;
 
-            protected:
+            private:
                 void _on_running();
                 void _on_starting();
                 void _on_cleaning();
 
 
-            protected:
+            private:                           
                 thread_pool_interface*  _pool;                
                 pool_callback_func_type _on_starting_handler;
                 pool_callback_func_type _on_running_handler;
@@ -84,4 +84,4 @@ namespace pilo
 }
 
 
-#endif // !_pilo_core_threading_polled_thread_pool_pulsive_worker_hpp_    
+#endif // !_pilo_core_threading_polled_thread_pool_pulsive_tick_worker_hpp_    

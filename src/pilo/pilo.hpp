@@ -493,8 +493,9 @@ namespace pilo
 
 
 
-#define PILO_STARTUP_INIT(c,v)   do { if (PILO_OK != ::pilo::core::process::pilo_startup(c,v)) { exit(-1); } } while(0)
+#define PILO_STARTUP_INIT(c,v)   do { if (PILO_OK != ::pilo::core::process::pilo_startup_initialize(c,v)) { exit(-1); } } while(0)
 #define PILO_CONTEXT    (::pilo::core::process::pilo_context())
-#define PILO_TIMESTAMP  (::pilo::core::datetime::timestamp_milli_system())
+#define PILO_TIMESTAMP  (::pilo::core::process::pilo_context()->timestamp())
+
 
 #endif

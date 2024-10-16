@@ -101,6 +101,89 @@ namespace pilo {
 
                     if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                         va_start(args, fmt);
+                        iret = this->_m_file.v_formatted_output(true, fmt, args);
+                        va_end(args);
+                        this->_m_total_size += iret;
+                    }
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
+                        va_start(args, fmt);
+#if defined(WINDOWS)
+                        iret = vfprintf_s(stdout, fmt, args);
+#else
+                        iret = vfprintf(stdout, fmt, args);
+#endif
+                        va_end(args);
+
+                        fprintf(stdout, "%s", this->_m_config.line_sep().c_str());
+                    }
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
+                        va_start(args, fmt);
+#if defined(WINDOWS)
+                        iret = vfprintf_s(stderr, fmt, args);
+#else
+                        iret = vfprintf(stderr, fmt, args);
+#endif
+                        va_end(args);
+
+                        fprintf(stderr, "%s", this->_m_config.line_sep().c_str());
+                    }
+                    
+                    return PILO_OK;
+                }
+
+                ::pilo::err_t log_raw(const char* cstr, ::pilo::i64_t len) override
+                {
+                    if (cstr == nullptr)
+                        return ::pilo::mk_perr(PERR_NOOP);
+                    if (len < 0)
+                        len = ::pilo::core::string::character_count(cstr);
+
+                    ::pilo::core::threading::exclusive_mutex_guard<thread_lock_type> t_gurad(this->_m_file.thread_lock());
+                    ::pilo::core::process::file_lock_guard<process_lock_type> p_gurad(this->_m_file.process_lock());
+
+                    if (!this->available())
+                        return ::pilo::mk_perr(PERR_INC_DATA);
+
+                    ::pilo::i64_t ts = ::pilo::core::datetime::timestamp_micro_system();
+                    PILO_ERRRET(this->_check_file(ts));
+                    _m_last_ts = ts;
+
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
+                        this->_m_file.write_line(cstr, len, false, nullptr);
+                    }
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
+                        ::fwrite(cstr, sizeof(char), len, stdout);
+                    }
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
+                        ::fwrite(cstr, sizeof(char), len, stderr);
+                    }
+
+                    return PILO_OK;
+                }
+
+
+                ::pilo::err_t log_debug(const char* filename, ::pilo::i32_t lineno, ::pilo::core::logging::level lv, const char* fmt, ...) override
+                {
+                    ::pilo::core::threading::exclusive_mutex_guard<thread_lock_type> t_gurad(this->_m_file.thread_lock());
+                    ::pilo::core::process::file_lock_guard<process_lock_type> p_gurad(this->_m_file.process_lock());
+
+                    if (!this->available())
+                        return ::pilo::mk_perr(PERR_INC_DATA);
+
+                    if (lv > this->_m_config.level()) {
+                        return PILO_OK;
+                    }
+
+                    ::pilo::i64_t ts = ::pilo::core::datetime::timestamp_micro_system();
+                    PILO_ERRRET(this->_check_file(ts));
+
+                    ::pilo::i64_t iret = 0;
+                    va_list args;
+                    _m_last_ts = ts;
+                    _write_header(lv);
+
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
+                        va_start(args, fmt);
                         iret = this->_m_file.v_formatted_output(false, fmt, args);
                         va_end(args);
                         this->_m_total_size += iret;
@@ -123,14 +206,12 @@ namespace pilo {
                         iret = vfprintf(stderr, fmt, args);
 #endif
                         va_end(args);
-
                     }
 
-                    _write_footer();
-                    
+                    this->_write_footer(filename, lineno);
+
                     return PILO_OK;
                 }
-
 
 
                 void add_filename_suffix(::pilo::u32_t e)
@@ -378,59 +459,38 @@ namespace pilo {
                     return PILO_OK;
                 }                
 
-                void _write_footer()
+                void _write_footer(const char* filename, ::pilo::i32_t lineno)
                 {
                     ::pilo::i64_t tlen = 0;
-                    if (this->_m_config.headers().test_value(::pilo::core::logging::SrcFile) || this->_m_config.headers().test_value(::pilo::core::logging::SrcLine)) {                        
-                        const char* cstr = nullptr;
-                        const char* cstr2 = nullptr;
-                        if (this->_m_config.headers().test_value(::pilo::core::logging::SrcFile) || this->_m_config.headers().test_value(::pilo::core::logging::SrcFile)) {
-                            cstr = ::pilo::core::string::rfind_char(__FILE__, -1, PMI_PATH_SEP);
-                            if (cstr == nullptr)
-                                cstr = __FILE__;
-                            else {
-                                cstr++;
-                                if (*cstr == 0) {
-                                    cstr = __FILE__;
-                                }
-                                else {
-                                    cstr2 = ::pilo::core::string::find_char(cstr, -1, PMI_PATH_OTHER_SEP);
-                                    if (cstr2 != nullptr && (*(cstr2 + 1) != 0)) {
-                                        cstr = cstr2 + 1;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (this->_m_config.headers().test_value(::pilo::core::logging::SrcFile)) {
-
-                            if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
-                                tlen = this->_m_file.formatted_output(false, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, __LINE__, this->_m_config.line_sep().c_str());
-                                this->_m_total_size += tlen;
-                            }
-                            if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                                ::pilo::core::io::file_formatted_output(stdout, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, __LINE__, this->_m_config.line_sep().c_str());
-                            }
-                            if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                                ::pilo::core::io::file_formatted_output(stderr, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, __LINE__, this->_m_config.line_sep().c_str());
-                            }
-
-                        }
-
-                        
-                    }
+                    const char* cstr = nullptr;
+                    const char* cstr2 = nullptr;
+                    
+                    cstr = ::pilo::core::string::rfind_char(filename, -1, PMI_PATH_SEP);
+                    if (cstr == nullptr)
+                        cstr = filename;
                     else {
-                        if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
-                            tlen = this->_m_file.formatted_output(false, "%s", this->_m_config.line_sep().c_str());
-                            this->_m_total_size += tlen;
+                        cstr++;
+                        if (*cstr == 0) {
+                            cstr = filename;
                         }
-                        if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            fprintf(stdout, "%s", this->_m_config.line_sep().c_str());
-                        }
-                        if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            fprintf(stderr, "%s", this->_m_config.line_sep().c_str());
+                        else {
+                            cstr2 = ::pilo::core::string::find_char(cstr, -1, PMI_PATH_OTHER_SEP);
+                            if (cstr2 != nullptr && (*(cstr2 + 1) != 0)) {
+                                cstr = cstr2 + 1;
+                            }
                         }
                     }
+
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
+                        tlen = this->_m_file.formatted_output(false, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, lineno, this->_m_config.line_sep().c_str());
+                        this->_m_total_size += tlen;
+                    }
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
+                        ::pilo::core::io::file_formatted_output(stdout, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, lineno, this->_m_config.line_sep().c_str());
+                    }
+                    if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
+                        ::pilo::core::io::file_formatted_output(stderr, "%s(%s:%d)%s", this->_m_config.field_sep().c_str(), cstr, lineno, this->_m_config.line_sep().c_str());
+                    }                   
                     
                 }
 
@@ -627,7 +687,9 @@ namespace pilo {
 
             private:
             PMC_DISABLE_COPY(local_text_logger)
-            };       
+
+
+};
 
             typedef class local_text_logger<::pilo::core::process::dummy_file_lock, ::pilo::core::threading::dummy_read_write_lock>   local_spst_text_logger;
             typedef class local_text_logger<::pilo::core::process::file_lock, ::pilo::core::threading::dummy_read_write_lock>   local_mpst_text_logger;

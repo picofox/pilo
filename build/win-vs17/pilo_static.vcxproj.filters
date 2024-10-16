@@ -211,6 +211,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_hybrid_worker.cpp">
       <Filter>pilo\core\threading</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_tick_worker.cpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_worker.cpp">
       <Filter>pilo\core\threading</Filter>
     </ClCompile>
@@ -628,6 +631,9 @@
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_hybrid_worker.hpp">
+      <Filter>pilo\core\threading</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_tick_worker.hpp">
       <Filter>pilo\core\threading</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_worker.hpp">

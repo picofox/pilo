@@ -17,7 +17,7 @@ namespace pilo
 				}
 				void timer_service::pulse(::pilo::i64_t now_ts)
 				{
-					PLOG(::pilo::core::logging::level::info, "timer pulse %lld", now_ts);
+					PLOG(::pilo::core::logging::level::info, "%lld", now_ts);
 					this->_time_wheel_millisec.update();
 				}
 			}

@@ -2,7 +2,7 @@
 #include "../process/context.hpp"
 #include "../logging/logger_interface.hpp"
 #include "./threading.hpp"
-#include "polled_thread_pool_pulsive_worker.hpp"
+#include "polled_thread_pool_pulsive_tick_worker.hpp"
 #include "../logging/logger_interface.hpp"
 #include "../process/context.hpp"
 
@@ -12,7 +12,7 @@ namespace pilo
     {
         namespace threading
         {
-            ::pilo::err_t polled_thread_pool_pulsive_worker::start()
+            ::pilo::err_t polled_thread_pool_pulsive_tick_worker::start()
             {
                 if (this->_worker_thread != nullptr) {
                     return ::pilo::mk_perr(PERR_EXIST);
@@ -20,10 +20,10 @@ namespace pilo
                 
                 this->_shutting = false;                
                 this->_worker_thread = new auto_join_thread(
-                    [](polled_thread_pool_pulsive_worker* w) {
+                    [](polled_thread_pool_pulsive_tick_worker* w) {
                         w->_on_starting();
                         try
-                        {
+                        {                            
                             w->_on_running();
                         }
                         catch (const std::exception&)
@@ -40,7 +40,7 @@ namespace pilo
                 return PILO_OK;
             }
 
-            ::pilo::err_t polled_thread_pool_pulsive_worker::stop()
+            ::pilo::err_t polled_thread_pool_pulsive_tick_worker::stop()
             {
                 if (this->_worker_thread == nullptr || this->_shutting || this->_stop) {
                     return ::pilo::mk_perr(PERR_NOOP);
@@ -72,18 +72,20 @@ namespace pilo
 
 
 
-            void polled_thread_pool_pulsive_worker::_on_starting()
+            void polled_thread_pool_pulsive_tick_worker::_on_starting()
             {
                 if (this->_on_starting_handler != nullptr) {
+                    PILO_CONTEXT->update_timestamp();
                     this->_on_starting_handler(this);
                 }                
             }
 
-            void polled_thread_pool_pulsive_worker::_on_running()
+            void polled_thread_pool_pulsive_tick_worker::_on_running()
             {                
                 while (!_shutting) {
                     try
                     {
+                        PILO_CONTEXT->update_timestamp();
                         this->_on_running_handler(this);
                     }
                     catch (const std::exception& ex)
@@ -100,19 +102,19 @@ namespace pilo
 
             }
 
-            void polled_thread_pool_pulsive_worker::_on_cleaning()
+            void polled_thread_pool_pulsive_tick_worker::_on_cleaning()
             {                
                 if (this->_on_cleaning_handler != nullptr) {
                     this->_on_cleaning_handler(this);
                 }                
             }
 
-            void polled_thread_pool_pulsive_worker::set_running_handler(pool_callback_func_type hdl)
+            void polled_thread_pool_pulsive_tick_worker::set_running_handler(pool_callback_func_type hdl)
             {
                 this->_on_running_handler = hdl;
             }
 
-            void polled_thread_pool_pulsive_worker::post_task(::pilo::core::sched::task* )
+            void polled_thread_pool_pulsive_tick_worker::post_task(::pilo::core::sched::task* )
             {
                 PMC_ASSERT(false);
             }

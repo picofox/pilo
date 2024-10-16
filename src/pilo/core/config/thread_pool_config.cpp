@@ -77,8 +77,8 @@ void pilo::core::config::thread_pool_config::clear(bool )
 	::pilo::core::string::copyz(cb.ptr(), cb.space_available(), ".task_executor_count");
 	PILO_CHKERR_RET(err, configuator_driver->set_value(cb.begin(), this->_task_executor_count, true));
 
-	::pilo::core::string::copyz(cb.ptr(), cb.space_available(), ".task_dequeue_block_msec");
-	PILO_CHKERR_RET(err, configuator_driver->set_value(cb.begin(), this->_task_dequeue_block_msec, true));
+	::pilo::core::string::copyz(cb.ptr(), cb.space_available(), ".task_dequeue_block_usec");
+	PILO_CHKERR_RET(err, configuator_driver->set_value(cb.begin(), this->_task_dequeue_block_usec, true));
 
 	::pilo::core::string::copyz(cb.ptr(), cb.space_available(), ".name");
 	PILO_CHKERR_RET(err, configuator_driver->set_value(cb.begin(), this->_name.c_str(), (int)this->_name.size(), false, true, true));
@@ -121,8 +121,8 @@ void pilo::core::config::thread_pool_config::clear(bool )
 	if (err != PILO_OK)
 		return err;
 
-	::pilo::core::string::copyz(cb.ptr(), cb.space_available(), ".task_dequeue_block_msec");
-	err = configuator_driver->get_value(cb.begin(), this->_task_dequeue_block_msec);
+	::pilo::core::string::copyz(cb.ptr(), cb.space_available(), ".task_dequeue_block_usec");
+	err = configuator_driver->get_value(cb.begin(), this->_task_dequeue_block_usec);
 	if (err != PILO_OK)
 		return err;
 

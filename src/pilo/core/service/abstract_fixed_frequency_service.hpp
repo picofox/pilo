@@ -22,7 +22,7 @@ namespace pilo
 				~abstract_fixed_frequency_service();
 
 			private:
-				::pilo::i64_t	_pulse_msec;
+				::pilo::i64_t	_pulse_usec;
 
 			};
 		}

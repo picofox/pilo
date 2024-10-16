@@ -21,6 +21,8 @@ namespace pilo {
                 virtual ::pilo::err_t close() = 0;
                 virtual ::pilo::err_t bakup() = 0;               
                 virtual ::pilo::err_t log(::pilo::core::logging::level lv, const char* fmt, ...) = 0;
+                virtual ::pilo::err_t log_debug(const char* filename, ::pilo::i32_t lineno, ::pilo::core::logging::level lv, const char* fmt, ...) = 0;
+                virtual ::pilo::err_t log_raw(const char* cstr, ::pilo::i64_t len) = 0;
                 virtual void set_level(::pilo::core::logging::level lv) { _m_config.set_level(lv); }
 
             protected:

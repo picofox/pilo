@@ -1,5 +1,6 @@
 ﻿#include "threading.hpp"
-
+#include "../logging/logger_interface.hpp"
+#include "../process/context.hpp"
 
 #ifdef WINDOWS
 	void pilo::core::threading::xpf_sleep(::pilo::i64_t secs)
@@ -14,7 +15,7 @@
 
 	void pilo::core::threading::xpf_usleep(::pilo::i64_t usecs)
 	{
-		::Sleep(DWORD(usecs / 1000) + 1);
+		::Sleep(DWORD(usecs / 1000));
 	}
 
 

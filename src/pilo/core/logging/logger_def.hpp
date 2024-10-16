@@ -14,24 +14,22 @@ namespace pilo {
             const ::pilo::u32_t DefaultFlags = (FlagBak);
 
 
-            const ::pilo::u32_t Date = 0x00000001;
-            const ::pilo::u32_t Time = 0x00000002;
-            const ::pilo::u32_t TimeZone = 0x00000004;
-            const ::pilo::u32_t Seq = 0x00000008;
-            const ::pilo::u32_t TotalSeq = 0x00000010;
-            const ::pilo::u32_t TimeStamp = 0x00000020;
-            const ::pilo::u32_t Level = 0x00000040;
-            const ::pilo::u32_t Pid = 0x00000080;
-            const ::pilo::u32_t StdTid = 0x00000100;
-            const ::pilo::u32_t LocalTid = 0x00000200;
-            const ::pilo::u32_t SrcFile = 0x00000400;
-            const ::pilo::u32_t SrcLine = 0x00000800;
-            const ::pilo::u32_t ProcName = 0x00001000;
-            const ::pilo::u32_t PPid = 0x00002000;
-            const ::pilo::u32_t SavedDate = 0x00004000;
-            const ::pilo::u32_t SavedTime = 0x00008000;
+            const ::pilo::u32_t Date =          0x00000001;
+            const ::pilo::u32_t Time =          0x00000002;
+            const ::pilo::u32_t TimeZone =      0x00000004;
+            const ::pilo::u32_t Seq =           0x00000008;
+            const ::pilo::u32_t TotalSeq =      0x00000010;
+            const ::pilo::u32_t TimeStamp =     0x00000020;
+            const ::pilo::u32_t Level =         0x00000040;
+            const ::pilo::u32_t Pid =           0x00000080;
+            const ::pilo::u32_t StdTid =        0x00000100;
+            const ::pilo::u32_t LocalTid =      0x00000200;
+            const ::pilo::u32_t ProcName =      0x00000400;
+            const ::pilo::u32_t PPid =          0x00000800;
+            const ::pilo::u32_t SavedDate =     0x00001000;
+            const ::pilo::u32_t SavedTime =     0x00002000;
 
-            const ::pilo::u32_t DefaultHeaders = (Date | Time | Seq | TotalSeq | Level | Pid | SrcFile | SrcLine);
+            const ::pilo::u32_t DefaultHeaders = (Date | Time | Seq | TotalSeq | Level | Pid);
             const ::pilo::u32_t DefaultBakNameSuffix = (SavedDate | SavedTime);
             const ::pilo::u32_t DefaultNameSuffix = (PPid);
 
@@ -112,8 +110,6 @@ namespace pilo {
                 "Pid",
                 "StdTid",
                 "LocalTid",
-                "SrcFile",
-                "SrcLine",
                 "ProcName",
                 "PPid",
                 "SavedDate",

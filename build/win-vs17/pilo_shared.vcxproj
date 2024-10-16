@@ -578,6 +578,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\efficient_thread_pool.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\performance_thread_pool.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_hybrid_worker.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_tick_worker.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_worker.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\read_write_mutex.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_task_executor.cpp" />
@@ -717,6 +718,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\order_awared_mutex_adaptor.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\performance_thread_pool.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_hybrid_worker.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_tick_worker.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\polled_thread_pool_pulsive_worker.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\read_write_mutex.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\shared_mutex_guard.hpp" />

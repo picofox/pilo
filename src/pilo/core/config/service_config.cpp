@@ -22,9 +22,8 @@ namespace pilo
             void service_config::clear(bool)
             {             
                 _name.clear();
-                _pulse_msec = 0;
                 _type_id = -1;
-                _pulse_msec = SP_PMI_SERVICE_PULSE_DEFAULT;
+                _pulse_usec = SP_PMI_SERVICE_PULSE_DEFAULT;
                 if (_param != nullptr) {
                     ::pilo::tlv::deallocate(_param);
                     _param = nullptr;
@@ -43,8 +42,8 @@ namespace pilo
                 ::pilo::core::io::string_formated_output(cb.ptr(), cb.space_available(), ".name", 5);
                 PILO_CHKERR_RET(err, configuator_driver->set_value(cb.begin(), this->_name, true));
 
-                ::pilo::core::io::string_formated_output(cb.ptr(), cb.space_available(), ".pulse_msec", 11);
-                PILO_CHKERR_RET(err, configuator_driver->set_value(cb.begin(), this->_pulse_msec, true));
+                ::pilo::core::io::string_formated_output(cb.ptr(), cb.space_available(), ".pulse_usec", 11);
+                PILO_CHKERR_RET(err, configuator_driver->set_value(cb.begin(), this->_pulse_usec, true));
 
 
                 ::pilo::core::io::string_formated_output(cb.ptr(), cb.space_available(), ".param.", 7);
@@ -79,8 +78,8 @@ namespace pilo
                 ::pilo::core::io::string_formated_output(cb.ptr(), cb.space_available(), ".name", 5);                
                 PILO_CHKERR_RET(err, configuator_driver->get_value(cb.begin(), this->_name));
 
-                ::pilo::core::io::string_formated_output(cb.ptr(), cb.space_available(), ".pulse_msec", 11);
-                PILO_CHKERR_RET(err, configuator_driver->get_value(cb.begin(), this->_pulse_msec));
+                ::pilo::core::io::string_formated_output(cb.ptr(), cb.space_available(), ".pulse_usec", 11);
+                PILO_CHKERR_RET(err, configuator_driver->get_value(cb.begin(), this->_pulse_usec));
 
 
                 ::pilo::core::io::string_formated_output(cb.ptr(), cb.space_available(), ".param", 6);

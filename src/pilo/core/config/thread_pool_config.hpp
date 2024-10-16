@@ -20,7 +20,7 @@ namespace pilo
                     , _workers_count(0)
                     , _task_executor_count(0 )
                     , _pulse_delay_usec(0)
-                    , _task_dequeue_block_msec(1000)
+                    , _task_dequeue_block_usec(1000)
                     , _name("")
                 {
 
@@ -32,11 +32,11 @@ namespace pilo
                 inline const std::string& name() const { return _name;  }
                 inline bool performance_mode() const { return _performance_mode;  }
                 inline bool global_task_queue() const { return _global_task_queue; }
-                inline ::pilo::i64_t task_dequeue_block_msec() const { return _task_dequeue_block_msec; }
+                inline ::pilo::i64_t task_dequeue_block_usec() const { return _task_dequeue_block_usec; }
 
                 void set(bool performance_mode, bool global_task_queue
                     , ::pilo::i32_t workers_count, ::pilo::i32_t task_executor_count
-                    , ::pilo::i64_t  pulse_delay_usec, ::pilo::i64_t task_dequeue_block_msec
+                    , ::pilo::i64_t  pulse_delay_usec, ::pilo::i64_t task_dequeue_block_usec
                     , const char *  name)
                 {
                     _performance_mode = performance_mode;
@@ -44,7 +44,7 @@ namespace pilo
                     _workers_count = workers_count;
                     _task_executor_count = task_executor_count;
                     _pulse_delay_usec = pulse_delay_usec;
-                    _task_dequeue_block_msec = task_dequeue_block_msec;
+                    _task_dequeue_block_usec = task_dequeue_block_usec;
                     _name = name;
                 }
 
@@ -72,7 +72,7 @@ namespace pilo
                 ::pilo::i32_t   _workers_count;
                 ::pilo::i32_t   _task_executor_count;
                 ::pilo::i64_t   _pulse_delay_usec;
-                ::pilo::i64_t   _task_dequeue_block_msec;
+                ::pilo::i64_t   _task_dequeue_block_usec;
                 std::string     _name;
                 
 

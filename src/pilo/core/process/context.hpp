@@ -171,6 +171,16 @@ namespace pilo
                     return _logger_manager.at(idx);
                 }
 
+                inline ::pilo::i64_t timestamp() const
+                {
+                    return _timestamp;
+                }
+
+                inline void update_timestamp()
+                {
+                    _timestamp = ::pilo::core::datetime::timestamp_micro_steady();
+                }
+
                 ::pilo::tlv* allocate_tlv();
                 void deallocate_tlv(::pilo::tlv* tlvp);                
                 tlv_pool_type* tlv_pool() { return &_tlv_pool;  }
@@ -205,8 +215,10 @@ namespace pilo
                 bool                _initialized;
                 ::pilo::os_pid_t    _pid;
                 ::pilo::os_pid_t    _ppid;
+                volatile ::pilo::i64_t       _timestamp;
                 std::string         _proc_name;
                 std::string         _proc_basename;
+
 
                 ::pilo::core::stat::system_information* _system_information;
                 ::pilo::core::rtti::wired_type_factory* _wired_type_facotry;
@@ -236,10 +248,13 @@ namespace pilo
                 
             };
 
-            ::pilo::err_t pilo_startup(int argc, char*argv[]);
+            ::pilo::err_t pilo_startup_initialize(int argc, char*argv[]);
             core::process::context* pilo_context();
         }
     }
 }
 
-#define PLOG(lv, fmt, ...)   do {::pilo::core::process::pilo_context()->logger(0)->log(lv, fmt, ##__VA_ARGS__);} while(0)
+#define PLOG_RELEASE(lv, fmt, ...)   do {::pilo::core::process::pilo_context()->logger(0)->log(lv, fmt, ##__VA_ARGS__);} while(0)
+#define PLOG_DEBUG(lv, fmt, ...)   do {::pilo::core::process::pilo_context()->logger(0)->log_debug(__FILE__,__LINE__,lv, fmt, ##__VA_ARGS__);} while(0)
+
+#define PLOG    PLOG_DEBUG

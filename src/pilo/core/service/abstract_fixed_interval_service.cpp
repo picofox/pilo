@@ -14,14 +14,14 @@ namespace pilo
 			abstract_fixed_interval_service::abstract_fixed_interval_service(service_group_interface* grp, ::pilo::service_id id)
 				: service_interface(grp, id)
 			{
-				_pulse_msec = grp->config()->pulse_msec();
+				_pulse_usec = grp->config()->pulse_usec();
 			}
 
 
 			void abstract_fixed_interval_service::check_pulse(::pilo::i64_t now_ts)
-			{
+			{				
 				::pilo::i64_t dist = now_ts - _m_last_pulse;
-				if (dist >= this->_pulse_msec) {
+				if (dist >= this->_pulse_usec) {
 					this->pulse(now_ts);
 					_m_last_pulse = PILO_TIMESTAMP;
 				}
@@ -30,7 +30,7 @@ namespace pilo
 
 			void abstract_fixed_interval_service::set_pulse(::pilo::i64_t i)
 			{
-				_pulse_msec = i;
+				_pulse_usec = i;
 			}
 
 			abstract_fixed_interval_service::~abstract_fixed_interval_service()

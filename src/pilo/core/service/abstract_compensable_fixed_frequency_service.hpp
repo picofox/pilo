@@ -24,7 +24,7 @@ namespace pilo
 
 
 			private:
-				::pilo::i64_t	_pulse_msec;
+				::pilo::i64_t	_pulse_usec;
 
 			};
 		}

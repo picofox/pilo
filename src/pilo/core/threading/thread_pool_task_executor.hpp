@@ -49,7 +49,7 @@ namespace pilo
                 pool_callback_func_type _on_starting_handler;
                 pool_callback_func_type _on_cleaning_handler;
                 ::pilo::i64_t           _pulse_delay;
-                const ::pilo::i64_t     _task_dequeue_block_msec;
+                const ::pilo::i64_t     _task_dequeue_block_usec;
                 const bool              _task_queue_owner;
                 volatile bool           _shutting;
                 volatile bool           _stop;

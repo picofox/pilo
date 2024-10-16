@@ -18,16 +18,16 @@ namespace pilo
             public:
                 service_config()
                     : _name("")
-                    , _pulse_msec(SP_PMI_SERVICE_PULSE_DEFAULT)
+                    , _pulse_usec(SP_PMI_SERVICE_PULSE_DEFAULT)
                     , _type_id(PMI_INVALID_SERVICE_GROUP_ID)
                     , _param(nullptr)
                 {
                     
                 }
 
-                service_config(const char* name, ::pilo::i64_t pulse_msec, ::pilo::i16_t svc_type_id, ::pilo::tlv* param)
+                service_config(const char* name, ::pilo::i64_t pulse_usec, ::pilo::i16_t svc_type_id, ::pilo::tlv* param)
                     : _name(name)
-                    , _pulse_msec(pulse_msec)
+                    , _pulse_usec(pulse_usec)
                     , _type_id(svc_type_id)
                     , _param(param)
                 {
@@ -37,7 +37,7 @@ namespace pilo
                 service_config(const service_config& o)
                 {
                     _name = o._name;
-                    _pulse_msec = o._pulse_msec;
+                    _pulse_usec = o._pulse_usec;
                     _type_id = o._type_id;
                     if (o._param != nullptr)
                         _param = o._param->clone();
@@ -49,7 +49,7 @@ namespace pilo
                 {
                     if (this != &o) {
                         _name = o._name;
-                        _pulse_msec = o._pulse_msec;
+                        _pulse_usec = o._pulse_usec;
                         _type_id = o._type_id;
                         if (o._param != nullptr)
                             _param = o._param->clone();
@@ -62,7 +62,7 @@ namespace pilo
                 service_config(service_config&& o) noexcept
                 {
                     _name = std::move(o._name);
-                    _pulse_msec = o._pulse_msec;
+                    _pulse_usec = o._pulse_usec;
                     _type_id = o._type_id;
                     if (o._param != nullptr) {
                         _param = o._param;
@@ -77,7 +77,7 @@ namespace pilo
                 {
                     if (this != &o) {
                         _name = std::move(o._name);
-                        _pulse_msec = o._pulse_msec;
+                        _pulse_usec = o._pulse_usec;
                         _type_id = o._type_id;
                         if (o._param != nullptr) {
                             _param = o._param;
@@ -109,8 +109,8 @@ namespace pilo
                 const::pilo::core::io::path* file_path() const override;
                 bool invalid() const override;
 
-                inline ::pilo::i64_t pulse_msec() const {
-                    return _pulse_msec;
+                inline ::pilo::i64_t pulse_usec() const {
+                    return _pulse_usec;
                 }
 
                 inline ::pilo::service_group_id type_id() const { return _type_id;  }
@@ -120,7 +120,7 @@ namespace pilo
 
             private:
                 std::string     _name;
-                ::pilo::i64_t	_pulse_msec;
+                ::pilo::i64_t	_pulse_usec;
                 ::pilo::service_group_id   _type_id;
                 ::pilo::tlv*    _param;
             };

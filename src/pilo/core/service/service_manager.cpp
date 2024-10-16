@@ -152,7 +152,7 @@ namespace pilo
 					if (_sched_queue.size_approx() <= 0) {
 						break;
 					}
-					::pilo::core::threading::xpf_msleep(100);
+					::pilo::core::threading::xpf_msleep(10);
 				}
 
 				return PILO_OK;

@@ -111,7 +111,7 @@ namespace pilo
                 bool has_task = false;
                 do {
                     if (this->_task_queue_owner) {
-                        has_task = this->_task_queue->wait_dequeue_timed(task_ptr, _task_dequeue_block_msec);
+                        has_task = this->_task_queue->wait_dequeue_timed(task_ptr, _task_dequeue_block_usec);
                     }
                     else {
                         has_task = this->_pool->get_task(task_ptr);
@@ -144,7 +144,7 @@ namespace pilo
                 , _on_starting_handler(on_start_cb)
                 , _on_cleaning_handler(on_clean_cb)
                 , _pulse_delay(pool->config()->pulse_delay_usec())
-                , _task_dequeue_block_msec(pool->config()->task_dequeue_block_msec())
+                , _task_dequeue_block_usec(pool->config()->task_dequeue_block_usec())
                 , _task_queue_owner(pool->has_task_queue() ? false : true)
                 , _shutting(false)
                 , _stop(true)
