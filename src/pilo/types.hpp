@@ -685,6 +685,33 @@ namespace pilo
 		count,
 	};
 
+	template<typename T, typename VT>
+	class flag_guard
+	{	
+	public:
+		typedef T flag_type;
+
+		explicit flag_guard(T& flag, VT init, VT fini)
+			: _flag(flag), _fini(fini)
+		{	
+			_flag = init;
+		}
+
+		~flag_guard() noexcept
+		{	
+			_flag = _fini;
+
+		}
+
+	private:		
+		T& _flag;
+		const VT _fini;
+
+	private:
+		flag_guard(const flag_guard&); 
+		flag_guard& operator=(const flag_guard&);
+	};
+
 } //pilo
 
 #endif //__pilo_types_hpp_

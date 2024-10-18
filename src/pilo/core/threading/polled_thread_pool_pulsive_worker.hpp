@@ -27,7 +27,7 @@ namespace pilo
                                                 , _on_cleaning_handler(on_clean_cb)
                                                 , _pulse_delay(pool->config()->pulse_delay_usec())
                                                 , _shutting(false)
-                                                , _stop(true)
+                                                , _running(false)
                                                 , _worker_thread(nullptr )
                 {                    
 
@@ -59,6 +59,7 @@ namespace pilo
                 const std::string& name() const { return _name; }
                 void post_task(::pilo::core::sched::task* task) override;
                 void set_running_handler(pool_callback_func_type hdl) override;
+                bool is_running() const override { return _running; }
 
             protected:
                 void _on_running();
@@ -73,7 +74,7 @@ namespace pilo
                 pool_callback_func_type _on_cleaning_handler;
                 ::pilo::i64_t           _pulse_delay;
                 volatile bool           _shutting;
-                volatile bool           _stop;
+                volatile bool           _running;
                 auto_join_thread*       _worker_thread;           
                 std::string             _name;                                
 

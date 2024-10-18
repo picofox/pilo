@@ -52,6 +52,8 @@ namespace pilo
 
                 inline void* object() { return _object; }
                 inline void* param() { return _param; }
+                inline task_func_type func() { return _func; }
+                inline task_destructor_func_type dtor() { return _dtor;  }
 
                 template<typename CTX>
                 inline CTX* context() { return (CTX*)_context; }

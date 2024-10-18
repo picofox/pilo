@@ -11,7 +11,18 @@ namespace pilo
 		
 			static ::pilo::core::algorithm::uint_sequence_generator<::pilo::i64_t>	s_timer_id_generator(::pilo::core::sched::timer::invalid_timer_id);
 
-			::pilo::err_t timer::set(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, task_func_type f_func, void* obj, void* param, task_destructor_func_type dtor)
+			timer* timer::clone() const
+			{
+				timer* ptr = PILO_CONTEXT->allocate_timer();
+				if (ptr != nullptr) {
+					ptr->set(this->_m_duration, this->_m_repeat_count, this->_m_repeat_duration
+						, this->_m_unit_in_millsecs
+						, this->_m_task->func(), this->_m_task->object(), this->_m_task->param(), this->_m_task->dtor());
+				}
+				return ptr;
+			}
+
+			::pilo::err_t timer::set(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, ::pilo::i64_t unit_in_millsecs, task_func_type f_func, void* obj, void* param, task_destructor_func_type dtor)
 			{				
 				if (_m_task != nullptr)
 				{
@@ -24,6 +35,7 @@ namespace pilo
 				_m_expire = 0;
 				_m_repeat_count = rep_cnt;
 				_m_repeat_duration = rep_dura;
+				_m_unit_in_millsecs = unit_in_millsecs;
 				_m_task = PILO_CONTEXT->allocate_task();
 				if (_m_task == nullptr) {
 					return ::pilo::mk_err(PERR_CREATE_OBJ_FAIL);

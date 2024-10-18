@@ -209,6 +209,16 @@ namespace pilo
                     this->_thread_pool->post_task(task_ptr);
                 }
 
+                ::pilo::i64_t add_rel_milli_timer(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura
+                    , ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
+                ::pilo::i64_t add_rel_sec_timer(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura
+                    , ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
+                ::pilo::i64_t add_abs_milli_timer(::pilo::i64_t epoch, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura
+                    , ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
+                ::pilo::i64_t add_abs_sec_timer(::pilo::i64_t epoch, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura
+                    , ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
+
+                
 
             private:
                 ::pilo::core::io::path _proc_paths[(int)::pilo::predefined_pilo_path::count];

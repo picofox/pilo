@@ -13,12 +13,19 @@ namespace pilo
             ::pilo::err_t thread_pool_task_executor::start()
             {
                 if (this->_worker_thread != nullptr) {
-                    return ::pilo::mk_perr(PERR_EXIST);
+                    if (this->is_running())
+                        return ::pilo::mk_perr(PERR_EXIST);
+                    else { //TODO 
+                        delete this->_worker_thread;
+                        this->_worker_thread = nullptr;
+                    }
                 }
 
-                this->_shutting = false;                
+                this->_shutting = false;    
+                this->_running = false;
                 this->_worker_thread = new auto_join_thread(
                     [](thread_pool_task_executor* w) {
+                        ::pilo::flag_guard<volatile bool, bool> guard(w->_running, true, false);
                         w->_on_starting();
                         try
                         {
@@ -26,21 +33,19 @@ namespace pilo
                         }
                         catch (const std::exception&)
                         {
-                            w->_on_cleaning();
-                            return;
+                            ;
                         }
                         w->_on_cleaning();
                         return;
                     },
                     this
                 );
-                this->_stop = false;
                 return PILO_OK;
             }
 
             ::pilo::err_t thread_pool_task_executor::stop()
             {
-                if (this->_worker_thread == nullptr || this->_shutting || this->_stop) {
+                if (this->_worker_thread == nullptr || this->_shutting) {
                     return ::pilo::mk_perr(PERR_NOOP);
                 }
                 this->_shutting = true;
@@ -54,7 +59,6 @@ namespace pilo
                     {
                     }
 
-                    this->_stop = true;
                     delete this->_worker_thread;
                     this->_worker_thread = nullptr;
                     this->_shutting = false;
@@ -92,8 +96,6 @@ namespace pilo
                 }    
 
                 _process_task();
-
-                this->_stop = true;
                 this->_shutting = false;
 
             }
@@ -147,7 +149,7 @@ namespace pilo
                 , _task_dequeue_block_usec(pool->config()->task_dequeue_block_usec())
                 , _task_queue_owner(pool->has_task_queue() ? false : true)
                 , _shutting(false)
-                , _stop(true)
+                , _running(false)
                 , _worker_thread(nullptr)
             {
                 if (name_stub == nullptr)

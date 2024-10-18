@@ -32,3 +32,9 @@
 #define SP_PMI_LBKBUF_NODE_4K_UNIT_SIZE     (BKILO(4))
 #define SP_PMI_LBKBUF_NODE_4K_STEP_SIZE     (1024)
 #define SP_PMI_SERVICE_PULSE_DEFAULT		(10000)
+
+#define SP_PMS_LOGMOD_ETP					"[TP-E]"
+#define SP_PMS_LOGMOD_PTP					"[TP-P]"
+
+
+#define SP_PMS_LOGSVC_TIMER					"[SVC-Timer]"

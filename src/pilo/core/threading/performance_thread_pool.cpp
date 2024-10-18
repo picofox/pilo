@@ -6,6 +6,7 @@
 #include "./polled_thread_pool_pulsive_worker.hpp"
 #include "./thread_pool_task_executor.hpp"
 #include "../container/concurrent_queue.hpp"
+#include "./polled_thread_pool_pulsive_tick_worker.hpp"
 
 namespace pilo
 {
@@ -15,6 +16,8 @@ namespace pilo
         {
             ::pilo::err_t performance_thread_pool::start()
             {
+                PLOG(::pilo::core::logging::level::info, SP_PMS_LOGMOD_PTP" Starting...");
+
                 ::pilo::i32_t gw_cnt = _config->workers_count();
                 ::pilo::i32_t te_cnt = _config->task_executor_count();
                 thread_pool_worker_interface* worker = nullptr;
@@ -23,6 +26,9 @@ namespace pilo
                 {
                     if (i < te_cnt) {
                         worker = new polled_thread_pool_hybrid_worker(this, _on_starting_handler, _on_running_handler, _on_cleaning_handler, _config->name().c_str());
+                    }
+                    else if (i == te_cnt) {
+                        worker = new polled_thread_pool_pulsive_tick_worker(this, _on_starting_handler, _on_running_handler, _on_cleaning_handler, _config->name().c_str());
                     }
                     else {
                         worker = new polled_thread_pool_pulsive_worker(this, _on_starting_handler, _on_running_handler, _on_cleaning_handler, _config->name().c_str());
@@ -38,6 +44,21 @@ namespace pilo
 
                 _task_executor_count = te_cnt;
 
+                PLOG(::pilo::core::logging::level::info, SP_PMS_LOGMOD_PTP" Waiting started.");
+
+                bool all_running = false;
+                while (!all_running) {
+                    all_running = true;
+                    for (::pilo::i32_t i = 0; i < gw_cnt; i++) {
+                        if (!_workers[i]->is_running()) {
+                            all_running = false;
+                            ::pilo::core::threading::xpf_msleep(100);
+                        }
+                    }
+                }
+
+                PLOG(::pilo::core::logging::level::info, SP_PMS_LOGMOD_PTP" Started.");
+
                 return PILO_OK;
             }
 
@@ -50,7 +71,7 @@ namespace pilo
             {
                 if (_task_queue != nullptr) {
                     if (! _task_queue->enqueue(t)) {
-                        PLOG(::pilo::core::logging::level::error, "post task to g-queue failed %x", &t);
+                        PLOG(::pilo::core::logging::level::error, SP_PMS_LOGMOD_PTP" Post task to g-queue failed %x", &t);
                     }
                 }
                 else {

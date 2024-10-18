@@ -15,12 +15,18 @@ namespace pilo
             ::pilo::err_t polled_thread_pool_pulsive_worker::start()
             {
                 if (this->_worker_thread != nullptr) {
-                    return ::pilo::mk_perr(PERR_EXIST);
+                    if (this->is_running())
+                        return ::pilo::mk_perr(PERR_EXIST);
+                    else { //TODO 
+                        delete this->_worker_thread;
+                        this->_worker_thread = nullptr;
+                    }
                 }
                 
                 this->_shutting = false;                
                 this->_worker_thread = new auto_join_thread(
                     [](polled_thread_pool_pulsive_worker* w) {
+                        ::pilo::flag_guard<volatile bool, bool> guard(w->_running, true, false);
                         w->_on_starting();
                         try
                         {
@@ -28,21 +34,20 @@ namespace pilo
                         }
                         catch (const std::exception&)
                         {
-                            w->_on_cleaning();
-                            return;
+                            ;
                         }
                         w->_on_cleaning();
                         return;
                     },
                     this
                 );
-                this->_stop = false;
+
                 return PILO_OK;
             }
 
             ::pilo::err_t polled_thread_pool_pulsive_worker::stop()
             {
-                if (this->_worker_thread == nullptr || this->_shutting || this->_stop) {
+                if (this->_worker_thread == nullptr || this->_shutting) {
                     return ::pilo::mk_perr(PERR_NOOP);
                 }
                 this->_shutting = true;
@@ -56,7 +61,6 @@ namespace pilo
                     {
                     }
 
-                    this->_stop = true;
                     delete this->_worker_thread;
                     this->_worker_thread = nullptr;
                     this->_shutting = false;
@@ -93,11 +97,7 @@ namespace pilo
                     if (_pulse_delay >= 0)
                         xpf_usleep(_pulse_delay);                     
                 }    
-
-
-                this->_stop = true;
                 this->_shutting = false;
-
             }
 
             void polled_thread_pool_pulsive_worker::_on_cleaning()

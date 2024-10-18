@@ -37,6 +37,7 @@ namespace pilo
                 const std::string& name() const { return _name; }
                 void post_task(::pilo::core::sched::task* task) override;
                 void set_running_handler(pool_callback_func_type hdl) override;
+                bool is_running() const override { return _running; } ;
 
             private:
                 void _on_running();
@@ -52,7 +53,7 @@ namespace pilo
                 const ::pilo::i64_t     _task_dequeue_block_usec;
                 const bool              _task_queue_owner;
                 volatile bool           _shutting;
-                volatile bool           _stop;
+                volatile bool           _running;
                 auto_join_thread*       _worker_thread;
                 pool_task_blocking_queue_type*   _task_queue;
                 std::string             _name;

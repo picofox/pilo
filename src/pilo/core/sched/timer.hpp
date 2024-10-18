@@ -2,7 +2,7 @@
 #define _pilo_core_sched_timer_hpp_
 
 #include    "./task.hpp"
-
+#include	"../io/formatted_io.hpp"
 
 namespace pilo
 {
@@ -19,7 +19,7 @@ namespace pilo
 			public:
 				timer()
 					: _m_next(nullptr)
-					,_m_id_n_cancel_flag(invalid_timer_id), _m_duration(0), _m_expire(0), _m_repeat_count(0), _m_repeat_duration(0), _m_task(nullptr)
+					,_m_id_n_cancel_flag(invalid_timer_id), _m_duration(0), _m_expire(0), _m_repeat_count(0), _m_repeat_duration(0), _m_unit_in_millsecs(10), _m_task(nullptr)
 				{
 
 				}
@@ -29,7 +29,10 @@ namespace pilo
 					reset();
 				}
 
-				::pilo::err_t set(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, task_func_type f_func, void* obj, void* param, task_destructor_func_type dtor);
+				timer* clone() const;
+
+
+				::pilo::err_t set(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, ::pilo::i64_t	unit_in_millsecs, task_func_type f_func, void* obj, void* param, task_destructor_func_type dtor);
 				void reset();
 
 				inline bool invalid() const
@@ -37,7 +40,7 @@ namespace pilo
 					return (_m_id_n_cancel_flag == invalid_timer_id || _m_task == nullptr);
 				}
 
-				inline ::pilo::i64_t id()
+				inline ::pilo::i64_t id() const
 				{
 					return (_m_id_n_cancel_flag & 0x7FFFFFFFFFFFFFFFLL);
 				}
@@ -72,6 +75,11 @@ namespace pilo
 					this->_m_expire = exp;
 				}
 
+				inline void add_expire(::pilo::u32_t exp)
+				{
+					this->_m_expire = this->_m_duration + exp;
+				}
+
 				inline ::pilo::u32_t repeat_count() const
 				{
 					return _m_repeat_count;
@@ -97,26 +105,38 @@ namespace pilo
 					}
 					else if (this->_m_repeat_count == 0) {
 						return false;
-					}
-					this->_m_repeat_count--;
+					}					
 					if (this->_m_repeat_count > 0) {
+						this->_m_repeat_count--;
 						this->_m_expire = this->_m_repeat_duration + time_slot;
 						return true;
 					}
 					return false;
 				}
 
+				inline ::pilo::i64_t unit_in_millsecs() const { return _m_unit_in_millsecs; }
+
 				inline timer* next() { return _m_next;  }
 				inline void set_next(timer* nptr) { _m_next = nptr; }
 
+				inline std::string to_string() const
+				{
+					char buffer[128] = { 0 };
+					::pilo::core::io::string_formated_output(buffer, 128, "timer_%lld:%u,%u,%u,%u,%s,%c"
+						,id(), _m_duration, _m_expire, _m_repeat_count, _m_repeat_duration, _m_unit_in_millsecs == 10 ? "ms" : "sec"
+						,cancelled() ? 'X':'O');
+					return std::string(buffer);
+				}
+
 			protected:				
 				::pilo::core::sched::timer*		_m_next;
-				::pilo::i64_t		_m_id_n_cancel_flag;
-				::pilo::u32_t		_m_duration;
-				::pilo::u32_t		_m_expire;
-				::pilo::u32_t		_m_repeat_count;
-				::pilo::u32_t		_m_repeat_duration;
-				::pilo::core::sched::task* _m_task;
+				::pilo::i64_t					_m_id_n_cancel_flag;
+				::pilo::u32_t					_m_duration;
+				::pilo::u32_t					_m_expire;
+				::pilo::u32_t					_m_repeat_count;
+				::pilo::u32_t					_m_repeat_duration;
+				::pilo::i64_t					_m_unit_in_millsecs;
+				::pilo::core::sched::task*		_m_task;
 			};
 
 			class timer_linked_list

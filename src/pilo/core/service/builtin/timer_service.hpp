@@ -4,6 +4,8 @@
 #include "../../sched/time_wheel.hpp"
 #include "../../service/abstract_fixed_interval_service.hpp"
 #include "../../service/services_def.hpp"
+#include "../../container/concurrent_queue.hpp"
+
 
 namespace pilo
 {
@@ -27,21 +29,27 @@ namespace pilo
 						
 					}
 
+				public:
+					void pulse(::pilo::i64_t now_ts) override;
 					::pilo::err_t start(::pilo::i64_t now_ts);
 
+					::pilo::i64_t add_rel_milli_timer(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura
+						, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
 
-				private:
-					::pilo::core::sched::time_wheel<::pilo::core::threading::dummy_mutex>	_time_wheel_sec;
-					::pilo::core::sched::time_wheel<::pilo::core::threading::dummy_mutex>	_time_wheel_millisec;
+					::pilo::i64_t add_rel_sec_timer(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura
+						, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
 
+					::pilo::i64_t add_abs_milli_timer(::pilo::i64_t epoch, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura
+						, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
 
-
-					// Inherited via abstract_fixed_interval_service
-					void pulse(::pilo::i64_t now_ts) override;
+					::pilo::i64_t add_abs_sec_timer(::pilo::i64_t epoch, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura
+						, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
 
 				private:
 					::pilo::i64_t _last_sec_timer_ts;
-
+					::pilo::core::sched::time_wheel<::pilo::core::threading::dummy_mutex>	_time_wheel_sec;
+					::pilo::core::sched::time_wheel<::pilo::core::threading::dummy_mutex>	_time_wheel_millisec;
+					::pilo::core::container::concurrent_queue<::pilo::core::sched::timer*>	_timer_queue;
 				};
 
 			}

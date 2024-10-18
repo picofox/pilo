@@ -46,10 +46,17 @@ namespace pilo
 						return nullptr;
 					}
 
-					std::lock_guard<::pilo::core::threading::native_mutex>	guard(this->_mutex);
+					std::lock_guard<lock_type>	guard(this->_mutex);
 					ptimer->set_expire(duration + this->_time);
 					this->_add_node(ptimer);
 					return ptimer;
+				}
+
+				void add_timer(::pilo::core::sched::timer* ptimer)
+				{
+					std::lock_guard<lock_type>	guard(this->_mutex);
+					ptimer->add_expire(this->_time);
+					this->_add_node(ptimer);
 				}
 
 				::pilo::err_t initialize()
@@ -150,16 +157,26 @@ namespace pilo
 
 				void _dispatch_list(::pilo::core::sched::timer* current_timer)
 				{
+					//while (true) {
+					//	current_timer->exec();
+					//	bool resched = current_timer->resched_check(this->_time);
+					//	if (resched) {
+
+					//	}
+					//}
+
 					::pilo::core::sched::timer* tmp_timer = nullptr;
 					do {
 						current_timer->exec();
 						bool resched = current_timer->resched_check(this->_time);
 						if (resched) {
-							{
-								std::lock_guard<lock_type>	guard(this->_mutex);
-								this->_add_node(current_timer);
-							}
+							tmp_timer = current_timer;
 							current_timer = current_timer->next();
+							tmp_timer->set_next(nullptr);
+							{
+								std::lock_guard<lock_type>	guard(this->_mutex);								
+								this->_add_node(tmp_timer);
+							}		
 						}
 						else {
 							tmp_timer = current_timer;

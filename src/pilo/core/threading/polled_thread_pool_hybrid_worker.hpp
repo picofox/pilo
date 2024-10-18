@@ -28,7 +28,7 @@ namespace pilo
                                                 , _pulse_delay(pool->config()->pulse_delay_usec())
                                                 , _task_queue_owner(pool->has_task_queue()? false : true)
                                                 , _shutting(false)
-                                                , _stop(true)
+                                                , _running(false)
                                                 , _worker_thread(nullptr)
                 {                    
 
@@ -68,7 +68,7 @@ namespace pilo
                 const std::string& name() const override { return _name;  };
                 void post_task(::pilo::core::sched::task* task) override;
                 void set_running_handler(pool_callback_func_type hdl) override;
-
+                bool is_running() const override  { return _running; }
             private:
                 void _on_running();
                 void _on_starting();
@@ -85,7 +85,7 @@ namespace pilo
                 ::pilo::i64_t           _pulse_delay;
                 const bool              _task_queue_owner;
                 volatile bool           _shutting;
-                volatile bool           _stop;
+                volatile bool           _running;
                 auto_join_thread*       _worker_thread;
                 pool_task_queue_type*   _task_queue;               
                 std::string             _name;

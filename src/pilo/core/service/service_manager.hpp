@@ -11,10 +11,16 @@ namespace pilo
 	{
 		namespace service
 		{
+			namespace builtin
+			{
+				class timer_service;
+			}
+
 			class service_manager
 			{
 			public:
-				friend class service_group_interface;				
+				friend class service_group_interface;	
+				friend class builtin::timer_service;
 				typedef service_group_interface* (*service_group_creation_func_type) (service_manager* mgr, const ::pilo::core::config::service_config* config);
 				typedef service_interface* (*service_creation_func_type) (service_group_interface* igroup, ::pilo::i32_t index);
 
@@ -42,12 +48,18 @@ namespace pilo
 					, service_group_creation_func_type svc_grp_crt_func
 					,service_creation_func_type svc_crt_func);
 
+				::pilo::core::service::builtin::timer_service* timer_service_cache()
+				{
+					return _timer_service;
+				}
+
 			private:
 				::pilo::err_t _add_group(service_group_interface* grp);
 
 
 			private:
-				::pilo::core::service::service_state							_state;				
+				::pilo::core::service::service_state							_state;			
+				::pilo::core::service::builtin::timer_service*					_timer_service;
 				::pilo::core::container::concurrent_queue<service_interface*>	_sched_queue;
 				std::map<::pilo::service_group_id, service_group_interface*>	_group;
 				std::map<::pilo::service_group_id, service_creation_func_type>	_service_creator;

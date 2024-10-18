@@ -9,6 +9,8 @@
 #include "../threading/efficient_thread_pool.hpp"
 #include "../threading/performance_thread_pool.hpp"
 #include "../logging/logger_interface.hpp"
+#include "../service/service_manager.hpp"
+#include "../service/builtin/timer_service.hpp"
 
 namespace pilo
 {
@@ -360,6 +362,27 @@ namespace pilo
                 
                 return PILO_OK;                    
             }
+
+            ::pilo::i64_t context::add_rel_milli_timer(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor)
+            {
+                return _service_manager->timer_service_cache()->add_rel_milli_timer(duration, rep_cnt, rep_dura, f_func, obj, param, dtor);
+            }
+
+            ::pilo::i64_t context::add_rel_sec_timer(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor)
+            {
+                return _service_manager->timer_service_cache()->add_rel_sec_timer(duration, rep_cnt, rep_dura, f_func, obj, param, dtor);
+            }
+
+            ::pilo::i64_t context::add_abs_milli_timer(::pilo::i64_t epoch, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor)
+            {
+                return _service_manager->timer_service_cache()->add_abs_milli_timer(epoch, rep_cnt, rep_dura, f_func, obj, param, dtor);
+            }
+
+            ::pilo::i64_t context::add_abs_sec_timer(::pilo::i64_t epoch, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor)
+            {
+                return _service_manager->timer_service_cache()->add_abs_sec_timer(epoch, rep_cnt, rep_dura, f_func, obj, param, dtor);
+            }
+
 
             void context::finalize()
             {

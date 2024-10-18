@@ -16,6 +16,8 @@ namespace pilo
         {
             ::pilo::err_t efficient_thread_pool::start()
             {
+                PLOG(::pilo::core::logging::level::info, SP_PMS_LOGMOD_ETP" Starting...");
+
                 if (_workers.size() > 0) {
                     return ::pilo::mk_perr(PERR_EXIST);
                 }
@@ -55,6 +57,20 @@ namespace pilo
                         return err;
                 }
 
+                PLOG(::pilo::core::logging::level::info, SP_PMS_LOGMOD_ETP" Waiting started.");
+
+                bool all_running = false;
+                while (! all_running) {
+                    all_running = true;
+                    for (::pilo::i32_t i = 0; i < gw_cnt; i++) {
+                        if (!_workers[i]->is_running()) {
+                            all_running = false;
+                            ::pilo::core::threading::xpf_msleep(100);
+                        }
+                    }
+                }
+                
+                PLOG(::pilo::core::logging::level::info, SP_PMS_LOGMOD_ETP" Started.");
 
                 return PILO_OK;
             }
@@ -67,7 +83,7 @@ namespace pilo
             {      
                 if (_task_queue != nullptr) {                    
                     if (!_task_queue->enqueue(t)) {
-                        PLOG(::pilo::core::logging::level::error, "post task to g-b-queue failed %x", &t);
+                        PLOG(::pilo::core::logging::level::error, SP_PMS_LOGMOD_ETP" Post task to g-b-queue failed %x", &t);
                     }
                 }
                 else {

@@ -34,6 +34,7 @@ namespace pilo
                 virtual const std::string& name() const = 0;    
                 virtual void post_task(::pilo::core::sched::task* task) = 0;
                 virtual void set_running_handler(pool_callback_func_type hdl) = 0;
+                virtual bool is_running() const = 0;
                 
             };
 
