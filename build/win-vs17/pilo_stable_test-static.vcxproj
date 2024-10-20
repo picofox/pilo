@@ -333,6 +333,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\container\case_trivil_concurrent_queue_basic.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\i18n\case_utf8_unicode.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\io\case_path.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\service\case_cron_service.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\service\case_timer_service.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\threading\case_efficient_thread_pool.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\threading\case_performance_thread_pool.cpp" />

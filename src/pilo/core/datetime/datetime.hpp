@@ -30,7 +30,7 @@ namespace pilo
 	namespace core
 	{
 		namespace datetime
-		{           
+		{     
 			typedef enum
 			{
 				edf_YYYYdMMdDD = 0, ///"%04d-%02d-%02d"

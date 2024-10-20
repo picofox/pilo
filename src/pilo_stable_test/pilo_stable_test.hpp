@@ -35,6 +35,7 @@ namespace pilo
 
 			namespace service
 			{
+				int case_cron_service_base(::pilo::core::testing::stable_test_case* p_case);
 				int case_timer_service_milli_single(::pilo::core::testing::stable_test_case* p_case);
 				int case_timer_service_milli_multi(::pilo::core::testing::stable_test_case* p_case);
 			}

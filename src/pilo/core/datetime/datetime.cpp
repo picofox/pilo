@@ -9,7 +9,7 @@ namespace pilo
 	{
 		namespace datetime
 		{ 
-            const static ::pilo::i64_t __cst_stc_year_1st_sec_cache[] =
+            const static ::pilo::i64_t __uct_stc_year_1st_sec_cache[] =
             {
                 0, 31536000, 63072000, 94694400, 126230400, 157766400, 189302400, 220924800,
                 252460800, 283996800, 315532800, 347155200, 378691200, 410227200, 441763200, 473385600,
@@ -319,7 +319,7 @@ namespace pilo
 
 				if (year >= endYear)
 				{
-                    ::pilo::i64_t secs = __cst_stc_year_1st_sec_cache[PMI_DATETIME_YEAR_1ST_SECS_CACHE_SIZE - 1];
+                    ::pilo::i64_t secs = __uct_stc_year_1st_sec_cache[PMI_DATETIME_YEAR_1ST_SECS_CACHE_SIZE - 1];
                     if (timezone == INT_MAX)
                     {                        
                         secs += datetime::diff_seconds_local_to_utc();
@@ -346,7 +346,7 @@ namespace pilo
 				}
                 else if (year < startYear)
                 {
-                    ::pilo::i64_t secs = __cst_stc_year_1st_sec_cache[0];
+                    ::pilo::i64_t secs = __uct_stc_year_1st_sec_cache[0];
                     if (timezone == INT_MAX)
                     {
                         secs += datetime::diff_seconds_local_to_utc();
@@ -374,11 +374,11 @@ namespace pilo
                     if (timezone == INT_MAX)
                     {
                         int diff = datetime::diff_seconds_local_to_utc();
-                        return __cst_stc_year_1st_sec_cache[year - 1970] + diff;
+                        return __uct_stc_year_1st_sec_cache[year - 1970] + diff;
                     }
                     else
                     {
-                        return __cst_stc_year_1st_sec_cache[year - 1970] + timezone;
+                        return __uct_stc_year_1st_sec_cache[year - 1970] + timezone;
                     }                    
 				}
 			}

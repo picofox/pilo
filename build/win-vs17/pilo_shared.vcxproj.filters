@@ -25,6 +25,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\datetime.cpp">
       <Filter>pilo\core\datetime</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\system_clock.cpp">
+      <Filter>pilo\core\datetime</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\i18n\encoding_conversion.cpp">
       <Filter>pilo\core\i18n</Filter>
     </ClCompile>
@@ -132,6 +135,9 @@
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.cpp">
       <Filter>pilo\core\rtti</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_spec.cpp">
+      <Filter>pilo\core\sched</Filter>
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\time_wheel.cpp">
       <Filter>pilo\core\sched</Filter>
@@ -292,6 +298,9 @@
       <Filter>pilo\core\datetime</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\stop_watch.hpp">
+      <Filter>pilo\core\datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\system_clock.hpp">
       <Filter>pilo\core\datetime</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\timestamp.hpp">
@@ -509,6 +518,9 @@
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.hpp">
       <Filter>pilo\core\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_spec.hpp">
+      <Filter>pilo\core\sched</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\task.hpp">
       <Filter>pilo\core\sched</Filter>

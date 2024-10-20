@@ -19,6 +19,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\io\case_path.cpp">
       <Filter>pilo_stable_test\core\io</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\service\case_cron_service.cpp">
+      <Filter>pilo_stable_test\core\service</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo_stable_test\core\service\case_timer_service.cpp">
       <Filter>pilo_stable_test\core\service</Filter>
     </ClCompile>

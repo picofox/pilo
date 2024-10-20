@@ -4,6 +4,7 @@
 
 #include <string>
 #include <sstream>
+#include <chrono>
 #include "./platform.hpp"
 
 #ifdef WINDOWS
@@ -711,6 +712,8 @@ namespace pilo
 		flag_guard(const flag_guard&); 
 		flag_guard& operator=(const flag_guard&);
 	};
+
+	
 
 } //pilo
 

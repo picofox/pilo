@@ -43,6 +43,7 @@ int main(int argc, char * argv[])
 
 void load_cases(stable_test_suite * suite)
 {
+	suite->register_case("case_cron_service_base", ::pilo::stable_test::core::service::case_cron_service_base, nullptr, 10000000, -1);
 	suite->register_case("timer_service_single", ::pilo::stable_test::core::service::case_timer_service_milli_single, nullptr, 10000000, -1);
 	suite->register_case("timer_service_multi", ::pilo::stable_test::core::service::case_timer_service_milli_multi, nullptr, 100000000, -1);
 

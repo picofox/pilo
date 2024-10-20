@@ -483,12 +483,6 @@ namespace pilo
         if (ptr != nullptr)
             *ptr = value;
     }
-
-    
-
-
-    
-
 }
 
 
@@ -496,6 +490,11 @@ namespace pilo
 #define PILO_STARTUP_INIT(c,v)   do { if (PILO_OK != ::pilo::core::process::pilo_startup_initialize(c,v)) { exit(-1); } } while(0)
 #define PILO_CONTEXT    (::pilo::core::process::pilo_context())
 #define PILO_TIMESTAMP  (::pilo::core::process::pilo_context()->timestamp())
-
+#define LL_NON     (::pilo::core::logging::level::none)    
+#define LL_FTL     (::pilo::core::logging::level::fatal)    
+#define LL_ERR     (::pilo::core::logging::level::error)    
+#define LL_WRN     (::pilo::core::logging::level::warn)    
+#define LL_INF     (::pilo::core::logging::level::info)    
+#define LL_DBG     (::pilo::core::logging::level::debug)    
 
 #endif
