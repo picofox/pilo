@@ -2,6 +2,7 @@
 #include <sstream>
 #include "../../pilo.hpp"
 #include "system_information.hpp"
+#include "../datetime/datetime.hpp"
 
 
 #ifdef WINDOWS
@@ -126,8 +127,11 @@ int win32_get_cpu_info(::pilo::i32_t& ncpus, ::pilo::i32_t& ncores, ::pilo::i32_
     ncores = (::pilo::i32_t)processorCoreCount;
     nlcores = (::pilo::i32_t)logicalProcessorCount;
 
-    free(buffer);
 
+    ::pilo::core::datetime::datetime::get
+
+
+    free(buffer);
     return 0;
 }
 

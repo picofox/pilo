@@ -254,7 +254,7 @@ namespace pilo
                 ::pilo::core::logging::logger_manager _logger_manager;
 
 
-                
+                                
                 
             };
 
