@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿#ifndef _pilo_core_datetime_datetime_h_
+#define _pilo_core_datetime_datetime_h_
 
 #include "../../pilo.hpp"
 #include <time.h>
@@ -29,8 +30,19 @@ namespace pilo
 {
 	namespace core
 	{
+
+
+
 		namespace datetime
-		{     
+		{
+
+		    __inline void get_localtime(struct tm * tmsp,  time_t*  secs) {
+#ifdef WINDOWS
+		        localtime_s(tmsp, secs);
+#else
+		        localtime_r(secs, tmsp);
+#endif
+		    }
 			typedef enum
 			{
 				edf_YYYYdMMdDD = 0, ///"%04d-%02d-%02d"
@@ -447,3 +459,6 @@ namespace pilo
 		}
 	}
 }
+
+
+#endif

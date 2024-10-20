@@ -36,11 +36,11 @@ namespace pilo
 				{
 				}
 
-				timer* add_timer(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, task_func_type f_func, void* obj, void* param, task_destructor_func_type dtor)
+				timer* add_timer(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, ::pilo::i64_t unit_in_millsecs,  task_func_type f_func, void* obj, void* param, task_destructor_func_type dtor)
 				{
 					::pilo::core::sched::timer* ptimer = PILO_CONTEXT->allocate_timer();
 					if (ptimer != nullptr) {
-						ptimer->set(duration, rep_cnt, rep_dura, f_func, obj, param, dtor);
+						ptimer->set(duration, rep_cnt, rep_dura, unit_in_millsecs,f_func, obj, param, dtor);
 					}
 					else {
 						return nullptr;

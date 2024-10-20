@@ -27,7 +27,7 @@ namespace pilo
 		{
 			namespace service
 			{
-				static ::std::atomic<::pilo::i64_t> s_cnt = 0;
+				static ::std::atomic<::pilo::i64_t> s_cnt(0);
 				static void timer_task(::pilo::core::sched::task* )
 				{
 					//::pilo::core::sched::timer* ptimer_ref = task_ptr->context<::pilo::core::sched::timer>();
