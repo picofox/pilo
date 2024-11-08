@@ -25,11 +25,8 @@ void load_cases(stable_test_suite* suite);
 int main(int argc, char * argv[])
 {
 	PILO_STARTUP_INIT(argc, argv);
-
 	stable_test_suite suite_default;
-
 	load_cases(&suite_default);
-
 	PILO_CONTEXT->start();
 	suite_default.run_cases(true);
 

@@ -13,7 +13,7 @@ namespace pilo
 			class timer
 			{
 			public:
-				const static ::pilo::i64_t invalid_timer_id = 0L;
+				const static ::pilo::i64_t invalid_timer_id = 0LL;
 				const static ::pilo::u32_t infinit_repeat = 0xFFFFFFFFU;
 
 			public:

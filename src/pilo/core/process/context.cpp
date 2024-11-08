@@ -11,6 +11,8 @@
 #include "../logging/logger_interface.hpp"
 #include "../service/service_manager.hpp"
 #include "../service/builtin/timer_service.hpp"
+#include "../datetime/zoned_clock.hpp"
+#include "../logging/logger_interface.hpp"
 
 namespace pilo
 {
@@ -23,6 +25,7 @@ namespace pilo
 #ifdef WINDOWS
             static int s_on_exit(void)
             {
+                
                 printf("pilo on exit, finanlizing.....\n");
                 PILO_CONTEXT->finalize();
                 delete _s_pilo_context_instance;
@@ -55,6 +58,11 @@ namespace pilo
                 , _linked_buffer_node_pool(nullptr)
                 , _service_manager(nullptr), _thread_pool(nullptr)
             {
+#ifdef WINDOWS
+                _tzset();
+#else
+                tzset();
+#endif
 
 
                 char buffer[PMI_PATH_MAX] = { 0 };
@@ -248,7 +256,6 @@ namespace pilo
                 if (err != PILO_OK)
                     return err;
 
-
                 err = _core_config->load_or_save_default();
                 if (err != PILO_OK) {
                     ::pilo::core::io::file_formatted_output(stderr, "load_or_save_default core config failed. (%s)\n", ::pilo::str_err(err, nullptr, true).c_str());
@@ -279,8 +286,7 @@ namespace pilo
                         return err;
                     }
                 }
-                
-                
+
                 err = _cmdline_arg.parse(argc, argv, errmsg);
                 if (err != PILO_OK) {
                     ::pilo::core::io::file_formatted_output(stderr, "Parse cmdline arguments failed. (%s)\n", errmsg.c_str());
@@ -299,10 +305,13 @@ namespace pilo
                 );
 
                 _environment_variable_manager.initialize();
-
                 err = _logger_manager.initialize(_core_config->loggers());
                 if (err != PILO_OK)
                     return err;
+                if (this->_core_config->overrided_timezone() == PMI_USE_SYSTEM_TIMEZONE) {
+                    ::pilo::i8_t tt = PILO_CONTEXT->system_information()->system_timezone();
+                    this->_core_config->set_overrided_timezone(tt);
+                }
 
 #ifdef WINDOWS
                 _onexit(s_on_exit);
@@ -343,12 +352,13 @@ namespace pilo
                 else {
                     _thread_pool = nullptr;
                 }
-                
-                if (_thread_pool != nullptr)
-                    return _thread_pool->start();
+
+                if (_thread_pool != nullptr) {
+                    _thread_pool->start();
+                }
 
                 _initialized = true;
-
+                
                 return PILO_OK;
             }
 
@@ -359,7 +369,9 @@ namespace pilo
                     err = _service_manager->start();
                 if (err != PILO_OK)
                     return err;
-                
+
+                _cron_manager.start();
+
                 return PILO_OK;                    
             }
 
@@ -383,9 +395,39 @@ namespace pilo
                 return _service_manager->timer_service_cache()->add_abs_sec_timer(epoch, rep_cnt, rep_dura, f_func, obj, param, dtor);
             }
 
+            ::pilo::i64_t context::add_cron_job(::pilo::i8_t tz, const std::string& spec, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor)
+            {
+                ::pilo::i64_t id =  _cron_manager.add_job(tz, spec, f_func, obj, param, dtor);
+                if (id > 0) {
+                    PLOG(::pilo::core::logging::level::info, "[cron] job (%d-%lld:%s) is added", ::pilo::core::sched::cron::timezone_of_id(id), ::pilo::core::sched::cron::seq_of_id(id), spec.c_str());
+                }
+                else {
+                    PLOG(::pilo::core::logging::level::error, "[cron] job (%d-%lld:%s) add failed.", ::pilo::core::sched::cron::timezone_of_id(id), ::pilo::core::sched::cron::seq_of_id(id), spec.c_str());
+                }
+                return id;
+            }
+
+            ::pilo::err_t context::delete_cron_job(::pilo::i64_t cronid)
+            {
+                ::pilo::err_t err = _cron_manager.delete_job(cronid);
+                if (err == PILO_OK) {
+                    PLOG(::pilo::core::logging::level::info, "[cron] job (%d-%lld) is stopped.", ::pilo::core::sched::cron::timezone_of_id(cronid), ::pilo::core::sched::cron::seq_of_id(cronid));
+                }
+                else {
+                    PLOG(::pilo::core::logging::level::info, "[cron] job (%d-%lld) stopped failed.", ::pilo::core::sched::cron::timezone_of_id(cronid), ::pilo::core::sched::cron::seq_of_id(cronid));
+                }
+                return err;
+            }
+
+            void context::delete_timer(::pilo::i64_t timer_id)
+            {
+                return _service_manager->timer_service_cache()->delete_timer(timer_id);
+            }
+
 
             void context::finalize()
             {
+                _cron_manager.finanlize();
                 std::string str = this->_pool_object_stat_mgr.to_string();
                 std::cout << str << std::endl;
             }
@@ -398,15 +440,19 @@ namespace pilo
                 _s_pilo_context_instance = new ::pilo::core::process::context();
                 if (_s_pilo_context_instance == nullptr)
                     return ::pilo::mk_perr(PERR_INSUF_HEAP);
+                
 
                 ::pilo::err_t err = _s_pilo_context_instance->initialize(argc, argv);
+
                 if (err != PILO_OK) {
                     fprintf(stderr, "PILO Initilization Failed. (%s)", ::pilo::str_err(err, nullptr, true).c_str());
                     return err;
                 }
+                
 
                 std::string si = _s_pilo_context_instance->startup_info();
                 _s_pilo_context_instance->logger(0)->log_raw(si.c_str(), (::pilo::i64_t) si.size());
+
 
                 return PILO_OK;
             }

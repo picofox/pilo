@@ -125,10 +125,7 @@ int win32_get_cpu_info(::pilo::i32_t& ncpus, ::pilo::i32_t& ncores, ::pilo::i32_
 
     ncpus = (::pilo::i32_t)processorPackageCount;
     ncores = (::pilo::i32_t)processorCoreCount;
-    nlcores = (::pilo::i32_t)logicalProcessorCount;
-
-
-    ::pilo::core::datetime::datetime::get
+    nlcores = (::pilo::i32_t)logicalProcessorCount;   
 
 
     free(buffer);
@@ -216,9 +213,10 @@ namespace pilo
 
 
 #else
-    error("unsupport OS")
+                error("unsupport OS");
 
 #endif
+                this->_system_timezone = (::pilo::i8_t) (0 - (::pilo::core::datetime::xpf_timezone_offset_seconds() / 3600LL));
             }
             std::string system_information::to_string() const
             {

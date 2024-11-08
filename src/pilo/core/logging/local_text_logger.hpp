@@ -175,11 +175,12 @@ namespace pilo {
                     }
 
                     ::pilo::i64_t ts = ::pilo::core::datetime::timestamp_micro_system();
-                    PILO_ERRRET(this->_check_file(ts));
+                    PILO_ERRRET(this->_check_file(ts));                    
 
                     ::pilo::i64_t iret = 0;
                     va_list args;
                     _m_last_ts = ts;
+
                     _write_header(lv);
 
                     if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
@@ -311,10 +312,10 @@ namespace pilo {
                         this->_m_next_shift_ts = 0;
                     }
                     else if (this->_m_config.splition_type() == ::pilo::core::logging::splition_type::by_day) {
-                        this->_m_next_shift_ts = ::pilo::core::datetime::datetime::calculate_next_day_initial_second(this->_m_open_ts / 1000000) * 1000000;
+                        this->_m_next_shift_ts = ::pilo::core::datetime::first_microsecond_of_next_days(this->_m_open_ts, PILO_CONTEXT->system_information()->system_timezone(), 1);
                     }
                     else if (this->_m_config.splition_type() == ::pilo::core::logging::splition_type::by_hour) {
-                        this->_m_next_shift_ts = ::pilo::core::datetime::datetime::calculate_next_hours_initial_second(this->_m_open_ts / 1000000) * 1000000;
+                        this->_m_next_shift_ts = ::pilo::core::datetime::first_microsecond_of_next_hours(this->_m_open_ts, PILO_CONTEXT->system_information()->system_timezone(), 1);
                     }
                     
                     this->_m_line_count = 0;
@@ -513,7 +514,7 @@ namespace pilo {
 #else
                         localtime_r(&unix_timestamp, &lt);
 #endif        
-                    }       
+                    }     
                     
                     if (this->_m_config.headers().test_value(::pilo::core::logging::Date)) {
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
@@ -528,6 +529,7 @@ namespace pilo {
                         }
                         
                     } 
+
 
                     if (this->_m_config.headers().test_value(::pilo::core::logging::Time)) {
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
@@ -668,6 +670,8 @@ namespace pilo {
                     this->_m_total_count++;
                     this->_m_line_count++;
                     this->_m_total_size += hlen;
+
+                    
                 }
                 
 

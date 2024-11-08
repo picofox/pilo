@@ -516,7 +516,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\thread_pool_config.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\datetime.cpp" />
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\system_clock.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\zoned_clock.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\i18n\encoding_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\formatted_io.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\io\io.cpp" />
@@ -553,7 +553,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u32_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u64_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.cpp" />
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_spec.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_manager.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\time_wheel.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\timer.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_compensable_fixed_frequency_service.cpp" />
@@ -602,13 +603,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\blocking_concurrent_queue.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\concurrent_queue.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\singly_linked_selflist.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\sorted_deque.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\trivil_concurrent_queue.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\codec_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\datetime.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\stop_watch.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\system_clock.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\timestamp.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\zoned_clock.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\i18n\encoding_conversion.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\device_interface.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\io\file.hpp" />
@@ -680,7 +682,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u32_conversion.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u64_conversion.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_spec.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_manager.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_resolving.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\task.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\time_wheel.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\timer.hpp" />

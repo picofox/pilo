@@ -9,7 +9,8 @@ namespace pilo
 		namespace sched
 		{
 		
-			static ::pilo::core::algorithm::uint_sequence_generator<::pilo::i64_t>	s_timer_id_generator(::pilo::core::sched::timer::invalid_timer_id);
+			static ::pilo::core::algorithm::uint_step_sequence_generator<::pilo::i64_t, 1, 2>	s_sec_timer_id_generator;
+			static ::pilo::core::algorithm::uint_step_sequence_generator<::pilo::i64_t, 2, 2>	s_ms_timer_id_generator;
 
 			timer* timer::clone() const
 			{
@@ -30,7 +31,15 @@ namespace pilo
 					_m_task = nullptr;
 				}
 				_m_next = nullptr;
-				_m_id_n_cancel_flag = s_timer_id_generator.next();
+				if (unit_in_millsecs == 1000)
+					_m_id_n_cancel_flag = s_sec_timer_id_generator.next();
+				else if (unit_in_millsecs == 10)
+					_m_id_n_cancel_flag = s_ms_timer_id_generator.next();
+				else {
+					PMC_ASSERT(false);
+					return ::pilo::mk_perr(PERR_INC_DATA);
+				}
+
 				_m_duration = duration;
 				_m_expire = 0;
 				_m_repeat_count = rep_cnt;

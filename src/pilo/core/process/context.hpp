@@ -14,6 +14,7 @@
 #include "../threading/thread_pool_interface.hpp"
 #include "../service/service_manager.hpp"
 #include "../sched/timer.hpp"
+#include "../sched/cron_manager.hpp"
 
 namespace pilo
 {
@@ -218,6 +219,10 @@ namespace pilo
                 ::pilo::i64_t add_abs_sec_timer(::pilo::i64_t epoch, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura
                     , ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
 
+                ::pilo::i64_t add_cron_job(::pilo::i8_t tz, const std::string& spec, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
+                ::pilo::err_t delete_cron_job(::pilo::i64_t cronid);
+
+                void delete_timer(::pilo::i64_t timer_id);
                 
 
             private:
@@ -252,9 +257,7 @@ namespace pilo
 
 
                 ::pilo::core::logging::logger_manager _logger_manager;
-
-
-                                
+                ::pilo::core::sched::cron_manager   _cron_manager;                                
                 
             };
 

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include "constants.hpp"
 #include <cstring>
+#include <vector>
 #include "../memory/util.hpp"
 
 
@@ -2190,8 +2191,9 @@ namespace pilo
                 return cb.begin();
             }
             
-            
-            
+            ::pilo::i64_t split(std::string* ret_arr, ::pilo::i64_t capa, const std::string& src, char delim, bool trim);
+            std::vector<std::string> split(const std::string& src, char delim, bool trim);
+            void to_lower_case_inplace(std::string& str);
         }
     }
 }

@@ -713,6 +713,32 @@ namespace pilo
 		flag_guard& operator=(const flag_guard&);
 	};
 
+
+	template <typename T> 
+	class default_less_than_comparator
+	{
+	private:
+		typedef T value_type;
+
+	public:
+		bool operator () (const value_type& a, const value_type& b) const
+		{
+			return (a) < (b);
+		}
+	};
+
+	template < typename T, typename L = default_less_than_comparator<T> > 
+	class default_comparator
+	{
+	public:
+		L m_less;
+		int operator () (const T& a, const T& b) const
+		{
+			if (m_less(a, b)) return -1;
+			else if (m_less(b, a)) return 1;
+			else return 0;
+		}
+	};
 	
 
 } //pilo

@@ -2,6 +2,7 @@
 #include "../io/formatted_io.hpp"
 #include <cwchar>
 #include "../../error.hpp"
+#include <vector>
 
 namespace pilo
 {
@@ -748,6 +749,54 @@ namespace pilo
                 }
 
                 return ret_count;
+            }
+
+            ::pilo::i64_t split(std::string* ret_arr, ::pilo::i64_t capa, const std::string& src, char delim, bool trim)
+            {
+                std::string token;
+                std::istringstream tokenStream(src);
+                ::pilo::i64_t idx = 0;
+                while (std::getline(tokenStream, token, delim)) {
+                    if (idx >= capa)
+                        return idx;
+                    if (!trim) {
+                        ret_arr[idx++] = token;
+                    }
+                    else {
+                        ::pilo::i64_t s = token.find_first_not_of(' ');
+                        ::pilo::i64_t e = token.find_last_not_of(' ');
+                        ret_arr[idx++] = token.substr(s, e - s + 1);
+                    }
+
+                }
+                return idx;
+            }
+
+            std::vector<std::string> split(const std::string& src, char delim, bool trim)
+            {
+                std::vector<std::string> ret;
+                std::string token;
+                std::istringstream tokenStream(src);
+                while (std::getline(tokenStream, token, delim)) {
+                    if (!trim) {
+                        ret.push_back(token);
+                    }
+                    else {
+                        ::pilo::i64_t s = token.find_first_not_of(' ');
+                        ::pilo::i64_t e = token.find_last_not_of(' ');
+                        ret.push_back(token.substr(s, e - s + 1));
+                    }
+
+                }
+                return ret;
+            }
+
+            void to_lower_case_inplace(std::string& str)
+            {
+                for (auto i = 0; i < str.length(); i++) {
+                    if (std::isupper(str[i]))
+                        str[i] = (char) std::tolower(str[i]);
+                }
             }
 
 

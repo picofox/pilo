@@ -17,7 +17,6 @@ namespace pilo
             ::pilo::err_t efficient_thread_pool::start()
             {
                 PLOG(::pilo::core::logging::level::info, SP_PMS_LOGMOD_ETP" Starting...");
-
                 if (_workers.size() > 0) {
                     return ::pilo::mk_perr(PERR_EXIST);
                 }
@@ -38,6 +37,7 @@ namespace pilo
                     if (err != PILO_OK)
                         return err;
                 }
+
                 _task_executor_count = te_cnt;
                 for (::pilo::i32_t i = te_cnt; i < gw_cnt; i++)
                 {

@@ -1,7 +1,10 @@
 ﻿#include <mutex>
 #include "datetime.hpp"
 #include "./timestamp.hpp"
-
+#include "../memory/bits_operation.hpp"
+#include "../process/context.hpp"
+#include <chrono>
+#include <map>
 
 namespace pilo
 {
@@ -9,6 +12,14 @@ namespace pilo
 	{
 		namespace datetime
 		{ 
+            const static std::map<std::string, ::pilo::u64_t> _cs_unit_map{
+                std::pair<std::string, ::pilo::u64_t>("us", 1),
+                std::pair<std::string, ::pilo::u64_t>("ms", 1000),
+                std::pair<std::string, ::pilo::u64_t>("s", 1000000),
+                std::pair<std::string, ::pilo::u64_t>("m", 60000000),
+                std::pair<std::string, ::pilo::u64_t>("h", 3600000000),
+            };
+
             const static ::pilo::i64_t __uct_stc_year_1st_sec_cache[] =
             {
                 0, 31536000, 63072000, 94694400, 126230400, 157766400, 189302400, 220924800,
@@ -45,267 +56,285 @@ namespace pilo
                 7826112000, 7857648000, 7889184000, 7920806400, 7952342400, 7983878400, 8015414400, 8047036800
             };
 
-
-            datetime::datetime() :m_epoch(::pilo::core::datetime::timestamp_micro_system())
-			{
-                
-			}
-
-            datetime::datetime(pilo::i64_t tick, datetime_precision_enum mode)
-			{
-                set(tick,mode);
-			}
-
-			datetime::datetime(const local_datetime& ldt)
-			{
-				this->from_local_datetime(ldt);
-			}
-
-			datetime::datetime(const datetime& other) : m_epoch(other.m_epoch)
-			{
-
-			}
-
-			datetime& datetime::operator=(const datetime& other)
-			{
-				if (this == &other) return *this;
-				m_epoch = other.m_epoch;
-				return *this;
-			}
-
-            datetime::~datetime()
+            ::pilo::u8_t days_of_months(::pilo::u8_t mon, bool is_leap)
             {
-
-            }
-
-            pilo::i32_t datetime::to_days() const
-            {
-                return (int)((m_epoch/1000000 - pilo::core::datetime::datetime::diff_seconds_local_to_utc()) / day_seconds + 1);
-            }
-
-            pilo::i32_t datetime::to_local_days() const
-            {
-                return (int)((m_epoch/1000000 - pilo::core::datetime::datetime::diff_seconds_local_to_utc()) / day_seconds + 1);
-            }
-
-            pilo::i32_t datetime::week_day() const
-            {
-                pilo::i32_t days = this->to_local_days();
-                //1970年1月1日是星期四
-                //周1返回1...周日返回7
-                int n = (days + 3) % 7;
-                return n ? n : 7;
-            }
-
-            pilo::i32_t datetime::month_day() const
-            {
-                local_datetime ldt;
-                if (! this->to_local_datetime(ldt))
-                {
-                    return -1;
+                if (mon == 4 || mon == 6 || mon == 9 || mon == 11) {
+                    return 30;
                 }
-                return ldt.date.day;
-            }
-
-
-            datetime& datetime::add_days(int days)
-            {
-                m_epoch += ((::pilo::i64_t) ((::pilo::i64_t) days * day_seconds * 1000000LL));
-                return *this;
-            }
-
-            datetime& datetime::add_seconds(int seconds)
-            {
-                m_epoch += ((::pilo::i64_t) seconds * 1000000LL);
-                return *this;
-            }
-
-            datetime& datetime::update()
-            {
-                m_epoch = ::pilo::core::datetime::timestamp_micro_system();
-                return *this;
-            }
-
-            size_t datetime::to_string(char* szBuffer, size_t sz, date_format_enum date_mode, time_format_enum time_mode) const
-            {
-                pilo::core::datetime::local_datetime ldt;
-                if (! this->to_local_datetime(ldt))
-                {
-
-                    ::pilo::core::string::copyz(szBuffer, sz, "[to_local_datetime()<-to_string() failed.]");
-                    return ::pilo::core::string::character_count("[to_local_datetime()<-to_string() failed.]");
+                else if (mon == 1 || mon == 3 || mon == 5 || mon == 7 || mon == 8 || mon == 10 || mon == 12) {
+                    return 31;
                 }
-                else
-                {
-
-                    return ldt.to_string(szBuffer,sz,date_mode, time_mode);
-                }
-                
-            }
-
-            bool datetime::from_string(const char * datetimeStr, bool use_milli)
-            {
-                local_datetime ldt;
-                ldt.from_string(datetimeStr, use_milli);
-                return this->from_local_datetime(ldt);
-            }
-
-            bool datetime::from_local_datetime(const local_datetime& ldt)
-			{
-				if (! ldt.valid())
-				{
-					return false;
-				}
-
-				::pilo::i64_t epoch_secs = ::pilo::core::datetime::datetime::calculate_year_initial_second_local(ldt.date.year);
-                if (epoch_secs < 0) epoch_secs = 0;
-
-				for (int i = 1; i < ldt.date.month; i++)
-				{
-					int days = ::pilo::core::datetime::datetime::days_in_months(ldt.date.year, i);
-                    epoch_secs += days * day_seconds;
-				}
-
-                epoch_secs += (ldt.date.day - 1) * day_seconds;
-                epoch_secs += ldt.time.hour * hour_seconds;
-                epoch_secs += ldt.time.minute * min_seconds;
-                epoch_secs += ldt.time.second;
-
-                m_epoch = epoch_secs * 1000000;
-
-                if (ldt.time.microsecond > 0)
-                {
-                    m_epoch += ldt.time.microsecond;
-                }
-                
-				return true;
-			}
-
-            bool datetime::to_local_datetime(local_datetime& ref_ldt) const
-            {
-                enum { max_year_secs = 366 * day_seconds };
-
-                //static const ::pilo::core::datetime::local_datetime emptyDatetime = { 0, 0, 0, 0, 0, 0, -1 };
-
-                ref_ldt.reset(1);
-
-                ::pilo::i64_t epoch_secs = m_epoch / 1000000;
-                if (epoch_secs < 0)
-                {
-                    return false;
-                }
-                ::pilo::i32_t ms_left = (::pilo::i32_t) (m_epoch - (epoch_secs * 1000000));
-
-                int ys = (int)(epoch_secs / max_year_secs);
-                ::pilo::core::datetime::local_datetime ldt;
-                //
-                ldt.set(ys+1970, 1,1,0,0,0,0);
-                ldt.date.year = ys + 1970;
-
-                pilo::i64_t secs = datetime::calculate_year_initial_second_local(ldt.date.year);
-                if (secs == INT64_MIN) 
-                {
-                    return false;
+                else if (mon == 2){
+                    if (is_leap) {
+                        return 29;
+                    }
+                    else {
+                        return 28;
+                    }
                 }
 
-                while (true)
+                return 0;
+            }
+
+            ::pilo::u64_t make_datetime(::pilo::u16_t year, ::pilo::u8_t mon, ::pilo::u8_t mday, ::pilo::u8_t hour, ::pilo::u8_t min, ::pilo::u8_t sec, ::pilo::u32_t usec, ::pilo::i8_t tz)
+            {
+                return 
+                    ((((::pilo::u64_t) year) & PMI_DATETIME_YEAR_MASK )<< 51)
+                        | ((((::pilo::u64_t) mon) & PMI_DATETIME_MON_MASK) << 47)
+                        | ((((::pilo::u64_t) mday) & PMI_DATETIME_MDAY_MASK)  << 42)
+                        | ((((::pilo::u64_t) hour) & PMI_DATETIME_HOUR_MASK) << 37)
+                        | ((((::pilo::u64_t) min) & PMI_DATETIME_MIN_MASK) << 31)
+                        | ((((::pilo::u64_t) sec) & PMI_DATETIME_SEC_MASK) << 25)
+                        | ((((::pilo::u64_t) usec) & PMI_DATETIME_USEC_MASK) << 5)
+                        | ((((::pilo::u64_t) (tz + 12)) & PMI_DATETIME_TZOFF_MASK));
+            }
+            ::pilo::u16_t year_of_datetime(::pilo::u64_t dtv)
+            {
+                return ((dtv >> 51) & PMI_DATETIME_YEAR_MASK);
+            }
+            ::pilo::u8_t month_of_datetime(::pilo::u64_t dtv)
+            {
+                return (::pilo::u8_t)((dtv >> 47) & PMI_DATETIME_MON_MASK);
+            }
+            ::pilo::u8_t mday_of_datetime(::pilo::u64_t dtv)
+            {
+                return (::pilo::u8_t)((dtv >> 42) & PMI_DATETIME_MDAY_MASK);
+            }
+            ::pilo::u8_t hour_of_datetime(::pilo::u64_t dtv)
+            {
+                return (::pilo::u8_t)((dtv >> 37) & PMI_DATETIME_HOUR_MASK);
+            }
+            ::pilo::u8_t min_of_datetime(::pilo::u64_t dtv)
+            {
+                return (::pilo::u8_t)((dtv >> 31) & PMI_DATETIME_MIN_MASK);
+            }
+            ::pilo::u8_t sec_of_datetime(::pilo::u64_t dtv)
+            {
+                return (::pilo::u8_t)((dtv >> 25) & PMI_DATETIME_SEC_MASK);
+            }
+            ::pilo::u32_t microsec_of_datetime(::pilo::u64_t dtv)
+            {
+                return (::pilo::u32_t)((dtv >> 5) & PMI_DATETIME_USEC_MASK);
+            }
+            ::pilo::i8_t timezone_hoff_of_datetime(::pilo::u64_t dtv)
+            {
+                return ((::pilo::i8_t)(dtv & PMI_DATETIME_TZOFF_MASK)) - 12;
+            }
+            bool set_year_of_datetime(::pilo::u64_t& dtv, ::pilo::u16_t year)
+            {
+                return ::pilo::core::memory::bits_operation::set_nbits(dtv, 0, 13, (::pilo::u64_t)year);
+            }
+            bool set_month_of_datetime(::pilo::u64_t& dtv, ::pilo::u8_t mon)
+            {
+                return ::pilo::core::memory::bits_operation::set_nbits(dtv, 13, 4, (::pilo::u64_t)mon);
+            }
+            bool set_mday_of_datetime(::pilo::u64_t& dtv, ::pilo::u8_t mday)
+            {
+                return ::pilo::core::memory::bits_operation::set_nbits(dtv, 17, 5, (::pilo::u64_t)mday);
+            }
+            bool set_hour_of_datetime(::pilo::u64_t& dtv, ::pilo::u8_t hour)
+            {
+                return ::pilo::core::memory::bits_operation::set_nbits(dtv, 22, 5, (::pilo::u64_t)hour);
+            }
+            bool set_min_of_datetime(::pilo::u64_t& dtv, ::pilo::u8_t min)
+            {
+                return ::pilo::core::memory::bits_operation::set_nbits(dtv, 27, 6, (::pilo::u64_t)min);
+            }
+            bool set_sec_of_datetime(::pilo::u64_t& dtv, ::pilo::u8_t sec)
+            {
+                return ::pilo::core::memory::bits_operation::set_nbits(dtv, 33, 6, (::pilo::u64_t)sec);
+            }
+            bool set_usec_of_datetime(::pilo::u64_t& dtv, ::pilo::u32_t usec)
+            {
+                return ::pilo::core::memory::bits_operation::set_nbits(dtv, 39, 20, (::pilo::u64_t)usec);
+            }
+            bool set_timezone_hoff_of_datetime(::pilo::u64_t& dtv, ::pilo::i8_t tzhoff)
+            {
+                return ::pilo::core::memory::bits_operation::set_nbits(dtv, 59, 5, (::pilo::u64_t) (tzhoff + 12));
+            }
+            const char* format_datetime_to_cstring(char* buffer, ::pilo::i64_t sz, const char* fmt, ::pilo::u64_t dtv)
+            {        
+                char tmp[10] = { 0 };
+
+                if (::pilo::core::string::copyz(buffer, sz, fmt) < 0)
+                    return nullptr;
+
+                if (::pilo::core::string::find_substring(buffer, "%2tz", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%+02d", ::pilo::core::datetime::timezone_hoff_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%2tz", tmp, nullptr);
+                }
+                if (::pilo::core::string::find_substring(buffer, "%tz", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%+d", ::pilo::core::datetime::timezone_hoff_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%tz", tmp, nullptr);
+                }
+
+                if (::pilo::core::string::find_substring(buffer, "%6us", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%06u", ::pilo::core::datetime::microsec_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%6us", tmp, nullptr);
+                }
+                if (::pilo::core::string::find_substring(buffer, "%us", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%u", ::pilo::core::datetime::microsec_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%us", tmp, nullptr);
+                }
+
+                if (::pilo::core::string::find_substring(buffer, "%3ms", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%03u", ::pilo::core::datetime::microsec_of_datetime(dtv) / 1000);
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%3ms", tmp, nullptr);
+                }
+                if (::pilo::core::string::find_substring(buffer, "%ms", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%u", ::pilo::core::datetime::microsec_of_datetime(dtv) / 1000);
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%ms", tmp, nullptr);
+                }
+
+
+                if (::pilo::core::string::find_substring(buffer, "%ss", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%02u", ::pilo::core::datetime::sec_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%ss", tmp, nullptr);
+                }
+                if (::pilo::core::string::find_substring(buffer, "%mm", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%02u", ::pilo::core::datetime::min_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%mm", tmp, nullptr);
+                }
+                if (::pilo::core::string::find_substring(buffer, "%hh", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%02u", ::pilo::core::datetime::hour_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%hh", tmp, nullptr);
+                }
+
+                if (::pilo::core::string::find_substring(buffer, "%YY", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%02u", ::pilo::core::datetime::year_of_datetime(dtv) - 2000);
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%YY", tmp, nullptr);
+                }
+                if (::pilo::core::string::find_substring(buffer, "%MM", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%02u", ::pilo::core::datetime::month_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%MM", tmp, nullptr);
+                }
+                if (::pilo::core::string::find_substring(buffer, "%DD", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%02u", ::pilo::core::datetime::mday_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%DD", tmp, nullptr);
+                }
+
+                if (::pilo::core::string::find_substring(buffer, "%s", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%u", ::pilo::core::datetime::sec_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%s", tmp, nullptr);
+                }                
+                if (::pilo::core::string::find_substring(buffer, "%m", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%u", ::pilo::core::datetime::min_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%m", tmp, nullptr);
+                }                
+                if (::pilo::core::string::find_substring(buffer, "%h", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%u", ::pilo::core::datetime::hour_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%h", tmp, nullptr);
+                }
+
+                if (::pilo::core::string::find_substring(buffer, "%Y", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%04u", ::pilo::core::datetime::year_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%Y", tmp, nullptr);
+                }
+                if (::pilo::core::string::find_substring(buffer, "%M", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%0u", ::pilo::core::datetime::month_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%M", tmp, nullptr);
+                }
+                if (::pilo::core::string::find_substring(buffer, "%D", -1) != nullptr) {
+                    ::pilo::core::io::string_formated_output(tmp, sizeof(tmp), "%0u", ::pilo::core::datetime::mday_of_datetime(dtv));
+                    ::pilo::core::string::rescanable_replace_inplace(buffer, -1, sz, "%D", tmp, nullptr);
+                }
+
+
+
+
+                return buffer;
+            }
+            ::pilo::u64_t timestamp_to_datetime(::pilo::i64_t t, ::pilo::i8_t tz)
+            {
+                ::pilo::u64_t ret = PMI_INVALID_DATETIME;
+                time_t sec_part = t / PMI_USECS_OF_SEC;
+                time_t left = t - (sec_part * PMI_USECS_OF_SEC);
+                struct  tm tms = { 0 };                
+                if (tz == PMI_USE_SYSTEM_TIMEZONE) {
+                    ::pilo::i8_t tt = PILO_CONTEXT->system_information()->system_timezone();
+                    tz = tt;
+                }
+                else if (tz == PMI_USE_OVERRIDED_TIMEZONE) {
+                    tz = PILO_CONTEXT->core_config()->overrided_timezone();
+                }
+                sec_part = sec_part + tz * 3600;
+                xpf_get_gmtime(&tms, &sec_part);
+
+                ret = make_datetime((::pilo::u16_t)tms.tm_year + 1900, (::pilo::u8_t)tms.tm_mon+1, (::pilo::u8_t)tms.tm_mday, (::pilo::u8_t)tms.tm_hour, (::pilo::u8_t)tms.tm_min, (::pilo::u8_t)tms.tm_sec, (::pilo::u32_t)left, (::pilo::i8_t)tz);
+                return ret;
+            }
+            ::pilo::u64_t timestamp_to_datetime(const ::pilo::core::datetime::systime & systm, ::pilo::i8_t tz)
+            {
+                ::pilo::i64_t ts = std::chrono::duration_cast<std::chrono::microseconds>(systm.time_since_epoch()).count();
+                return ::pilo::core::datetime::timestamp_to_datetime(ts, tz);
+            }
+            ::pilo::i64_t datetime_to_timestamp(::pilo::u64_t dtv, ::pilo::i8_t tz)
+            {
+                ::pilo::i64_t epoch_secs = ::pilo::core::datetime::first_second_of_year(::pilo::core::datetime::year_of_datetime(dtv), tz);
+
+                ::pilo::u8_t mon = ::pilo::core::datetime::month_of_datetime(dtv);
+                for (::pilo::u8_t i = 1; i < mon; i++)
                 {
-                    pilo::i64_t secs2 = datetime::calculate_year_initial_second_local(ldt.date.year + 1);
-                    if (secs2 == INT64_MIN)
+                    ::pilo::i64_t days = ::pilo::core::datetime::mdays_in_months(::pilo::core::datetime::year_of_datetime(dtv), i);
+                    epoch_secs += days * 86400;
+                }
+
+                epoch_secs += ((::pilo::i64_t)::pilo::core::datetime::mday_of_datetime(dtv) - 1) * 86400;
+                epoch_secs += ((::pilo::i64_t)::pilo::core::datetime::hour_of_datetime(dtv)) * 3600;
+                epoch_secs += ((::pilo::i64_t)::pilo::core::datetime::min_of_datetime(dtv)) * 60;
+                epoch_secs += ((::pilo::i64_t)::pilo::core::datetime::sec_of_datetime(dtv));
+                ::pilo::i64_t epoch = epoch_secs * 1000000;
+                epoch += ((::pilo::i64_t)::pilo::core::datetime::microsec_of_datetime(dtv));
+                return epoch;
+            }
+
+            std::time_t datetime_to_timestamp_by_second(std::tm& date, ::pilo::i8_t tz)
+            {
+                ::pilo::u16_t year = (::pilo::u16_t) (date.tm_year + 1900);
+                ::pilo::i64_t epoch_secs = ::pilo::core::datetime::first_second_of_year(year, tz);
+                for (::pilo::u8_t i = 1; i < date.tm_mon + 1; i++)
+                {
+                    ::pilo::i64_t days = ::pilo::core::datetime::mdays_in_months(year, i);
+                    epoch_secs += days * 86400;
+                }
+                epoch_secs += ((::pilo::i64_t) (date.tm_mday-1)) * 86400;
+                epoch_secs += ((::pilo::i64_t) date.tm_hour) * 3600;
+                epoch_secs += ((::pilo::i64_t) date.tm_min) * 60;
+                epoch_secs += ((::pilo::i64_t) date.tm_sec);
+
+                time_t t = epoch_secs + tz * PMI_SECS_OF_HOUR;
+                ::pilo::core::datetime::xpf_get_gmtime(&date, &t);
+
+                return epoch_secs;
+            }
+
+            ::pilo::i64_t datetime_to_timestamp(::pilo::u64_t dtv)
+            {
+                return ::pilo::core::datetime::datetime_to_timestamp(dtv, ::pilo::core::datetime::timezone_hoff_of_datetime(dtv));
+            }
+            bool is_leap_year(::pilo::u16_t year)
+            {
+                if ((year % 4) == 0)
+                {
+                    if ((year % 100) == 0 && (year % 400) != 0)
                     {
                         return false;
                     }
-
-                    if (epoch_secs < secs2)
-                    {
-                        break;
-                    }
-                    ldt.date.year += 1;
-                    secs = secs2;
-                }
-
-                pilo::i64_t delta = epoch_secs - secs;
-                for (; ldt.date.month <= 12; ldt.date.month++)
-                {
-                    int days = ::pilo::core::datetime::datetime::days_in_months(ldt.date.year, ldt.date.month);
-                    if (delta >= days*day_seconds)
-                    {
-                        delta -= days*day_seconds;
-                    }
                     else
                     {
-                        for (; ldt.date.day <= days; ldt.date.day++)
-                        {
-                            if (delta >= day_seconds)
-                            {
-                                delta -= day_seconds;
-                            }
-                            else
-                            {
-                                ldt.time.hour = (pilo::i8_t)(delta / hour_seconds);
-                                ldt.time.minute = (pilo::i8_t)((delta%hour_seconds) / min_seconds);
-                                ldt.time.second = (pilo::i8_t)((delta%hour_seconds) % min_seconds);
-                                ldt.time.microsecond =(pilo::i32_t) ms_left;
-                                ref_ldt = ldt;
-                                return true;
-                            }
-                        }
+                        return true;
                     }
                 }
-
-                // 不可达
-                return false;
-            }
-
-            void datetime::set(pilo::i64_t tick, datetime_precision_enum mode)
-            {
-                if (mode == edtp_Seconds)
+                else
                 {
-                    m_epoch = tick * 1000000;
-                }
-                else if (mode == edtp_Millisecond)
-                {
-                    m_epoch = tick * 1000;
-                }
-                else if (mode == edtp_Microsecond)
-                {
-                    m_epoch = tick;
+                    return false;
                 }
             }
 
-            pilo::core::datetime::local_datetime datetime::now()
+
+            ::pilo::i64_t first_second_of_year(::pilo::u16_t year, ::pilo::i8_t tzhoff)
             {
-                ::pilo::core::datetime::local_datetime ldt;
-                ::pilo::core::datetime::datetime dt;
-                if (! dt.to_local_datetime(ldt))
-                {
-                    ldt.date.day = -1;
-                    ldt.time.hour = -1;
-                }                
-
-                return ldt;
-            }
-
-            ::pilo::i64_t datetime::epoch_time()
-            {
-#ifdef      WINDOWS
-#   ifdef   __x86_64__                
-                return (::pilo::i64_t) _time64(NULL);
-#   else
-                return (::pilo::i64_t) _time32(NULL);
-#   endif
-#else
-
-                return (::pilo::i64_t) ::time(NULL);;
-#endif
-
-            }
-
-
-            pilo::i64_t datetime::calculate_year_initial_second_local(int year, ::pilo::i32_t timezone)
-			{
-
-                if (year > PMI_PILO_DATETIME_MAX_YEAR)
+                if (year > PMI_DATETIME_YEAR_MAX)
                 {
                     return INT64_MIN;
                 }
@@ -314,23 +343,14 @@ namespace pilo
                     return INT64_MIN;
                 }
 
-				const int startYear = 1970;
+                const int startYear = 1970;
                 const int endYear = startYear + PMI_DATETIME_YEAR_1ST_SECS_CACHE_SIZE;
 
-				if (year >= endYear)
-				{
+                if (year >= endYear)
+                {
                     ::pilo::i64_t secs = __uct_stc_year_1st_sec_cache[PMI_DATETIME_YEAR_1ST_SECS_CACHE_SIZE - 1];
-                    if (timezone == INT_MAX)
-                    {                        
-                        secs += datetime::diff_seconds_local_to_utc();
-                    }
-                    else
-                    {
-                        secs += timezone;
-                    }
-
-                    
-                    for (int i = PMI_DATETIME_YEAR_1ST_SECS_CACHE_MAX_YEAR; i < year; i++)
+                    secs -= (::pilo::i64_t)tzhoff * 3600;
+                    for (::pilo::u16_t i = PMI_DATETIME_YEAR_1ST_SECS_CACHE_MAX_YEAR; i < year; i++)
                     {
                         if (is_leap_year(i))
                         {
@@ -342,23 +362,16 @@ namespace pilo
                         }
                     }
                     return secs;
-                   
-				}
+
+                }
                 else if (year < startYear)
                 {
                     ::pilo::i64_t secs = __uct_stc_year_1st_sec_cache[0];
-                    if (timezone == INT_MAX)
-                    {
-                        secs += datetime::diff_seconds_local_to_utc();
-                    }
-                    else
-                    {
-                        secs += timezone;
-                    }
+                    secs -= (::pilo::i64_t) tzhoff * 3600;
 
-                    for (int i = 1970; i > year; i--)
+                    for (::pilo::i16_t i = 1970; i > year; i--)
                     {
-                        if (is_leap_year(i-1))
+                        if (is_leap_year(i - 1))
                         {
                             secs -= (366 * 86400);
                         }
@@ -369,187 +382,267 @@ namespace pilo
                     }
                     return secs;
                 }
-				else
-				{
-                    if (timezone == INT_MAX)
-                    {
-                        int diff = datetime::diff_seconds_local_to_utc();
-                        return __uct_stc_year_1st_sec_cache[year - 1970] + diff;
+                else
+                {
+                    return __uct_stc_year_1st_sec_cache[year - 1970] - ((::pilo::i64_t)tzhoff) * 3600;
+                }
+            }
+            ::pilo::i64_t first_second_of_day(::pilo::i64_t usec_ts, ::pilo::i8_t tzhoff)
+            {
+                return first_microsecond_of_day(usec_ts, tzhoff) / PMI_USECS_OF_SEC;
+            }
+            ::pilo::i64_t first_second_of_week(::pilo::i64_t usec_ts, ::pilo::i8_t tzhoff)
+            {
+                return ::pilo::core::datetime::first_microsecond_of_week(usec_ts, tzhoff) / PMI_USECS_OF_SEC;
+            }
+            ::pilo::i64_t first_second_of_month(::pilo::i64_t usec_ts, ::pilo::i8_t tzhoff)
+            {
+                return ::pilo::core::datetime::first_microsecond_of_month(usec_ts, tzhoff) / PMI_USECS_OF_SEC;
+            }
+            ::pilo::i64_t first_second_of_hour(::pilo::i64_t usec_ts, ::pilo::i8_t tzhoff)
+            {
+                return ::pilo::core::datetime::first_microsecond_of_hour(usec_ts, tzhoff) / PMI_USECS_OF_SEC;
+            }
+            ::pilo::i64_t first_microsecond_of_day(::pilo::i64_t usec_ts, ::pilo::i8_t tzhoff)
+            {
+                usec_ts += PMF_TZ_USEC_OFF(tzhoff);
+                ::pilo::i64_t remain = usec_ts % PMI_USECS_OF_DAY;
+                return ((usec_ts - remain) - PMF_TZ_USEC_OFF(tzhoff));
+            }
+            ::pilo::i64_t first_microsecond_of_week(::pilo::i64_t usec_ts, ::pilo::i8_t tzhoff)
+            {
+                ::pilo::i64_t wd = ::pilo::core::datetime::week_day(usec_ts, tzhoff);
+                ::pilo::i64_t day1st = ::pilo::core::datetime::first_microsecond_of_day(usec_ts, tzhoff);
+                ::pilo::i64_t remain = usec_ts - day1st;
+                ::pilo::i64_t off_from_week_initial = remain + wd * PMI_USECS_OF_DAY;
+                return usec_ts - off_from_week_initial;
+            }
+            ::pilo::i64_t first_microsecond_of_month(::pilo::i64_t usec_ts, ::pilo::i8_t tzhoff)
+            {
+                ::pilo::i64_t dtv = ::pilo::core::datetime::timestamp_to_datetime(usec_ts, tzhoff);
+                return ::pilo::core::datetime::first_microsecond_of_month(dtv);
+            }
+            ::pilo::i64_t first_microsecond_of_hour(::pilo::i64_t usec_ts, ::pilo::i8_t tzhoff)
+            {
+                ::pilo::i64_t today_ts = ::pilo::core::datetime::first_microsecond_of_day(usec_ts, tzhoff);
+                ::pilo::u64_t dtv = ::pilo::core::datetime::timestamp_to_datetime(usec_ts, tzhoff);
+                ::pilo::i64_t hours_off = ::pilo::core::datetime::hour_of_datetime(dtv);
+                return today_ts + hours_off * PMI_USECS_OF_HOUR;
+            }
+            ::pilo::i64_t first_second_of_month(::pilo::u64_t dtv)
+            {
+                return ::pilo::core::datetime::first_microsecond_of_month(dtv) / PMI_USECS_OF_SEC;
+            }
+            ::pilo::i64_t first_microsecond_of_month(::pilo::u64_t dtv)
+            {
+                ::pilo::u64_t tmp_dtv = ::pilo::core::datetime::make_datetime(
+                    ::pilo::core::datetime::year_of_datetime(dtv),
+                    ::pilo::core::datetime::month_of_datetime(dtv),
+                    1, 0, 0, 0, 0, ::pilo::core::datetime::timezone_hoff_of_datetime(dtv)
+                );
+                return ::pilo::core::datetime::datetime_to_timestamp(tmp_dtv);
+            }
+            ::pilo::i64_t first_second_of_next_days(::pilo::i64_t ts, ::pilo::i8_t tz, ::pilo::i64_t ndays)
+            {
+                return first_microsecond_of_next_days(ts, tz, ndays);
+            }
+            ::pilo::i64_t first_second_of_next_hours(::pilo::i64_t ts, ::pilo::i8_t tz, ::pilo::i64_t nhours)
+            {
+                return ::pilo::core::datetime::first_microsecond_of_next_hours(ts, tz, nhours) / PMI_USECS_OF_SEC;
+            }
+            ::pilo::i64_t first_microsecond_of_next_days(::pilo::i64_t ts, ::pilo::i8_t tz, ::pilo::i64_t ndays)
+            {
+                ::pilo::i64_t ret = ::pilo::core::datetime::first_microsecond_of_day(ts, tz);
+                return ret + ndays * PMI_USECS_OF_DAY;
+            }
+            ::pilo::i64_t first_microsecond_of_next_hours(::pilo::i64_t ts, ::pilo::i8_t tz, ::pilo::i64_t nhours)
+            {
+                ::pilo::i64_t ret = ::pilo::core::datetime::first_microsecond_of_hour(ts, tz);
+                return ret + nhours * PMI_USECS_OF_HOUR;
+            }
+
+            static ::pilo::u64_t leading_fraction(::pilo::f64_t& scale, char** rem ,const char* cstr) 
+            {
+                ::pilo::u64_t x = 0;
+                int i = 0;
+                scale = 1;
+                bool overflow = false;
+                ::pilo::i64_t len = ::pilo::core::string::character_count(cstr);
+                for (; i < len; i++) {
+                    char c = cstr[i];
+                    if (c < '0' || c > '9') {
+                        break;
                     }
+                    if (overflow) {
+                        continue;
+                    }
+
+                    if (x > ((1ULL << 63) - 1) / 10) {
+                        // It's possible for overflow to give a positive number, so take care.
+                        overflow = true;
+                        continue;
+                    }
+                    ::pilo::u64_t y = x * 10 + (::pilo::u64_t)c - '0';
+                    if (y > (1ULL << 63)) {
+                        overflow = true;
+                        continue;
+                    }
+                    x = y;
+                    scale *= 10;
+                }
+
+                if (rem != nullptr)
+                    *rem = ((char*)cstr) + i;
+
+                return x;
+            }
+
+
+            ::pilo::i64_t microsecond_from_cstr(const char* cstr, ::pilo::i64_t len)
+            {
+                char* tmp_cstr_ptr = nullptr;
+                if (len < 0)
+                    len = ::pilo::core::string::character_count(cstr);
+                // [-+]?([0-9]*(\.[0-9]*)?[a-z]+)+
+                ::pilo::u64_t d = 0;
+                bool neg = false;
+
+                // Consume [-+]?
+                if (len > 0) {
+                    char c = cstr[0];
+                    if (c == '-' || c == '+') {
+                        neg = (c == '-');
+                        cstr++;
+                    }
+                }
+                len = ::pilo::core::string::character_count(cstr);
+                // Special case: if all that is left is "0", this is zero.
+                if (cstr[0] == '0' && cstr[1] == 0) {
+                    return 0;
+                }
+                if (len <= 0)
+                    return -1;
+
+                while (*cstr != 0) {
+                    ::pilo::u64_t v = 0;
+                    ::pilo::u64_t f = 0;
+                    ::pilo::f64_t scale = 1;
+
+                    // The next character must be [0-9.]
+                    if (!(cstr[0] == '.' || '0' <= cstr[0] && cstr[0] <= '9')) {
+                        return -1;
+                    }
+                    // Consume [0-9]*
+                    len = ::pilo::core::string::character_count(cstr);
+                    v = ::strtoll(cstr, &tmp_cstr_ptr, 10);
+                    cstr = tmp_cstr_ptr;
+                    bool pre = false;
+                    ::pilo::i64_t old_len = len;
+                    len = ::pilo::core::string::character_count(cstr);
+                    if (old_len != len)
+                        pre = true;
                     else
-                    {
-                        return __uct_stc_year_1st_sec_cache[year - 1970] + timezone;
-                    }                    
-				}
-			}
+                        pre = false;
 
-            pilo::i64_t datetime::calculate_day_initial_second_local(pilo::i64_t sec)
-            {
-                datetime dt(sec, edtp_Seconds);
-                local_datetime ldt; 
-                if (! dt.to_local_datetime(ldt))
-                {
-                    return  (pilo::i64_t) -1;
+                    // Consume (\.[0-9]*)?
+                    bool post = false;               
+                    if (len > 0 && cstr[0] == '.') {
+                        cstr++;
+                        len = ::pilo::core::string::character_count(cstr);
+                        f = leading_fraction(scale, &tmp_cstr_ptr, cstr);
+                        cstr = tmp_cstr_ptr;
+                        old_len = len;
+                        len = ::pilo::core::string::character_count(cstr);
+                        if (old_len != len)
+                            post = true;
+                        else
+                            post = false;          
+                    }
+                    if (!pre && !post){
+                        // no digits (e.g. ".s" or "-.s")
+                        return -1;
+                    }
+
+                    // Consume unit.
+                    ::pilo::i64_t i = 0;
+                    len = ::pilo::core::string::character_count(cstr);
+                    for (; i < len; i++) {
+                        char c = cstr[i];
+                        if ((c == '.') || '0' <= c && c <= '9') {
+                            break;
+                        }
+                    }
+                    if (i == 0) {
+                        return -1;
+                    }
+                    std::string u(cstr, i);
+                    cstr = cstr + i;
+                    std::map<std::string, ::pilo::u64_t>::const_iterator cit = _cs_unit_map.find(u);
+                    if (cit == _cs_unit_map.cend()) {
+                        return -1;
+                    }
+                    ::pilo::u64_t unit = cit->second;
+                    if (v > ((1ULL << 63) / unit)) {
+                        return -1;
+                    }
+                    v *= unit;
+                    if (f > 0) {
+                        // float64 is needed to be nanosecond accurate for fractions of hours.
+                        // v >= 0 && (f*unit/scale) <= 3.6e+12 (ns/h, h is the largest unit)
+                        v += (::pilo::u64_t)(((::pilo::f64_t)f) * ((::pilo::f64_t)unit / scale));
+                        if (v > (1ULL << 63)) {
+                            return -1;
+                        }
+                    }
+                    d += v;
+                    if (d > ((1ULL << 63))) {
+                        return -1;
+                    }                
                 }
 
-                ldt.time.hour = ldt.time.minute = ldt.time.second = 0;
-                dt.from_local_datetime(ldt);
-                return (pilo::i64_t)dt.seconds_since_epoch();
-            }
-
-            pilo::i64_t datetime::calculate_week_initial_second(pilo::i64_t sec)
-            {
-                ::pilo::core::datetime::datetime dt(sec, edtp_Seconds);
-
-                ::pilo::core::datetime::local_datetime ldt;
-                if (!dt.to_local_datetime(ldt))
-                {
-                    return  (pilo::i64_t) -1;
+                if (neg) {
+                    return 0 - d;
                 }
-
-                ldt.time.hour = ldt.time.minute = ldt.time.second = 0;
-                dt.from_local_datetime(ldt);
-
-                int weekDay = dt.week_day();
-                if (weekDay != 1)
-                {
-                    dt.add_days(1 - weekDay);
-                }
-                
-                return (pilo::i64_t)dt.seconds_since_epoch();
-            }
-
-            pilo::i64_t datetime::calculate_month_initial_second(pilo::i64_t sec)
-            {
-                ::pilo::core::datetime::datetime dt(sec, edtp_Seconds);
-                ::pilo::core::datetime::local_datetime ldt;
-                dt.to_local_datetime(ldt);
-                ldt.time.reset();
-                dt.from_local_datetime(ldt);
-
-                dt.add_days(1 - ldt.date.day);
-
-                return (pilo::i64_t)dt.seconds_since_epoch();
-            }
-
-            pilo::i64_t datetime::calculate_next_hours_initial_second(pilo::i64_t sec)
-            {
-                ::pilo::i64_t day_init = ::pilo::core::datetime::datetime::calculate_day_initial_second_local(sec);
-                ::pilo::i64_t delta = sec - day_init;
-                ::pilo::i64_t cnt = delta / 3600;
-                cnt++;
-                return day_init + (cnt * 3600);
-            }
-
-            pilo::i64_t datetime::calculate_next_day_initial_second(pilo::i64_t sec)
-            {
-                return ::pilo::core::datetime::datetime::calculate_day_initial_second_local(sec) + day_seconds;
-            }
-
-            pilo::i64_t datetime::calculate_next_week_initial_second(pilo::i64_t sec)
-            {
-                return ::pilo::core::datetime::datetime::calculate_week_initial_second(sec) + day_seconds * 7;
-            }
-
-            pilo::i64_t datetime::calculate_next_month_initial_second(pilo::i64_t sec)
-            {
-                ::pilo::core::datetime::datetime dt(sec, edtp_Seconds);
-                ::pilo::core::datetime::local_datetime ldt;
-                dt.to_local_datetime(ldt);
-                ldt.time.reset();
-                dt.from_local_datetime(ldt);
-                dt.add_days(1 - ldt.date.day);
-
-                int mdays = ::pilo::core::datetime::datetime::days_in_months(ldt.date.year, ldt.date.month);
-                return ::pilo::core::datetime::datetime::calculate_day_initial_second_local(sec) + day_seconds*mdays;                
-            }
-
-            pilo::i64_t datetime::calculate_next_year_initial_second(pilo::i64_t sec)
-            {
-                ::pilo::core::datetime::datetime dt(sec, edtp_Seconds);
-                ::pilo::core::datetime::local_datetime ldt;
-                dt.to_local_datetime(ldt);
-
-                return ::pilo::core::datetime::datetime::calculate_year_initial_second_local(ldt.date.year+1);
-            }
-
-            bool datetime::operator==(const ::pilo::core::datetime::datetime& other) const
-            {
-                return m_epoch == other.m_epoch;
-            }
-    
-            bool datetime::operator!=(const ::pilo::core::datetime::datetime& other) const
-            {
-                return m_epoch != other.m_epoch;
-            }
-
-            bool datetime::operator>(const ::pilo::core::datetime::datetime& other) const
-            {
-                return m_epoch > other.m_epoch;
-            }
-
-            bool datetime::operator<(const ::pilo::core::datetime::datetime& other) const
-            {
-                return m_epoch < other.m_epoch;
-            }
-
-            bool datetime::operator>=(const ::pilo::core::datetime::datetime& other) const
-            {
-                return m_epoch >= other.m_epoch;
-            }
-
-            bool datetime::operator<=(const ::pilo::core::datetime::datetime& other) const
-            {
-                return m_epoch <= other.m_epoch;
-            }
-
-            pilo::i32_t datetime::diff_seconds_local_to_utc()
-            {
-#ifdef      WINDOWS
-                pilo::i32_t t;
-                int n = _get_timezone((long*)&t);
-                if (n != 0)
-                {
+                if (d > ((1ULL << 63) - 1)) {
                     return -1;
                 }
-                return 0-t;
-#else
-                return 0-timezone;
-#endif
+                return d;
             }
 
-            ::pilo::i8_t datetime::days_in_months(int year, int month)
-			{
+
+
+
+
+            ::pilo::i64_t ceil_by_second(::pilo::i64_t ts)
+            {
+                return ts += PMI_USECS_OF_SEC - (ts % PMI_USECS_OF_SEC);
+            }
+
+            void ceil_by_second(::pilo::i64_t* ts)
+            {
+                *ts = *ts + PMI_USECS_OF_SEC - (*ts % PMI_USECS_OF_SEC);
+            }
+
+            ::pilo::u8_t week_day(::pilo::i64_t usec_ts, ::pilo::i8_t tzhoff)
+            {
+                ::pilo::i64_t ts = usec_ts;
+                ts = ts + PMF_TZ_USEC_OFF(tzhoff);
+                ::pilo::i64_t days = ts / PMI_USECS_OF_DAY;
+                return  (::pilo::i8_t)((days + 4) % 7);
+            }
+            ::pilo::u8_t mdays_in_months(::pilo::u16_t year, ::pilo::u8_t month)
+            {
                 static ::pilo::i8_t  leapDays[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
                 static ::pilo::i8_t  nonleapDays[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-				if (::pilo::core::datetime::datetime::is_leap_year(year))
-				{
-					return leapDays[month - 1];
-				}
-				else
-				{
-					return nonleapDays[month - 1];
-				}
-			} 
-
-			bool datetime::is_leap_year(int year)
-			{
-				if ((year % 4) == 0)
-				{
-					if ((year % 100) == 0 && (year % 400) != 0)
-					{
-						return false;
-					}
-					else
-					{
-						return true;
-					}
-				}
-				else
-				{
-					return false;
-				}
-			}
-        }
+                if (::pilo::core::datetime::is_leap_year(year))
+                {
+                    return leapDays[month - 1];
+                }
+                else
+                {
+                    return nonleapDays[month - 1];
+                }
+            }
+}
 	}
 }

@@ -8,6 +8,7 @@
 #include	"../threading/dummy_mutex.hpp"
 #include	"../process/context.hpp"
 #include	"../logging/logger_interface.hpp"
+#include	<set>
 
 namespace pilo
 {
@@ -36,11 +37,17 @@ namespace pilo
 				{
 				}
 
-				timer* add_timer(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, task_func_type f_func, void* obj, void* param, task_destructor_func_type dtor)
+				void delete_timer(::pilo::i64_t id)
+				{
+					std::lock_guard<lock_type>	guard(this->_mutex);
+					_delete_set.insert(id);
+				}
+
+				timer* add_timer(::pilo::u32_t duration, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura, ::pilo::i64_t unit_in_millsecs,  task_func_type f_func, void* obj, void* param, task_destructor_func_type dtor)
 				{
 					::pilo::core::sched::timer* ptimer = PILO_CONTEXT->allocate_timer();
 					if (ptimer != nullptr) {
-						ptimer->set(duration, rep_cnt, rep_dura, f_func, obj, param, dtor);
+						ptimer->set(duration, rep_cnt, rep_dura, unit_in_millsecs,f_func, obj, param, dtor);
 					}
 					else {
 						return nullptr;
@@ -157,33 +164,32 @@ namespace pilo
 
 				void _dispatch_list(::pilo::core::sched::timer* current_timer)
 				{
-					//while (true) {
-					//	current_timer->exec();
-					//	bool resched = current_timer->resched_check(this->_time);
-					//	if (resched) {
-
-					//	}
-					//}
-
 					::pilo::core::sched::timer* tmp_timer = nullptr;
-					do {
-						current_timer->exec();
-						bool resched = current_timer->resched_check(this->_time);
-						if (resched) {
+					do {						
+						if (_delete_set.count(current_timer->id()) > 0) {
+							_delete_set.erase(current_timer->id());
 							tmp_timer = current_timer;
-							current_timer = current_timer->next();
-							tmp_timer->set_next(nullptr);
-							{
-								std::lock_guard<lock_type>	guard(this->_mutex);								
-								this->_add_node(tmp_timer);
-							}		
+							current_timer = current_timer->next();							
+							PILO_CONTEXT->deallocate_timer(tmp_timer);							
 						}
 						else {
-							tmp_timer = current_timer;
-							current_timer = current_timer->next();
-							PILO_CONTEXT->deallocate_timer(tmp_timer);
+							current_timer->exec();
+							bool resched = current_timer->resched_check(this->_time);
+							if (resched) {
+								tmp_timer = current_timer;
+								current_timer = current_timer->next();
+								tmp_timer->set_next(nullptr);
+								{
+									std::lock_guard<lock_type>	guard(this->_mutex);
+									this->_add_node(tmp_timer);
+								}
+							}
+							else {
+								tmp_timer = current_timer;
+								current_timer = current_timer->next();
+								PILO_CONTEXT->deallocate_timer(tmp_timer);
+							}
 						}
-
 					} while (current_timer != nullptr);
 				}
 
@@ -206,8 +212,8 @@ namespace pilo
 					_shift();
 					_execute();
 				}
-				 
-
+				
+				
 			private:
 				::pilo::u32_t									_time;
 				::pilo::u32_t									_start_time;
@@ -217,12 +223,13 @@ namespace pilo
 				::pilo::core::sched::timer_linked_list			_near[TIME_NEAR];
 				::pilo::core::sched::timer_linked_list			_t[4][TIME_LEVEL];
 				lock_type										_mutex;
+				std::set<::pilo::i64_t>							_delete_set;
 
 			private:
 				M_DISABLE_COPY(time_wheel)
 
 			};
-			
+
 		}
 	}
 }

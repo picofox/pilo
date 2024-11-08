@@ -21,7 +21,8 @@ namespace pilo
                 inline ::pilo::i32_t num_cores() const { return _num_cores;  }
                 inline ::pilo::i32_t num_logical_cores() const { return _num_logical_processors;  }
                 inline ::pilo::i32_t page_size() const { return _page_size; }
-                inline ::pilo::i8_t sys_timezone() const { return this->_sys_timezone;  }
+                inline ::pilo::i8_t system_timezone() const { return this->_system_timezone;  }
+
 
 
                 std::string to_string() const;
@@ -32,7 +33,9 @@ namespace pilo
                 ::pilo::i32_t _num_logical_processors;
                 ::pilo::i32_t _page_size;
                 ::pilo::i64_t _freq;
-                ::pilo::i8_t _sys_timezone;
+                ::pilo::i8_t _system_timezone;
+                
+
                   
             };
         }

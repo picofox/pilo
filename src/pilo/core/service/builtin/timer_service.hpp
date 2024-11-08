@@ -45,6 +45,8 @@ namespace pilo
 					::pilo::i64_t add_abs_sec_timer(::pilo::i64_t epoch, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura
 						, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
 
+					void delete_timer(::pilo::i64_t timer);
+
 				private:
 					::pilo::i64_t _last_sec_timer_ts;
 					::pilo::core::sched::time_wheel<::pilo::core::threading::dummy_mutex>	_time_wheel_sec;

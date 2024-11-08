@@ -26,7 +26,7 @@ namespace pilo
                 inline void operator()()
                 {
                     PMC_ASSERT(_func != nullptr);
-                    _func(this);
+                   _func(this);
                 }
 
                 inline void set(task_func_type f_func, void* obj, void* param, void* ctx, task_destructor_func_type dtor)

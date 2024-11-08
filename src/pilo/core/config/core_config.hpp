@@ -77,10 +77,12 @@ namespace pilo {
                 const env_vars_config& env_vars() const { return _env_vars;  }
                 const std::map<::pilo::service_group_id, service_config>& core_services() const { return _core_services; }
                 const thread_pool_config& thread_pool() const { return _thread_pool;  }
+
             
             public:
                 inline void set_cwd(const char* cwd_cstr) { _cwd = cwd_cstr; }
-
+                ::pilo::i8_t overrided_timezone() const { return _overrided_timezone;  }
+                void set_overrided_timezone(::pilo::i8_t tz) { _overrided_timezone = tz;  }
 
             private:                
                 ::std::string                           _cwd;
@@ -89,6 +91,7 @@ namespace pilo {
                 env_vars_config                         _env_vars;
                 std::map<::pilo::i16_t, service_config> _core_services;
                 thread_pool_config                      _thread_pool;
+                ::pilo::i8_t                            _overrided_timezone;
 
             };
 

@@ -4,13 +4,16 @@
 #include "../process/process.hpp"
 #include "../ml/json_tlv_driver.hpp"
 #include "../service/services_def.hpp"
+#include "../datetime/zoned_clock.hpp"
+#include "../datetime/datetime.hpp"
+
 
 namespace pilo {
     namespace core {
         namespace config {
 
             core_config::core_config()
-                : _cwd("")
+                : _cwd(""), _overrided_timezone(PMI_USE_SYSTEM_TIMEZONE)
             {
                 
             }
@@ -56,6 +59,8 @@ namespace pilo {
                 _core_services.insert(std::pair<::pilo::i16_t, service_config>((::pilo::i16_t)0, std::move(svc_cfg)));
 
                 this->_thread_pool.set_default();
+
+                this->_overrided_timezone = PMI_USE_SYSTEM_TIMEZONE;
 
                 return PILO_OK;
             }
@@ -156,9 +161,14 @@ namespace pilo {
                     }                
                 }
 
-
-
                 PILO_CHKERR_RET(err, this->_thread_pool.load_from_configurator("thread_pool", driver));
+
+                this->_overrided_timezone = -61;
+                err = driver->get_value("overrided_timezone", this->_overrided_timezone);
+                if (err != PILO_OK) {
+                    this->_overrided_timezone = PMI_USE_SYSTEM_TIMEZONE;
+                }
+
 
                 return PILO_OK;
             }
@@ -185,9 +195,11 @@ namespace pilo {
                     it->second.save_to_configurator(buffer, driver);
                 }
 
-
-
                 this->_thread_pool.save_to_configurator("thread_pool", driver);
+
+                ::pilo::i8_t tz = 0;
+                PILO_CHKERR_RET(err, driver->set_value("overrided_timezone", tz, true));
+
                 return PILO_OK;
             }
 

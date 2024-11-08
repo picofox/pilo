@@ -9,6 +9,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
                     return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
                 }
@@ -22,6 +25,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
                     return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
                 }
@@ -35,6 +41,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (err != PILO_OK)
                     return err;
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
@@ -48,6 +57,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (err != PILO_OK)
                     return err;
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
@@ -61,6 +73,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (err != PILO_OK)
                     return err;
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
@@ -74,6 +89,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (err != PILO_OK)
                     return err;
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
@@ -87,6 +105,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (err != PILO_OK)
                     return err;
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
@@ -100,6 +121,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (err != PILO_OK)
                     return err;
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
@@ -113,6 +137,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (err != PILO_OK)
                     return err;
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
@@ -126,6 +153,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (err != PILO_OK)
                     return err;
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
@@ -139,6 +169,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (err != PILO_OK)
                     return err;
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {
@@ -154,6 +187,9 @@ namespace pilo {
             {
                 ::pilo::err_t err = PILO_OK;
                 ::pilo::tlv* vp = get_value_node(fqn, err);
+                if (vp == nullptr) {
+                    return ::pilo::mk_perr(PERR_NON_EXIST);
+                }
                 if (err != PILO_OK)
                     return err;
                 if (vp->wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single) {

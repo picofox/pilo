@@ -65,6 +65,19 @@ namespace pilo
 					return add_rel_sec_timer((::pilo::u32_t)diff, rep_cnt, rep_dura, f_func, obj, param, dtor);
 				}
 
+				void timer_service::delete_timer(::pilo::i64_t timer_id)
+				{
+					if (timer_id % 2 == 0) {
+						this->_time_wheel_millisec.delete_timer(timer_id);
+					}
+					else {
+						this->_time_wheel_sec.delete_timer(timer_id);
+						
+					}
+				}
+
+
+
 				void timer_service::pulse(::pilo::i64_t now_ts)
 				{
 					//PLOG(::pilo::core::logging::level::info, "%lld", now_ts);
