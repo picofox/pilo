@@ -370,8 +370,6 @@ namespace pilo
                 if (err != PILO_OK)
                     return err;
 
-                _cron_manager.start();
-
                 return PILO_OK;                    
             }
 
@@ -395,29 +393,66 @@ namespace pilo
                 return _service_manager->timer_service_cache()->add_abs_sec_timer(epoch, rep_cnt, rep_dura, f_func, obj, param, dtor);
             }
 
-            ::pilo::i64_t context::add_cron_job(::pilo::i8_t tz, const std::string& spec, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor)
+            ::pilo::i64_t context::start_neo_cron_job(::pilo::i8_t tz, const std::string& spec, ::pilo::core::sched::task_func_type f_func, void* param, ::pilo::core::sched::task_destructor_func_type dtor)
             {
-                ::pilo::i64_t id =  _cron_manager.add_job(tz, spec, f_func, obj, param, dtor);
+                ::pilo::i64_t id = _cron_scheduler.start_neo_job(tz, spec, f_func, param, dtor);
                 if (id > 0) {
-                    PLOG(::pilo::core::logging::level::info, "[cron] job (%d-%lld:%s) is added", ::pilo::core::sched::cron::timezone_of_id(id), ::pilo::core::sched::cron::seq_of_id(id), spec.c_str());
+                    PLOG(::pilo::core::logging::level::info, "[cron] job (%d-%lld:%s) is added", ::pilo::core::sched::cron_scheduler::timezone_of_id(id), ::pilo::core::sched::cron_scheduler::seq_of_id(id), spec.c_str());
                 }
                 else {
-                    PLOG(::pilo::core::logging::level::error, "[cron] job (%d-%lld:%s) add failed.", ::pilo::core::sched::cron::timezone_of_id(id), ::pilo::core::sched::cron::seq_of_id(id), spec.c_str());
+                    PLOG(::pilo::core::logging::level::error, "[cron] job (%d-%lld:%s) add failed.", ::pilo::core::sched::cron_scheduler::timezone_of_id(id), ::pilo::core::sched::cron_scheduler::seq_of_id(id), spec.c_str());
                 }
                 return id;
             }
 
-            ::pilo::err_t context::delete_cron_job(::pilo::i64_t cronid)
+            ::pilo::err_t context::stop_cron_job(::pilo::i64_t job_id)
             {
-                ::pilo::err_t err = _cron_manager.delete_job(cronid);
-                if (err == PILO_OK) {
-                    PLOG(::pilo::core::logging::level::info, "[cron] job (%d-%lld) is stopped.", ::pilo::core::sched::cron::timezone_of_id(cronid), ::pilo::core::sched::cron::seq_of_id(cronid));
+                ::pilo::err_t err = this->_cron_scheduler.stop_job(job_id);
+                if (err != PILO_OK) {
+                    PLOG(::pilo::core::logging::level::error, "[cron] stop cron job (%d-%lld) failed."
+                        , ::pilo::core::sched::cron_scheduler::timezone_of_id(job_id)
+                        , ::pilo::core::sched::cron_scheduler::seq_of_id(job_id));
                 }
                 else {
-                    PLOG(::pilo::core::logging::level::info, "[cron] job (%d-%lld) stopped failed.", ::pilo::core::sched::cron::timezone_of_id(cronid), ::pilo::core::sched::cron::seq_of_id(cronid));
+                    PLOG(::pilo::core::logging::level::info, "[cron] cron job (%d-%lld) marked stopped."
+                        , ::pilo::core::sched::cron_scheduler::timezone_of_id(job_id)
+                        , ::pilo::core::sched::cron_scheduler::seq_of_id(job_id));
                 }
                 return err;
             }
+
+            ::pilo::err_t context::on_cron_job_check(void* entry)
+            {
+                ::pilo::core::sched::cron_job* job = (::pilo::core::sched::cron_job*)entry;
+                if (job == nullptr) {
+                    return ::pilo::mk_perr(PERR_NULL_PTR);
+                }
+
+                if (job->is_stop()) {
+                    char buffer[64] = { 0 };
+                    job->to_cstring(buffer, sizeof(buffer));
+                    ::pilo::err_t err = job->delete_job();
+                    if (err != PILO_OK) {
+                        PLOG(::pilo::core::logging::level::error, "[cron] delete cron job (%s) failed.", buffer);
+                        return ::pilo::mk_perr(PERR_NON_EXIST);
+                    }
+                    PLOG(::pilo::core::logging::level::info, "[cron] cron job (%s) deleted.", buffer);
+                    return ::pilo::mk_perr(PERR_NOOP);
+                }
+                return PILO_OK;
+            }
+
+            ::pilo::err_t context::on_cron_job_continue(void* entry)
+            {
+                ::pilo::core::sched::cron_job* job = (::pilo::core::sched::cron_job*)entry;
+                if (job == nullptr) {
+                    return ::pilo::mk_perr(PERR_NULL_PTR);
+                }
+                
+                return job->schedule(PMI_INVALID_TIMESTAMP);
+            }
+
+            
 
             void context::delete_timer(::pilo::i64_t timer_id)
             {
@@ -427,9 +462,13 @@ namespace pilo
 
             void context::finalize()
             {
-                _cron_manager.finanlize();
                 std::string str = this->_pool_object_stat_mgr.to_string();
                 std::cout << str << std::endl;
+                PLOG(::pilo::core::logging::level::info, "pilo finalizing");
+                PLOG(::pilo::core::logging::level::info, "stopping service manager.");
+                _service_manager->stop();
+                PLOG(::pilo::core::logging::level::info, "stopping thread pool.");
+                _thread_pool->stop();   
             }
 
             ::pilo::err_t pilo_startup_initialize(int argc, char* argv[])

@@ -14,7 +14,7 @@
 #include "../threading/thread_pool_interface.hpp"
 #include "../service/service_manager.hpp"
 #include "../sched/timer.hpp"
-#include "../sched/cron_manager.hpp"
+#include "../sched/cron_scheduler.hpp"
 
 namespace pilo
 {
@@ -219,8 +219,10 @@ namespace pilo
                 ::pilo::i64_t add_abs_sec_timer(::pilo::i64_t epoch, ::pilo::u32_t rep_cnt, ::pilo::u32_t rep_dura
                     , ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
 
-                ::pilo::i64_t add_cron_job(::pilo::i8_t tz, const std::string& spec, ::pilo::core::sched::task_func_type f_func, void* obj, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
-                ::pilo::err_t delete_cron_job(::pilo::i64_t cronid);
+                ::pilo::i64_t start_neo_cron_job(::pilo::i8_t tz, const std::string& spec, ::pilo::core::sched::task_func_type f_func, void* param, ::pilo::core::sched::task_destructor_func_type dtor);
+                ::pilo::err_t stop_cron_job(::pilo::i64_t job_id);
+                ::pilo::err_t on_cron_job_check(void * entry);
+                ::pilo::err_t on_cron_job_continue(void* entry);
 
                 void delete_timer(::pilo::i64_t timer_id);
                 
@@ -257,8 +259,8 @@ namespace pilo
 
 
                 ::pilo::core::logging::logger_manager _logger_manager;
-                ::pilo::core::sched::cron_manager   _cron_manager;                                
-                
+                              
+                ::pilo::core::sched::cron_scheduler _cron_scheduler;
             };
 
             ::pilo::err_t pilo_startup_initialize(int argc, char*argv[]);

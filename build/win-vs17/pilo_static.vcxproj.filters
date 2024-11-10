@@ -136,10 +136,10 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.cpp">
       <Filter>pilo\core\rtti</Filter>
     </ClCompile>
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron.cpp">
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_job.cpp">
       <Filter>pilo\core\sched</Filter>
     </ClCompile>
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_manager.cpp">
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_scheduler.cpp">
       <Filter>pilo\core\sched</Filter>
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\time_wheel.cpp">
@@ -525,13 +525,13 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.hpp">
       <Filter>pilo\core\rtti</Filter>
     </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron.hpp">
-      <Filter>pilo\core\sched</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_manager.hpp">
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_job.hpp">
       <Filter>pilo\core\sched</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_resolving.hpp">
+      <Filter>pilo\core\sched</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_scheduler.hpp">
       <Filter>pilo\core\sched</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\task.hpp">

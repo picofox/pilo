@@ -553,8 +553,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u32_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u64_conversion.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.cpp" />
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron.cpp" />
-    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_manager.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_job.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_scheduler.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\time_wheel.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\timer.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\service\abstract_compensable_fixed_frequency_service.cpp" />
@@ -682,9 +682,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u32_conversion.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u64_conversion.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type_u8_conversion.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron.hpp" />
-    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_manager.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_job.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_resolving.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\cron_scheduler.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\task.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\time_wheel.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\sched\timer.hpp" />
