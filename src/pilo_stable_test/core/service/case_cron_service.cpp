@@ -84,8 +84,7 @@ namespace pilo
 
 					p_case->set_result(PILO_OK);
 
-					exit(0);
-					//return 0;
+					return 0;
 				}
 
 

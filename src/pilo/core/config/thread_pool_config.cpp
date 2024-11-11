@@ -134,6 +134,7 @@ void pilo::core::config::thread_pool_config::clear(bool )
 	return PILO_OK;
 }
 
+
 const::pilo::core::io::path* pilo::core::config::thread_pool_config::file_path() const
 {
 	return nullptr;
