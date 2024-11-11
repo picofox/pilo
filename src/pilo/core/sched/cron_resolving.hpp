@@ -886,7 +886,7 @@ namespace pilo
             }
 
             template <typename Traits = cron_standard_traits>
-            static std::tm cron_next(cronexpr const& cex, std::tm, ::pilo::i8_t tz)
+            static std::tm cron_next(cronexpr const& cex, std::tm date, ::pilo::i8_t tz)
             {
                 time_t original = ::pilo::core::datetime::datetime_to_timestamp_by_second(date, tz);
                 if (PMI_INVALID_TIMESTAMP == original) return {};
