@@ -17,6 +17,8 @@
 #include "pilo/error.hpp"
 #include "pilo/tlv.hpp"
 
+#include "pilo/external/OpenXLSX/OpenXLSX.hpp"
+
 using namespace ::pilo::core::testing;
 
 void load_cases(stable_test_suite* suite);
@@ -28,9 +30,19 @@ int main(int argc, char * argv[])
 	stable_test_suite suite_default;
 	load_cases(&suite_default);
 	PILO_CONTEXT->start();
+
+
+	OpenXLSX::XLDocument doc;
+	doc.open("D:\\projects\\git_repo\\libpilo\\output\\win-vs17\\pilo\\tmp\\test_xls\\her1o.xlsx");
+	bool ok = doc.isOpen();
+	if (!ok) {
+		printf("open failed");
+	}
+	
+
+
+
 	suite_default.run_cases(true);
-
-
 	std::string str = PILO_CONTEXT->pool_object_stat_mgr().to_updated_string();
 	std::cout << str << std::endl;
 

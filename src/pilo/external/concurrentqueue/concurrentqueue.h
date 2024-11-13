@@ -384,7 +384,7 @@ struct ConcurrentQueueDefaultTraits
 	// not. If false, only pre-allocated blocks (controlled by the constructor
 	// arguments) will be recycled, and all others will be `free`d back to the heap.
 	// Note that blocks consumed by explicit producers are only freed on destruction
-	// of the queue (not following destruction of the token) regardless of this trait.
+	// of the queue (! following destruction of the token) regardless of this trait.
 	static const bool RECYCLE_ALLOCATED_BLOCKS = false;
 
 	
@@ -2347,7 +2347,7 @@ private:
 		struct BlockIndexHeader
 		{
 			size_t size;
-			std::atomic<size_t> front;		// Current slot (not next, like pr_blockIndexFront)
+			std::atomic<size_t> front;		// Current slot (! next, like pr_blockIndexFront)
 			BlockIndexEntry* entries;
 			void* prev;
 		};
@@ -2398,7 +2398,7 @@ private:
 		// To be used by producer only -- consumer must use the ones in referenced by blockIndex
 		size_t pr_blockIndexSlotsUsed;
 		size_t pr_blockIndexSize;
-		size_t pr_blockIndexFront;		// Next slot (not current)
+		size_t pr_blockIndexFront;		// Next slot (! current)
 		BlockIndexEntry* pr_blockIndexEntries;
 		void* pr_blockIndexRaw;
 		
