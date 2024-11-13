@@ -78,12 +78,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /utf-8</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -98,10 +99,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -138,12 +139,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /utf-8</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -158,10 +160,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WINDOWS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -198,11 +200,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -217,10 +220,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -257,12 +260,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -275,10 +279,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src\pilo\external\mysqlclient\8.0.19\include;D:\projects\git_repo\libpilo\src\pilo;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -450,6 +454,32 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_task_executor.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\error.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml\pugixml.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLCell.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLCellIterator.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLCellRange.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLCellReference.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLCellValue.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLColor.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLColumn.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLComments.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLContentTypes.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLDateTime.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLDocument.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLFormula.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLMergeCells.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLProperties.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLRelationships.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLRow.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLRowData.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLSharedStrings.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLSheet.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLStyles.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLWorkbook.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLXmlData.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLXmlFile.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLXmlParser.cpp" />
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLZipArchive.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\pilo.cpp" />
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\tlv.cpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\algorithm\find.hpp" />
@@ -598,6 +628,59 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\thread_pool_task_executor.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\threading\threading.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\error.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\OpenXLSX-Exports.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\OpenXLSX.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\args.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\cenv.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\config.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\convert.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\cstdio.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\cstdlib.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\encoding_errors.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\encoding_utf.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\filebuf.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\fstream.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\iostream.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\scoped_ptr.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\stackstring.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\system.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\utf.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\utf8_codecvt.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\windows.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml\pugiconfig.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml\pugixml.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy\zippy.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\IZipArchive.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCell.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCellIterator.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCellRange.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCellReference.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCellValue.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLColor.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLColumn.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCommandQuery.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLComments.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLConstants.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLContentTypes.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLDateTime.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLDocument.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLException.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLFormula.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLIterator.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLMergeCells.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLProperties.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLRelationships.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLRow.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLRowData.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLSharedStrings.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLSheet.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLStyles.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLWorkbook.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLXmlData.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLXmlFile.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLXmlParser.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLZipArchive.hpp" />
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\utilities\XLUtilities.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml_iterators.hpp" />
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml_print.hpp" />

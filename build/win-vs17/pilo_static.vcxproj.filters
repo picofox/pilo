@@ -238,6 +238,84 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\error.cpp">
       <Filter>pilo</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml\pugixml.cpp">
+      <Filter>pilo\external\OpenXLSX\external\pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLCell.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLCellIterator.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLCellRange.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLCellReference.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLCellValue.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLColor.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLColumn.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLComments.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLContentTypes.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLDateTime.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLDocument.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLFormula.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLMergeCells.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLProperties.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLRelationships.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLRow.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLRowData.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLSharedStrings.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLSheet.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLStyles.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLWorkbook.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLXmlData.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLXmlFile.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLXmlParser.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\XLZipArchive.cpp">
+      <Filter>pilo\external\OpenXLSX\sources</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\pilo.cpp">
       <Filter>pilo</Filter>
     </ClCompile>
@@ -684,6 +762,165 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\error.hpp">
       <Filter>pilo</Filter>
     </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\OpenXLSX-Exports.hpp">
+      <Filter>pilo\external\OpenXLSX</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\OpenXLSX.hpp">
+      <Filter>pilo\external\OpenXLSX</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\args.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\cenv.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\config.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\convert.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\cstdio.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\cstdlib.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\encoding_errors.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\encoding_utf.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\filebuf.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\fstream.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\iostream.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\scoped_ptr.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\stackstring.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\system.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\utf.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\utf8_codecvt.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\nowide\nowide\windows.hpp">
+      <Filter>pilo\external\OpenXLSX\external\nowide\nowide</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml\pugiconfig.hpp">
+      <Filter>pilo\external\OpenXLSX\external\pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml\pugixml.hpp">
+      <Filter>pilo\external\OpenXLSX\external\pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy\zippy.hpp">
+      <Filter>pilo\external\OpenXLSX\external\zippy</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\IZipArchive.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCell.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCellIterator.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCellRange.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCellReference.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCellValue.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLColor.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLColumn.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLCommandQuery.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLComments.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLConstants.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLContentTypes.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLDateTime.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLDocument.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLException.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLFormula.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLIterator.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLMergeCells.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLProperties.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLRelationships.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLRow.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLRowData.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLSharedStrings.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLSheet.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLStyles.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLWorkbook.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLXmlData.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLXmlFile.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLXmlParser.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers\XLZipArchive.hpp">
+      <Filter>pilo\external\OpenXLSX\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\sources\utilities\XLUtilities.hpp">
+      <Filter>pilo\external\OpenXLSX\sources\utilities</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\external\rapidxml\rapidxml.hpp">
       <Filter>pilo\external\rapidxml</Filter>
     </ClInclude>
@@ -910,6 +1147,33 @@
     </Filter>
     <Filter Include="pilo\external">
       <UniqueIdentifier>{FD50F290-5B81-33CE-BCCE-ACA0BB3B349F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\external\OpenXLSX">
+      <UniqueIdentifier>{5F059A0E-5547-3E91-A597-07D0F7685C73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\external\OpenXLSX\external">
+      <UniqueIdentifier>{3744840A-C2A4-32B9-B6B4-A84433FBB299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\external\OpenXLSX\external\nowide">
+      <UniqueIdentifier>{48F93A2E-DBA0-3DBA-BEAB-088BFE18F8E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\external\OpenXLSX\external\nowide\nowide">
+      <UniqueIdentifier>{A357CA7A-E516-3250-B609-20778105079B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\external\OpenXLSX\external\pugixml">
+      <UniqueIdentifier>{7FF45A97-C9D3-3589-B1F4-166291D6D438}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\external\OpenXLSX\external\zippy">
+      <UniqueIdentifier>{C7C96332-D4B3-3E68-A8BD-BA133F24709B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\external\OpenXLSX\headers">
+      <UniqueIdentifier>{681A52DE-E7E7-3103-835C-04F44F2B9AC0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\external\OpenXLSX\sources">
+      <UniqueIdentifier>{3867BC11-1C33-35EA-A11B-F6CA5ED68AA0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\external\OpenXLSX\sources\utilities">
+      <UniqueIdentifier>{15EC8EA5-0467-38DC-BB6D-570AF8CDA361}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo\external\concurrentqueue">
       <UniqueIdentifier>{EC89B2F3-E40A-339A-A9F3-9A0F83FA346E}</UniqueIdentifier>

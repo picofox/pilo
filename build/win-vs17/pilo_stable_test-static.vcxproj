@@ -90,12 +90,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /utf-8</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -110,10 +111,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -136,12 +137,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /utf-8</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -156,10 +158,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WINDOWS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -182,11 +184,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -201,10 +204,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -227,12 +230,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -245,10 +249,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WINDOWS;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\git_repo\libpilo\src;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\pugixml;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\headers;D:\projects\git_repo\libpilo\src\pilo\external\OpenXLSX\external\zippy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
