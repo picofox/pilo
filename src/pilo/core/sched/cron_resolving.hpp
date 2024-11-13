@@ -328,17 +328,17 @@ namespace pilo
                     return text;
                 }
 
-                //static std::vector<std::string> split(CRONCPP_STRING_VIEW text, char const delimiter)
-                //{
-                //    std::vector<std::string> tokens;
-                //    std::string token;
-                //    std::istringstream tokenStream(text.data());
-                //    while (std::getline(tokenStream, token, delimiter))
-                //    {
-                //        tokens.push_back(token);
-                //    }
-                //    return tokens;
-                //}
+                static std::vector<std::string> split(CRONCPP_STRING_VIEW text, char const delimiter)
+                {
+                    std::vector<std::string> tokens;
+                    std::string token;
+                    std::istringstream tokenStream(text.data());
+                    while (std::getline(tokenStream, token, delimiter))
+                    {
+                        tokens.push_back(token);
+                    }
+                    return tokens;
+                }
 
                 CRONCPP_CONSTEXPTR inline bool contains(CRONCPP_STRING_VIEW text, char const ch) noexcept
                 {
@@ -394,7 +394,7 @@ namespace pilo
                     }
                     else
                     {
-                        auto parts = ::pilo::core::string::split(field, '-', true);
+                        auto parts = utils::split(field, '-');
                         if (parts.size() != 2)
                             throw bad_cronexpr("Specified range requires two fields");
 
@@ -428,7 +428,7 @@ namespace pilo
                     if (value.length() > 0 && value[value.length() - 1] == ',')
                         throw bad_cronexpr("Value cannot end with comma");
 
-                    auto fields = ::pilo::core::string::split(value, ',', true);
+                    auto fields = utils::split(value, ',');
                     if (fields.empty())
                         throw bad_cronexpr("Expression parsing error");
 
@@ -860,7 +860,7 @@ namespace pilo
                 if (expr.empty())
                     return nullptr;
 
-                auto fields = ::pilo::core::string::split(expr, ' ', true);
+                auto fields = utils::split(expr, ' ');
                 fields.erase(
                     std::remove_if(std::begin(fields), std::end(fields),
                         [](CRONCPP_STRING_VIEW s) {return s.empty(); }),

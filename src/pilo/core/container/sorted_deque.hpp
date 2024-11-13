@@ -25,7 +25,7 @@ namespace pilo
 
 					::pilo::i64_t lo = 0;
 					::pilo::i64_t hi = _m_vec.size() - 1;
-					register ::pilo::i64_t  num = _m_vec.size();
+					::pilo::i64_t  num = _m_vec.size();
 					::pilo::i64_t half = 0;
 					::pilo::i64_t mid_idx = 0;
 					int result = 0;

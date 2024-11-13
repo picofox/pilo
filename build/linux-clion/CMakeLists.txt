@@ -18,7 +18,7 @@ endif()
 project(libpilo)
 set(CMAKE_DEBUG_POSTFIX "-debug")
 set(CMAKE_RELEASE_POSTFIX "-release")
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 get_filename_component(PILO_PROJECT_DIR "${CMAKE_SOURCE_DIR}/../../" ABSOLUTE NAME)
 get_filename_component(PFC_NAME ${CMAKE_SOURCE_DIR} NAME)
@@ -48,21 +48,21 @@ set_target_properties(pilo_static PROPERTIES OUTPUT_NAME "pilo-static")
 add_library(pilo_shared SHARED ${PILO_LIBCPPS} ${PILO_LIBHPPS} ${PILO_LIBHS})
 set_target_properties(pilo_shared PROPERTIES OUTPUT_NAME "pilo-shared")
 
-target_include_directories(pilo_static PUBLIC "${PILO_LIBSRC_DIR}/external/mysqlclient/8.0.19/include" "${PILO_LIBSRC_DIR}")
-target_include_directories(pilo_shared PUBLIC "${PILO_LIBSRC_DIR}/external/mysqlclient/8.0.19/include" "${PILO_LIBSRC_DIR}")
+target_include_directories(pilo_static PUBLIC "${PILO_LIBSRC_DIR}/external/mysqlclient/8.0.19/include" "${PILO_LIBSRC_DIR}" "${PILO_LIBSRC_DIR}/external/OpenXLSX" "${PILO_LIBSRC_DIR}/external/OpenXLSX/external/pugixml" "${PILO_LIBSRC_DIR}/external/OpenXLSX/headers" "${PILO_LIBSRC_DIR}/external/OpenXLSX/external/zippy")
+target_include_directories(pilo_shared PUBLIC "${PILO_LIBSRC_DIR}/external/mysqlclient/8.0.19/include" "${PILO_LIBSRC_DIR}" "${PILO_LIBSRC_DIR}/external/OpenXLSX" "${PILO_LIBSRC_DIR}/external/OpenXLSX/external/pugixml" "${PILO_LIBSRC_DIR}/external/OpenXLSX/headers" "${PILO_LIBSRC_DIR}/external/OpenXLSX/external/zippy")
 
 set_target_properties(pilo_static PROPERTIES
-    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
-    COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++17"
+    COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++17"
 )
 
 set_target_properties(pilo_shared PROPERTIES
-    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -fPIC -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
-    COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -fPIC -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++17"
+    COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++17"
 )
 
-#target_compile_options(pilo_static PUBLIC -g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11)
-#target_compile_options(pilo_shared PUBLIC -O2 -fPIC -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11)
+#target_compile_options(pilo_static PUBLIC -g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++17)
+#target_compile_options(pilo_shared PUBLIC -O2 -fPIC -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++17)
 
 set(PILO_LIBPILO_INCLUDE_DIR ${PILO_OUTPUT_DIR}/include)
 set(PILO_LIBPILO_LIB_DIR ${PILO_OUTPUT_DIR}/lib)
@@ -104,8 +104,8 @@ target_link_libraries(pilo_func_test-static PUBLIC debug "pilo-static-debug" opt
 target_link_directories(pilo_func_test-static PUBLIC ${PILO_OUTPUT_LIB_DIR})
 add_dependencies(pilo_func_test-static pilo_static)
 set_target_properties(pilo_func_test-static PROPERTIES
-    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
-    COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++17"
+    COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++17"
 )
 add_custom_command(TARGET pilo_func_test-static PRE_BUILD
         COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_func_test-static-debug
@@ -123,8 +123,8 @@ target_link_libraries(pilo_func_test-shared PUBLIC debug "pilo-shared-debug" opt
 target_link_directories(pilo_func_test-shared PUBLIC ${PILO_OUTPUT_LIB_DIR})
 add_dependencies(pilo_func_test-shared pilo_shared)
 set_target_properties(pilo_func_test-shared PROPERTIES
-    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
-    COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++17"
+    COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++17"
 )
 add_custom_command(TARGET pilo_func_test-shared PRE_BUILD
         COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_func_test-shared-debug
@@ -142,14 +142,14 @@ set_target_properties(pilo_stable_test-static PROPERTIES DEBUG_POSTFIX "-debug" 
 set_target_properties(pilo_stable_test-static PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
 set_target_properties(pilo_stable_test-static PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PILO_OUTPUT_DIR}/bin)
 #target_include_directories(pilo_stable_test-static PUBLIC "${PILO_OUTPUT_DIR}/include")
-target_include_directories(pilo_stable_test-static PUBLIC ${PILO_PROJECT_DIR}/src)
+target_include_directories(pilo_stable_test-static PUBLIC ${PILO_PROJECT_DIR}/src "${PILO_LIBSRC_DIR}/external/OpenXLSX" "${PILO_LIBSRC_DIR}/external/OpenXLSX/external/pugixml" "${PILO_LIBSRC_DIR}/external/OpenXLSX/headers" "${PILO_LIBSRC_DIR}/external/OpenXLSX/external/zippy")
 target_link_libraries(pilo_stable_test-static PUBLIC "pthread" "dl")
 target_link_libraries(pilo_stable_test-static PUBLIC debug "pilo-static-debug" optimized "pilo-static-release")
 target_link_directories(pilo_stable_test-static PUBLIC ${PILO_OUTPUT_LIB_DIR})
 add_dependencies(pilo_stable_test-static pilo_static)
 set_target_properties(pilo_stable_test-static PROPERTIES
-    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
-    COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++17"
+    COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++17"
 )
 add_custom_command(TARGET pilo_stable_test-static PRE_BUILD
         COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_stable_test-static-debug
@@ -167,8 +167,8 @@ target_link_libraries(pilo_stable_test-shared PUBLIC debug "pilo-shared-debug" o
 target_link_directories(pilo_stable_test-shared PUBLIC ${PILO_OUTPUT_LIB_DIR})
 add_dependencies(pilo_stable_test-shared pilo_shared)
 set_target_properties(pilo_stable_test-shared PROPERTIES
-    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
-    COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++17"
+    COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++17"
 )
 add_custom_command(TARGET pilo_stable_test-shared PRE_BUILD
         COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_stable_test-shared-debug
@@ -193,8 +193,8 @@ target_link_libraries(pilo_performance_test-static PUBLIC debug "pilo-static-deb
 target_link_directories(pilo_performance_test-static PUBLIC ${PILO_OUTPUT_LIB_DIR})
 add_dependencies(pilo_performance_test-static pilo_static)
 set_target_properties(pilo_performance_test-static PROPERTIES
-    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
-    COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++17"
+    COMPILE_FLAGS_DEBUG "-g -pthread -Wall -Werror -Wno-stringop-truncation -std=c++17"
 )
 add_custom_command(TARGET pilo_performance_test-static PRE_BUILD
         COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_performance_test-static-debug
@@ -214,8 +214,8 @@ target_link_libraries(pilo_performance_test-shared PUBLIC debug "pilo-shared-deb
 target_link_directories(pilo_performance_test-shared PUBLIC ${PILO_OUTPUT_LIB_DIR})
 add_dependencies(pilo_performance_test-shared pilo_shared)
 set_target_properties(pilo_performance_test-shared PROPERTIES
-    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++11"
-    COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++11"
+    COMPILE_FLAGS_RELEASE "-O2 -fno-aggressive-loop-optimizations -pthread -Wall -Werror -Wno-stringop-truncation  -std=c++17"
+    COMPILE_FLAGS_DEBUG "-g -fPIC -pthread -Wall -Werror -Wno-stringop-truncation -std=c++17"
 )
 add_custom_command(TARGET pilo_performance_test-shared PRE_BUILD
         COMMAND rm -f ${PILO_OUTPUT_DIR}/bin/pilo_performance_test-shared-debug
