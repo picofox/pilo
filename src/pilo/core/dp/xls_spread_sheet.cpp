@@ -52,6 +52,8 @@ pilo::core::dp::xls_spread_sheet::~xls_spread_sheet()
 	else if (cm == ::pilo::core::io::creation_mode::create_neo) {
 		try
 		{
+			if (is_exist)
+			    return ::pilo::mk_perr(PERR_EXIST);
 			_doc.create(std::string(_m_path.fullpath()), false);
 			_open_for_write = true;
 		}
@@ -63,6 +65,9 @@ pilo::core::dp::xls_spread_sheet::~xls_spread_sheet()
 	else if (cm == ::pilo::core::io::creation_mode::open_existing) {
 		try
 		{
+			if (!is_exist)
+                            return ::pilo::mk_perr(PERR_NON_EXIST);
+
 			_doc.open(std::string(_m_path.fullpath()));
 			_open_for_write = false;
 		}

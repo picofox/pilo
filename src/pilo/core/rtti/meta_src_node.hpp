@@ -72,7 +72,7 @@ namespace pilo
 			const ::pilo::id_value_mapper<5, std::string, ::pilo::u16_t> s_cpp_meta_id_value_mapper({ "static", "const", "const", "volatile","mutable"});
 			const ::pilo::id_value_mapper<5, std::string, ::pilo::u8_t> s_cpp_acces_priv_str_mapper({ "", "public", "protected", "private" });
 
-			_inline static void s_gen_indent_to_sstream(std::stringstream& ss, ::pilo::i16_t indent, const char* indent_cstr = nullptr)
+			inline static void s_gen_indent_to_sstream(std::stringstream& ss, ::pilo::i16_t indent, const char* indent_cstr = nullptr)
 			{
 				if (indent_cstr == nullptr)
 					indent_cstr = "    ";
@@ -81,7 +81,7 @@ namespace pilo
 				}
 			}
 
-			_inline static void s_gen_nl_to_sstream(std::stringstream& ss, ::pilo::u32_t flags)
+			inline static void s_gen_nl_to_sstream(std::stringstream& ss, ::pilo::u32_t flags)
 			{
 				if (flags & output_flag_win_nl)
 					ss << PMS_LINESEP_WIN_A;
@@ -89,7 +89,7 @@ namespace pilo
 					ss << PMS_LINESEP_UNIX_A;
 			}
 
-			_inline static void s_gen_value_assignment_cppstr(std::stringstream& ss, const std::string& v, const ::pilo::bit_flag<::pilo::u16_t>& modi)
+			inline static void s_gen_value_assignment_cppstr(std::stringstream& ss, const std::string& v, const ::pilo::bit_flag<::pilo::u16_t>& modi)
 			{
 				if (modi.test_value(mod_val_isnull)) {
 					ss << " = nullptr";
@@ -109,7 +109,7 @@ namespace pilo
 				}				
 			}
 
-			_inline static void s_gen_nl(std::stringstream& ss, ::pilo::u32_t flags)
+			inline static void s_gen_nl(std::stringstream& ss, ::pilo::u32_t flags)
 			{
 				if (flags & output_flag_need_nl) {
 					if (flags & output_flag_win_nl) {

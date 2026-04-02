@@ -828,7 +828,7 @@ namespace pilo
 
             void to_lower_case_inplace(std::string& str)
             {
-                for (auto i = 0; i < str.length(); i++) {
+                for (size_t i = 0; i < str.length(); i++) {
                     if (std::isupper(str[i]))
                         str[i] = (char) std::tolower(str[i]);
                 }
@@ -836,7 +836,7 @@ namespace pilo
 
             void to_upper_case_inplace(std::string& str)
             {
-                for (auto i = 0; i < str.length(); i++) {
+                for (size_t i = 0; i < str.length(); i++) {
                     if (std::islower(str[i]))
                         str[i] = (char)std::toupper(str[i]);
                 }

@@ -202,7 +202,6 @@ namespace pilo
                 ::pilo::i64_t v_formatted_output(bool nl, const char* fmt, va_list args)
                 {
                     this->_check_wirte_buffer(true);
-                    ::pilo::err_t err = PILO_OK;
 
 #               if defined(WINDOWS)
                     ::pilo::core::memory::object_array<char, 4096> buffer;

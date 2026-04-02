@@ -7,7 +7,6 @@ namespace pilo
     {
         namespace process
         {
-            static int s_i = 0;
             static ::pilo::err_t _s_read_envs(const char* key, ::pilo::i32_t key_len, const char* val, ::pilo::i32_t val_len, void* ctx)
             {
                 environment_variable_manager* evm_ptr = (environment_variable_manager*) ctx;
@@ -67,7 +66,7 @@ namespace pilo
                 }
 
                 const std::vector<std::string >& vec_unset = PILO_CONTEXT->core_config()->env_vars().vars_to_unset();
-                for (int i = 0; i < vec_unset.size(); i++) {
+                for (size_t i = 0; i < vec_unset.size(); i++) {
                     err = this->unset(vec_unset[i]);
                     if (err != PILO_OK) {
                         PMC_ASSERT(false);
@@ -125,7 +124,7 @@ namespace pilo
                         return ::pilo::mk_perr(PERR_CREATE_TLV_FAIL);
                     }
 
-                    for (int i = 0; i < vec.size(); i++) {
+                    for (size_t i = 0; i < vec.size(); i++) {
                         tlvp->push_back<std::string>(vec[i]);
                         if (PILO_CONTEXT->core_config()->env_vars().need_sync(key_ref)) {
                             if (i > 0)
@@ -137,7 +136,7 @@ namespace pilo
                 }
                 else {
                     it->second->clear();
-                    for (int i = 0; i < vec.size(); i++) {
+                    for (size_t i = 0; i < vec.size(); i++) {
                         it->second->push_back<std::string>(vec[i]);
                         if (PILO_CONTEXT->core_config()->env_vars().need_sync(key_ref)) {
                             if (i > 0)
@@ -171,7 +170,7 @@ namespace pilo
                         return ::pilo::mk_perr(PERR_CREATE_TLV_FAIL);
                     }
 
-                    for (int i = 0; i < vec.size(); i++) {
+                    for (size_t i = 0; i < vec.size(); i++) {
                         tlvp->push_back<std::string>(vec[i]);
                         if (sync) {
                             if (i > 0)
@@ -182,7 +181,7 @@ namespace pilo
                     _vars.insert(std::pair<std::string, ::pilo::tlv*>(key_ref, tlvp));
                 }
                 else {   
-                    for (int i = 0; i < vec.size(); i++) {
+                    for (size_t i = 0; i < vec.size(); i++) {
                         it->second->push_back<std::string>(vec[i]);
                     }
                     if (sync) {

@@ -32,14 +32,17 @@ namespace pilo
 
 				int case_efficeint_thread_pool_basic(::pilo::core::testing::func_test_case* p_case)
 				{
-					::pilo::err_t err = PILO_OK;
 					const ::pilo::core::config::thread_pool_config& cfg = PILO_CONTEXT->core_config()->thread_pool();
 					::pilo::core::threading::thread_pool_interface *pool =  new ::pilo::core::threading::efficient_thread_pool(&cfg, start_cb, run_cb, stop_cb);
 					if (pool == nullptr) {
 						return p_case->error(PERR_CREATE_OBJ_FAIL, "Create efficient_thread_pool failed");
 					}
 
-					err = pool->start();
+					auto ret = pool->start();
+					if (ret != PILO_OK) {
+						return p_case->error(PERR_CREATE_OBJ_FAIL, "Start efficient_thread_pool failed");
+
+					}
 
 
 

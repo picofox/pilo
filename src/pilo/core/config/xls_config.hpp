@@ -28,9 +28,9 @@ namespace pilo
                 ::pilo::i32_t index() const { return _index;  };
                 ::pilo::u32_t column() const { return _column; }
                 const std::string& name() const { return _name; }
-                const ::pilo::i16_t value_type() const { _wired_type.value_type(); }
-                const ::pilo::i8_t key_type() const { _wired_type.key_type(); }
-                const ::pilo::i8_t wrapper_type() const { _wired_type.wrapper_type(); }
+                const ::pilo::i16_t value_type() const { return _wired_type.value_type(); }
+                const ::pilo::i8_t key_type() const { return _wired_type.key_type(); }
+                const ::pilo::i8_t wrapper_type() const { return _wired_type.wrapper_type(); }
 
                 void set_name(const std::string& s) { _name = s; }
                 void set_value_type(::pilo::i16_t vt) { _wired_type.set_value_type(vt); }

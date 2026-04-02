@@ -32,7 +32,7 @@ namespace pilo
 			::pilo::err_t rac_service_group::remove_service(::pilo::service_id id)
 			{
 				service_interface* iservice = nullptr;
-				if (_services.size() <= id) {
+				if ((int)_services.size() <= id) {
 					return ::pilo::mk_err(PERR_NON_EXIST);
 				}
 				iservice = _services[id];
@@ -47,7 +47,7 @@ namespace pilo
 			::pilo::err_t rac_service_group::remove_all_service()
 			{
 				::pilo::err_t err = PILO_OK;
-				for (int i = 0; i < _services.size(); i++) {
+				for (int i = 0; i < (int)  _services.size(); i++) {
 					err = remove_service((::pilo::service_id)i);
 					if (err != PILO_OK)
 						return err;
@@ -61,7 +61,7 @@ namespace pilo
 			::pilo::err_t rac_service_group::iterate(service_iterate_func_type cb)
 			{
 				::pilo::err_t err = PILO_OK;
-				for (::pilo::service_id i = 0; i < _services.size(); i++) {
+				for (::pilo::service_id i = 0; i < (int)  _services.size(); i++) {
 					err = cb(i, _services[i], this);
 					if (err != PILO_OK)
 						return err;
@@ -71,7 +71,7 @@ namespace pilo
 			::pilo::err_t rac_service_group::start(::pilo::i64_t now_ts)
 			{
 				::pilo::err_t err = PILO_OK;
-				for (int i = 0; i < _services.size(); i++) {
+				for (int i = 0; i < (int) _services.size(); i++) {
 					err = _services.at(i)->start(now_ts);
 					if (err != PILO_OK)
 						return err;
@@ -81,7 +81,7 @@ namespace pilo
 			::pilo::err_t rac_service_group::stop(::pilo::i64_t now_ts)
 			{
 				::pilo::err_t err = PILO_OK;
-				for (int i = 0; i < _services.size(); i++) {
+				for (int i = 0; i < (int)_services.size(); i++) {
 					err = _services.at(i)->stop(now_ts);
 					if (err != PILO_OK)
 						return err;
@@ -90,7 +90,7 @@ namespace pilo
 			}
 			bool rac_service_group::all_stopped() const
 			{
-				for (int i = 0; i < _services.size(); i++) {
+				for (int i = 0; i < (int)_services.size(); i++) {
 					if (! _services.at(i)->is_stopped()) {
 						return false;
 					}					

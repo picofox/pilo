@@ -283,7 +283,7 @@ namespace pilo
                 char buffer[64] = { 0 };
                 const char* ptr = buffer;
 
-                for (int i = 0; i < _targets.size(); i++) {
+                for (size_t i = 0; i < _targets.size(); i++) {
                     if (i != 0)
                         ss << ", ";
                     ptr = _targets[i]->as_cstr(buffer, sizeof(buffer), nullptr, nullptr, nullptr);
@@ -296,8 +296,8 @@ namespace pilo
             ::pilo::tlv* cmdline_arg::find_arg(char s_name, const std::string& str) const
             {
                 if (s_name >= 0) {
-                    if (_short_args[s_name] != nullptr)
-                        return _short_args[s_name];
+                    if (_short_args[(int) s_name] != nullptr)
+                        return _short_args[(int)s_name];
                 }
                 if (!str.empty()) {
                     std::map<std::string, ::pilo::tlv*>::const_iterator it = _long_args.find(str);
@@ -316,11 +316,11 @@ namespace pilo
                         _compose_errmsg(errmsg, "No target spec is specified", nullptr, nullptr, nullptr);
                         return ::pilo::mk_perr(PERR_INVALID_PARAM);
                     }
-                    if (spec->max_count() >= 0 && _targets.size() > spec->max_count()) {
+                    if (spec->max_count() >= 0 && ((int)  _targets.size()) > spec->max_count()) {
                         _compose_errmsg(errmsg, "Too many targets specified. ", nullptr, nullptr, nullptr);
                         return ::pilo::mk_perr(PERR_INVALID_PARAM);
                     }
-                    if (spec->min_count() >= 0 && _targets.size() < spec->min_count()) {
+                    if (spec->min_count() >= 0 && ((int)_targets.size()) < spec->min_count()) {
                         _compose_errmsg(errmsg, "Too few targets specified. ", nullptr, nullptr, nullptr);
                         return ::pilo::mk_perr(PERR_INVALID_PARAM);
                     }
@@ -349,7 +349,7 @@ namespace pilo
                 for (; cit != _long_args.cend(); cit++) {
                     spec = PILO_CONTEXT->core_config()->cmdline_arg_spec().spec(cit->first);
                     if (spec == nullptr) {
-                        _compose_errmsg(errmsg, "spec for Arg by long arg ", spec->name().c_str(), " cmd is not found", nullptr);
+                        _compose_errmsg(errmsg, "spec for Arg by long arg ", "null-spec", " cmd is not found", nullptr);
                         return ::pilo::mk_perr(PERR_INVALID_PARAM);;
                     }
                     if (spec->short_name() < 0) {                    
@@ -460,7 +460,7 @@ namespace pilo
                 }
 
                 if (spec->short_name() >= 0) {
-                    this->_short_args[spec->short_name()] = tlvp;
+                    this->_short_args[(int)spec->short_name()] = tlvp;
                 }
                 if (!spec->long_name().empty()) {
                     this->_long_args.insert(std::pair<std::string, ::pilo::tlv*>(spec->long_name(), tlvp));

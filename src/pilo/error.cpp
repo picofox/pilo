@@ -164,13 +164,12 @@ namespace pilo
         ::pilo::i64_t remain_capa = sizeof(buf) - elen;
 
         va_list args;
-        int ret;
 
         va_start(args, fmt);
 #               if defined(WINDOWS)
-        ret = _vsnprintf_s(buf + elen, remain_capa, _TRUNCATE, fmt, args);
+        _vsnprintf_s(buf + elen, remain_capa, _TRUNCATE, fmt, args);
 #               else
-        ret = vsnprintf(buf, len, fmt, args);
+        vsnprintf(buf+elen, remain_capa, fmt, args);
 #               endif	
         va_end(args);
         errmsg = buf;

@@ -12,7 +12,7 @@ namespace pilo
 
             ::pilo::u8_t wired_type::s_char_to_key_type(char ch)
             {
-                for (int i = 0; i < sizeof(s_key_type_chars); i++) {
+                for (size_t i = 0; i < sizeof(s_key_type_chars); i++) {
                     if (s_key_type_chars[i] == ch)
                         return (::pilo::u8_t) i;
                 }
@@ -21,7 +21,7 @@ namespace pilo
 
             ::pilo::u16_t wired_type::s_char_to_value_type(char ch)
             {
-                for (int i = 0; i < sizeof(s_value_type_intrin_chars); i++) {
+                for (size_t i = 0; i < sizeof(s_value_type_intrin_chars); i++) {
                     if (s_value_type_intrin_chars[i] == ch)
                         return (::pilo::u16_t) i;
                 }

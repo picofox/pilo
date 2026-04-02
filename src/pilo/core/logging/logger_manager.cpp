@@ -25,7 +25,7 @@ namespace pilo {
                     return ::pilo::mk_perr(PERR_NON_EXIST);
 
                 ::pilo::i32_t id = 0;
-                for (::pilo::i32_t i = 0; i < lgs.size(); i++) {
+                for (size_t i = 0; i < lgs.size(); i++) {
                     const ::pilo::core::config::logger& lg = lgs.at(i);
                     ::pilo::err_t err = create_logger(id, lg, true);
                     if (err != PILO_OK) {

@@ -74,15 +74,15 @@ std::string pilo::core::config::xls_config::to_string() const
 	std::stringstream ss;
 	ss << '\t' << _ns << '.' << _cls_name << ' ' << '(' << _config_file_name << ')' << std::endl;
 	ss << '\t' << "UI:" << std::endl;
-	for (auto i = 0; i < _union_indices.size(); i++) {
+	for (size_t i = 0; i < _union_indices.size(); i++) {
 		ss << "\t\t";
-		for (auto j = 0; j < _union_indices[i].size(); j++) {
+		for (size_t j = 0; j < _union_indices[i].size(); j++) {
 			ss << _union_indices[i][j] << ',';
 		}
 		ss << std::endl;
 	}
 	ss << '\t' << "Fields:" << std::endl;
-	for (auto i = 0; i < _fields.size(); i++) {
+	for (size_t i = 0; i < _fields.size(); i++) {
 		ss << "\t\t" << _fields[i].to_string() << std::endl;
 	}
 	ss << std::endl;
@@ -317,7 +317,7 @@ void pilo::core::config::xls_config_set::reset()
 std::string pilo::core::config::xls_config_set::to_string() const
 {
 	std::stringstream ss;
-	ss << _name << '(' << _sheet_name << ') ' << std::endl;
+	ss << _name << '(' << _sheet_name << ") " << std::endl;
 	ss << "Server:" << std::endl;
 	ss << _configs[xls_config_set::server].to_string();
 	ss << "Client:" << std::endl;
@@ -334,13 +334,12 @@ void pilo::core::config::xls_config_set::_compose_errmsg(std::string& errmsg, ::
 	::pilo::i64_t remain_capa = sizeof(buf) - elen;
 
 	va_list args;
-	int ret;
 
 	va_start(args, fmt);
 #               if defined(WINDOWS)
-	ret = _vsnprintf_s(buf + elen, remain_capa, _TRUNCATE, fmt, args);
+	_vsnprintf_s(buf + elen, remain_capa, _TRUNCATE, fmt, args);
 #               else
-	ret = vsnprintf(buf, len, fmt, args);
+	vsnprintf(buf + elen, remain_capa, fmt, args);
 #               endif	
 	va_end(args);
 	errmsg = buf;

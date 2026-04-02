@@ -83,7 +83,7 @@ namespace pilo
             void performance_thread_pool::set_running_handler(pool_callback_func_type hdl)
             {
                 this->_on_running_handler = hdl;
-                for (::pilo::i32_t i = 0; i < this->_workers.size(); i++) {
+                for (::pilo::i32_t i = 0; i < (int)  this->_workers.size(); i++) {
                     this->_workers[i]->set_running_handler(hdl);
                 }
             }

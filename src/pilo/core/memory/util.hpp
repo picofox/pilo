@@ -599,7 +599,8 @@ namespace pilo
                         {
                             return ::pilo::mk_perr( PERR_INSUF_HEAP);
                         }
-                        memcpy(ptr, _ptr, _capacity * sizeof(value_type));
+
+                        memcpy(ptr, _ptr, _capacity *  sizeof(value_type));
                         if (_ptr != nullptr && _is_dynamic)
                         {
                             PMF_HEAP_FREE(_ptr);

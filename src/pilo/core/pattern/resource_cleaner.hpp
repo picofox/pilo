@@ -90,7 +90,7 @@ namespace pilo
                         return ::pilo::mk_perr(PERR_NULL_PARAM);
                     }
 
-                    if (_size >= _items.max_size())
+                    if (_size >= (::pilo::i32_t)  _items.max_size())
                     {
                         return ::pilo::mk_perr( PERR_VAL_TOO_LARGE);
                     }

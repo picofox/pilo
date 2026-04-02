@@ -529,7 +529,7 @@ namespace pilo
                     ::pilo::f64_t scale = 1;
 
                     // The next character must be [0-9.]
-                    if (!(cstr[0] == '.' || '0' <= cstr[0] && cstr[0] <= '9')) {
+                    if (!(cstr[0] == '.' || ('0' <= cstr[0] && cstr[0] <= '9'))) {
                         return -1;
                     }
                     // Consume [0-9]*
@@ -568,7 +568,7 @@ namespace pilo
                     len = ::pilo::core::string::character_count(cstr);
                     for (; i < len; i++) {
                         char c = cstr[i];
-                        if ((c == '.') || '0' <= c && c <= '9') {
+                        if ((c == '.') || ('0' <= c && c <= '9')) {
                             break;
                         }
                     }

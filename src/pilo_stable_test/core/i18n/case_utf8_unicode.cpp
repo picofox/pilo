@@ -39,7 +39,7 @@ namespace pilo
 					wchar_t wb[1] = { 0 };
 					::pilo::wchar_buffer_t wbuf(wb, 1, 0, false);
 					::pilo::err_t err = PILO_OK;
-					for (int i = 0; i < PMF_COUNT_OF(s_test_strs); i++)
+					for (size_t i = 0; i < PMF_COUNT_OF(s_test_strs); i++)
 					{
 						if (s_test_strs[i] == nullptr)
 							return PILO_OK;

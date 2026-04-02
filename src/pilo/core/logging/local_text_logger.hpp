@@ -335,7 +335,6 @@ namespace pilo {
                         return PILO_OK;
                     }
                     _m_filename.clear();
-                    std::tm lt = { 0 };
                     _m_filename = this->_m_config.name();
                     char buffer[16] = { 0 };
                     if (_m_config.name_suffix().test_value(::pilo::core::logging::Pid)) {

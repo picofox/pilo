@@ -1417,8 +1417,11 @@ namespace pilo {
                 return PILO_OK;
             }
 
-            ::pilo::err_t path::touch_file(const char *filepath, ::pilo::pathlen_t path_len, bool delete_exist) {
-                const char *p = filepath;
+            ::pilo::err_t path::touch_file(const char *filepath, ::pilo::pathlen_t path_len, bool delete_exist) 
+	    {
+
+#ifdef WINDOWS
+		const char *p = filepath;
                 ::pilo::core::memory::object_array<char, SP_PMI_PATH_DEFAULT_LENGTH> src;
                 if (path_len != path::unknow_length) {
                     src.check_space(path_len + 1);
@@ -1426,7 +1429,6 @@ namespace pilo {
                     p = src.begin();
                 }
 
-#ifdef WINDOWS
                 wchar_t wb[SP_PMI_PATH_DEFAULT_LENGTH] = { 0 };
                 ::pilo::wchar_buffer_t buffer(wb, SP_PMI_PATH_DEFAULT_LENGTH, 0, false);
                 ::pilo::err_t err = ::pilo::core::i18n::utf8_to_os_unicode(buffer, filepath, path_len);
@@ -1577,7 +1579,7 @@ namespace pilo {
                     return path::remove_dir(pth, path_len);
                 } else if (fs_node_type == path::fs_node_type_file) {
                     return path::remove_file(pth, path_len);
-                } else if (fs_node_type == path::fs_node_type_lnk) {//could be very danger, inf loop
+                } else if (fs_node_type == path::fs_node_type_lnk && can_follow) {//could be very danger, inf loop
                     return remove_fs_node_follow_link(path::fs_node_type_lnk, target_path.begin(),
                                                       (::pilo::pathlen_t) target_path.size());
                 } else {

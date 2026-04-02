@@ -77,7 +77,7 @@ namespace pilo {
                     }
                 }
 
-                for (int i = 0; i < _vars_to_unset.size(); i++) {
+                for (size_t i = 0; i < _vars_to_unset.size(); i++) {
                     ::pilo::core::io::string_formated_output(cb.ptr(), cb.space_available(), ".to_unset.[]");
                     PILO_CHKERR_RET(err, configuator_driver->set_value(cb.begin(), _vars_to_unset.at(i), true));
                 }

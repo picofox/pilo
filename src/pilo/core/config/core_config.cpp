@@ -87,7 +87,7 @@ namespace pilo {
                 if (_loggers.empty())
                     return true;
 
-                for (int i = 0; i < _loggers.size(); i++) {
+                for (size_t i = 0; i < _loggers.size(); i++) {
                     if (_loggers[i].invalid())
                         return true;
                 }
@@ -181,7 +181,7 @@ namespace pilo {
                 PILO_CHKERR_RET(err, driver->set_value("cwd", _cwd.c_str(), (::pilo::i32_t) _cwd.size(), false, true, true));
                 char buffer[128] = { 0 };                
 
-                for (int i = 0; i < _loggers.size(); i++) {
+                for (size_t i = 0; i < _loggers.size(); i++) {
                     ::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "loggers.[%d].", i);
                     _loggers[i].save_to_configurator(buffer, driver);
                 }

@@ -119,10 +119,10 @@ namespace pilo {
                 ::pilo::err_t add_spec(cmdline_spec* spec)
                 {
                     if (spec->short_name() >= 0) {
-                        if (_short_specs[spec->short_name()] != nullptr) {
+                        if (_short_specs[(int)spec->short_name()] != nullptr) {
                             return ::pilo::mk_perr(PERR_EXIST);
                         }
-                        _short_specs[spec->short_name()] = spec;
+                        _short_specs[(int)spec->short_name()] = spec;
                     }               
 
                     if (!spec->long_name().empty()) {
@@ -160,7 +160,7 @@ namespace pilo {
 
 
                 bool has_arg() const;
-                const cmdline_spec* spec(char c) const { return _short_specs[c]; }
+                const cmdline_spec* spec(char c) const { return _short_specs[(int)c]; }
                 const cmdline_spec* spec(const std::string& l) const 
                 { 
                     std::map<std::string, cmdline_spec*>::const_iterator it = _long_specs.find(l);

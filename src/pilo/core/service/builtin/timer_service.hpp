@@ -22,9 +22,9 @@ namespace pilo
 				public:
 					timer_service(::pilo::core::service::service_group_interface* grp)
 						: abstract_fixed_interval_service(grp, 0)
+						, _last_sec_timer_ts(0)
 						, _time_wheel_sec(1000)
 						, _time_wheel_millisec(10) 
-						, _last_sec_timer_ts(0)
 					{
 						
 					}
