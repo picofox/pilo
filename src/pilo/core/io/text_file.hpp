@@ -207,6 +207,7 @@ namespace pilo
                     ::pilo::core::memory::object_array<char, 4096> buffer;
                     ::pilo::i32_t i = 0;
                     ::pilo::i64_t ret = 0;
+                    ::pilo::err_t err = PILO_OK;
                     bool done = false;
                     while (i < 16) {
                         ret = _vsnprintf_s(buffer.begin(), buffer.capacity() - this->_m_write_sep_len, _TRUNCATE, fmt, args);
