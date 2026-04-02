@@ -17,7 +17,8 @@ namespace pilo {
             class json_tlv_driver : public tlv_driver_interface
             {
             public:
-                json_tlv_driver() : _m_root_value(nullptr) {}
+                json_tlv_driver() : _m_root_value(nullptr), _owner(true) {}
+                json_tlv_driver(::pilo::tlv* root_ref) : _m_root_value(root_ref), _owner(false) {}
                 virtual ~json_tlv_driver();
 
 
@@ -94,6 +95,7 @@ namespace pilo {
             protected:
 
                 ::pilo::tlv* _m_root_value;
+                bool _owner;
 
             private:
             PMC_DISABLE_COPY(json_tlv_driver)

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "./wired_type_tlv_conversion.hpp"
 #include "./wired_type_i8_conversion.hpp"

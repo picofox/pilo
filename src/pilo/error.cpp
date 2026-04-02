@@ -157,4 +157,23 @@ namespace pilo
         return std::string(buffer);
     }
 
+    void compose_errmsg(std::string& errmsg, const char* fmt, ...)
+    {
+        char buf[512] = { 0 };
+        ::pilo::i64_t elen = ::pilo::core::io::string_formated_output(buf, sizeof(buf), "err_info: ");
+        ::pilo::i64_t remain_capa = sizeof(buf) - elen;
+
+        va_list args;
+        int ret;
+
+        va_start(args, fmt);
+#               if defined(WINDOWS)
+        ret = _vsnprintf_s(buf + elen, remain_capa, _TRUNCATE, fmt, args);
+#               else
+        ret = vsnprintf(buf, len, fmt, args);
+#               endif	
+        va_end(args);
+        errmsg = buf;
+    }
+
 }

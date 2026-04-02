@@ -161,6 +161,7 @@ typedef unsigned __int64 uint64_t;
 #   define  PMS_OS_UNICODE_NAME PMS_CODE_PAGE_WINDOWS_UNICODE_NAME
 #	define	PMS_OS_TYPE_NAME		"windows"
 #	define  PMS_PFD_ATOMIC_API_H	"atomic_capi_msvc.hpp"
+#	define  NOMINMAX
 
 #elif __linux__
 #	define	PMI_OS_TYPE	PMI_OS_LINUX

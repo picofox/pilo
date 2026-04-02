@@ -540,10 +540,19 @@ namespace pilo
 				return dst_buffer;
 			}
 
-            ::pilo::i64_t iteratable_split(const wchar_t* src, ::pilo::i64_t srclen, const wchar_t* delim, ::pilo::i64_t delimlen, spliction_iterator_functype_w iter, void* ctx, bool filter_empty, bool whole_when_no_delim_found, bool trim, bool trim_part)
+            ::pilo::i64_t iteratable_split(const wchar_t* src, ::pilo::i64_t srclen
+                , const wchar_t* delim, ::pilo::i64_t delimlen
+                , spliction_iterator_functype_w iter, void* ctx, bool filter_empty
+                , bool whole_when_no_delim_found, bool trim, bool trim_part
+                , ::pilo::err_t* retp)
             {
-                if (src == nullptr || *src == 0)
+                ::pilo::set_if_ptr_is_not_null(retp, PILO_OK);
+
+                if (src == nullptr || *src == 0) {
+                    ::pilo::set_if_ptr_is_not_null(retp, ::pilo::mk_perr(PERR_NULL_PARAM));
                     return -1;
+                }
+                    
                 if (srclen == -1)
                     srclen = ::pilo::core::string::character_count(src);
                 if (delimlen == -1)
@@ -582,8 +591,10 @@ namespace pilo
                             }
 
                             err = iter(src, pstr, src_rlen, ctx);
-                            if (err != PILO_OK)
+                            if (err != PILO_OK) {
+                                ::pilo::set_if_ptr_is_not_null(retp, err);
                                 return ret_count;
+                            }
                             if (src_rlen <= 0 && filter_empty)
                                 return ret_count;
                             ret_count++;
@@ -594,7 +605,11 @@ namespace pilo
                     {
                         if (!filter_empty)
                         {
-                            iter(src, pstr, ret_ptr - pstr, ctx);
+                            err = iter(src, pstr, ret_ptr - pstr, ctx);
+                            if (err != PILO_OK) {
+                                ::pilo::set_if_ptr_is_not_null(retp, err);
+                                return ret_count;
+                            }
                             ret_count++;
                         }
                         ret_ptr++;
@@ -623,8 +638,11 @@ namespace pilo
                             src_rlen -= tmppartlen;
                         }
                         err = iter(src, pstr, ret_ptr - pstr, ctx);
-                        if (err != PILO_OK || pstr == nullptr)
-                            return ret_count;
+                        if (err != PILO_OK || pstr == nullptr) {
+                            ::pilo::set_if_ptr_is_not_null(retp, err);
+                            return ret_count;                            
+                        }
+
                         src_rlen -= (ret_ptr - pstr);
                         if (src_rlen <= 0 || !filter_empty) {
                             ret_count++;
@@ -645,11 +663,18 @@ namespace pilo
                 return ret_count;
             }
 
-            ::pilo::i64_t iteratable_split(const char* src, ::pilo::i64_t srclen, const char* delim, ::pilo::i64_t delimlen, spliction_iterator_functype_a iter, void* ctx, bool filter_empty, bool whole_when_no_delim_found, bool trim, bool trim_part)
+            ::pilo::i64_t iteratable_split(const char* src, ::pilo::i64_t srclen, const char* delim, ::pilo::i64_t delimlen
+                , spliction_iterator_functype_a iter, void* ctx, bool filter_empty
+                , bool whole_when_no_delim_found, bool trim, bool trim_part
+                , ::pilo::err_t* retp)
 
             {
-                if (src == nullptr || *src == 0)
+                ::pilo::set_if_ptr_is_not_null(retp, PILO_OK);
+
+                if (src == nullptr || *src == 0) {
+                    ::pilo::set_if_ptr_is_not_null(retp, ::pilo::mk_perr(PERR_NULL_PARAM));
                     return -1;
+                }
                 if (srclen == -1)
                     srclen = ::pilo::core::string::character_count(src);
                 if (delimlen == -1)
@@ -688,8 +713,11 @@ namespace pilo
                             }
 
                             err = iter(src, pstr, src_rlen, ctx);
-                            if (err != PILO_OK)
+                            if (err != PILO_OK) {
+                                ::pilo::set_if_ptr_is_not_null(retp, err);
                                 return ret_count;
+                            }
+                                
                             if (src_rlen <= 0 && filter_empty)
                                 return ret_count;
                             ret_count++;
@@ -701,6 +729,10 @@ namespace pilo
                         if (!filter_empty)
                         {
                             iter(src,pstr, ret_ptr - pstr, ctx);
+                            if (err != PILO_OK) {
+                                ::pilo::set_if_ptr_is_not_null(retp, err);
+                                return ret_count;
+                            }
                             ret_count++;
                         }
                         ret_ptr++;
@@ -729,8 +761,11 @@ namespace pilo
                             src_rlen -= tmppartlen;
                         }
                         err = iter(src, pstr, ret_ptr - pstr, ctx);
-                        if (err != PILO_OK || pstr == nullptr)
-                            return ret_count;
+                        if (err != PILO_OK || pstr == nullptr) {
+                            ::pilo::set_if_ptr_is_not_null(retp, err);
+                            return ret_count;                            
+                        }
+
                         src_rlen -= (ret_ptr - pstr);
                         if (src_rlen <= 0 || !filter_empty) {
                             ret_count++;
@@ -796,6 +831,14 @@ namespace pilo
                 for (auto i = 0; i < str.length(); i++) {
                     if (std::isupper(str[i]))
                         str[i] = (char) std::tolower(str[i]);
+                }
+            }
+
+            void to_upper_case_inplace(std::string& str)
+            {
+                for (auto i = 0; i < str.length(); i++) {
+                    if (std::islower(str[i]))
+                        str[i] = (char)std::toupper(str[i]);
                 }
             }
 
@@ -1315,6 +1358,48 @@ namespace pilo
                 return (::pilo::u64_t)ret;
             }
 
-}
+
+            void trim_string(std::string& str)
+            {
+                size_t size = str.size();
+                if (size == 0)
+                    return;
+
+                const char* data = str.data();
+                size_t first = 0;
+                while (first < size) {
+                    if (data[first] == ' ' || data[first] == '\t')
+                        first++;
+                    else
+                        break;
+                }
+
+                if (first == size) {
+                    str = "";
+                    return;
+                }
+
+                size_t last = size - 1;
+                while (last > first) {
+                    if (data[last] == ' ' || data[last] == '\t')
+                        last--;
+                    else
+                        break;
+                }
+
+                if (first == 0 && last == size - 1)
+                    return;
+
+                str = str.substr(first, last - first + 1);
+            }
+
+            void append_char_to_stringstream(std::stringstream& ss, char ch, ::pilo::i32_t cnt)
+            {
+                for (auto i = 0; i < cnt; i++) {
+                    ss << ch;
+                }
+            }
+
+        }
     }
 }

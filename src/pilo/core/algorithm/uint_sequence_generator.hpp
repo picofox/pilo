@@ -33,7 +33,7 @@ namespace pilo
             class uint_sequence_generator
             {
             public:
-                uint_sequence_generator(T cur = 0, T max_value = std::numeric_limits<T>::max)
+                uint_sequence_generator(T cur = 0, T max_value = std::numeric_limits<T>::max() )
                     : _current(cur), _max_value(max_value) {}
 
                 T next()
@@ -61,7 +61,7 @@ namespace pilo
                 T next()
                 {
                     T v = _current.fetch_add(step);
-                    if (v >= ((((std::numeric_limits<T>::max)() - init) / step * step)) + 1 ) {
+                    if (v >= (     (std::numeric_limits<T>::max() - init) / step * step    ) + 1 ) {
                         _current = init;
                     }
 

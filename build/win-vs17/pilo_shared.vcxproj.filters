@@ -19,6 +19,9 @@
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\thread_pool_config.cpp">
       <Filter>pilo\core\config</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\config\xls_config.cpp">
+      <Filter>pilo\core\config</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\crypto\base64_codec.cpp">
       <Filter>pilo\core\crypto</Filter>
     </ClCompile>
@@ -27,6 +30,9 @@
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\zoned_clock.cpp">
       <Filter>pilo\core\datetime</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\dp\xls_spread_sheet.cpp">
+      <Filter>pilo\core\dp</Filter>
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\i18n\encoding_conversion.cpp">
       <Filter>pilo\core\i18n</Filter>
@@ -72,6 +78,21 @@
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\process\process.cpp">
       <Filter>pilo\core\process</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\meta_function.cpp">
+      <Filter>pilo\core\rtti</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\meta_ns.cpp">
+      <Filter>pilo\core\rtti</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\meta_src_node.cpp">
+      <Filter>pilo\core\rtti</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\meta_srcfile.cpp">
+      <Filter>pilo\core\rtti</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\meta_variable.cpp">
+      <Filter>pilo\core\rtti</Filter>
     </ClCompile>
     <ClCompile Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type.cpp">
       <Filter>pilo\core\rtti</Filter>
@@ -354,6 +375,9 @@
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\thread_pool_config.hpp">
       <Filter>pilo\core\config</Filter>
     </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\config\xls_config.hpp">
+      <Filter>pilo\core\config</Filter>
+    </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\container\auto_array.hpp">
       <Filter>pilo\core\container</Filter>
     </ClInclude>
@@ -389,6 +413,9 @@
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\datetime\zoned_clock.hpp">
       <Filter>pilo\core\datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\dp\xls_spread_sheet.hpp">
+      <Filter>pilo\core\dp</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\i18n\encoding_conversion.hpp">
       <Filter>pilo\core\i18n</Filter>
@@ -539,6 +566,21 @@
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\process\shared_file_lock_guard.hpp">
       <Filter>pilo\core\process</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\meta_function.hpp">
+      <Filter>pilo\core\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\meta_ns.hpp">
+      <Filter>pilo\core\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\meta_src_node.hpp">
+      <Filter>pilo\core\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\meta_srcfile.hpp">
+      <Filter>pilo\core\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\meta_variable.hpp">
+      <Filter>pilo\core\rtti</Filter>
     </ClInclude>
     <ClInclude Include="D:\projects\git_repo\libpilo\src\pilo\core\rtti\wired_type.hpp">
       <Filter>pilo\core\rtti</Filter>
@@ -1099,6 +1141,9 @@
     </Filter>
     <Filter Include="pilo\core\datetime">
       <UniqueIdentifier>{240134CA-41E2-34BE-B09E-27AFA6FD12A5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pilo\core\dp">
+      <UniqueIdentifier>{5CAA6C3B-EAC1-3BBE-9D85-A6C9FE865E51}</UniqueIdentifier>
     </Filter>
     <Filter Include="pilo\core\i18n">
       <UniqueIdentifier>{D20FA0B9-FF6B-33FE-B0FA-42A6E2E04436}</UniqueIdentifier>

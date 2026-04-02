@@ -1,4 +1,4 @@
-#include "wired_type.hpp"
+﻿#include "wired_type.hpp"
 #include "../string/string_operation.hpp"
 
 namespace pilo

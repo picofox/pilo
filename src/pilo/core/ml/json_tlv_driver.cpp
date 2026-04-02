@@ -10,7 +10,7 @@ namespace pilo {
         namespace ml {
             json_tlv_driver::~json_tlv_driver()
             {
-                if (_m_root_value != nullptr) {
+                if (_m_root_value != nullptr && _owner) {
                     ::pilo::tlv::deallocate(_m_root_value);
                     _m_root_value = nullptr;
                 }

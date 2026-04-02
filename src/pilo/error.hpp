@@ -194,6 +194,9 @@ namespace pilo
     const char* cstr_err_verbose(err_t err, char* buffer, ::pilo::i64_t buffer_capacity, const char* prefix);
     const char* cstr_err(err_t err, char* buffer, ::pilo::i64_t buffer_capacity, const char* prefix = nullptr, bool verbose = false);
     std::string str_err(err_t err, const char* prefix = nullptr, bool verbose = false);
+
+
+    void compose_errmsg(std::string& errmsg,  const char* fmt, ...);
 }
 
 #endif //__pilo_error_hpp_

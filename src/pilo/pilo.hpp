@@ -85,6 +85,8 @@
 #define PMB_DEBUG_MPOOL_SHOW_FULLLIST_DETAIL  (0x3)
 #define PMB_DEBUG_MPOOL_SHOW_UNIT_IMAGE		  (0x4)
 
+#define PMS_LINESEP_WIN_A                       "\r\n"
+#define PMS_LINESEP_UNIX_A                      "\n"
 
 
 #if defined(WINDOWS)
@@ -483,6 +485,51 @@ namespace pilo
         if (ptr != nullptr)
             *ptr = value;
     }
+
+    template<::pilo::i32_t capa, typename VT, typename IT, typename C = ::pilo::default_comparator<VT, ::pilo::default_less_than_comparator<VT>> >
+    class id_value_mapper
+    {
+    public:
+        typedef VT	value_type;
+        typedef IT	id_type;
+        typedef C   comparator_type;
+
+    public:
+        id_value_mapper(std::initializer_list<value_type> l)
+        {
+            id_type idx = 0;
+            for (auto s : l) {
+                _values[idx++] = s;
+            }
+            _size = idx;
+        }
+
+        const value_type& get_value(id_type id) const
+        {
+            return _values[id];
+        }
+
+        ::pilo::err_t find_id(id_type* id, value_type v) const
+        {
+            for (auto i = 0; i < _size; i++) {
+                int result = _cmp(_values[i], v);
+                if (result == 0) {
+                    if (id != nullptr) *
+                        id = i;
+                    return i;
+                }
+            }
+            return ::pilo::mk_perr(PERR_NON_EXIST);
+        }
+
+
+    private:
+        value_type	_values[capa];
+        id_type		_size;
+        comparator_type		_cmp;
+    };
+
+
 }
 
 

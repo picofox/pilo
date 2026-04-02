@@ -1,4 +1,4 @@
-#ifndef _pilo_core_sched_cron_resolving_hpp_
+﻿#ifndef _pilo_core_sched_cron_resolving_hpp_
 #define _pilo_core_sched_cron_resolving_hpp_
 
 #include <vector>
@@ -392,6 +392,8 @@ namespace pilo
                         first = to_cron_int(field);
                         last = first;
                     }
+
+
                     else
                     {
                         auto parts = utils::split(field, '-');

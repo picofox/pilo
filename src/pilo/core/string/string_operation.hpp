@@ -1591,6 +1591,7 @@ namespace pilo
                 , bool filter_empty
                 , bool whole_when_no_delim_found
                 , bool trim, bool trim_part
+                , ::pilo::err_t* retp = nullptr
 
             );
 
@@ -1600,6 +1601,7 @@ namespace pilo
                 , bool filter_empty
                 , bool whole_when_no_delim_found
                 , bool trim, bool trim_part
+                , ::pilo::err_t* retp = nullptr
 
             );
 
@@ -1607,7 +1609,22 @@ namespace pilo
 
 
 
+            template<typename CHAR_T>
+            std::string merge_cstr_ref(::pilo::cstr_ref<CHAR_T>* parts, ::pilo::i64_t nparts, const CHAR_T* delim, ::pilo::i64_t delimlen)
+            {
+                std::stringstream ss;
+                std::string part;
 
+                for (auto i = 0; i < nparts; i++) {
+                    if (i != 0) {
+                        part.assign(delim, delimlen);
+                        ss << part;
+                    }
+                    part.assign(parts[i].ptr, parts[i].length);
+                    ss << part;
+                }
+                return ss.str();
+            }
 
 
 
@@ -1721,8 +1738,15 @@ namespace pilo
                         }
 
                         src_rlen--;
-                        if (src_rlen == 0)
+                        if (src_rlen == 0) {
+                            if (*pstr == 0 && !filter_empty && ret_count < max_parts) {
+                                ret_parts[ret_count].init(pstr, (::pilo::i64_t) 0);
+                                return ret_count + 1;
+                            }
                             return ret_count;
+                        }
+
+                            
                     }                    
                 }               
 
@@ -2194,6 +2218,29 @@ namespace pilo
             ::pilo::i64_t split(std::string* ret_arr, ::pilo::i64_t capa, const std::string& src, char delim, bool trim);
             std::vector<std::string> split(const std::string& src, char delim, bool trim);
             void to_lower_case_inplace(std::string& str);
+            void to_upper_case_inplace(std::string& str);
+            void trim_string(std::string& str);
+
+            class cstring_strict_comparator
+            {
+            public:
+                bool operator () (const char* a, const char* b) const
+                {
+                    return ::pilo::core::string::strict_compare(a, 0, b, 0, -1) < 0;
+                }
+            };
+
+            class cstring_icase_comparator
+            {
+            public:
+                bool operator () (const char* a, const char* b) const
+                {
+                    return ::pilo::core::string::i_compare(a, 0, b, 0, -1) < 0;
+                }
+            };
+
+
+            void append_char_to_stringstream(std::stringstream& ss, char ch, ::pilo::i32_t cnt);
         }
     }
 }
