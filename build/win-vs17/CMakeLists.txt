@@ -112,9 +112,11 @@ source_group_by_dir(PILO_LIBHS)
 
 add_library(pilo_static STATIC ${PILO_LIBCPPS} ${PILO_LIBHPPS} ${PILO_LIBHS})
 SET_TARGET_PROPERTIES(pilo_static PROPERTIES OUTPUT_NAME "libpilo-static")
+target_compile_features(pilo_static PRIVATE cxx_std_17)
 
 add_library(pilo_shared SHARED ${PILO_LIBCPPS} ${PILO_LIBHPPS} ${PILO_LIBHS})
 SET_TARGET_PROPERTIES(pilo_shared PROPERTIES OUTPUT_NAME "libpilo-shared")
+target_compile_features(pilo_shared PRIVATE cxx_std_17)
 
 target_include_directories(pilo_static PUBLIC "${PILO_LIBSRC_DIR}/external/mysqlclient/8.0.19/include" "${PILO_LIBSRC_DIR}" "${PILO_LIBSRC_DIR}/external/OpenXLSX" "${PILO_LIBSRC_DIR}/external/OpenXLSX/external/pugixml" "${PILO_LIBSRC_DIR}/external/OpenXLSX/headers" "${PILO_LIBSRC_DIR}/external/OpenXLSX/external/zippy")
 target_include_directories(pilo_shared PUBLIC "${PILO_LIBSRC_DIR}/external/mysqlclient/8.0.19/include" "${PILO_LIBSRC_DIR}" "${PILO_LIBSRC_DIR}/external/OpenXLSX" "${PILO_LIBSRC_DIR}/external/OpenXLSX/external/pugixml" "${PILO_LIBSRC_DIR}/external/OpenXLSX/headers" "${PILO_LIBSRC_DIR}/external/OpenXLSX/external/zippy")
@@ -160,6 +162,7 @@ file(GLOB_RECURSE PILOFUNC_TEST_HS ${PILO_FUNCTEST_DIR}/*.h)
 
 #static func-test
 add_executable(pilo_func_test-static ${PILOFUNC_TEST_CPPS} ${PILOFUNC_TEST_PPS} ${PILOFUNC_TEST_HS})
+target_compile_features(pilo_func_test-static PRIVATE cxx_std_17)
 set_target_properties(pilo_func_test-static PROPERTIES OUTPUT_NAME "pilo_func_test-static")
 set_target_properties(pilo_func_test-static PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
 set_target_properties(pilo_func_test-static PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
@@ -178,11 +181,13 @@ target_link_directories(pilo_func_test-static PUBLIC ${PILO_OUTPUT_LIB_DIR})
 
 #dynamic func-test
 add_executable(pilo_func_test-shared ${PILOFUNC_TEST_CPPS} ${PILOFUNC_TEST_PPS} ${PILOFUNC_TEST_HS})
+target_compile_features(pilo_func_test-shared PRIVATE cxx_std_17)
 set_target_properties(pilo_func_test-shared PROPERTIES OUTPUT_NAME "pilo_func_test-shared")
 set_target_properties(pilo_func_test-shared PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
 set_target_properties(pilo_func_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
 set_target_properties(pilo_func_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PILO_OUTPUT_DIR}/bin)
 set_target_properties(pilo_func_test-shared PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)..\\..\\output\\win-vs17\\pilo")
+set_target_properties(pilo_func_test-shared PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=$(ProjectDir)..\\..\\output\\win-vs17\\pilo\\lib;%PATH%")
 set_target_properties(pilo_func_test-shared PROPERTIES DEPENDS pilo_shared)
 source_group_by_dir(PILOFUNC_TEST_CPPS)
 source_group_by_dir(PILOFUNC_TEST_PPS)
@@ -192,6 +197,7 @@ target_link_libraries(pilo_func_test-shared PUBLIC debug "libpilo-shared-debug" 
 target_link_libraries(pilo_func_test-shared PUBLIC "ws2_32.lib")
 target_link_directories(pilo_func_test-shared PUBLIC ${PILO_OUTPUT_LIB_DIR})
 
+
 #stable test
 set(PILO_STABLETEST_DIR "${PILO_PROJECT_DIR}/src/pilo_stable_test")
 file(GLOB_RECURSE PILOSTABLE_TEST_CPPS ${PILO_STABLETEST_DIR}/*.cpp)
@@ -199,6 +205,7 @@ file(GLOB_RECURSE PILOSTABLE_TEST_PPS ${PILO_STABLETEST_DIR}/*.hpp)
 file(GLOB_RECURSE PILOSTABLE_TEST_HS ${PILO_STABLETEST_DIR}/*.h)
 #static stable-test
 add_executable(pilo_stable_test-static ${PILOSTABLE_TEST_CPPS} ${PILOSTABLE_TEST_PPS} ${PILOSTABLE_TEST_HS})
+target_compile_features(pilo_stable_test-static PRIVATE cxx_std_17)
 set_target_properties(pilo_stable_test-static PROPERTIES OUTPUT_NAME "pilo_stable_test-static")
 set_target_properties(pilo_stable_test-static PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
 set_target_properties(pilo_stable_test-static PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
@@ -215,12 +222,14 @@ target_link_directories(pilo_stable_test-static PUBLIC ${PILO_OUTPUT_LIB_DIR})
 
 #dynamic stable-test
 add_executable(pilo_stable_test-shared ${PILOSTABLE_TEST_CPPS} ${PILOSTABLE_TEST_PPS} ${PILOSTABLE_TEST_HS})
+target_compile_features(pilo_stable_test-shared PRIVATE cxx_std_17)
 set_target_properties(pilo_stable_test-shared PROPERTIES OUTPUT_NAME "pilo_stable_test-shared")
 set_target_properties(pilo_stable_test-shared PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
 set_target_properties(pilo_stable_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
 set_target_properties(pilo_stable_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PILO_OUTPUT_DIR}/bin)
 set_target_properties(pilo_stable_test-shared PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)..\\..\\output\\win-vs17\\pilo")
 set_target_properties(pilo_stable_test-shared PROPERTIES DEPENDS pilo_shared)
+set_target_properties(pilo_stable_test-shared PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=$(ProjectDir)..\\..\\output\\win-vs17\\pilo\\lib;%PATH%")
 source_group_by_dir(PILOSTABLE_TEST_CPPS)
 source_group_by_dir(PILOSTABLE_TEST_PPS)
 source_group_by_dir(PILOSTABLE_TEST_HS)
@@ -239,6 +248,7 @@ file(GLOB_RECURSE PILOPERFORMANCE_TEST_PPS ${PILO_PERFORMANCETEST_DIR}/*.hpp)
 file(GLOB_RECURSE PILOPERFORMANCE_TEST_HS ${PILO_PERFORMANCETEST_DIR}/*.h)
 #static performance-test
 add_executable(pilo_performance_test-static ${PILOPERFORMANCE_TEST_CPPS} ${PILOPERFORMANCE_TEST_PPS} ${PILOPERFORMANCE_TEST_HS})
+target_compile_features(pilo_performance_test-static PRIVATE cxx_std_17)
 set_target_properties(pilo_performance_test-static PROPERTIES OUTPUT_NAME "pilo_performance_test-static")
 set_target_properties(pilo_performance_test-static PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
 set_target_properties(pilo_performance_test-static PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
@@ -255,12 +265,14 @@ target_link_directories(pilo_performance_test-static PUBLIC ${PILO_OUTPUT_LIB_DI
 
 #dynamic performance-test
 add_executable(pilo_performance_test-shared ${PILOPERFORMANCE_TEST_CPPS} ${PILOPERFORMANCE_TEST_PPS} ${PILOPERFORMANCE_TEST_HS})
+target_compile_features(pilo_performance_test-shared PRIVATE cxx_std_17)
 set_target_properties(pilo_performance_test-shared PROPERTIES OUTPUT_NAME "pilo_performance_test-shared")
 set_target_properties(pilo_performance_test-shared PROPERTIES DEBUG_POSTFIX "-debug" RELEASE_POSTFIX "-release")
 set_target_properties(pilo_performance_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PILO_OUTPUT_DIR}/bin)
 set_target_properties(pilo_performance_test-shared PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PILO_OUTPUT_DIR}/bin)
 set_target_properties(pilo_performance_test-shared PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$(ProjectDir)..\\..\\output\\win-vs17\\pilo")
 set_target_properties(pilo_performance_test-shared PROPERTIES DEPENDS pilo_shared)
+set_target_properties(pilo_performance_test-shared PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=$(ProjectDir)..\\..\\output\\win-vs17\\pilo\\lib;%PATH%")
 source_group_by_dir(PILOPERFORMANCE_TEST_CPPS)
 source_group_by_dir(PILOPERFORMANCE_TEST_PPS)
 source_group_by_dir(PILOPERFORMANCE_TEST_HS)
