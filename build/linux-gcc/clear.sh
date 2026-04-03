@@ -1,3 +1,4 @@
 #!/bin/bash
-rm CMakeCache.txt cmake_install.cmake  CMakeLists.txt  err.txt  Makefile
+rm -f  CMakeCache.txt cmake_install.cmake  err.txt  Makefile
+rm -fr CMakeFiles
 
