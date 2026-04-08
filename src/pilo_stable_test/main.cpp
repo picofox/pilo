@@ -34,6 +34,7 @@ int main(int argc, char * argv[])
 	load_cases(&suite_default);
 	PILO_CONTEXT->start();
 
+/*
 	::pilo::core::config::xls_config_set xcfg;
 	std::string errmsg;
 	::pilo::err_t err = xcfg.parse("hero", "D:\\projects\\git_repo\\libpilo\\output\\win-vs17\\pilo\\tmp\\test_xls\\hero.xlsx", ::pilo::predefined_pilo_path::count, errmsg);
@@ -61,6 +62,7 @@ int main(int argc, char * argv[])
 	//std::string str1 = wks.cell(OpenXLSX::XLCellReference("A1")).value().get<std::string>();
 
 
+*/
 
 	suite_default.run_cases(true);
 	std::string str = PILO_CONTEXT->pool_object_stat_mgr().to_updated_string();
