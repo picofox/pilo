@@ -32,33 +32,62 @@ namespace pilo
 				count,
 			};
 
-			const ::pilo::u16_t mod_bit_static = 0;
-			const ::pilo::u16_t mod_bit_ptr_const = 1;
-			const ::pilo::u16_t mod_bit_val_const = 2;
-			const ::pilo::u16_t mod_bit_volatile = 3;
-			const ::pilo::u16_t mod_bit_mutable = 4;
-			const ::pilo::u16_t mod_bit_isptr = 5;
-			const ::pilo::u16_t mod_bit_isstr = 6;
-			const ::pilo::u16_t mod_bit_ischar = 7;
-			const ::pilo::u16_t mod_bit_isnull = 8;
+			enum class meta_func_type : ::pilo::u8_t
+			{
+				na = 0,
+				c, //1, ctype func
+				member, //2, c++ member
+				cons,
+				des,
+				copycons,
+				copyops,
 
-			const ::pilo::u16_t mod_val_static = 1;
-			const ::pilo::u16_t mod_val_pre_const = 2;
-			const ::pilo::u16_t mod_val_post_const = 4;
-			const ::pilo::u16_t mod_val_volatile = 8;
-			const ::pilo::u16_t mod_val_mutable = 0x10;
-			const ::pilo::u16_t mod_val_isptr = 0x20;
-			const ::pilo::u16_t mod_val_isstr = 0x40;
-			const ::pilo::u16_t mod_val_ischar = 0x80;
-			const ::pilo::u16_t mod_val_isnull = 0x100;
+			};
 
+			const ::pilo::u16_t _mod_bit_static = 0;
+			const ::pilo::u16_t _mod_bit_ptr_const = 1;
+			const ::pilo::u16_t _mod_bit_val_const = 2;
+			const ::pilo::u16_t _mod_bit_volatile = 3;
+			const ::pilo::u16_t _mod_bit_mutable = 4;
+			const ::pilo::u16_t _mod_bit_friend = 5;
+			const ::pilo::u16_t _mod_bit_virtual = 6;
+			const ::pilo::u16_t _mod_bit_inline = 7;
+			const ::pilo::u16_t _mod_bit_abstract = 8;
+			const ::pilo::u16_t _mod_bit_isptr = 9;
+			const ::pilo::u16_t _mod_bit_isstr = 10;
+			const ::pilo::u16_t _mod_bit_ischar = 11;
+			const ::pilo::u16_t _mod_bit_isnull = 12;
 
+			const ::pilo::u16_t mod_const = 0x2;
+			const ::pilo::u16_t mod_static = 0x1;
+			const ::pilo::u16_t mod_ptr_const = 0x2;
+			const ::pilo::u16_t mod_val_const = 0x4;
+			const ::pilo::u16_t mod_volatile = 0x8;
+			const ::pilo::u16_t mod_mutable = 0x10;
+			const ::pilo::u16_t mod_friend = 0x20;
+			const ::pilo::u16_t mod_virtual = 0x40;
+			const ::pilo::u16_t mod_inline = 0x80;
+			const ::pilo::u16_t mod_abstract = 0x100;
+			const ::pilo::u16_t mod_isptr = 0x200;
+			const ::pilo::u16_t mod_isstr = 0x400;
+			const ::pilo::u16_t mod_ischar = 0x800;
+			const ::pilo::u16_t mod_isnull = 0x1000;	
 
+			const ::pilo::u8_t getter_rtype = 0x01;
+			const ::pilo::u8_t getter_ptype_ptr = 0x02;
+			const ::pilo::u8_t getter_ptype_ref = 0x04;
+			const ::pilo::u8_t getter_ptype_cptr = 0x08;
+			const ::pilo::u8_t getter_ptype_cref = 0x10;
+			const ::pilo::u8_t setter_vtype = 0x20;
+			const ::pilo::u8_t setter_ptype_ptr = 0x20;
+			const ::pilo::u8_t setter_ptype_ref = 0x80;
+		
 
-			const ::pilo::u32_t output_flag_need_priv = 0x1;
-			const ::pilo::u32_t output_flag_codeline_sep = 0x2;
-			const ::pilo::u32_t output_flag_need_nl = 0x4;
-			const ::pilo::u32_t output_flag_win_nl = 0x8;
+			const ::pilo::u32_t oflag_need_priv = 0x1;
+			const ::pilo::u32_t oflag_codeline_sep = 0x2;
+			const ::pilo::u32_t oflag_need_nl = 0x4;
+			const ::pilo::u32_t oflag_win_nl = 0x8;
+			const ::pilo::u32_t oflag_dec = 0x10;
 
 
 
@@ -69,8 +98,8 @@ namespace pilo
 			const ::pilo::u8_t acc_priv_procted = 2;
 			const ::pilo::u8_t acc_priv_private = 3;
 
-			const ::pilo::id_value_mapper<5, std::string, ::pilo::u16_t> s_cpp_meta_id_value_mapper({ "static", "const", "const", "volatile","mutable"});
-			const ::pilo::id_value_mapper<5, std::string, ::pilo::u8_t> s_cpp_acces_priv_str_mapper({ "", "public", "protected", "private" });
+			const ::pilo::id_value_mapper<8, std::string, ::pilo::u16_t> s_cpp_meta_id_value_mapper({ "static", "const", "const", "volatile","mutable","friend", "virtual", "inline"});
+			const ::pilo::id_value_mapper<4, std::string, ::pilo::u8_t> s_cpp_acces_priv_str_mapper({ "", "public", "protected", "private" });
 
 			inline static void s_gen_indent_to_sstream(std::stringstream& ss, ::pilo::i16_t indent, const char* indent_cstr = nullptr)
 			{
@@ -83,7 +112,7 @@ namespace pilo
 
 			inline static void s_gen_nl_to_sstream(std::stringstream& ss, ::pilo::u32_t flags)
 			{
-				if (flags & output_flag_win_nl)
+				if (flags & oflag_win_nl)
 					ss << PMS_LINESEP_WIN_A;
 				else
 					ss << PMS_LINESEP_UNIX_A;
@@ -91,15 +120,15 @@ namespace pilo
 
 			inline static void s_gen_value_assignment_cppstr(std::stringstream& ss, const std::string& v, const ::pilo::bit_flag<::pilo::u16_t>& modi)
 			{
-				if (modi.test_value(mod_val_isnull)) {
+				if (modi.test_value(mod_isnull)) {
 					ss << " = nullptr";
 				}
 				else {
 					if (!v.empty()) {
-						if (modi.test_value(mod_val_isstr)) {
+						if (modi.test_value(mod_isstr)) {
 							ss << " = " << "\"" << v << "\"";
 						}
-						else if (modi.test_value(mod_val_ischar)) {
+						else if (modi.test_value(mod_ischar)) {
 							ss << " = " << '\'' << v << '\'';
 						}
 						else {
@@ -111,8 +140,8 @@ namespace pilo
 
 			inline static void s_gen_nl(std::stringstream& ss, ::pilo::u32_t flags)
 			{
-				if (flags & output_flag_need_nl) {
-					if (flags & output_flag_win_nl) {
+				if (flags & oflag_need_nl) {
+					if (flags & oflag_win_nl) {
 						ss << PMS_LINESEP_WIN_A;
 					}
 					else {

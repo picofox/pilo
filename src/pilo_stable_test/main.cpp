@@ -43,9 +43,10 @@ int main(int argc, char * argv[])
 	}
 
 	std::stringstream ss;
-	::pilo::core::rtti::meta_variable var("name", "char*", "fox", (::pilo::u8_t)(::pilo::core::rtti::mod_val_pre_const | ::pilo::core::rtti::mod_val_post_const | ::pilo::core::rtti::mod_val_isstr|::pilo::core::rtti::mod_val_static), ::pilo::core::rtti::acc_priv_public);
+	::pilo::core::rtti::meta_variable var((::pilo::u16_t)(::pilo::core::rtti::mod_ptr_const | ::pilo::core::rtti::mod_val_const | ::pilo::core::rtti::mod_isstr|::pilo::core::rtti::mod_static), ::pilo::core::rtti::acc_priv_public, 
+		(::pilo::u8_t)0 ,"name", "char*", "fox");
 	var.set_indent(1);
-	var.append_to_stringstream_cpp(ss, nullptr, ::pilo::core::rtti::output_flag_codeline_sep);
+	var.append_to_stringstream_cpp(ss, nullptr, ::pilo::core::rtti::oflag_codeline_sep);
 
 	printf("\n-------------------------------\n");
 	printf("%s",ss.str().c_str());

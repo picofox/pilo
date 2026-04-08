@@ -16,8 +16,10 @@ namespace pilo
 			class meta_variable : public meta_src_node
 			{
 			public:
-				meta_variable(const std::string& namestr, const std::string& typestr, const std::string& valuestr, ::pilo::u8_t modifiers, ::pilo::u8_t accpriv)
-					: meta_src_node(meta_node_type_enum::var), _m_name(namestr), _m_type(typestr), _m_value(valuestr), _m_modifiers(modifiers), _m_access_priv(accpriv)
+				meta_variable(::pilo::u16_t modifiers, ::pilo::u8_t accpriv, ::pilo::u8_t accessor_flag, const std::string& namestr, const std::string& typestr, const std::string& valuestr)
+					: meta_src_node(meta_node_type_enum::var)
+					, _m_modifiers(modifiers), _m_access_priv(accpriv), _m_accessor_flags(accessor_flag)
+					, _m_name(namestr), _m_type(typestr), _m_value(valuestr)
 
 				{
 
@@ -42,23 +44,28 @@ namespace pilo
 				void set_type(const std::string& s) { _m_type = s; }
 				void set_value(const std::string& s) { _m_value = s; }
 				void set_access_priv(::pilo::u8_t acp) { _m_access_priv = acp; }
+				void add_setter_flag(::pilo::u8_t f) { _m_accessor_flags.set_value(f, true); }
+				void clear_setter_flag(::pilo::u8_t f) { _m_accessor_flags.set_value(f, false); }
+				void set_setter_flag(::pilo::u8_t all_flags) { _m_accessor_flags.set(all_flags); }
+
 
 				void reset()
 				{
-					_m_modifiers.reset();
+					_m_modifiers.reset();							
+					_m_access_priv = acc_priv_none;
+					_m_accessor_flags.reset();
 					_m_name.clear();
 					_m_type.clear();
 					_m_value.clear();
-					_m_access_priv = acc_priv_none;
 				}
 
-			protected:
+			protected:				
+				::pilo::bit_flag<::pilo::u16_t> _m_modifiers;
+				::pilo::u8_t	_m_access_priv;
+				::pilo::bit_flag<::pilo::u8_t> _m_accessor_flags;
 				std::string _m_name;
 				std::string _m_type;
 				std::string _m_value;
-				::pilo::bit_flag<::pilo::u16_t> _m_modifiers;
-				::pilo::u8_t	_m_access_priv;
-
 				
 
 			};
