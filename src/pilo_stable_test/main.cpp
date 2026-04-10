@@ -67,17 +67,15 @@ int main(int argc, char * argv[])
 	printf("\n-------------------------------\n");
 
 
-	
-
 	//auto wks = doc.workbook().worksheet("hero");
 	//std::string str1 = wks.cell(OpenXLSX::XLCellReference("A1")).value().get<std::string>();
 
 
 
 
-	suite_default.run_cases(true);
-	std::string str = PILO_CONTEXT->pool_object_stat_mgr().to_updated_string();
-	std::cout << str << std::endl;
+	//suite_default.run_cases(true);
+	//std::string str = PILO_CONTEXT->pool_object_stat_mgr().to_updated_string();
+	//std::cout << str << std::endl;
 
 	getchar();
 	return 0;
