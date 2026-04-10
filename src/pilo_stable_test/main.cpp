@@ -19,6 +19,7 @@
 
 #include "pilo/core/config/xls_config.hpp"
 #include "pilo/core/rtti/meta_variable.hpp"
+#include "pilo/core/rtti/meta_function.hpp"
 
 using namespace ::pilo::core::testing;
 
@@ -43,26 +44,36 @@ int main(int argc, char * argv[])
 		return -1;
 	}
 
-	std::stringstream ss;
-	::pilo::core::rtti::meta_variable var((::pilo::u16_t)(::pilo::core::rtti::mod_ptr_const | ::pilo::core::rtti::mod_val_const | ::pilo::core::rtti::mod_isstr|::pilo::core::rtti::mod_static), ::pilo::core::rtti::acc_priv_public, 
-		(::pilo::u8_t)0 ,"name", "char*", "fox");
-	var.set_indent(1);
-	var.append_to_stringstream_cpp(ss, nullptr, ::pilo::core::rtti::oflag_codeline_sep);
+	err = xcfg.save_config_file(::pilo::core::config::xls_config_set::server, "app_config/server", ::pilo::predefined_pilo_path::cnf);
+	err = xcfg.save_config_file(::pilo::core::config::xls_config_set::client, "app_config/client", ::pilo::predefined_pilo_path::cnf);
+	printf("%s\n", xcfg.to_string().c_str());
 
+	*/
+
+	std::stringstream ss;
+	
+	::pilo::core::rtti::meta_function func(0, ::pilo::core::rtti::acc_priv_procted, ::pilo::core::rtti::meta_func_type::moveops, "Player", "");
+	func.set_indent(2);
+	func.add_param(::pilo::core::rtti::mod_const, "id", "int", "90");
+	func.add_param(::pilo::core::rtti::mod_const | ::pilo::core::rtti::mod_isstr, "name", "std::string", "fox");
+	func.add_bodyline(0,3, "dsfadfafafa0", "not this");
+	func.add_bodyline(0,3, "dsfadfafafa1");
+	func.add_bodyline(0,3, "dsfadfafafa2");
+	func.add_bodyline(0,3, "dsfadfafafa3");
+	func.append_to_stringstream_cpp(ss, nullptr, ::pilo::core::rtti::oflag_codeline_sep  | ::pilo::core::rtti::oflag_need_priv | ::pilo::core::rtti::oflag_need_nl, "Player");
+	
 	printf("\n-------------------------------\n");
 	printf("%s",ss.str().c_str());
 	printf("\n-------------------------------\n");
 
 
-	err = xcfg.save_config_file(::pilo::core::config::xls_config_set::server, "app_config/server", ::pilo::predefined_pilo_path::cnf);
-	err = xcfg.save_config_file(::pilo::core::config::xls_config_set::client, "app_config/client", ::pilo::predefined_pilo_path::cnf);
-	printf("%s\n", xcfg.to_string().c_str());
+	
 
 	//auto wks = doc.workbook().worksheet("hero");
 	//std::string str1 = wks.cell(OpenXLSX::XLCellReference("A1")).value().get<std::string>();
 
 
-*/
+
 
 	suite_default.run_cases(true);
 	std::string str = PILO_CONTEXT->pool_object_stat_mgr().to_updated_string();

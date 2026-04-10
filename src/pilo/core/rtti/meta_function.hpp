@@ -4,6 +4,8 @@
 #include	"../../pilo.hpp"
 #include	<vector>
 #include	"./meta_variable.hpp"
+#include	"./meta_codeline.hpp"
+#include	<memory>
 
 namespace pilo
 {
@@ -24,19 +26,23 @@ namespace pilo
 				~meta_function();
 
 				// Inherited via meta_src_node
-				::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags) const override;
+				::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const override;
 
 				::pilo::err_t add_param(::pilo::u16_t modifiers, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
+				::pilo::err_t add_bodyline(::pilo::u16_t modifiers, ::pilo::i16_t indent, const std::string & line, const std::string cmt = "");
+
+			
+				::pilo::err_t append_cpp_declare_string(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags) const;
+				::pilo::err_t append_cpp_definition_string(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags,  const std::string& strparam) const;
 
 			protected:
 				::pilo::bit_flag<::pilo::u16_t> _m_modifiers;
 				::pilo::u8_t					_m_access_priv;
 				meta_func_type					_m_func_type;
 				std::string						_m_name;
-				std::string						_m_ret_type;
-				std::string						_m_dec;
-				std::string						_m_def;
+				std::string						_m_ret_type;				
 				std::vector<meta_variable>		_m_params;
+				std::vector<std::unique_ptr<meta_src_node>>	_m_bodylines;
 			};
 
 		}

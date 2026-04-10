@@ -27,17 +27,19 @@ namespace pilo
 				~meta_variable();
 
 				// Inherited via meta_src_node
-				::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags) const override;
+				::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const override;
 
 
 
 
-
+				void append_as_param_string(std::stringstream& ss,::pilo::u32_t flags) const;
 				const ::pilo::bit_flag<::pilo::u16_t>& modifiers() { return _m_modifiers; }
 				const std::string& name() const { return _m_name; }
 				const std::string& type() const { return _m_type; }
 				const std::string& value() const { return _m_value; }
 				::pilo::u8_t access_priv() const { return _m_access_priv; }
+
+		
 
 				void mark_modifier(::pilo::u8_t m) { _m_modifiers.mark_index(m); }
 				void set_name(const std::string& s) { _m_name = s; }
