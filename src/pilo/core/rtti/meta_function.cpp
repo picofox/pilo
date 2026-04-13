@@ -20,16 +20,15 @@ namespace pilo
 
 			::pilo::err_t meta_function::add_param(::pilo::u16_t modifiers, const std::string& namestr, const std::string& typestr, const std::string& valuestr)
 			{
-				meta_variable var(modifiers, 0, 0, namestr, typestr, valuestr);
+				meta_variable var(0, modifiers, 0, 0, namestr, typestr, valuestr);
 				_m_params.emplace_back(var);
 				return PILO_OK;
 			}
 
-			::pilo::err_t meta_function::add_bodyline(::pilo::u16_t modifiers,::pilo::i16_t indent, const std::string& line, const std::string cmt)
+			::pilo::err_t meta_function::add_bodyline(::pilo::i16_t rel_indent, ::pilo::u16_t modifiers, const std::string& line, const std::string cmt)
 			{
-				std::unique_ptr<meta_src_node> node_ptr = std::make_unique<meta_codeline>(modifiers, line, cmt);
-				node_ptr->set_indent(indent);
-				this->_m_bodylines.push_back(std::move(node_ptr));
+				rel_indent += this->_m_indent;
+				this->_m_bodylines.push_back(std::make_unique<meta_codeline>(rel_indent, modifiers, line, cmt));
 				return PILO_OK;
 			}
 

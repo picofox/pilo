@@ -20,6 +20,7 @@
 #include "pilo/core/config/xls_config.hpp"
 #include "pilo/core/rtti/meta_variable.hpp"
 #include "pilo/core/rtti/meta_function.hpp"
+#include "pilo/core/rtti/meta_enum.hpp"
 
 using namespace ::pilo::core::testing;
 
@@ -51,17 +52,22 @@ int main(int argc, char * argv[])
 	*/
 
 	std::stringstream ss;
-	
-	::pilo::core::rtti::meta_function func(0, ::pilo::core::rtti::acc_priv_procted, ::pilo::core::rtti::meta_func_type::moveops, "Player", "");
-	func.set_indent(2);
-	func.add_param(::pilo::core::rtti::mod_const, "id", "int", "90");
-	func.add_param(::pilo::core::rtti::mod_const | ::pilo::core::rtti::mod_isstr, "name", "std::string", "fox");
-	func.add_bodyline(0,3, "dsfadfafafa0", "not this");
-	func.add_bodyline(0,3, "dsfadfafafa1");
-	func.add_bodyline(0,3, "dsfadfafafa2");
-	func.add_bodyline(0,3, "dsfadfafafa3");
-	func.append_to_stringstream_cpp(ss, nullptr, ::pilo::core::rtti::oflag_codeline_sep  | ::pilo::core::rtti::oflag_need_priv | ::pilo::core::rtti::oflag_need_nl, "Player");
-	
+
+	::pilo::core::rtti::meta_enum<short> e(1, ::pilo::core::rtti::mod_adv_enum, "WeekdayEnum", "short");
+	e.add("Mon", true, 0, "monday");
+	e.add("Tue", false, 0, "tuesday");
+	e.add("Wed", false, 0, "wednesday");
+	e.add("Thu", false, 0, "thursday");
+	e.append_to_stringstream_cpp(ss, nullptr,0, "");
+	//::pilo::core::rtti::meta_function func(6, 0, ::pilo::core::rtti::acc_priv_procted, ::pilo::core::rtti::meta_func_type::moveops, "Player", "");
+	//func.add_param(::pilo::core::rtti::mod_const, "id", "int", "90");
+	//func.add_param(::pilo::core::rtti::mod_const | ::pilo::core::rtti::mod_isstr, "name", "std::string", "fox");
+	//func.add_bodyline(1,0, "dsfadfafafa0", "not this");
+	//func.add_bodyline(1,0, "dsfadfafafa1");
+	//func.add_bodyline(1,0, "dsfadfafafa2");
+	//func.add_bodyline(1,0, "dsfadfafafa3");
+	//func.append_to_stringstream_cpp(ss, nullptr, ::pilo::core::rtti::oflag_codeline_sep  | ::pilo::core::rtti::oflag_need_priv | ::pilo::core::rtti::oflag_need_nl, "Player");
+	//
 	printf("\n-------------------------------\n");
 	printf("%s",ss.str().c_str());
 	printf("\n-------------------------------\n");

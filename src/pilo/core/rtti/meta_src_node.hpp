@@ -21,11 +21,10 @@ namespace pilo
                 klass,//3
                 func,//4
                 var, //5
-                enum_c,//6
-                enum_cls,//7
-                codeline,//8
-                imports, //9
-                hdr_ins,//10      
+                enumer,//6
+                codeline,//7
+                imports, //8
+                hdr_ins,//9      
                 count,
             };
 
@@ -58,6 +57,7 @@ namespace pilo
             const ::pilo::u16_t mod_ischar = 0x800;
             const ::pilo::u16_t mod_isnull = 0x1000;    
             const ::pilo::u16_t mod_noex = 0x2000;
+            const ::pilo::u16_t mod_adv_enum = 0x4000;
 
             const ::pilo::u8_t getter_rtype = 0x01;
             const ::pilo::u8_t getter_ptype_ptr = 0x02;
@@ -102,6 +102,7 @@ namespace pilo
 
             inline static void s_gen_nl_to_sstream(std::stringstream& ss, ::pilo::u32_t flags)
             {
+                
                 if (flags & oflag_win_nl)
                     ss << PMS_LINESEP_WIN_A;
                 else
@@ -144,7 +145,7 @@ namespace pilo
             class meta_src_node
             {
             public:
-                meta_src_node(meta_node_type_enum mnte);
+                meta_src_node(meta_node_type_enum mnte, ::pilo::i16_t indent);
                 virtual ~meta_src_node();
 
                 virtual ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string & strparam) const = 0;
