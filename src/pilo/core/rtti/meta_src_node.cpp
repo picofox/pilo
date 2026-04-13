@@ -9,9 +9,10 @@ namespace pilo
         {
             ::pilo::core::algorithm::uint_sequence_generator<unsigned int> meta_src_node::_s_seq_generator = ::pilo::core::algorithm::uint_sequence_generator<unsigned int>();
 
-            meta_src_node::meta_src_node(meta_node_type_enum mnte, ::pilo::i16_t indent) : _m_type(mnte), _m_indent(indent)
+            meta_src_node::meta_src_node(meta_node_type_enum mnte, ::pilo::i16_t indent, ::pilo::u64_t modifier) 
+                : _m_type(mnte), _m_indent(indent), _m_id(_s_seq_generator.next()), _m_modifiers(modifier)
             {
-                _m_id = _s_seq_generator.next();
+                
             }
 
             meta_src_node::~meta_src_node()

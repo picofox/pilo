@@ -59,15 +59,15 @@ int main(int argc, char * argv[])
 	e.add("Wed", false, 0, "wednesday");
 	e.add("Thu", false, 0, "thursday");
 	e.append_to_stringstream_cpp(ss, nullptr,0, "");
-	//::pilo::core::rtti::meta_function func(6, 0, ::pilo::core::rtti::acc_priv_procted, ::pilo::core::rtti::meta_func_type::moveops, "Player", "");
-	//func.add_param(::pilo::core::rtti::mod_const, "id", "int", "90");
-	//func.add_param(::pilo::core::rtti::mod_const | ::pilo::core::rtti::mod_isstr, "name", "std::string", "fox");
-	//func.add_bodyline(1,0, "dsfadfafafa0", "not this");
-	//func.add_bodyline(1,0, "dsfadfafafa1");
-	//func.add_bodyline(1,0, "dsfadfafafa2");
-	//func.add_bodyline(1,0, "dsfadfafafa3");
-	//func.append_to_stringstream_cpp(ss, nullptr, ::pilo::core::rtti::oflag_codeline_sep  | ::pilo::core::rtti::oflag_need_priv | ::pilo::core::rtti::oflag_need_nl, "Player");
-	//
+	::pilo::core::rtti::meta_function func(6, ::pilo::core::rtti::mod_protected, ::pilo::core::rtti::meta_func_type::moveops, "Player", "");
+	func.add_param(::pilo::core::rtti::mod_const, "id", "int", "90");
+	func.add_param(::pilo::core::rtti::mod_const | ::pilo::core::rtti::mod_isstr, "name", "std::string", "fox");
+	func.add_bodyline(1,0, "dsfadfafafa0", "not this");
+	func.add_bodyline(1,0, "dsfadfafafa1");
+	func.add_bodyline(1,0, "dsfadfafafa2");
+	func.add_bodyline(1,0, "dsfadfafafa3");
+	func.append_to_stringstream_cpp(ss, nullptr, ::pilo::core::rtti::oflag_codeline_sep  | ::pilo::core::rtti::oflag_need_priv | ::pilo::core::rtti::oflag_need_colsep | ::pilo::core::rtti::oflag_need_nl, "Player");
+	
 	printf("\n-------------------------------\n");
 	printf("%s",ss.str().c_str());
 	printf("\n-------------------------------\n");

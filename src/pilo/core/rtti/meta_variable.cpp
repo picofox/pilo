@@ -13,13 +13,8 @@ namespace pilo
             ::pilo::err_t meta_variable::append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const
             {            
                 PMC_UNUSED(strparam);
-                if ((flags & oflag_need_priv) && this->_m_access_priv != acc_priv_none) {
-                    s_gen_indent_to_sstream(ss, pilo_min<::pilo::i16_t>(this->indent() - 1, 1), indent_cstr);
-                    ss << s_cpp_acces_priv_str_mapper.get_value(this->_m_access_priv);
-                    ss << ':';                    
-                    s_gen_nl_to_sstream(ss, flags);                    
-                }
-                
+                s_gen_priv(ss, this->_m_modifiers, flags, false, this->indent() - 1, indent_cstr);
+
                 s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);
                 
                 if (_m_modifiers.test_value(mod_mutable))

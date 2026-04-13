@@ -16,7 +16,7 @@ namespace pilo
             {
             public:
                 meta_ns(::pilo::i16_t indent, const std::string& namestr)
-                    : meta_src_node(meta_node_type_enum::ns, indent), _m_name(namestr)
+                    : meta_src_node(meta_node_type_enum::ns, indent,0), _m_name(namestr)
 
                 {
 

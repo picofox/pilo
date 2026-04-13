@@ -18,14 +18,14 @@ namespace pilo
 
 			}
 
-			::pilo::err_t meta_function::add_param(::pilo::u16_t modifiers, const std::string& namestr, const std::string& typestr, const std::string& valuestr)
+			::pilo::err_t meta_function::add_param(::pilo::u64_t modifiers, const std::string& namestr, const std::string& typestr, const std::string& valuestr)
 			{
-				meta_variable var(0, modifiers, 0, 0, namestr, typestr, valuestr);
+				meta_variable var(0, modifiers, 0, namestr, typestr, valuestr);
 				_m_params.emplace_back(var);
 				return PILO_OK;
 			}
 
-			::pilo::err_t meta_function::add_bodyline(::pilo::i16_t rel_indent, ::pilo::u16_t modifiers, const std::string& line, const std::string cmt)
+			::pilo::err_t meta_function::add_bodyline(::pilo::i16_t rel_indent, ::pilo::u64_t modifiers, const std::string& line, const std::string cmt)
 			{
 				rel_indent += this->_m_indent;
 				this->_m_bodylines.push_back(std::make_unique<meta_codeline>(rel_indent, modifiers, line, cmt));
@@ -49,12 +49,7 @@ namespace pilo
 
 				}	
 				else {
-					if ((flags & oflag_need_priv) && this->_m_access_priv != acc_priv_none) {
-						s_gen_indent_to_sstream(ss, pilo_min<::pilo::i16_t>(this->indent() - 1, 1), indent_cstr);
-						ss << s_cpp_acces_priv_str_mapper.get_value(this->_m_access_priv);
-						ss << ':';
-						s_gen_nl_to_sstream(ss, flags);
-					}
+					s_gen_priv(ss, this->_m_modifiers, flags, false, this->indent() - 1, indent_cstr);
 
 					if (this->_m_func_type == ::pilo::core::rtti::meta_func_type::cons) {
 						s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);						
@@ -152,12 +147,7 @@ namespace pilo
 
 				}
 				else {
-					if ((flags & oflag_need_priv) && this->_m_access_priv != acc_priv_none) {
-						s_gen_indent_to_sstream(ss, pilo_min<::pilo::i16_t>(this->indent() - 1, 1), indent_cstr);
-						ss << s_cpp_acces_priv_str_mapper.get_value(this->_m_access_priv);
-						ss << ':';
-						s_gen_nl_to_sstream(ss, flags);
-					}
+					s_gen_priv(ss, this->_m_modifiers, flags, false, this->indent() - 1, indent_cstr);
 
 					if (this->_m_func_type == ::pilo::core::rtti::meta_func_type::cons) {
 						s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);

@@ -16,12 +16,11 @@ namespace pilo
             class meta_enum : public meta_src_node
             {
             public:
-                meta_enum(::pilo::i16_t indent, ::pilo::u16_t modifiers, const std::string& namestr, const std::string& typestr)
-                    : meta_src_node(meta_node_type_enum::enumer, indent)
-                    , _m_modifiers(modifiers), _m_place_holder(0), _m_name(namestr), _m_expl_type(typestr)
+                meta_enum(::pilo::i16_t indent, ::pilo::u64_t modifiers, const std::string& namestr, const std::string& typestr)
+                    : meta_src_node(meta_node_type_enum::enumer, indent, modifiers)
+                    , _m_name(namestr), _m_expl_type(typestr)
 
                 {
-
                 }
 
                 ~meta_enum() {}
@@ -93,8 +92,6 @@ namespace pilo
                 }
 
             protected:
-                ::pilo::bit_flag<::pilo::u16_t> _m_modifiers;
-                ::pilo::i16_t                   _m_place_holder;
                 std::string                     _m_name;
                 std::string                     _m_expl_type;
                 std::vector<std::string>        _m_item_names;
@@ -105,14 +102,12 @@ namespace pilo
 
             };
 
-
-
         }
     }
 }
 
 
-#endif // !_pilo_core_rtti_meta_ns_hpp_
+#endif // !_pilo_core_rtti_meta_enum_hpp_
 
 
 

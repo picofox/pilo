@@ -14,9 +14,8 @@ namespace pilo
             class meta_codeline : public meta_src_node
             {
             public:            
-                meta_codeline(::pilo::i16_t indent, ::pilo::u16_t modifiers, const std::string& codeline_string, const std::string& comment_string)
-                    : meta_src_node(meta_node_type_enum::codeline, indent)
-                    , _m_modifiers(modifiers)
+                meta_codeline(::pilo::i16_t indent, ::pilo::u64_t modifiers, const std::string& codeline_string, const std::string& comment_string)
+                    : meta_src_node(meta_node_type_enum::codeline, indent, modifiers)
                     , _m_codeline(codeline_string), _m_comment(comment_string)
 
 
@@ -35,10 +34,8 @@ namespace pilo
                 bool is_comment() const { return (_m_codeline.empty() && (!_m_comment.empty())); }
                 bool is_blank() const { return (_m_codeline.empty() && _m_comment.empty()); }
                 bool is_code() const { return ((!_m_codeline.empty()) && (_m_comment.empty())); }
-                //bool has_code() const { return (! _m_codeline.empty()); }                
 
             protected:
-                ::pilo::bit_flag<::pilo::u16_t> _m_modifiers;
                 std::string    _m_codeline;
                 std::string _m_comment;
                 
