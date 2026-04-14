@@ -13,7 +13,7 @@ namespace pilo
             {
             }
 
-            ::pilo::err_t meta_srcfile::append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const
+            ::pilo::err_t meta_srcfile::append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam, const char* indent_cstr) const
             {
                 PMC_UNUSED(ss);
                 PMC_UNUSED(indent_cstr);

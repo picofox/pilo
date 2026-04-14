@@ -24,7 +24,7 @@ namespace pilo
             {                
                 PMC_UNUSED(indent);
                 for (auto it = lines.cbegin(); it != lines.cend(); it++) {
-                    (*it)->append_to_stringstream_cpp(ss, indent_cstr, flags, "");
+                    (*it)->append_to_stringstream_cpp(ss, flags, "", indent_cstr);
                 }
             }
 

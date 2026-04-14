@@ -21,6 +21,7 @@
 #include "pilo/core/rtti/meta_variable.hpp"
 #include "pilo/core/rtti/meta_function.hpp"
 #include "pilo/core/rtti/meta_enum.hpp"
+#include "pilo/core/rtti/meta_klass.hpp"
 
 using namespace ::pilo::core::testing;
 
@@ -53,24 +54,21 @@ int main(int argc, char * argv[])
 
 	std::stringstream ss;
 
-	::pilo::core::rtti::meta_enum<short> e(1, ::pilo::core::rtti::mod_adv_enum, "WeekdayEnum", "short");
-	e.add("Mon", true, 0, "monday");
-	e.add("Tue", false, 0, "tuesday");
-	e.add("Wed", false, 0, "wednesday");
-	e.add("Thu", false, 0, "thursday");
-	e.append_to_stringstream_cpp(ss, nullptr,0, "");
-	::pilo::core::rtti::meta_function func(6, ::pilo::core::rtti::mod_protected, ::pilo::core::rtti::meta_func_type::moveops, "Player", "");
-	func.add_param(::pilo::core::rtti::mod_const, "id", "int", "90");
-	func.add_param(::pilo::core::rtti::mod_const | ::pilo::core::rtti::mod_isstr, "name", "std::string", "fox");
-	func.add_bodyline(1,0, "dsfadfafafa0", "not this");
-	func.add_bodyline(1,0, "dsfadfafafa1");
-	func.add_bodyline(1,0, "dsfadfafafa2");
-	func.add_bodyline(1,0, "dsfadfafafa3");
-	func.append_to_stringstream_cpp(ss, nullptr, ::pilo::core::rtti::oflag_codeline_sep  | ::pilo::core::rtti::oflag_need_priv | ::pilo::core::rtti::oflag_need_colsep | ::pilo::core::rtti::oflag_need_nl, "Player");
+	::pilo::core::rtti::meta_klass c1(1, 0, "Player", "");
+	c1.add_basetype_member_variable(mod_private,getter_rtype | setter_vtype, "id", "unsigned long long", "-1");
+	c1.add_string_member_variable(mod_private, ::pilo::core::rtti::getter_rtype | setter_vtype, "name", "std::string", "");
+	c1.add_basetype_member_variable(mod_private, ::pilo::core::rtti::getter_rtype | setter_vtype, "vip_levl", "unsigned char", "0");
+	c1.add_basetype_member_variable(mod_protected, ::pilo::core::rtti::getter_rtype | setter_vtype, "obj_type", "short", "0");
+	c1.add_basetype_member_variable(mod_public, ::pilo::core::rtti::getter_rtype | setter_vtype, "coin", "long long", "0");
+
+
+
+	c1.append_to_stringstream_cpp(ss, ::pilo::core::rtti::oflag_dec,"", nullptr);
+	
 	
 	printf("\n-------------------------------\n");
 	printf("%s",ss.str().c_str());
-	printf("\n-------------------------------\n");
+ 	printf("\n-------------------------------\n");
 
 
 	//auto wks = doc.workbook().worksheet("hero");
@@ -95,7 +93,7 @@ void load_cases(stable_test_suite * suite)
 
 	//suite->register_case("p_thread_pool_NQ", ::pilo::stable_test::core::threading::case_performance_thread_pool_global_nqueue, nullptr, 100000000, -1);
 	//suite->register_case("p_thread_pool_Q", ::pilo::stable_test::core::threading::case_performance_thread_pool_global_queue, nullptr, 100000000, -1);
-	
+	  
 	//suite->register_case("e_thread_pool_NQ", ::pilo::stable_test::core::threading::case_effcient_thread_pool_global_nqueue, nullptr, 100000000, -1);
 	//suite->register_case("e_thread_pool_Q", ::pilo::stable_test::core::threading::case_effcient_thread_pool_global_queue, nullptr, 100000000, -1);
 	suite->register_case("conncurrent_queue@1g", ::pilo::stable_test::core::container::case_concurrent_queue_for_1g_count, nullptr, 10000000, -1);

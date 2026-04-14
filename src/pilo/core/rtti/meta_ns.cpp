@@ -9,7 +9,7 @@ namespace pilo
             meta_ns::~meta_ns()
             {
             }
-            ::pilo::err_t meta_ns::append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const
+            ::pilo::err_t meta_ns::append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam, const char* indent_cstr) const
             {
                 PMC_UNUSED(ss);
                 PMC_UNUSED(indent_cstr);

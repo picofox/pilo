@@ -71,7 +71,10 @@ namespace pilo
             const ::pilo::u64_t mod_public              = 0x10000;
             const ::pilo::u64_t mod_private             = 0x20000;
             const ::pilo::u64_t mod_protected           = 0x40000;
-            
+            const ::pilo::u64_t mod_prefix              = 0x80000;
+            const ::pilo::u64_t mod_is_ref             = 0x100000;
+            const ::pilo::u64_t mod_non_basetype        = 0x200000;
+            const ::pilo::u64_t mod_sentence_end        = 0x400000;
 
             const ::pilo::u32_t getter_rtype = 0x01;
             const ::pilo::u32_t getter_ptype_ptr = 0x02;
@@ -81,7 +84,8 @@ namespace pilo
             const ::pilo::u32_t setter_vtype = 0x20;
             const ::pilo::u32_t setter_ptype_ptr = 0x40;
             const ::pilo::u32_t setter_ptype_ref = 0x80;
-        
+
+
 
             const ::pilo::u32_t oflag_need_priv               = 0x00000001;
             const ::pilo::u32_t oflag_codeline_sep            = 0x00000002;
@@ -94,7 +98,46 @@ namespace pilo
             const ::pilo::u32_t oflag_need_colsep             = 0x00000100;
 
            
+            inline static std::string s_prefix_to_variable_name(const std::string& name, access_priv_type_enum apt)
+            {
+                if (access_priv_type_enum::pub == apt)
+                    return "m_" + name;
+                else if (access_priv_type_enum::pro == apt)
+                    return "_m_" + name;
+                else if (access_priv_type_enum::pri == apt)
+                    return "_" + name;
+                else
+                    return name;
+            }
 
+            inline static std::string s_prefix_to_variable_name_by_mod(const std::string& name, ::pilo::u64_t mod)
+            {
+                if (mod & mod_private)
+                    return "_" + name;
+                else if (mod & mod_protected)
+                    return "_m_" + name;
+                else if (mod & mod_public)
+                    return "m_" + name;
+                else
+                    return name;
+            }
+
+            inline static std::string s_name_to_getter(const std::string& name)
+            {
+                if (name.size() > 3 && name[0] == '_' && name[1] == 'm' && name[2] == '_')
+                    return name.substr(2);
+                else if (name.size() > 2 && name[0] == 'm' && name[1] == '_')
+                    return name.substr(2);
+                else if (name.size() > 1 && name[0] == '_')
+                    return name.substr(1);
+                else
+                    return name;                
+            }
+
+            inline static std::string s_name_to_setter(const std::string& name)
+            {
+                return "set_" + s_name_to_getter(name);
+            }
 
 
             inline static void s_gen_indent_to_sstream(std::stringstream& ss, ::pilo::i16_t indent, const char* indent_cstr = nullptr)
@@ -152,7 +195,7 @@ namespace pilo
             }
 
             inline static void s_gen_priv(std::stringstream& ss, const ::pilo::bit_flag<::pilo::u64_t>& modi, ::pilo::u32_t flags, bool noop_if_no_priv,  ::pilo::i16_t indent, const char* indent_cstr = nullptr)
-            {
+            {                
                 if (modi.test_value(mod_private)) {
                     s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1), indent_cstr);
                     ss << "private";                      
@@ -183,7 +226,7 @@ namespace pilo
                 meta_src_node(meta_node_type_enum mnte, ::pilo::i16_t indent, ::pilo::u64_t modifiers);
                 virtual ~meta_src_node();
 
-                virtual ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string & strparam) const = 0;
+                virtual ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags,  const std::string & strparam = "", const char* indent_cstr = nullptr) const = 0;
                 virtual meta_node_type_enum meta_type() const { return _m_type; }
                 unsigned int id() const { return _m_id; }
                 void set_indent(::pilo::i16_t indent) { _m_indent = indent; }

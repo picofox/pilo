@@ -10,10 +10,14 @@ namespace pilo
             {
             }
 
-            ::pilo::err_t meta_variable::append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const
+            ::pilo::err_t meta_variable::append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam , const char* indent_cstr) const
             {            
                 PMC_UNUSED(strparam);
-                s_gen_priv(ss, this->_m_modifiers, flags, false, this->indent() - 1, indent_cstr);
+
+                if (flags & oflag_need_priv) {
+                    flags |= oflag_need_nl | oflag_need_colsep;
+                    s_gen_priv(ss, this->_m_modifiers, flags, false, this->indent() - 1, indent_cstr);
+                }                
 
                 s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);
                 
@@ -46,8 +50,13 @@ namespace pilo
                 if (_m_modifiers.test_value(mod_ptr_const))
                     ss << "const ";
                 if (_m_modifiers.test_value(mod_volatile))
-                    ss << "volatile ";
-                ss << _m_type << ' ';
+                    ss << "volatile ";                
+                
+                if (this->_m_modifiers.test_value(mod_is_ref))
+                    ss << _m_type << "& ";
+                else
+                    ss << _m_type << ' ';
+
                 if (_m_modifiers.test_value(mod_val_const))
                     ss << "const ";
                 ss << _m_name;

@@ -22,12 +22,14 @@ namespace pilo
                     , _m_name(namestr), _m_type(typestr), _m_value(valuestr)
 
                 {
-
+                    if (this->_m_modifiers.test_value(mod_prefix)) {
+                        this->_m_name = s_prefix_to_variable_name(this->_m_name, this->access_priv_type());
+                    }
                 }
                 ~meta_variable();
 
                 // Inherited via meta_src_node
-                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const override;
+                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", const char* indent_cstr = nullptr) const override;
 
 
 

@@ -26,7 +26,7 @@ namespace pilo
                 ~meta_enum() {}
 
                 // Inherited via meta_src_node
-                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const override
+                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", const char* indent_cstr = nullptr) const override
                 {
                     PMC_UNUSED(strparam);
                     s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);

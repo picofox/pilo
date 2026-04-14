@@ -9,7 +9,7 @@ namespace pilo
             meta_codeline::~meta_codeline()
             {                
             }
-            ::pilo::err_t meta_codeline::append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const
+            ::pilo::err_t meta_codeline::append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam, const char* indent_cstr) const
             {
                 PMC_UNUSED(strparam);
                 flags |= oflag_need_nl;
@@ -28,6 +28,8 @@ namespace pilo
                     
                     } else if (this->is_code()) {                    
                         ss << this->_m_codeline;
+                        if (this->_m_modifiers.test_value(mod_sentence_end))
+                            ss << ";";
                         s_gen_nl(ss, flags);
 
                     } else {

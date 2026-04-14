@@ -9,12 +9,12 @@ namespace pilo
 			meta_function::~meta_function()
 			{
 			}
-			::pilo::err_t meta_function::append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const
+			::pilo::err_t meta_function::append_to_stringstream_cpp(std::stringstream& ss,  ::pilo::u32_t flags, const std::string& strparam, const char* indent_cstr) const
 			{
 				if (flags & oflag_dec)
-					return append_cpp_declare_string(ss, indent_cstr, flags);
+					return append_cpp_declare_string(ss, flags, indent_cstr);
 				else 
-					return append_cpp_definition_string(ss, indent_cstr, flags, strparam);
+					return append_cpp_definition_string(ss, flags, strparam, indent_cstr);
 
 			}
 
@@ -34,8 +34,12 @@ namespace pilo
 
 
 
-			::pilo::err_t meta_function::append_cpp_declare_string(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags) const
+			::pilo::err_t meta_function::append_cpp_declare_string(std::stringstream& ss, ::pilo::u32_t flags, const char* indent_cstr) const
 			{	
+				if (this->_m_modifiers.test_value(mod_inline)) {
+					return append_cpp_definition_string(ss, flags, "", indent_cstr);
+				}
+
 				if (this->_m_func_type == ::pilo::core::rtti::meta_func_type::c) {
 					s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);
 					ss << this->_m_ret_type << ' ' << this->_m_name << '(' ;
@@ -49,7 +53,10 @@ namespace pilo
 
 				}	
 				else {
-					s_gen_priv(ss, this->_m_modifiers, flags, false, this->indent() - 1, indent_cstr);
+					if (flags & oflag_need_priv) {
+						flags |= oflag_need_nl | oflag_need_colsep;
+						s_gen_priv(ss, this->_m_modifiers, flags, false, this->indent() - 1, indent_cstr);
+					}
 
 					if (this->_m_func_type == ::pilo::core::rtti::meta_func_type::cons) {
 						s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);						
@@ -129,11 +136,8 @@ namespace pilo
 				return PILO_OK;
 			}
 
-			::pilo::err_t meta_function::append_cpp_definition_string(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const
+			::pilo::err_t meta_function::append_cpp_definition_string(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam, const char* indent_cstr) const
 			{
-				if (this->_m_modifiers.test_value(mod_inline))
-					ss << "inline ";
-
 				if (this->_m_func_type == ::pilo::core::rtti::meta_func_type::c) {
 					s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);
 					ss << this->_m_ret_type << ' ' << this->_m_name << '(';
@@ -147,11 +151,16 @@ namespace pilo
 
 				}
 				else {
-					s_gen_priv(ss, this->_m_modifiers, flags, false, this->indent() - 1, indent_cstr);
-
+					if (flags & oflag_need_priv) {
+						flags |= oflag_need_nl | oflag_need_colsep;
+						s_gen_priv(ss, this->_m_modifiers, flags, false, this->indent() - 1, indent_cstr);
+					}
 					if (this->_m_func_type == ::pilo::core::rtti::meta_func_type::cons) {
 						s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);
-						ss << strparam << "::" << this->_m_name << '(';
+						if ((!this->_m_modifiers.test_value(mod_inline)) && strparam.size() > 0) {
+							ss << strparam << "::" << this->_m_name << '(';
+						}						
+						
 						for (size_t i = 0; i < this->_m_params.size(); i++) {
 							if (i > 0) {
 								ss << ", ";
@@ -190,6 +199,8 @@ namespace pilo
 					}
 					else if (this->_m_func_type == ::pilo::core::rtti::meta_func_type::member) {
 						s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);
+						if (this->_m_modifiers.test_value(mod_inline))
+							ss << "inline ";
 						if (this->_m_modifiers.test_value(mod_virtual))
 							ss << "virtual ";
 						else if (this->_m_modifiers.test_value(mod_static))
@@ -197,7 +208,23 @@ namespace pilo
 						else if (this->_m_modifiers.test_value(mod_friend))
 							ss << "friend ";
 
-						ss << strparam << "::" << this->_m_ret_type << ' ' << this->_m_name << '(';
+						if (this->_m_modifiers.test_value(mod_val_const)) {
+							ss << "const ";
+						}
+
+						ss << this->_m_ret_type;			
+						if (this->_m_modifiers.test_value(mod_is_ref)) {
+							ss << "&";
+						}
+						ss << " ";
+
+
+						if ((!this->_m_modifiers.test_value(mod_inline)) && strparam.size() > 0) {
+							ss << strparam << "::" << this->_m_name << '(';
+						} else {
+							ss << strparam << this->_m_name << '(';
+						}
+
 						for (size_t i = 0; i < this->_m_params.size(); i++) {
 							if (i > 0) {
 								ss << ", ";
@@ -226,7 +253,7 @@ namespace pilo
 				ss << "{";
 				s_gen_nl(ss, flags);
 				s_gen_lines_cpp(ss, this->_m_bodylines, this->_m_indent+1, flags, indent_cstr);
-				s_gen_nl(ss, flags);
+				
 				s_gen_indent_to_sstream(ss, this->_m_indent, indent_cstr);
 				ss << "}";
 

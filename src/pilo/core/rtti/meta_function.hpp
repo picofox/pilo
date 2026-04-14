@@ -26,14 +26,14 @@ namespace pilo
                 ~meta_function();
 
                 // Inherited via meta_src_node
-                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags, const std::string& strparam) const override;
+                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", const char* indent_cstr = nullptr) const override;
 
                 ::pilo::err_t add_param(::pilo::u64_t modifiers, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
                 ::pilo::err_t add_bodyline(::pilo::i16_t rel_indent, ::pilo::u64_t modifiers, const std::string & line, const std::string cmt = "");
 
             
-                ::pilo::err_t append_cpp_declare_string(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags) const;
-                ::pilo::err_t append_cpp_definition_string(std::stringstream& ss, const char* indent_cstr, ::pilo::u32_t flags,  const std::string& strparam) const;
+                ::pilo::err_t append_cpp_declare_string(std::stringstream& ss,  ::pilo::u32_t flags, const char* indent_cstr) const;
+                ::pilo::err_t append_cpp_definition_string(std::stringstream& ss, ::pilo::u32_t flags,  const std::string& strparam, const char* indent_cstr) const;
 
             protected:                
                 meta_func_type                    _m_func_type;
