@@ -228,7 +228,7 @@ namespace pilo
                 auto mp = std::make_unique<meta_function>(rel_indent, modifiers, meta_func_type::cons, this->_m_name, "");
                 if (base_init_param_list.size() > 0) {
                     mp->add_param_to_base_init_param_list(_m_basename);
-                    for (const std::string x : base_init_param_list) {
+                    for (const std::string& x : base_init_param_list) {
                         mp->add_param_to_base_init_param_list(x);
                     }
                 } 

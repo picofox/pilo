@@ -238,8 +238,10 @@ namespace pilo
 					}
 					else if (this->_m_func_type == ::pilo::core::rtti::meta_func_type::des) {
 						s_gen_indent_to_sstream(ss, effect_indent, indent_cstr);
-						if (this->_m_modifiers.test_value(mod_virtual))
-							ss << "virtual ";
+						if (strparam.size() <= 0) {
+							if (this->_m_modifiers.test_value(mod_virtual))
+								ss << "virtual ";
+						}
 						ss << strparam << "::" << '~' << this->_m_name << "()";
 
 					}
@@ -265,10 +267,16 @@ namespace pilo
 					}
 					else if (this->_m_func_type == ::pilo::core::rtti::meta_func_type::member) {
 						s_gen_indent_to_sstream(ss, effect_indent, indent_cstr);
+
+						if (strparam.size() <= 0) {
+							if (this->_m_modifiers.test_value(mod_virtual))
+								ss << "virtual ";
+						}
+
+
 						if (this->_m_modifiers.test_value(mod_inline))
 							ss << "inline ";
-						if (this->_m_modifiers.test_value(mod_virtual))
-							ss << "virtual ";
+						
 						else if (this->_m_modifiers.test_value(mod_static))
 							ss << "static ";
 						else if (this->_m_modifiers.test_value(mod_friend))
