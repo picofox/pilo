@@ -3089,7 +3089,7 @@ namespace pilo
         ret_tlv->_size = this->_size;
         ret_tlv->_type = this->_type;
         ::pilo::err_t err = PILO_OK;
-        if (this->wrapper_type() == wired_type::wrapper_single)
+        if (this->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_single)
         {
             if (this->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv)
             {
@@ -3123,13 +3123,13 @@ namespace pilo
                 ret_tlv->_u64 = this->_u64;
             }
         }
-        else if (this->wrapper_type() == wired_type::wrapper_array)
+        else if (this->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_array)
         {
             err = ret_tlv->_clone_data_array(this);
             if (err != PILO_OK)
                 return nullptr;
         }
-        else if (this->wrapper_type() == wired_type::wrapper_dict)
+        else if (this->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_dict)
         {
             err = ret_tlv->_clone_data_dict(this);
             if (err != PILO_OK)
@@ -3235,7 +3235,7 @@ namespace pilo
     {
         if (this->_dynamic_data != nullptr)
         {
-            if (this->_type.wrapper_type() == wired_type::wrapper_single)
+            if (this->_type.wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_single)
             {
                 if (_type.value_type() == ::pilo::core::rtti::wired_type::value_type_bytes)
                 {
@@ -3252,7 +3252,7 @@ namespace pilo
                 }
 
             }
-            else if (this->_type.wrapper_type() == wired_type::wrapper_array)
+            else if (this->_type.wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_array)
             {
                 ::pilo::core::rtti::destroy_deque(this->value_type(), & this->_dynamic_data);
             }           

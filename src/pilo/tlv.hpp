@@ -27,8 +27,6 @@
 
 #define PILO_TLV_POOL_ALLOCATOR_STEP_SIZE	(4096)
 
-using namespace ::pilo::core::rtti;
-
 namespace pilo
 {
 
@@ -77,18 +75,18 @@ namespace pilo
 		{
 			reset();
 		}
-		tlv() :               _size(0), _type(false, wired_type::wrapper_na, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_na), _dynamic_data(nullptr) {}
-		tlv(::pilo::i8_t v) : _size(1), _type(false, wired_type::wrapper_single, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_i8),_i8(v) {}
-		tlv(::pilo::u8_t v) : _size(1), _type(false, wired_type::wrapper_single, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_u8), _u8(v) {}
-		tlv(::pilo::i16_t v) : _size(2), _type(false, wired_type::wrapper_single, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_i16), _i16(v) {}
-		tlv(::pilo::u16_t v) : _size(2), _type(false, wired_type::wrapper_single, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_u16), _u16(v) {}
-		tlv(::pilo::i32_t v) : _size(4), _type(false, wired_type::wrapper_single, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_i32), _i32(v) {}
-		tlv(::pilo::u32_t v) : _size(4), _type(false, wired_type::wrapper_single, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_u32), _u32(v) {}
-		tlv(::pilo::i64_t v) : _size(8), _type(false, wired_type::wrapper_single, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_i64), _i64(v) {}
-		tlv(::pilo::u64_t v) : _size(8), _type(false, wired_type::wrapper_single, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_u64), _u64(v) {}
-		tlv(::pilo::f32_t v) : _size(4), _type(false, wired_type::wrapper_single, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_f32), _f32(v) {}
-		tlv(::pilo::f64_t v) : _size(8), _type(false, wired_type::wrapper_single, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_f64), _f64(v) {}
-		tlv(bool v) : _size(1), _type(false, wired_type::wrapper_single, wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_boolean), _i8((::pilo::i8_t)v) {}
+		tlv() :               _size(0), _type(false,::pilo::core::rtti::wired_type::wrapper_na,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_na), _dynamic_data(nullptr) {}
+		tlv(::pilo::i8_t v) : _size(1), _type(false,::pilo::core::rtti::wired_type::wrapper_single,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_i8),_i8(v) {}
+		tlv(::pilo::u8_t v) : _size(1), _type(false,::pilo::core::rtti::wired_type::wrapper_single,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_u8), _u8(v) {}
+		tlv(::pilo::i16_t v) : _size(2), _type(false,::pilo::core::rtti::wired_type::wrapper_single,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_i16), _i16(v) {}
+		tlv(::pilo::u16_t v) : _size(2), _type(false,::pilo::core::rtti::wired_type::wrapper_single,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_u16), _u16(v) {}
+		tlv(::pilo::i32_t v) : _size(4), _type(false,::pilo::core::rtti::wired_type::wrapper_single,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_i32), _i32(v) {}
+		tlv(::pilo::u32_t v) : _size(4), _type(false,::pilo::core::rtti::wired_type::wrapper_single,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_u32), _u32(v) {}
+		tlv(::pilo::i64_t v) : _size(8), _type(false,::pilo::core::rtti::wired_type::wrapper_single,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_i64), _i64(v) {}
+		tlv(::pilo::u64_t v) : _size(8), _type(false,::pilo::core::rtti::wired_type::wrapper_single,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_u64), _u64(v) {}
+		tlv(::pilo::f32_t v) : _size(4), _type(false,::pilo::core::rtti::wired_type::wrapper_single,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_f32), _f32(v) {}
+		tlv(::pilo::f64_t v) : _size(8), _type(false,::pilo::core::rtti::wired_type::wrapper_single,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_f64), _f64(v) {}
+		tlv(bool v) : _size(1), _type(false,::pilo::core::rtti::wired_type::wrapper_single,::pilo::core::rtti::wired_type::key_type_na, ::pilo::core::rtti::wired_type::value_type_boolean), _i8((::pilo::i8_t)v) {}
 		tlv(const char* str, ::pilo::i32_t len, bool is_str, bool adopt)
 		{
 			if (is_str)

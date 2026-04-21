@@ -26,9 +26,11 @@ namespace pilo
                 ~meta_enum() {}
 
                 // Inherited via meta_src_node
-                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", const char* indent_cstr = nullptr) const override
+                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", const char* indent_cstr = nullptr, ::pilo::i16_t effect_indent = -1) const override
                 {
                     PMC_UNUSED(strparam);
+                    if (effect_indent == -1)
+                        effect_indent = this->_m_indent;
                     s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);
                     ss << "enum ";
                     if (_m_modifiers.test_value(mod_adv_enum)) {

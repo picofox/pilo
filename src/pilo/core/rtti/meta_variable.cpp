@@ -10,28 +10,35 @@ namespace pilo
             {
             }
 
-            ::pilo::err_t meta_variable::append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam , const char* indent_cstr) const
+            ::pilo::err_t meta_variable::append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam , const char* indent_cstr, ::pilo::i16_t effect_indent ) const
             {            
                 PMC_UNUSED(strparam);
-
-                if (flags & oflag_need_priv) {
-                    flags |= oflag_need_nl | oflag_need_colsep;
-                    s_gen_priv(ss, this->_m_modifiers, flags, false, this->indent() - 1, indent_cstr);
-                }                
-
-                s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);
+                if (effect_indent == -1)
+                    effect_indent = this->indent();
                 
-                if (_m_modifiers.test_value(mod_mutable))
-                    ss << "mutable ";
-                if (_m_modifiers.test_value(mod_static))
-                    ss << "static ";
-                if (_m_modifiers.test_value(mod_ptr_const))
-                    ss << "const ";
-                if (_m_modifiers.test_value(mod_volatile))
-                    ss << "volatile ";
-                ss << _m_type << ' ';
-                if (_m_modifiers.test_value(mod_val_const))
-                    ss << "const ";
+                if (flags & oflag_supress_type) {
+                    s_gen_indent_to_sstream(ss, effect_indent, indent_cstr);
+                }
+                else {
+                    if (flags & oflag_need_priv) {
+                        flags |= oflag_need_nl | oflag_need_colsep;
+                        s_gen_priv(ss, this->_m_modifiers.data(), flags, false, effect_indent - 1, indent_cstr);
+                    }
+                    s_gen_indent_to_sstream(ss, effect_indent, indent_cstr);
+                    if (_m_modifiers.test_value(mod_mutable))
+                        ss << "mutable ";
+                    if (_m_modifiers.test_value(mod_static))
+                        ss << "static ";
+                    if (_m_modifiers.test_value(mod_ptr_const))
+                        ss << "const ";
+                    if (_m_modifiers.test_value(mod_volatile))
+                        ss << "volatile ";
+                    ss << _m_type << ' ';
+                    if (_m_modifiers.test_value(mod_val_const))
+                        ss << "const ";
+                }
+
+                
                 ss << _m_name;
                 if (flags & oflag_need_value) {
                     s_gen_value_assignment_cppstr(ss, _m_value, _m_modifiers);
@@ -65,6 +72,7 @@ namespace pilo
                 }
 
             }
+
 
         }
     }

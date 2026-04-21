@@ -72,9 +72,12 @@ namespace pilo
             const ::pilo::u64_t mod_private             = 0x20000;
             const ::pilo::u64_t mod_protected           = 0x40000;
             const ::pilo::u64_t mod_prefix              = 0x80000;
-            const ::pilo::u64_t mod_is_ref             = 0x100000;
+            const ::pilo::u64_t mod_is_ref              = 0x100000;
             const ::pilo::u64_t mod_non_basetype        = 0x200000;
             const ::pilo::u64_t mod_sentence_end        = 0x400000;
+            const ::pilo::u64_t mod_map_to_member       = 0x800000;
+
+            const ::pilo::u64_t mod_cost_str = (::pilo::core::rtti::mod_isstr | ::pilo::core::rtti::mod_ptr_const);
 
             const ::pilo::u32_t getter_rtype = 0x01;
             const ::pilo::u32_t getter_ptype_ptr = 0x02;
@@ -96,7 +99,7 @@ namespace pilo
             const ::pilo::u32_t oflag_sl_cmt                  = 0x00000040;
             const ::pilo::u32_t oflag_cmt_diff_line           = 0x00000080;
             const ::pilo::u32_t oflag_need_colsep             = 0x00000100;
-
+            const ::pilo::u32_t oflag_supress_type            = 0x00000200;
            
             inline static std::string s_prefix_to_variable_name(const std::string& name, access_priv_type_enum apt)
             {
@@ -194,15 +197,15 @@ namespace pilo
                 }
             }
 
-            inline static void s_gen_priv(std::stringstream& ss, const ::pilo::bit_flag<::pilo::u64_t>& modi, ::pilo::u32_t flags, bool noop_if_no_priv,  ::pilo::i16_t indent, const char* indent_cstr = nullptr)
+            inline static void s_gen_priv(std::stringstream& ss, ::pilo::u64_t modi, ::pilo::u32_t flags, bool noop_if_no_priv,  ::pilo::i16_t indent, const char* indent_cstr = nullptr)
             {                
-                if (modi.test_value(mod_private)) {
+                if (modi &mod_private) {
                     s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1), indent_cstr);
                     ss << "private";                      
-                } else if (modi.test_value(mod_protected)) {
+                } else if (modi &mod_protected) {
                     s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1), indent_cstr);
                     ss << "protected";
-                } else if (modi.test_value(mod_public)) {
+                } else if (modi &mod_public) {
                     s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1), indent_cstr);
                     ss << "public";
                 } else {
@@ -219,18 +222,31 @@ namespace pilo
                 }
 
             }
-            
+
+            inline static void s_gen_priv(std::stringstream& ss, ::pilo::u64_t modi)
+            {
+                if (modi & mod_private) {
+                    ss << "private";
+                }
+                else if (modi & mod_protected) {
+                    ss << "protected";
+                }
+                else if (modi & mod_public) {
+                    ss << "public";
+                }
+            }
             class meta_src_node
             {
             public:
                 meta_src_node(meta_node_type_enum mnte, ::pilo::i16_t indent, ::pilo::u64_t modifiers);
                 virtual ~meta_src_node();
 
-                virtual ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags,  const std::string & strparam = "", const char* indent_cstr = nullptr) const = 0;
+                virtual ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags,  const std::string & strparam = "", const char* indent_cstr = nullptr, ::pilo::i16_t effect_indent = -1) const = 0;
                 virtual meta_node_type_enum meta_type() const { return _m_type; }
                 unsigned int id() const { return _m_id; }
                 void set_indent(::pilo::i16_t indent) { _m_indent = indent; }
                 ::pilo::i16_t indent() const { return _m_indent; }
+                bool test_modifier(::pilo::u64_t flag) const { return _m_modifiers.test_value(flag);  }
                 access_priv_type_enum access_priv_type() const
                 {
                     if (_m_modifiers.test_value(mod_private))
@@ -242,6 +258,7 @@ namespace pilo
                     else
                         return access_priv_type_enum::none;
                 }
+                ::pilo::u64_t modifier_data() const { return _m_modifiers.data(); }
 
             public:
                 static ::pilo::core::algorithm::uint_sequence_generator<unsigned int>    _s_seq_generator;

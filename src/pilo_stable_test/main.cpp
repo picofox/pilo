@@ -54,17 +54,37 @@ int main(int argc, char * argv[])
 
 	std::stringstream ss;
 
-	::pilo::core::rtti::meta_klass c1(1, 0, "Player", "");
-	c1.add_basetype_member_variable(mod_private,getter_rtype | setter_vtype, "id", "unsigned long long", "-1");
-	c1.add_string_member_variable(mod_private, ::pilo::core::rtti::getter_rtype | setter_vtype, "name", "std::string", "");
-	c1.add_basetype_member_variable(mod_private, ::pilo::core::rtti::getter_rtype | setter_vtype, "vip_levl", "unsigned char", "0");
-	c1.add_basetype_member_variable(mod_protected, ::pilo::core::rtti::getter_rtype | setter_vtype, "obj_type", "short", "0");
-	c1.add_basetype_member_variable(mod_public, ::pilo::core::rtti::getter_rtype | setter_vtype, "coin", "long long", "0");
+	::pilo::core::rtti::meta_klass c1(1, 0, "player", "gameobject", ::pilo::core::rtti::mod_protected);
+	::pilo::u64_t mod = ::pilo::core::rtti::mod_inline;
+	mod = 0;
+	c1.add_basetype_member_variable(::pilo::core::rtti::mod_private | mod, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "id", "unsigned long long", "-1");
+	c1.add_string_member_variable(::pilo::core::rtti::mod_private | mod, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "title", "std::string", "");
+	c1.add_basetype_member_variable(::pilo::core::rtti::mod_private | mod, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "vip_level", "unsigned char", "0");
+	c1.add_basetype_member_variable(::pilo::core::rtti::mod_protected | mod, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "obj_type", "short", "0");
+	c1.add_basetype_member_variable(::pilo::core::rtti::mod_public | mod, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "coin", "long long", "0");
+	c1.add_basetype_member_variable(::pilo::core::rtti::mod_private | mod | ::pilo::core::rtti::mod_isstr, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "desc", "std::string", "no desc");
+
+	::pilo::core::rtti::meta_function* confp = c1.add_constructor(::pilo::core::rtti::mod_public | mod, { "GmaeObjectTypeEnum::player", "\"fox\"" });
+	confp->add_param(::pilo::core::rtti::mod_map_to_member | ::pilo::core::rtti::mod_private, "id", "unsigned long long", "0");
+	if (confp == nullptr)
+		return -1;
+	confp->add_param(::pilo::core::rtti::mod_map_to_member | ::pilo::core::rtti::mod_private | ::pilo::core::rtti::mod_cost_str, "title", "std::string&", "player title here");
+	if (confp == nullptr)
+		return -1;
+	confp->add_param(::pilo::core::rtti::mod_map_to_member | ::pilo::core::rtti::mod_private, "vip_level", "unsigned char", "0");
+	if (confp == nullptr)
+		return -1;
+	confp->add_param(::pilo::core::rtti::mod_map_to_member | ::pilo::core::rtti::mod_protected, "obj_type", "short", "0");
+	if (confp == nullptr)
+		return -1;
+
+	confp->add_param(::pilo::core::rtti::mod_map_to_member | ::pilo::core::rtti::mod_public, "coin", "long long", "0");
+	if (confp == nullptr)
+		return -1;
 
 
-
-	c1.append_to_stringstream_cpp(ss, ::pilo::core::rtti::oflag_dec,"", nullptr);
-	
+	c1.append_to_stringstream_cpp(ss, ::pilo::core::rtti::oflag_dec, "", nullptr);
+	c1.append_to_stringstream_cpp(ss, 0, "", nullptr);
 	
 	printf("\n-------------------------------\n");
 	printf("%s",ss.str().c_str());

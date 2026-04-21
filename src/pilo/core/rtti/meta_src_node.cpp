@@ -21,9 +21,9 @@ namespace pilo
 
 
             void s_gen_lines_cpp(std::stringstream& ss, const std::vector<std::unique_ptr<meta_src_node>>& lines, ::pilo::i16_t indent, ::pilo::u32_t flags, const char* indent_cstr)
-            {                
-                PMC_UNUSED(indent);
+            {
                 for (auto it = lines.cbegin(); it != lines.cend(); it++) {
+                    (*it)->set_indent(indent);
                     (*it)->append_to_stringstream_cpp(ss, flags, "", indent_cstr);
                 }
             }
