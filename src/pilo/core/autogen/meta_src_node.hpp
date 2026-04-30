@@ -1,17 +1,18 @@
-﻿#ifndef _pilo_core_rtti_meta_node_hpp_
-#define _pilo_core_rtti_meta_node_hpp_
+﻿#ifndef _pilo_core_autogen_meta_node_hpp_
+#define _pilo_core_autogen_meta_node_hpp_
 
 #include    "../../pilo.hpp"
 #include    <string>
 #include    <sstream>
 #include    "../algorithm/uint_sequence_generator.hpp"
 #include    <vector>
+#include    "autogen.hpp"
 
 namespace pilo
 {
     namespace core
     {
-        namespace rtti
+        namespace autogen
         {
             enum class meta_node_type_enum : short
             {
@@ -24,7 +25,6 @@ namespace pilo
                 enumer,//6
                 codeline,//7
                 imports, //8
-                hdr_ins,//9      
                 count,
             };
 
@@ -39,6 +39,8 @@ namespace pilo
                 copyops,
                 movecons,
                 moveops,
+                getter,
+                setter,
 
             };
 
@@ -52,32 +54,33 @@ namespace pilo
 
             const ::pilo::u64_t mod_const = 0x2;
 
-            const ::pilo::u64_t mod_static              = 0x1;
-            const ::pilo::u64_t mod_ptr_const           = 0x2;
-            const ::pilo::u64_t mod_val_const           = 0x4;
-            const ::pilo::u64_t mod_volatile            = 0x8;
-            const ::pilo::u64_t mod_mutable             = 0x10;
-            const ::pilo::u64_t mod_friend              = 0x20;
-            const ::pilo::u64_t mod_virtual             = 0x40;
-            const ::pilo::u64_t mod_inline              = 0x80;
-            const ::pilo::u64_t mod_abstract            = 0x100;
-            const ::pilo::u64_t mod_isptr               = 0x200;
-            const ::pilo::u64_t mod_isstr               = 0x400;
-            const ::pilo::u64_t mod_ischar              = 0x800;
-            const ::pilo::u64_t mod_isnull              = 0x1000;    
-            const ::pilo::u64_t mod_noex                = 0x2000;
-            const ::pilo::u64_t mod_adv_enum            = 0x4000;
-            const ::pilo::u64_t mod_c_struct            = 0x8000;
-            const ::pilo::u64_t mod_public              = 0x10000;
-            const ::pilo::u64_t mod_private             = 0x20000;
-            const ::pilo::u64_t mod_protected           = 0x40000;
-            const ::pilo::u64_t mod_prefix              = 0x80000;
-            const ::pilo::u64_t mod_is_ref              = 0x100000;
-            const ::pilo::u64_t mod_non_basetype        = 0x200000;
-            const ::pilo::u64_t mod_sentence_end        = 0x400000;
-            const ::pilo::u64_t mod_map_to_member       = 0x800000;
+            const ::pilo::u64_t mod_static              = 0x0000000000000001;
+            const ::pilo::u64_t mod_ptr_const           = 0x0000000000000002;
+            const ::pilo::u64_t mod_val_const           = 0x0000000000000004;
+            const ::pilo::u64_t mod_volatile            = 0x0000000000000008;
+            const ::pilo::u64_t mod_mutable             = 0x0000000000000010;
+            const ::pilo::u64_t mod_friend              = 0x0000000000000020;
+            const ::pilo::u64_t mod_virtual             = 0x0000000000000040;
+            const ::pilo::u64_t mod_inline              = 0x0000000000000080;
+            const ::pilo::u64_t mod_abstract            = 0x0000000000000100;
+            const ::pilo::u64_t mod_isptr               = 0x0000000000000200;
+            const ::pilo::u64_t mod_isstr               = 0x0000000000000400;
+            const ::pilo::u64_t mod_ischar              = 0x0000000000000800;
+            const ::pilo::u64_t mod_isnull              = 0x0000000000001000;
+            const ::pilo::u64_t mod_noex                = 0x0000000000002000;
+            const ::pilo::u64_t mod_adv_enum            = 0x0000000000004000;
+            const ::pilo::u64_t mod_c_struct            = 0x0000000000008000;
+            const ::pilo::u64_t mod_public              = 0x0000000000010000;
+            const ::pilo::u64_t mod_private             = 0x0000000000020000;
+            const ::pilo::u64_t mod_protected           = 0x0000000000040000;
+            const ::pilo::u64_t mod_prefix              = 0x0000000000080000;
+            const ::pilo::u64_t mod_is_ref              = 0x0000000000100000;
+            const ::pilo::u64_t mod_non_basetype        = 0x0000000000200000;
+            const ::pilo::u64_t mod_sentence_end        = 0x0000000000400000;
+            const ::pilo::u64_t mod_map_to_member       = 0x0000000000800000;
+            const ::pilo::u64_t mod_autofill            = 0x0000000001000000;
 
-            const ::pilo::u64_t mod_cost_str = (::pilo::core::rtti::mod_isstr | ::pilo::core::rtti::mod_ptr_const);
+            const ::pilo::u64_t mod_cost_str = (mod_isstr |  mod_ptr_const);
 
             const ::pilo::u32_t getter_rtype = 0x01;
             const ::pilo::u32_t getter_ptype_ptr = 0x02;
@@ -143,27 +146,16 @@ namespace pilo
             }
 
 
-            inline static void s_gen_indent_to_sstream(std::stringstream& ss, ::pilo::i16_t indent, const char* indent_cstr = nullptr)
+            inline static void s_gen_indent_to_sstream(std::stringstream& ss, ::pilo::i16_t indent)
             {
                 if (indent <= 0)
                     return;
-
-                if (indent_cstr == nullptr)
-                    indent_cstr = "    ";
-                
+               
                 for (auto i = 0; i < indent; i++) {
-                    ss << indent_cstr;
+                    ss << g_autogen_config.indent_str();
                 }
             }
 
-            inline static void s_gen_nl_to_sstream(std::stringstream& ss, ::pilo::u32_t flags)
-            {
-                
-                if (flags & oflag_win_nl)
-                    ss << PMS_LINESEP_WIN_A;
-                else
-                    ss << PMS_LINESEP_UNIX_A;
-            }
 
             inline static void s_gen_value_assignment_cppstr(std::stringstream& ss, const std::string& v, const ::pilo::bit_flag<::pilo::u64_t>& modi)
             {
@@ -197,21 +189,21 @@ namespace pilo
                 }
             }
 
-            inline static void s_gen_priv(std::stringstream& ss, ::pilo::u64_t modi, ::pilo::u32_t flags, bool noop_if_no_priv,  ::pilo::i16_t indent, const char* indent_cstr = nullptr)
+            inline static void s_gen_priv(std::stringstream& ss, ::pilo::u64_t modi, ::pilo::u32_t flags, bool noop_if_no_priv,  ::pilo::i16_t indent)
             {                
                 if (modi &mod_private) {
-                    s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1), indent_cstr);
+                    s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1));
                     ss << "private";                      
                 } else if (modi &mod_protected) {
-                    s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1), indent_cstr);
+                    s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1));
                     ss << "protected";
                 } else if (modi &mod_public) {
-                    s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1), indent_cstr);
+                    s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1));
                     ss << "public";
                 } else {
                     if (noop_if_no_priv)
                         return;
-                    s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1), indent_cstr);
+                    s_gen_indent_to_sstream(ss, pilo_max<::pilo::i16_t>(indent, 1));
                     return;
                 }
                 if (flags & oflag_need_colsep) {
@@ -241,7 +233,7 @@ namespace pilo
                 meta_src_node(meta_node_type_enum mnte, ::pilo::i16_t indent, ::pilo::u64_t modifiers);
                 virtual ~meta_src_node();
 
-                virtual ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags,  const std::string & strparam = "", const char* indent_cstr = nullptr, ::pilo::i16_t effect_indent = -1) const = 0;
+                virtual ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags,  const std::string & strparam = "", ::pilo::i16_t effect_indent = -1) const = 0;
                 virtual meta_node_type_enum meta_type() const { return _m_type; }
                 unsigned int id() const { return _m_id; }
                 void set_indent(::pilo::i16_t indent) { _m_indent = indent; }
@@ -273,10 +265,10 @@ namespace pilo
 
             };
 
-            void s_gen_lines_cpp(std::stringstream& ss, const std::vector<std::unique_ptr<meta_src_node>>& lines, ::pilo::i16_t indent, ::pilo::u32_t flags, const char* indent_cstr = nullptr);
+            void s_gen_lines_cpp(std::stringstream& ss, const std::vector<std::unique_ptr<meta_src_node>>& lines, ::pilo::i16_t indent, ::pilo::u32_t flags);
 
         }
     }
 }
 
-#endif
+#endif //!_pilo_core_autogen_meta_node_hpp_

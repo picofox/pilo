@@ -1,5 +1,5 @@
-﻿#ifndef _pilo_core_rtti_meta_variable_hpp_
-#define _pilo_core_rtti_meta_variable_hpp_
+﻿#ifndef _pilo_core_autogen_meta_variable_hpp_
+#define _pilo_core_autogen_meta_variable_hpp_
 
 #include    "../../pilo.hpp"
 #include    "../string/string_operation.hpp"
@@ -11,7 +11,7 @@ namespace pilo
 {
     namespace core
     {
-        namespace rtti
+        namespace autogen
         {
             class meta_variable : public meta_src_node
             {
@@ -29,7 +29,7 @@ namespace pilo
                 ~meta_variable();
 
                 // Inherited via meta_src_node
-                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", const char* indent_cstr = nullptr, ::pilo::i16_t effect_indent = -1) const override;
+                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", ::pilo::i16_t effect_indent = -1) const override;
 
 
 
@@ -70,7 +70,7 @@ namespace pilo
 }
 
 
-#endif // !_pilo_core_rtti_meta_variable_hpp_
+#endif // !_pilo_core_autogen_meta_variable_hpp_
 
 
 

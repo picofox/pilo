@@ -4,12 +4,12 @@ namespace pilo
 {
     namespace core
     {
-        namespace rtti
+        namespace autogen
         {
             meta_codeline::~meta_codeline()
             {                
             }
-            ::pilo::err_t meta_codeline::append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam, const char* indent_cstr, ::pilo::i16_t effect_indent ) const
+            ::pilo::err_t meta_codeline::append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam, ::pilo::i16_t effect_indent ) const
             {
                 if (effect_indent == -1)
                     effect_indent = this->_m_indent;
@@ -17,11 +17,11 @@ namespace pilo
                 PMC_UNUSED(strparam);
                 flags |= oflag_need_nl;
                 if (this->is_blank()) {
-                    s_gen_nl_to_sstream(ss, flags);
+                    ss << g_autogen_config.newline_sep();
                     return PERR_OK;
                 }
                 else {
-                    s_gen_indent_to_sstream(ss, effect_indent, indent_cstr);
+                    s_gen_indent_to_sstream(ss, effect_indent);
                     if (this->is_comment()) {
                         if (flags & oflag_sl_cmt)
                             ss << "//" << this->_m_comment;
@@ -37,8 +37,8 @@ namespace pilo
 
                     } else {
                         ss << this->_m_codeline;
-                        if (flags & ::pilo::core::rtti::oflag_cmt_diff_line) {
-                            s_gen_nl_to_sstream(ss, flags);
+                        if (flags & oflag_cmt_diff_line) {
+                            ss << g_autogen_config.newline_sep();
                         }
                         if (flags & oflag_sl_cmt)
                             ss << "//" << this->_m_comment;

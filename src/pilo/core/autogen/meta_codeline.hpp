@@ -1,5 +1,5 @@
-﻿#ifndef _pilo_core_rtti_meta_ns_hpp_
-#define _pilo_core_rtti_meta_ns_hpp_
+﻿#ifndef _pilo_core_autogen_meta_codeline_hpp_
+#define _pilo_core_autogen_meta_codeline_hpp_
 
 #include    "../../pilo.hpp"
 #include    <vector>
@@ -9,7 +9,7 @@ namespace pilo
 {
     namespace core
     {
-        namespace rtti
+        namespace autogen
         {
             class meta_codeline : public meta_src_node
             {
@@ -20,13 +20,13 @@ namespace pilo
 
 
                 {
-
+                        
                 }
 
                 ~meta_codeline();
 
                 // Inherited via meta_src_node
-                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", const char* indent_cstr = nullptr, ::pilo::i16_t effect_indent = -1) const override;
+                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", ::pilo::i16_t effect_indent = -1) const override;
 
                 std::string codeline() const { return _m_codeline;  }
                 std::string comment() const { return _m_comment; }
@@ -53,7 +53,7 @@ namespace pilo
 }
 
 
-#endif // !_pilo_core_rtti_meta_ns_hpp_
+#endif // !_pilo_core_autogen_meta_codeline_hpp_
 
 
 

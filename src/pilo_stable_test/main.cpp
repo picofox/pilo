@@ -18,10 +18,8 @@
 #include "pilo/tlv.hpp"
 
 #include "pilo/core/config/xls_config.hpp"
-#include "pilo/core/rtti/meta_variable.hpp"
-#include "pilo/core/rtti/meta_function.hpp"
-#include "pilo/core/rtti/meta_enum.hpp"
-#include "pilo/core/rtti/meta_klass.hpp"
+#include "pilo/core/autogen/meta_srcfile.hpp"
+
 
 using namespace ::pilo::core::testing;
 
@@ -54,39 +52,59 @@ int main(int argc, char * argv[])
 
 	std::stringstream ss;
 
-	::pilo::core::rtti::meta_klass c1(1, 0, "player", "gameobject", ::pilo::core::rtti::mod_protected);
-	::pilo::u64_t mod = ::pilo::core::rtti::mod_inline;
+	::pilo::core::autogen::meta_srcfile sf(0,"pilo.core.test.player");
+	sf.add_import(PMI_OS_UNSUPPORT, false, true, "gameobject.hpp");
+	sf.add_import(PMI_OS_UNSUPPORT, false, false, "player.hpp");
+	sf.add_import(PMI_OS_UNSUPPORT, true, false, "vector");
+	sf.add_empty_lines(3);
+
+	auto ns1 = sf.add_ns_node("pilo");
+	auto ns2 = ns1->add_ns_node("core");
+	auto ns3 = ns2->add_ns_node("test_autogen");
+	auto c1 = ns3->add_klass_node(0, "player", "gameobject", ::pilo::core::autogen::mod_protected);
+	::pilo::u64_t mod = ::pilo::core::autogen::mod_inline;
 	mod = 0;
-	c1.add_basetype_member_variable(::pilo::core::rtti::mod_private | mod, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "id", "unsigned long long", "-1");
-	c1.add_string_member_variable(::pilo::core::rtti::mod_private | mod, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "title", "std::string", "");
-	c1.add_basetype_member_variable(::pilo::core::rtti::mod_private | mod, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "vip_level", "unsigned char", "0");
-	c1.add_basetype_member_variable(::pilo::core::rtti::mod_protected | mod, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "obj_type", "short", "0");
-	c1.add_basetype_member_variable(::pilo::core::rtti::mod_public | mod, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "coin", "long long", "0");
-	c1.add_basetype_member_variable(::pilo::core::rtti::mod_private | mod | ::pilo::core::rtti::mod_isstr, ::pilo::core::rtti::getter_rtype | ::pilo::core::rtti::setter_vtype, "desc", "std::string", "no desc");
-	c1.add_desstructor(::pilo::core::rtti::mod_public | ::pilo::core::rtti::mod_virtual);
+	c1->add_basetype_member_variable(::pilo::core::autogen::mod_private | mod, ::pilo::core::autogen::getter_rtype | ::pilo::core::autogen::setter_vtype, "id", "unsigned long long", "-1");
+	c1->add_string_member_variable(::pilo::core::autogen::mod_private | mod, ::pilo::core::autogen::getter_rtype | ::pilo::core::autogen::setter_vtype, "title", "std::string", "");
+	c1->add_basetype_member_variable(::pilo::core::autogen::mod_private | mod, ::pilo::core::autogen::getter_rtype | ::pilo::core::autogen::setter_vtype, "vip_level", "unsigned char", "0");
+	c1->add_basetype_member_variable(::pilo::core::autogen::mod_protected | mod, ::pilo::core::autogen::getter_rtype | ::pilo::core::autogen::setter_vtype, "obj_type", "short", "0");
+	c1->add_basetype_member_variable(::pilo::core::autogen::mod_public | mod, ::pilo::core::autogen::getter_rtype | ::pilo::core::autogen::setter_vtype, "coin", "long long", "0");
+	c1->add_string_member_variable(::pilo::core::autogen::mod_private | mod, ::pilo::core::autogen::getter_rtype | ::pilo::core::autogen::setter_vtype, "desc", "std::string", "no desc");
+	c1->add_ptr_member_variable(::pilo::core::autogen::mod_private | mod, ::pilo::core::autogen::getter_rtype | ::pilo::core::autogen::setter_vtype, "conn", "int *", "nullptr");
 
-	::pilo::core::rtti::meta_function* confp = c1.add_constructor(::pilo::core::rtti::mod_public | mod, { "GmaeObjectTypeEnum::player", "\"fox\"" });
-	confp->add_param(::pilo::core::rtti::mod_map_to_member | ::pilo::core::rtti::mod_private, "id", "unsigned long long", "0");
+	::pilo::core::autogen::meta_function* confp = c1->add_constructor(mod | ::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_autofill | mod, { "GmaeObjectTypeEnum::player", "\"fox\"" });
+	confp->add_param(::pilo::core::autogen::mod_map_to_member | ::pilo::core::autogen::mod_private, "id", "unsigned long long", "0");
 	if (confp == nullptr)
 		return -1;
-	confp->add_param(::pilo::core::rtti::mod_map_to_member | ::pilo::core::rtti::mod_private | ::pilo::core::rtti::mod_cost_str, "title", "std::string&", "player title here");
+	confp->add_param(::pilo::core::autogen::mod_map_to_member | ::pilo::core::autogen::mod_private | ::pilo::core::autogen::mod_cost_str, "title", "std::string&", "player title here");
 	if (confp == nullptr)
 		return -1;
-	confp->add_param(::pilo::core::rtti::mod_map_to_member | ::pilo::core::rtti::mod_private, "vip_level", "unsigned char", "0");
+	confp->add_param(::pilo::core::autogen::mod_map_to_member | ::pilo::core::autogen::mod_private, "vip_level", "unsigned char", "0");
 	if (confp == nullptr)
 		return -1;
-	confp->add_param(::pilo::core::rtti::mod_map_to_member | ::pilo::core::rtti::mod_protected, "obj_type", "short", "0");
-	if (confp == nullptr)
-		return -1;
-
-	confp->add_param(::pilo::core::rtti::mod_map_to_member | ::pilo::core::rtti::mod_public, "coin", "long long", "0");
+	confp->add_param(::pilo::core::autogen::mod_map_to_member | ::pilo::core::autogen::mod_protected, "obj_type", "short", "0");
 	if (confp == nullptr)
 		return -1;
 
+	confp->add_param(::pilo::core::autogen::mod_map_to_member | ::pilo::core::autogen::mod_public, "coin", "long long", "0");
+	if (confp == nullptr)
+		return -1;
 
-	c1.append_to_stringstream_cpp(ss, ::pilo::core::rtti::oflag_dec, "", nullptr);
-	c1.append_to_stringstream_cpp(ss, 0, "", nullptr);
+	c1->add_desstructor(mod | ::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_virtual);
+	c1->add_copy_constructor(mod | ::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_autofill);
+	c1->add_copy_operator(mod | ::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_autofill);
+	c1->add_move_constructor(mod | ::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_autofill);
+	c1->add_move_operator(mod | ::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_autofill);
+	c1->add_member_mothed(mod | ::pilo::core::autogen::mod_public, "load", "int");
+
+	//c1->append_to_stringstream_cpp(ss, ::pilo::core::autogen::oflag_dec, "");
+	//c1->append_to_stringstream_cpp(ss, 0, "");
+	//
+
+	sf.append_to_stringstream_cpp(ss, ::pilo::core::autogen::oflag_dec, "");
+	sf.append_to_stringstream_cpp(ss, 0, "");
 	
+
 	printf("\n-------------------------------\n");
 	printf("%s",ss.str().c_str());
  	printf("\n-------------------------------\n");

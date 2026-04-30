@@ -5,7 +5,7 @@ namespace pilo
 {
     namespace core
     {
-        namespace rtti
+        namespace autogen
         {
             ::pilo::core::algorithm::uint_sequence_generator<unsigned int> meta_src_node::_s_seq_generator = ::pilo::core::algorithm::uint_sequence_generator<unsigned int>();
 
@@ -20,11 +20,11 @@ namespace pilo
             }
 
 
-            void s_gen_lines_cpp(std::stringstream& ss, const std::vector<std::unique_ptr<meta_src_node>>& lines, ::pilo::i16_t indent, ::pilo::u32_t flags, const char* indent_cstr)
+            void s_gen_lines_cpp(std::stringstream& ss, const std::vector<std::unique_ptr<meta_src_node>>& lines, ::pilo::i16_t indent, ::pilo::u32_t flags)
             {
                 for (auto it = lines.cbegin(); it != lines.cend(); it++) {
                     (*it)->set_indent(indent);
-                    (*it)->append_to_stringstream_cpp(ss, flags, "", indent_cstr);
+                    (*it)->append_to_stringstream_cpp(ss, flags, "");
                 }
             }
 

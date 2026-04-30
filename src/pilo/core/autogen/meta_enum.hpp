@@ -1,5 +1,5 @@
-﻿#ifndef _pilo_core_rtti_meta_enum_hpp_
-#define _pilo_core_rtti_meta_enum_hpp_
+﻿#ifndef _pilo_core_autogen_meta_enum_hpp_
+#define _pilo_core_autogen_meta_enum_hpp_
 
 #include    "../../pilo.hpp"
 #include    <vector>
@@ -10,7 +10,7 @@ namespace pilo
 {
     namespace core
     {
-        namespace rtti
+        namespace autogen
         {
             template<typename T>
             class meta_enum : public meta_src_node
@@ -21,17 +21,18 @@ namespace pilo
                     , _m_name(namestr), _m_expl_type(typestr)
 
                 {
+                    
                 }
 
                 ~meta_enum() {}
 
                 // Inherited via meta_src_node
-                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", const char* indent_cstr = nullptr, ::pilo::i16_t effect_indent = -1) const override
+                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", ::pilo::i16_t effect_indent = -1) const override
                 {
                     PMC_UNUSED(strparam);
                     if (effect_indent == -1)
                         effect_indent = this->_m_indent;
-                    s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);
+                    s_gen_indent_to_sstream(ss, this->indent());
                     ss << "enum ";
                     if (_m_modifiers.test_value(mod_adv_enum)) {
                         ss << "class ";
@@ -44,7 +45,7 @@ namespace pilo
                                         
                     if (flags & oflag_need_nl) {
                         s_gen_nl_to_sstream(ss, flags);
-                        s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);
+                        s_gen_indent_to_sstream(ss, this->indent());
                         ss << "{";
                         s_gen_nl_to_sstream(ss, flags);
                     } else {
@@ -54,7 +55,7 @@ namespace pilo
                     
                     for (size_t i = 0; i < _m_item_names.size(); i++) {         
                         if (flags & oflag_need_nl) {
-                            s_gen_indent_to_sstream(ss, this->indent() + 1, indent_cstr);
+                            s_gen_indent_to_sstream(ss, this->indent() + 1);
                         }
                         
                         ss << _m_item_names[i];
@@ -70,7 +71,7 @@ namespace pilo
                     }
 
                     if (flags & oflag_need_nl) {
-                        s_gen_indent_to_sstream(ss, this->indent(), indent_cstr);
+                        s_gen_indent_to_sstream(ss, this->indent());
                         ss << "};";
                     }
                     else {
@@ -109,7 +110,7 @@ namespace pilo
 }
 
 
-#endif // !_pilo_core_rtti_meta_enum_hpp_
+#endif // !_pilo_core_autogen_meta_enum_hpp_
 
 
 

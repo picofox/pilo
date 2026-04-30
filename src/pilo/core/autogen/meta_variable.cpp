@@ -4,27 +4,27 @@ namespace pilo
 {
     namespace core
     {
-        namespace rtti
+        namespace autogen
         {
             meta_variable::~meta_variable()
             {
             }
 
-            ::pilo::err_t meta_variable::append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam , const char* indent_cstr, ::pilo::i16_t effect_indent ) const
+            ::pilo::err_t meta_variable::append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam , ::pilo::i16_t effect_indent ) const
             {            
                 PMC_UNUSED(strparam);
                 if (effect_indent == -1)
                     effect_indent = this->indent();
                 
                 if (flags & oflag_supress_type) {
-                    s_gen_indent_to_sstream(ss, effect_indent, indent_cstr);
+                    s_gen_indent_to_sstream(ss, effect_indent);
                 }
                 else {
                     if (flags & oflag_need_priv) {
                         flags |= oflag_need_nl | oflag_need_colsep;
-                        s_gen_priv(ss, this->_m_modifiers.data(), flags, false, effect_indent - 1, indent_cstr);
+                        s_gen_priv(ss, this->_m_modifiers.data(), flags, false, effect_indent - 1);
                     }
-                    s_gen_indent_to_sstream(ss, effect_indent, indent_cstr);
+                    s_gen_indent_to_sstream(ss, effect_indent);
                     if (_m_modifiers.test_value(mod_mutable))
                         ss << "mutable ";
                     if (_m_modifiers.test_value(mod_static))
@@ -49,7 +49,7 @@ namespace pilo
                 }
                 s_gen_nl(ss, flags);                
 
-                return PERR_OK;
+                return PILO_OK;
             }
 
             void meta_variable::append_as_param_string(std::stringstream& ss, ::pilo::u32_t flags) const

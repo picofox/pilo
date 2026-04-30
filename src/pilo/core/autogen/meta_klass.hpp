@@ -1,5 +1,5 @@
-﻿#ifndef _pilo_core_rtti_meta_klass_hpp_
-#define _pilo_core_rtti_meta_klass_hpp_
+﻿#ifndef _pilo_core_autogen_meta_klass_hpp_
+#define _pilo_core_autogen_meta_klass_hpp_
 
 #include    <initializer_list>
 #include    "../../pilo.hpp"
@@ -12,7 +12,7 @@ namespace pilo
 {
     namespace core
     {
-        namespace rtti
+        namespace autogen
         {
             class meta_klass : public meta_src_node
             {
@@ -29,20 +29,27 @@ namespace pilo
                 ~meta_klass();
 
                 // Inherited via meta_src_node
-                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss,  ::pilo::u32_t flags, const std::string& strparam = "", const char* indent_cstr = nullptr, ::pilo::i16_t effect_indent = -1) const override;
-                ::pilo::err_t append_cpp_declare_string(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam, const char* indent_cstr) const;
-                ::pilo::err_t append_cpp_definition_string(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam, const char* indent_cstr, ::pilo::i16_t effect_indent = -1) const;
+                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss,  ::pilo::u32_t flags, const std::string& strparam = "", ::pilo::i16_t effect_indent = -1) const override;
+                ::pilo::err_t append_cpp_declare_string(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam) const;
+                ::pilo::err_t append_cpp_definition_string(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam, ::pilo::i16_t effect_indent) const;
 
 
                 std::string name() const { return _m_name;  };
                 ::pilo::err_t add_member_variable(::pilo::u64_t modifiers, ::pilo::u32_t accessor_flag, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
                 ::pilo::err_t add_basetype_member_variable(::pilo::u64_t modifiers, ::pilo::u32_t accessor_flag, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
+                ::pilo::err_t add_ptr_member_variable(::pilo::u64_t modifiers, ::pilo::u32_t accessor_flag, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
                 ::pilo::err_t add_string_member_variable(::pilo::u64_t modifiers, ::pilo::u32_t accessor_flag, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
                 ::pilo::err_t add_nonbasetype_member_variable(::pilo::u64_t modifiers, ::pilo::u32_t accessor_flag, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
                 ::pilo::err_t prepend_cons_param(::pilo::u64_t modifiers, const std::string& valuestr);
                 ::pilo::err_t append_cons_param(::pilo::u64_t modifiers, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
                 meta_function* add_constructor(::pilo::u64_t modifiers, std::initializer_list<std::string> base_init_param_list);
                 meta_function* add_desstructor(::pilo::u64_t modifiers);
+                meta_function* add_copy_constructor(::pilo::u64_t modifiers);
+                meta_function* add_copy_operator(::pilo::u64_t modifiers);
+                meta_function* add_move_constructor(::pilo::u64_t modifiers);
+                meta_function* add_move_operator(::pilo::u64_t modifiers);
+                meta_function* add_member_mothed(::pilo::u64_t modifiers, const std::string& name, const std::string ret_type);
+                
 
                 meta_variable* find_member_var_by_name(const std::string name)
                 {
@@ -69,9 +76,9 @@ namespace pilo
                 std::vector<std::unique_ptr<meta_src_node>>        _m_member_variables;
                 std::vector<std::unique_ptr<meta_src_node>>        _m_accessor_methods;
                 std::vector<std::unique_ptr<meta_src_node>>        _m_cons_des;
-                
-
-
+                std::vector<std::unique_ptr<meta_src_node>>        _m_copycons_ops;
+                std::vector<std::unique_ptr<meta_src_node>>        _m_movecons_ops;
+                std::vector<std::unique_ptr<meta_src_node>>        _m_member_mothod;
                 
 
             };
@@ -83,7 +90,7 @@ namespace pilo
 }
 
 
-#endif // !_pilo_core_rtti_meta_klass_hpp_
+#endif // !_pilo_core_autogen_meta_klass_hpp_
 
 
 

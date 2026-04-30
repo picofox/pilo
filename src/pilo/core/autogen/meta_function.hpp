@@ -1,5 +1,5 @@
-﻿#ifndef _pilo_core_rtti_meta_function_hpp_
-#define _pilo_core_rtti_meta_function_hpp_
+﻿#ifndef _pilo_core_autogen_meta_function_hpp_
+#define _pilo_core_autogen_meta_function_hpp_
 
 
 #include    "../../pilo.hpp"
@@ -12,7 +12,7 @@ namespace pilo
 {
     namespace core
     {
-        namespace rtti
+        namespace autogen
         {
             class meta_function : public meta_src_node
             {
@@ -27,14 +27,15 @@ namespace pilo
                 ~meta_function();
 
                 // Inherited via meta_src_node
-                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", const char* indent_cstr = nullptr, ::pilo::i16_t effect_indent = -1) const override;
+                ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", ::pilo::i16_t effect_indent = -1) const override;
 
                 ::pilo::err_t add_param(::pilo::u64_t modifiers, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
                 ::pilo::err_t add_bodyline(::pilo::i16_t rel_indent, ::pilo::u64_t modifiers, const std::string & line, const std::string cmt = "");
 
-            
-                ::pilo::err_t append_cpp_declare_string(std::stringstream& ss,  ::pilo::u32_t flags, const char* indent_cstr) const;
-                ::pilo::err_t append_cpp_definition_string(std::stringstream& ss, ::pilo::u32_t flags,  const std::string& strparam, const char* indent_cstr, ::pilo::i16_t effect_indent = -1) const;
+                void set_base_clsname(const std::string& name) { _m_base_clsname = name; }
+                const std::string& base_clsname() const { return _m_base_clsname;  }
+                ::pilo::err_t append_cpp_declare_string(std::stringstream& ss,  ::pilo::u32_t flags) const;
+                ::pilo::err_t append_cpp_definition_string(std::stringstream& ss, ::pilo::u32_t flags,  const std::string& strparam, ::pilo::i16_t effect_indent = -1) const;
                 void add_param_to_base_init_param_list(const std::string& param) { _m_base_init_param_list.push_back(param); }
                 void add_member_var_list(meta_variable* vp) { _m_member_var_list.push_back(vp); }
                 meta_variable* find_var_in_members(const std::string& name, ::pilo::u64_t mod)
@@ -70,11 +71,13 @@ namespace pilo
             protected:                
                 meta_func_type                    _m_func_type;
                 std::string                        _m_name;
-                std::string                        _m_ret_type;                
+                std::string                        _m_ret_type;    
+                std::string                        _m_base_clsname;
                 std::vector<meta_variable>        _m_params;
                 std::vector<std::unique_ptr<meta_src_node>>    _m_bodylines;
                 std::vector<std::string>          _m_base_init_param_list;
                 std::vector<meta_variable*>       _m_member_var_list;
+
 
             private:
                 std::vector<meta_variable*>       _init_member_var_list;
@@ -85,7 +88,7 @@ namespace pilo
 }
 
 
-#endif // !_pilo_core_rtti_meta_function_hpp_
+#endif // !_pilo_core_autogen_meta_function_hpp_
 
 
 
