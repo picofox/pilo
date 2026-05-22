@@ -2,7 +2,10 @@
 #include    <vector>
 #include    "../../tlv.hpp"
 #include    "../dp/xls_spread_sheet.hpp"
+#include    "../logging/logger_def.hpp"
+ 
 
+#define     PMI_XLS_GEN_ERR_BUFF_SIZE   (1024)
 
 namespace pilo
 {
@@ -19,7 +22,7 @@ namespace pilo
                 friend xls_config_set;
 
             public:
-                xls_config_field() : _index(-1), _column(0)
+                xls_config_field() : _index(-1), _column(0), _flags(0)
                 {
 
                 }
@@ -43,10 +46,11 @@ namespace pilo
             private:
                 ::pilo::i32_t _index;
                 ::pilo::u32_t _column;
+                ::pilo::bit_flag<::pilo::u32_t>  _flags;
                 std::string _name;
                 ::pilo::core::rtti::wired_type  _wired_type;
                 std::string _default_value_str;
-                ::pilo::bit_flag<::pilo::u8_t>  _flags;
+                
             };
 
             class xls_config_set;
@@ -91,10 +95,11 @@ namespace pilo
             public:
                 const static int server = 0;
                 const static int client = 1;
-                const static ::pilo::u8_t   flag_primary_key = 0x1; //p
-                const static ::pilo::u8_t   flag_unique = 0x2; //u
-                const static ::pilo::u8_t   flag_index = 0x4; //i
-                const static ::pilo::u8_t   flag_nullable = 0x8; //n
+                const static ::pilo::u32_t   flag_primary_key = 0x1; //p
+                const static ::pilo::u32_t   flag_unique = 0x2; //u
+                const static ::pilo::u32_t   flag_index = 0x4; //i
+                const static ::pilo::u32_t   flag_nullable = 0x8; //n
+                const static ::pilo::u32_t   flag_primary_key_array = 0x1; //P
 
 
             public:
@@ -125,6 +130,53 @@ namespace pilo
                 std::string  _desc;
                 xls_config _configs[2];
             };
+
+            ::pilo::err_t s_xls_file_iter_func(::pilo::i8_t event_type, const ::pilo::core::io::path* src_path, ::pilo::i8_t fsnt, ::pilo::i32_t layer_idx, ::pilo::i32_t file_idx, void* ctx);
+
+            class xls_config_generator
+            {
+            public:
+                static ::pilo::err_t s_xls_file_iter_func(::pilo::i8_t event_type, const ::pilo::core::io::path* src_path, ::pilo::i8_t fsnt, ::pilo::i32_t layer_idx, ::pilo::i32_t file_idx, void* ctx);
+            public:
+                xls_config_generator() 
+                {  
+                    _errmsg_buffer[0] = { 0 };
+                }
+
+            public:
+                ::pilo::err_t set(const char* xls_dir_path, ::pilo::predefined_pilo_path xls_dir_path_base
+                    , const char* dest_server_config_dir_path, ::pilo::predefined_pilo_path dest_server_config_path_base
+                    , const char* dest_client_config_dir_path, ::pilo::predefined_pilo_path dest_client_config_dir_path_base
+                    , const char* dest_server_source_dir_path, ::pilo::predefined_pilo_path dest_server_source_dir_path_base
+                    , const char* dest_client_source_dir_path, ::pilo::predefined_pilo_path dest_client_source_dir_path_base);
+
+                void clear();
+
+                ::pilo::err_t parse();
+                ::pilo::err_t generate_server_config();
+                ::pilo::err_t generate_client_config();
+                ::pilo::err_t generate_server_source();
+                ::pilo::err_t generate_client_source();
+
+                const char* errmsg() const { return _errmsg_buffer;  }
+
+                void add_log(::pilo::core::logging::level level, ::pilo::u32_t row, ::pilo::u32_t col, const char* fmt, ...);
+                void add_log(::pilo::core::logging::level level, const char* fmt, ...);
+
+                const std::vector<::pilo::core::logging::info_item>& logs() const { return _logs;  }
+
+            private:
+                ::pilo::core::io::path _xls_dir_path;
+                ::pilo::core::io::path _dest_server_config_dir_path;
+                ::pilo::core::io::path _dest_client_config_dir_path;
+                ::pilo::core::io::path _dest_server_source_dir_path;
+                ::pilo::core::io::path _dest_client_source_dir_path;
+                char _errmsg_buffer[PMI_XLS_GEN_ERR_BUFF_SIZE];
+                std::vector<::pilo::core::logging::info_item>   _logs;
+                
+            };
+
+            
         }
     }
 }

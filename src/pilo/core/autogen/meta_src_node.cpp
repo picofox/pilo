@@ -7,6 +7,7 @@ namespace pilo
     {
         namespace autogen
         {
+            autogen_config g_autogen_config;
             ::pilo::core::algorithm::uint_sequence_generator<unsigned int> meta_src_node::_s_seq_generator = ::pilo::core::algorithm::uint_sequence_generator<unsigned int>();
 
             meta_src_node::meta_src_node(meta_node_type_enum mnte, ::pilo::i16_t indent, ::pilo::u64_t modifier) 

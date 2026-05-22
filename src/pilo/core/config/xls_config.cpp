@@ -3,6 +3,7 @@
 #include	<sstream>
 #include	"../process/context.hpp"
 #include    "../ml/json_tlv_driver.hpp"
+#include	"../io/path.hpp"
 
 ::pilo::err_t pilo::core::config::xls_config::s_ui_parser(const char* src, const char* ptr, ::pilo::i64_t len, void* ctx)
 {
@@ -112,7 +113,17 @@ void pilo::core::config::xls_config_set::reset()
 
 ::pilo::err_t pilo::core::config::xls_config_set::parse(const std::string& sheet_name, const char* path_str, ::pilo::predefined_pilo_path prefix, std::string& errmsg)
 {
+	
+	PMC_UNUSED(sheet_name);
+	PMC_UNUSED(path_str);
+	PMC_UNUSED(prefix);
+	PMC_UNUSED(errmsg);
+
 	this->reset();
+
+	
+
+	/*
 
 	::pilo::cstr_ref<char> parts[6];
 	::pilo::i64_t parts_cnt = 0;
@@ -304,7 +315,7 @@ void pilo::core::config::xls_config_set::reset()
 	} //loop all lines
 
 
-
+	*/
 	
 	return PILO_OK;
 }
@@ -435,4 +446,199 @@ std::string pilo::core::config::xls_config_field::to_string() const
 	if (_flags.test_value(xls_config_set::flag_nullable)) attrbuf[i++] = 'n';
 	::pilo::core::io::string_formated_output(buffer, sizeof(buffer), "%s:%s:%s:%s", _name.c_str(), wtbuf, attrbuf, _default_value_str.c_str());
 	return std::string(buffer);
+}
+
+
+
+::pilo::err_t pilo::core::config::xls_config_generator::s_xls_file_iter_func(::pilo::i8_t event_type, const::pilo::core::io::path* src_path, ::pilo::i8_t fsnt, ::pilo::i32_t layer_idx, ::pilo::i32_t file_idx, void* ctx)
+{
+	PMC_UNUSED(event_type);
+	PMC_UNUSED(fsnt);
+	PMC_UNUSED(layer_idx);
+	PMC_UNUSED(file_idx);
+	pilo::core::config::xls_config_generator* pgen = (pilo::core::config::xls_config_generator*)ctx;
+	if (pgen == nullptr) {
+		return PERR_NULL_PTR;
+	}
+
+	if ((::pilo::core::string::i_compare(src_path->extname(), 0, "xlsx", 0, -1))
+		&& (::pilo::core::string::i_compare(src_path->extname(), 0, "xls", 0, -1))) {
+		pgen->add_log(::pilo::core::logging::level::info, "File - [%s] Ignored", src_path->fullpath());
+		return PILO_OK;
+	}
+
+	::pilo::pathlen_t rlen = 0;
+	if (src_path->basename(rlen)[0] == '~') {
+		pgen->add_log(::pilo::core::logging::level::info, "File - [%s] Ignored", src_path->fullpath());
+		return PILO_OK;
+	}
+
+	if (fsnt != ::pilo::core::io::path::fs_node_type_file) {
+		pgen->add_log(::pilo::core::logging::level::info, "File - [%s] Ignored", src_path->fullpath());
+		return PILO_OK;
+	}
+
+	pgen->add_log(::pilo::core::logging::level::info, "Parsing File - [%s]", src_path->fullpath());
+
+	::pilo::core::dp::xls_spread_document doc;
+	::pilo::err_t eret = doc.open(src_path->fullpath(), ::pilo::core::io::creation_mode::open_existing, ::pilo::predefined_pilo_path::count);
+	if (eret != PILO_OK) {
+		::pilo::core::io::string_formated_output(pgen->_errmsg_buffer, PMI_XLS_GEN_ERR_BUFF_SIZE, "Error: xls_conf_gen@0x%p Open file <%s> Failed", pgen, src_path->fullpath());
+		return eret;
+	}
+
+	std::vector<std::string> name_lists;
+	eret = doc.get_all_worksheet_names(name_lists);
+	if (eret != PILO_OK) {
+		::pilo::core::io::string_formated_output(pgen->_errmsg_buffer, PMI_XLS_GEN_ERR_BUFF_SIZE, "Error: xls_conf_gen@0x%p get worksheets name list of <%s> Failed", pgen, src_path->fullpath());
+		return eret;
+	}
+
+	for (size_t i = 0; i < name_lists.size(); i++) {
+		if (name_lists.at(i).size() < 2 || name_lists.at(i)[0] != '$') {
+			continue;
+		}
+
+		::pilo::core::dp::xls_spread_sheet ws = doc.worksheet_by_index((::pilo::u32_t)(i + 1));
+
+		pgen->add_log(::pilo::core::logging::level::info, "Parsing Sheet [%s] in File - [%s]", ws.name().c_str(), src_path->fullpath());
+
+
+	}
+
+	return PILO_OK;
+}
+
+::pilo::err_t pilo::core::config::xls_config_generator::set(const char* xls_dir_path, ::pilo::predefined_pilo_path xls_dir_path_base
+	, const char* dest_server_config_dir_path, ::pilo::predefined_pilo_path dest_server_config_dir_path_base
+	, const char* dest_client_config_dir_path, ::pilo::predefined_pilo_path dest_client_config_dir_path_base
+	, const char* dest_server_source_dir_path, ::pilo::predefined_pilo_path dest_server_source_dir_path_base
+	, const char* dest_client_source_dir_path, ::pilo::predefined_pilo_path dest_client_source_dir_path_base)
+{
+	if (_xls_dir_path.fullpath() != nullptr) {
+		::pilo::core::io::string_formated_output(_errmsg_buffer, PMI_XLS_GEN_ERR_BUFF_SIZE, "Error: xls_conf_gen@0x%p Already set!", this);
+		return PERR_EXIST;
+	}
+
+	if (nullptr == xls_dir_path) {
+		::pilo::core::io::string_formated_output(_errmsg_buffer, PMI_XLS_GEN_ERR_BUFF_SIZE, "Error: xls_conf_gen@0x%p xls dir path is null", this);
+		return PERR_NULL_PATH;
+	}
+	else
+		_xls_dir_path.set(xls_dir_path, xls_dir_path_base);
+
+	if (nullptr == dest_server_config_dir_path)
+		_dest_server_config_dir_path.reset();
+	else
+		_dest_server_config_dir_path.set(dest_server_config_dir_path, dest_server_config_dir_path_base);
+
+	if (nullptr == dest_client_config_dir_path)
+		_dest_client_config_dir_path.reset();
+	else
+		_dest_client_config_dir_path.set(dest_client_config_dir_path, dest_client_config_dir_path_base);
+
+	if (nullptr == dest_server_source_dir_path)
+		_dest_server_source_dir_path.reset();
+	else
+		_dest_server_source_dir_path.set(dest_server_source_dir_path, dest_server_source_dir_path_base);
+
+	if (nullptr == dest_client_source_dir_path)
+		_dest_client_source_dir_path.reset();
+	else
+		_dest_client_source_dir_path.set(dest_client_source_dir_path, dest_client_source_dir_path_base);
+
+	_errmsg_buffer[0] = 0;
+	return PILO_OK;
+}
+
+void pilo::core::config::xls_config_generator::clear()
+{
+	_xls_dir_path.reset();
+	_dest_server_config_dir_path.reset();
+	_dest_client_config_dir_path.reset();
+	_dest_server_source_dir_path.reset();
+	_dest_client_source_dir_path.reset();
+
+	_errmsg_buffer[0] = { 0 };
+}
+
+::pilo::err_t pilo::core::config::xls_config_generator::parse()
+{
+	this->add_log(::pilo::core::logging::level::info, "Start Parsing dir - [%s]", _xls_dir_path.fullpath());
+
+	::pilo::err_t ret = ::pilo::core::io::path::dfs_travel_path(&_xls_dir_path, s_xls_file_iter_func, this, false, ::pilo::core::io::path::evt_node_visiting);
+	if (ret != PILO_OK) {
+		::pilo::core::io::string_formated_output(_errmsg_buffer, PMI_XLS_GEN_ERR_BUFF_SIZE, "Error: xls_conf_gen@0x%p travel xls dir <%s> Failed", this, _xls_dir_path.fullpath());
+		return ret;
+	}
+
+	_errmsg_buffer[0] = { 0 };
+
+	return PILO_OK;
+}
+
+::pilo::err_t pilo::core::config::xls_config_generator::generate_server_config()
+{
+	_errmsg_buffer[0] = { 0 };
+	return PILO_OK;
+}
+
+::pilo::err_t pilo::core::config::xls_config_generator::generate_client_config()
+{
+	_errmsg_buffer[0] = { 0 };
+	return PILO_OK;
+}
+
+::pilo::err_t pilo::core::config::xls_config_generator::generate_server_source()
+{
+	_errmsg_buffer[0] = { 0 };
+	return PILO_OK;
+}
+
+::pilo::err_t pilo::core::config::xls_config_generator::generate_client_source()
+{
+	_errmsg_buffer[0] = { 0 };
+	return PILO_OK;
+}
+
+
+
+void pilo::core::config::xls_config_generator::add_log(::pilo::core::logging::level level, ::pilo::u32_t row, ::pilo::u32_t col, const char* fmt, ...)
+{
+	char buf[PMI_XLS_GEN_ERR_BUFF_SIZE] = { 0 };
+	::pilo::i64_t elen = ::pilo::core::io::string_formated_output(buf, sizeof(buf), "XCG_0x%p => @[%03u:%02u] : ",this,  row, col);
+	::pilo::i64_t remain_capa = sizeof(buf) - elen;
+
+	va_list args;
+
+	va_start(args, fmt);
+#               if defined(WINDOWS)
+	_vsnprintf_s(buf + elen, remain_capa, _TRUNCATE, fmt, args);
+#               else
+	vsnprintf(buf + elen, remain_capa, fmt, args);
+#               endif	
+	va_end(args);
+
+	::pilo::core::logging::info_item ii((::pilo::u32_t)_logs.size(), ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), buf);
+	_logs.push_back(ii);
+}
+
+void pilo::core::config::xls_config_generator::add_log(::pilo::core::logging::level level, const char* fmt, ...)
+{
+	char buf[PMI_XLS_GEN_ERR_BUFF_SIZE] = { 0 };
+	::pilo::i64_t elen = ::pilo::core::io::string_formated_output(buf, sizeof(buf), "XCG_0x%p => @[NA Pos] : ", this);
+	::pilo::i64_t remain_capa = sizeof(buf) - elen;
+
+	va_list args;
+
+	va_start(args, fmt);
+#               if defined(WINDOWS)
+	_vsnprintf_s(buf + elen, remain_capa, _TRUNCATE, fmt, args);
+#               else
+	vsnprintf(buf + elen, remain_capa, fmt, args);
+#               endif	
+	va_end(args);
+
+	::pilo::core::logging::info_item ii((::pilo::u32_t)_logs.size(), ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), buf);
+	_logs.push_back(ii);
 }

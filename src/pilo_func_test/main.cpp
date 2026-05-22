@@ -23,6 +23,7 @@
 
 #include "pilo/core/pattern/resource_cleaner.hpp"
 
+#include "pilo/core/config/xls_config.hpp"
 
 using namespace ::pilo::core::testing;
 
@@ -39,6 +40,10 @@ int main(int argc, char * argv[])
 {
 	PILO_STARTUP_INIT(argc, argv);
 
+
+	
+
+
  	func_test_suite suite_default;
 
 	load_cases(&suite_default);
@@ -51,6 +56,8 @@ int main(int argc, char * argv[])
 
 void load_cases(func_test_suite * suite)
 {		
+	suite->register_case("case_xls_config_gen", ::pilo::func_test::core::config::case_xls_config_gen, nullptr);
+
 	suite->register_case("case_efficeint_thread_pool_basic", ::pilo::func_test::core::threading::case_efficeint_thread_pool_basic, nullptr);
 
 	suite->register_case("case_tlv_set_value", ::pilo::func_test::case_tlv_set_value, nullptr);

@@ -6,7 +6,7 @@ namespace pilo
     {
         namespace autogen
         {
-            autogen_config g_autogen_config;
+            
 
         }
     }

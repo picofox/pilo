@@ -50,6 +50,7 @@ namespace pilo
 			{
 				int case_core_config(::pilo::core::testing::func_test_case* p_case);
 				int case_json_config_basic(::pilo::core::testing::func_test_case* p_case);
+				int case_xls_config_gen(::pilo::core::testing::func_test_case* p_case);
 			}
 
 			namespace rtti

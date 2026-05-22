@@ -1,8 +1,9 @@
 #ifndef _pilo_core_log_logger_def_hpp_
 #define _pilo_core_log_logger_def_hpp_
 
-#include "../../pilo.hpp"
-
+#include    "../../pilo.hpp"
+#include    "../datetime/timestamp.hpp"
+#include    "../io/formatted_io.hpp"
 
 
 namespace pilo {
@@ -57,6 +58,12 @@ namespace pilo {
                 warn = 3,
                 info = 4,
                 debug = 5,
+            };
+
+            enum class representative_type : ::pilo::u8_t
+            {
+                text = 0,
+                bin = 1,
             };
 
             enum class splition_type : ::pilo::u8_t
@@ -121,7 +128,115 @@ namespace pilo {
                 "FlagZip"
             };
 
+            class info_item
+            {
+            public:
+                info_item() 
+                    : _seq((::pilo::u32_t) ~0), _representative_type(::pilo::core::logging::representative_type::text)
+                    , _level(::pilo::core::logging::level::info), _bin_type(0),_timestamp(-1)
+                {
 
+                }
+
+                info_item(::pilo::u32_t seq, ::pilo::core::logging::representative_type  representative_type
+                    ,::pilo::core::logging::level level,::pilo::u16_t bin_type, ::pilo::i64_t ts, const char* infocstr)
+                {
+                    _seq = seq;
+                    _representative_type = representative_type;
+                    _level = level;
+                    _bin_type = bin_type;
+                    _timestamp = ts;
+                    _info = infocstr;
+                }
+
+                info_item(const info_item& rhs) : _seq(rhs._seq), _representative_type(rhs._representative_type)
+                    , _level(rhs._level), _bin_type(rhs._bin_type), _timestamp(rhs._timestamp), _info(rhs._info)
+                {
+                    
+                }
+
+                info_item& operator=(const info_item& rhs)
+                {
+                    if (this == &rhs) {
+                        return *this;
+                    }
+                    _seq = rhs._seq;
+                    _representative_type = rhs._representative_type;
+                    _level = rhs._level;
+                    _bin_type = rhs._bin_type;
+                    _timestamp = rhs._timestamp;
+                    _info = rhs._info;
+                }
+
+                void set(::pilo::u32_t seq, ::pilo::core::logging::representative_type  representative_type
+                    , ::pilo::core::logging::level level, ::pilo::u16_t bin_type, const char* info)
+                {
+                    _seq = seq;
+                    _representative_type = representative_type;
+                    _level = level;
+                    _bin_type = bin_type;
+                    _timestamp = ::pilo::core::datetime::timestamp_micro_system();
+                    _info = info;
+                }
+
+                void set_text(::pilo::u32_t seq, ::pilo::core::logging::level level, const char* info)
+                {
+                    _seq = seq;
+                    _representative_type = ::pilo::core::logging::representative_type::text;
+                    _level = level;
+                    _bin_type = 0;
+                    _timestamp = ::pilo::core::datetime::timestamp_micro_system();
+                    _info = info;
+                }
+
+                void clear()
+                {
+                    _seq = (::pilo::u32_t)~0;
+                    _representative_type = ::pilo::core::logging::representative_type::text;
+                    _level = ::pilo::core::logging::level::info;
+                    _bin_type = 0;
+                    _timestamp = -1;
+                    _info.clear();
+                }
+
+                ::pilo::u32_t seq() const { return _seq; }
+                ::pilo::core::logging::representative_type representative_type() const { return _representative_type; }
+                ::pilo::core::logging::level level() const { return _level; }
+                ::pilo::u16_t bin_type() const { return _bin_type; }
+                ::pilo::i64_t timestamp() const { return _timestamp;  }
+                std::string info() const { return _info;  }
+
+                std::string to_string() const
+                {
+                    std::tm lt = { 0 };
+                    ::pilo::i64_t micro_seconds = 0;
+                    std::time_t unix_timestamp = _timestamp / 1000000;
+                    micro_seconds = _timestamp - unix_timestamp * 1000000;
+
+#ifdef WINDOWS
+                    localtime_s(&lt, &unix_timestamp);
+#else
+                    localtime_r(&unix_timestamp, &lt);
+#endif        
+                    char buff[128] = { 0 };
+
+                    ::pilo::core::io::string_formated_output(buff, 128, "%04d-%02d-%02d %02d:%02d:%02d.%06d"
+                        , lt.tm_year + 1900, lt.tm_mon + 1, lt.tm_mday, lt.tm_hour, lt.tm_min, lt.tm_sec, micro_seconds);
+
+
+                    std::stringstream ss;
+                    ss << buff << '\t' << g_level_names[(int)_level] << '\t' << _info << "\n";
+                    return ss.str();
+                }
+
+            private:
+                ::pilo::u32_t                                   _seq;
+                ::pilo::core::logging::representative_type      _representative_type;
+                ::pilo::core::logging::level                    _level;
+                ::pilo::u16_t                                   _bin_type;                
+                ::pilo::i64_t                                   _timestamp;                
+                std::string                                     _info;
+            };
 
 
         }

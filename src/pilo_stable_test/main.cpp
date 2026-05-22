@@ -35,6 +35,8 @@ int main(int argc, char * argv[])
 	load_cases(&suite_default);
 	PILO_CONTEXT->start();
 
+
+
 /*
 	::pilo::core::config::xls_config_set xcfg;
 	std::string errmsg;
@@ -63,7 +65,7 @@ int main(int argc, char * argv[])
 	auto ns3 = ns2->add_ns_node("test_autogen");
 	auto c1 = ns3->add_klass_node(0, "player", "gameobject", ::pilo::core::autogen::mod_protected);
 	::pilo::u64_t mod = ::pilo::core::autogen::mod_inline;
-	mod = 0;
+	//mod = 0;
 	c1->add_basetype_member_variable(::pilo::core::autogen::mod_private | mod, ::pilo::core::autogen::getter_rtype | ::pilo::core::autogen::setter_vtype, "id", "unsigned long long", "-1");
 	c1->add_string_member_variable(::pilo::core::autogen::mod_private | mod, ::pilo::core::autogen::getter_rtype | ::pilo::core::autogen::setter_vtype, "title", "std::string", "");
 	c1->add_basetype_member_variable(::pilo::core::autogen::mod_private | mod, ::pilo::core::autogen::getter_rtype | ::pilo::core::autogen::setter_vtype, "vip_level", "unsigned char", "0");

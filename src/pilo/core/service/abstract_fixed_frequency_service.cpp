@@ -12,7 +12,7 @@ namespace pilo
 			void abstract_fixed_frequency_service::check_pulse(::pilo::i64_t now_ts)
 			{
 				::pilo::i64_t dist = now_ts - _m_last_pulse;
-				if (dist > _m_last_pulse) {
+				if (dist > this->_pulse_usec) {
 					_m_last_pulse = PILO_TIMESTAMP;
 					this->pulse(now_ts);					
 				}

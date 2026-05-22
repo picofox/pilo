@@ -1,180 +1,16 @@
 #include	"./xls_spread_sheet.hpp"
 #include	"../process/context.hpp"
 
-pilo::core::dp::xls_spread_sheet::xls_spread_sheet() :_open_for_write(false)
+pilo::core::dp::xls_spread_sheet::xls_spread_sheet(OpenXLSX::XLWorksheet ws) : _work_sheet(ws)
 {
-	_doc.suppressWarnings();
+
 }
 
 pilo::core::dp::xls_spread_sheet::~xls_spread_sheet()
 {
-	close();
+
 }
 
-::pilo::err_t pilo::core::dp::xls_spread_sheet::open(const char* path_str, ::pilo::core::io::creation_mode cm,  ::pilo::predefined_pilo_path prefix)
-{
-	if (_doc.isOpen())
-		return ::pilo::mk_perr(PERR_EXIST);
-
-	this->_m_path.set(path_str, prefix);
-	if (this->_m_path.invalid()) {
-		return ::pilo::mk_perr(PERR_INVALID_PATH);
-	}
-
-	::pilo::err_t err = this->_m_path.ensure_parent_path_exist();
-	if (err != PILO_OK) {
-		return ::pilo::mk_perr(PERR_INVALID_PATH);
-	}
-
-	bool is_exist = false;  
-	::pilo::i8_t fsnt = this->_m_path.get_fs_info(nullptr, nullptr);
-	if ( fsnt == ::pilo::core::io::path::path_type_na) {
-		is_exist = false;
-	}
-	else if (fsnt == ::pilo::core::io::path::fs_node_type_file) {
-		is_exist = true;
-	}
-	else {
-		return ::pilo::mk_perr(PERR_NOT_A_REG_FILE);
-	}
-
-	if (cm == ::pilo::core::io::creation_mode::create_always) {
-		try
-		{
-			_doc.create(std::string(_m_path.fullpath()), true);
-			_open_for_write = true;
-		}
-		catch (const std::exception&)
-		{
-			return ::pilo::mk_perr(PERR_IO_CREATE_FAIL);
-		}
-	}
-	else if (cm == ::pilo::core::io::creation_mode::create_neo) {
-		try
-		{
-			if (is_exist)
-			    return ::pilo::mk_perr(PERR_EXIST);
-			_doc.create(std::string(_m_path.fullpath()), false);
-			_open_for_write = true;
-		}
-		catch (const std::exception&)
-		{
-			return ::pilo::mk_perr(PERR_IO_CREATE_FAIL);
-		}
-	}
-	else if (cm == ::pilo::core::io::creation_mode::open_existing) {
-		try
-		{
-			if (!is_exist)
-                            return ::pilo::mk_perr(PERR_NON_EXIST);
-
-			_doc.open(std::string(_m_path.fullpath()));
-			_open_for_write = false;
-		}
-		catch (const std::exception&)
-		{
-			return ::pilo::mk_perr(PERR_IO_CREATE_FAIL);
-		}
-	}
-	else if (cm == ::pilo::core::io::creation_mode::open_always) {
-		try
-		{
-			_doc.open(std::string(_m_path.fullpath()));
-			_open_for_write = false;
-		}
-		catch (const std::exception&)
-		{
-			try
-			{
-				_doc.create(std::string(_m_path.fullpath()), true);
-				_open_for_write = true;
-			}
-			catch (const std::exception&)
-			{
-				return ::pilo::mk_perr(PERR_IO_CREATE_FAIL);
-			}
-		}
-	}
-	else {
-		return ::pilo::mk_perr(PERR_INVALID_PARAM);
-	}
-
-	_doc.suppressWarnings();
-
-	return PILO_OK;
-}
-
-void pilo::core::dp::xls_spread_sheet::close()
-{
-	if (_doc.isOpen()) {
-		if (_open_for_write) {
-			_doc.save();
-		}
-		_doc.close();
-	}		
-}
-
-::pilo::u32_t pilo::core::dp::xls_spread_sheet::sheet_count() const
-{
-	return _doc.workbook().sheetCount();
-}
-
-::pilo::i32_t pilo::core::dp::xls_spread_sheet::worksheet_count() const
-{
-	return _doc.workbook().worksheetCount();
-}
-
-::pilo::u32_t pilo::core::dp::xls_spread_sheet::row_count(const std::string& sheet_name) const
-{
-	try
-	{
-		return _doc.workbook().worksheet(sheet_name).rowCount();
-	}
-	catch (const std::exception&)
-	{
-		return xls_spread_sheet::invalid_count;
-	}
-}
-
-::pilo::u32_t pilo::core::dp::xls_spread_sheet::col_count(const std::string& sheet_name) const
-{
-	try
-	{
-		return _doc.workbook().worksheet(sheet_name).columnCount();
-	}
-	catch (const std::exception&)
-	{
-		return xls_spread_sheet::invalid_count;
-	}
-}
-
-::pilo::tlv* pilo::core::dp::xls_spread_sheet::value(const std::string& name, ::pilo::u32_t row, ::pilo::u32_t col) const
-{
-	try
-	{
-		auto wks = _doc.workbook().worksheet(name);
-		OpenXLSX::XLCellAssignable cell = wks.cell(row, (::pilo::u16_t)col);
-		return this->_value(cell);
-	}
-	catch (const std::exception&)
-	{
-		return nullptr;
-	}
-}
-
-::pilo::tlv* pilo::core::dp::xls_spread_sheet::value(::pilo::u16_t idx, ::pilo::u32_t row, ::pilo::u32_t col) const
-{
-	try
-	{
-		auto wks = _doc.workbook().worksheet(idx);
-		OpenXLSX::XLCellAssignable cell = wks.cell(row, (::pilo::u16_t)col);
-		return this->_value(cell);
-	}
-	catch (const std::exception&)
-	{
-		return nullptr;
-	}
-}
 
 ::pilo::u32_t pilo::core::dp::xls_spread_sheet::row_count() const
 {
@@ -200,125 +36,6 @@ void pilo::core::dp::xls_spread_sheet::close()
 	}
 }
 
-::pilo::tlv* pilo::core::dp::xls_spread_sheet::row_values(const std::string& name, ::pilo::u32_t row, ::pilo::u32_t col_beg, ::std::initializer_list<::pilo::i16_t> types)
-{
-	OpenXLSX::XLWorksheet  wks;
-	try
-	{
-		wks = _doc.workbook().worksheet(name);
-	}
-	catch (const std::exception&)
-	{
-		return nullptr;
-	}
-
-	::pilo::tlv* tlvp = PILO_CONTEXT->allocate_tlv();
-	tlvp->set_array_type(::pilo::core::rtti::wired_type::value_type_tlv);
-
-	::pilo::u32_t i = 0;
-	for (::pilo::i16_t t : types) {
-		OpenXLSX::XLCellAssignable cell = wks.cell(row, (::pilo::u16_t)(col_beg + i));
-		::pilo::tlv* p = _value(cell, t);
-		if (p == nullptr) {
-			PILO_CONTEXT->deallocate_tlv(tlvp);
-			return nullptr;
-		}
-		tlvp->push_back(p, -1, true);
-		i++;
-	}
-
-	return tlvp;
-}
-
-::pilo::tlv* pilo::core::dp::xls_spread_sheet::row_values(::pilo::u16_t idx, ::pilo::u32_t row, ::pilo::u32_t col_beg, ::std::initializer_list<::pilo::i16_t> types)
-{	
-	OpenXLSX::XLWorksheet  wks;
-	try
-	{
-		wks = _doc.workbook().worksheet(idx);
-	}
-	catch (const std::exception&)
-	{
-		return nullptr;
-	}
-
-	::pilo::tlv* tlvp = PILO_CONTEXT->allocate_tlv();
-	tlvp->set_array_type(::pilo::core::rtti::wired_type::value_type_tlv);
-
-	::pilo::u32_t i = 0;
-	for (::pilo::i16_t t : types) {
-		OpenXLSX::XLCellAssignable cell = wks.cell(row, (::pilo::u16_t)(col_beg + i));
-		::pilo::tlv* p = _value(cell, t);
-		if (p == nullptr) {
-			PILO_CONTEXT->deallocate_tlv(tlvp);
-			return nullptr;
-		}
-		tlvp->push_back(p, -1, true);
-		i++;
-
-	}
-
-	return tlvp;
-}
-
-::pilo::tlv* pilo::core::dp::xls_spread_sheet::row_values_selected(::pilo::u16_t idx, ::pilo::u32_t row, ::std::initializer_list<::pilo::u32_t> indices, ::std::initializer_list<::pilo::i16_t> types)
-{
-	OpenXLSX::XLWorksheet  wks;
-	try
-	{
-		wks = _doc.workbook().worksheet(idx);
-	}
-	catch (const std::exception&)
-	{
-		return nullptr;
-	}
-
-	::pilo::tlv* tlvp = PILO_CONTEXT->allocate_tlv();
-	tlvp->set_array_type(::pilo::core::rtti::wired_type::value_type_tlv);
-
-	::pilo::u32_t i = 0;
-	auto t_it = types.begin();
-	auto i_it = indices.begin();
-	for (; i_it != indices.end() && t_it != types.end(); ++i_it, ++t_it) {
-		OpenXLSX::XLCellAssignable cell = wks.cell(row, (::pilo::u16_t)(*i_it));
-		::pilo::tlv* p = _value(cell, *t_it);
-		if (p == nullptr) {
-			PILO_CONTEXT->deallocate_tlv(tlvp);
-			return nullptr;
-		}
-		tlvp->push_back(p, -1, true);
-		i++;
-
-	}
-
-	return tlvp;
-}
-
-::pilo::err_t pilo::core::dp::xls_spread_sheet::select_work_sheet(const std::string& sheet_name)
-{
-	try
-	{
-		_work_sheet = _doc.workbook().worksheet(sheet_name);
-	}
-	catch (const std::exception&)
-	{
-		return ::pilo::mk_perr(PERR_NON_EXIST);
-	}
-	return PILO_OK;
-}
-
-::pilo::err_t pilo::core::dp::xls_spread_sheet::select_work_sheet(::pilo::u16_t idx)
-{
-	try
-	{
-		_work_sheet = _doc.workbook().worksheet(idx);
-	}
-	catch (const std::exception&)
-	{
-		return ::pilo::mk_perr(PERR_NON_EXIST);
-	}
-	return PILO_OK;
-}
 
 ::pilo::tlv* pilo::core::dp::xls_spread_sheet::row_values(::pilo::u32_t row, ::pilo::u32_t col_beg, ::std::initializer_list<::pilo::i16_t> types)
 {
@@ -578,5 +295,161 @@ void pilo::core::dp::xls_spread_sheet::close()
 		return nullptr;
 	}
 
+}
+
+pilo::core::dp::xls_spread_document::xls_spread_document() :_open_for_write(false)
+{
+	_doc.suppressWarnings();
+}
+
+pilo::core::dp::xls_spread_document::~xls_spread_document()
+{
+	close();
+}
+
+::pilo::err_t pilo::core::dp::xls_spread_document::open(const char* path_str, ::pilo::core::io::creation_mode cm, ::pilo::predefined_pilo_path prefix)
+{
+	if (_doc.isOpen())
+		return ::pilo::mk_perr(PERR_EXIST);
+
+	this->_m_path.set(path_str, prefix);
+	if (this->_m_path.invalid()) {
+		return ::pilo::mk_perr(PERR_INVALID_PATH);
+	}
+
+	::pilo::err_t err = this->_m_path.ensure_parent_path_exist();
+	if (err != PILO_OK) {
+		return ::pilo::mk_perr(PERR_INVALID_PATH);
+	}
+
+	bool is_exist = false;
+	::pilo::i8_t fsnt = this->_m_path.get_fs_info(nullptr, nullptr);
+	if (fsnt == ::pilo::core::io::path::path_type_na) {
+		is_exist = false;
+	}
+	else if (fsnt == ::pilo::core::io::path::fs_node_type_file) {
+		is_exist = true;
+	}
+	else {
+		return ::pilo::mk_perr(PERR_NOT_A_REG_FILE);
+	}
+
+	if (cm == ::pilo::core::io::creation_mode::create_always) {
+		try
+		{
+			_doc.create(std::string(_m_path.fullpath()), true);
+			_open_for_write = true;
+		}
+		catch (const std::exception&)
+		{
+			return ::pilo::mk_perr(PERR_IO_CREATE_FAIL);
+		}
+	}
+	else if (cm == ::pilo::core::io::creation_mode::create_neo) {
+		try
+		{
+			if (is_exist)
+				return ::pilo::mk_perr(PERR_EXIST);
+			_doc.create(std::string(_m_path.fullpath()), false);
+			_open_for_write = true;
+		}
+		catch (const std::exception&)
+		{
+			return ::pilo::mk_perr(PERR_IO_CREATE_FAIL);
+		}
+	}
+	else if (cm == ::pilo::core::io::creation_mode::open_existing) {
+		try
+		{
+			if (!is_exist)
+				return ::pilo::mk_perr(PERR_NON_EXIST);
+
+			_doc.open(std::string(_m_path.fullpath()));
+			_open_for_write = false;
+		}
+		catch (const std::exception&)
+		{
+			return ::pilo::mk_perr(PERR_IO_CREATE_FAIL);
+		}
+	}
+	else if (cm == ::pilo::core::io::creation_mode::open_always) {
+		try
+		{
+			_doc.open(std::string(_m_path.fullpath()));
+			_open_for_write = false;
+		}
+		catch (const std::exception&)
+		{
+			try
+			{
+				_doc.create(std::string(_m_path.fullpath()), true);
+				_open_for_write = true;
+			}
+			catch (const std::exception&)
+			{
+				return ::pilo::mk_perr(PERR_IO_CREATE_FAIL);
+			}
+		}
+	}
+	else {
+		return ::pilo::mk_perr(PERR_INVALID_PARAM);
+	}
+
+	_doc.suppressWarnings();
+
+	return PILO_OK;
+}
+
+void pilo::core::dp::xls_spread_document::close()
+{
+	if (_doc.isOpen()) {
+		if (_open_for_write) {
+			_doc.save();
+		}
+		_doc.close();
+	}
+}
+
+void pilo::core::dp::xls_spread_document::save()
+{
+	_doc.save();
+}
+
+void pilo::core::dp::xls_spread_document::save_as(const std::string& filepathstr, bool force_overwrite)
+{
+	_doc.saveAs(filepathstr, force_overwrite);
+}
+
+::pilo::u32_t pilo::core::dp::xls_spread_document::sheet_count() const
+{
+	return _doc.workbook().sheetCount();
+}
+
+::pilo::u32_t pilo::core::dp::xls_spread_document::worksheet_count() const
+{
+	return _doc.workbook().worksheetCount();
+}
+
+::pilo::err_t pilo::core::dp::xls_spread_document::get_all_worksheet_names(std::vector<std::string>& names)
+{
+	try
+	{
+		::pilo::u32_t cnt = _doc.workbook().worksheetCount();
+		for (::pilo::u32_t u = 1; u <= cnt; u++) {
+			names.push_back(_doc.workbook().worksheet((::pilo::u16_t)u).name());
+		}
+	}
+	catch (const std::exception&)
+	{
+		return ::pilo::mk_perr(PERR_UNDEF);
+	}
+	return PILO_OK;
+}
+
+::pilo::core::dp::xls_spread_sheet pilo::core::dp::xls_spread_document::worksheet_by_index(::pilo::u32_t index)
+{
+	OpenXLSX::XLWorksheet ws = _doc.workbook().worksheet((::pilo::u16_t) index);
+	::pilo::core::dp::xls_spread_sheet xws(ws);
+	return xws;
 }
 
