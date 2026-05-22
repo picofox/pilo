@@ -21,38 +21,6 @@ namespace pilo
 				xls_spread_sheet(OpenXLSX::XLWorksheet ws);
 				~xls_spread_sheet();
 
-				template<typename T>
-				::pilo::err_t value(T& value_ret, ::pilo::u16_t idx, ::pilo::u32_t row, ::pilo::u32_t col) const
-				{
-					try
-					{
-						auto wks = _doc.workbook().worksheet(idx);
-						OpenXLSX::XLCellAssignable cell = wks.cell(row, (::pilo::u16_t)col);						
-						value_ret = cell.value().get<T>();
-						return PILO_OK;
-					}
-					catch (const std::exception&)
-					{
-						return ::pilo::mk_perr(PERR_NON_EXIST);
-					}
-				}
-
-				template<typename T>
-				::pilo::err_t value(T& value_ret, const std::string& name, ::pilo::u32_t row, ::pilo::u32_t col) const
-				{
-					try
-					{
-						auto wks = _doc.workbook().worksheet(name);
-						OpenXLSX::XLCellAssignable cell = wks.cell(row, (::pilo::u16_t)col);
-						value_ret = cell.value().get<T>();
-						return PILO_OK;
-					}
-					catch (const std::exception&)
-					{
-						return ::pilo::mk_perr(PERR_NON_EXIST);
-					}
-				}
-
 				::pilo::u32_t row_count() const;
 				::pilo::u32_t col_count() const;
 
