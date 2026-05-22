@@ -44,10 +44,10 @@ namespace pilo
                     }
                                         
                     if (flags & oflag_need_nl) {
-                        s_gen_nl_to_sstream(ss, flags);
+                        ss << g_autogen_config.newline_sep();
                         s_gen_indent_to_sstream(ss, this->indent());
                         ss << "{";
-                        s_gen_nl_to_sstream(ss, flags);
+                        ss << g_autogen_config.newline_sep();
                     } else {
                         ss << " {";
                     }
@@ -67,7 +67,7 @@ namespace pilo
                             ss << " /* " << _m_item_cmt[i] << " */ ";
                         }
                         if (flags & oflag_need_nl)
-                            s_gen_nl_to_sstream(ss, flags | oflag_need_nl);
+                            ss << g_autogen_config.newline_sep();
                     }
 
                     if (flags & oflag_need_nl) {
@@ -79,7 +79,7 @@ namespace pilo
                     }
 
 
-                    s_gen_nl_to_sstream(ss, flags);
+                    ss << g_autogen_config.newline_sep();
                     return PILO_OK;
 
                 }
