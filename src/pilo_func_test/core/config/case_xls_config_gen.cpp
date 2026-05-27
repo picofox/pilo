@@ -27,12 +27,14 @@ namespace pilo
 						, "test_xls/conf_src/server", ::pilo::predefined_pilo_path::tmp
 						, "test_xls/conf_src/client", ::pilo::predefined_pilo_path::tmp);
 					if (xret != PILO_OK) {
-						return p_case->error(xret, xconf_gen.errmsg());
+						return p_case->error(xret, xconf_gen.logs().back().to_string().c_str());
 					}
 
 					xret = xconf_gen.parse();
 					if (xret != PILO_OK) {
-						return p_case->error(xret, xconf_gen.errmsg());
+						for (size_t i = 0; i < xconf_gen.logs().size(); i++) {
+							printf("%s\n", xconf_gen.logs().at(i).to_string().c_str());
+						}
 					}
 
 					for (size_t i = 0; i < xconf_gen.logs().size(); i++) {

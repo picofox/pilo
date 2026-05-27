@@ -130,9 +130,11 @@ pilo::core::dp::xls_spread_sheet::~xls_spread_sheet()
 {
 	try
 	{
-		tlv_ptr->clear();
-		if (cell.empty())
+
+		if (cell.value().type() == OpenXLSX::XLValueType::Empty) {
+			tlv_ptr->clear();
 			return PILO_OK;
+		}
 
 		OpenXLSX::XLValueType ctp = cell.value().type();
 		if (ctp == OpenXLSX::XLValueType::Integer) {
@@ -171,7 +173,7 @@ pilo::core::dp::xls_spread_sheet::~xls_spread_sheet()
 {
 	try
 	{
-		if (cell.empty()) {
+		if (cell.value().type() == OpenXLSX::XLValueType::Empty) {
 			str.clear();
 			return PILO_OK;
 		}		

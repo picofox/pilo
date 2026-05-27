@@ -21,6 +21,8 @@ namespace pilo
 
             ::pilo::u16_t wired_type::s_char_to_value_type(char ch)
             {
+                if (ch == '-')
+                    return ::pilo::core::rtti::wired_type::value_type_na;
                 for (size_t i = 0; i < sizeof(s_value_type_intrin_chars); i++) {
                     if (s_value_type_intrin_chars[i] == ch)
                         return (::pilo::u16_t) i;
@@ -50,6 +52,7 @@ namespace pilo
                     wt = ::pilo::core::rtti::wired_type::wrapper_na;
                     kt = ::pilo::core::rtti::wired_type::key_type_na;
                     vt = ::pilo::core::rtti::wired_type::value_type_na;
+                    return ::pilo::mk_perr(PERR_VAL_EMPTY);
                 }
                 else if (len == 1) {
                     wt = ::pilo::core::rtti::wired_type::wrapper_single;

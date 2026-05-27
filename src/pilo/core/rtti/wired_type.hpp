@@ -73,8 +73,40 @@ namespace pilo
 					set(is_msg, wrapper_type, key_type, value_type);
 				}
 
+				wired_type(wired_type& rhs)
+					: _attribute(rhs._attribute), _flags(rhs._flags), _value_type(rhs._value_type)
+				{
+
+				}
+				wired_type& operator=(const wired_type& rhs)
+				{
+					if (this != &rhs) {
+						_attribute = rhs._attribute;
+						_flags = rhs._flags;
+						_value_type = rhs._value_type;
+					}
+					return *this;
+				}
+
+				wired_type(wired_type&& rhs) noexcept
+					: _attribute(rhs._attribute), _flags(rhs._flags), _value_type(rhs._value_type)
+				{
+
+				}
+				wired_type& operator=(wired_type&& rhs) noexcept
+				{
+					if (this != &rhs) {
+						_attribute = rhs._attribute;
+						_flags = rhs._flags;
+						_value_type = rhs._value_type;
+					}
+					return *this;
+				}
+
 				::pilo::u8_t attribute() const { return _attribute; }
 				::pilo::u8_t flags() const { return _flags; }
+
+
 
 				inline void set_flag(::pilo::u8_t f)
 				{

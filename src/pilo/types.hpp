@@ -289,9 +289,20 @@ namespace pilo
 			}
 			return c;
 		}
+
+
 	public:
 		bit_flag(INT_T dfl) { _flags = dfl; }
 		bit_flag() { _flags = 0; }
+
+	public:
+		bit_flag(const bit_flag&) = default;                
+		bit_flag& operator=(const bit_flag&) = default;      
+
+		bit_flag(bit_flag&&) noexcept = default;
+		bit_flag& operator=(bit_flag&&) noexcept = default;  
+
+	public:
 		bit_flag& operator=(INT_T v) { _flags = v; return *this; }
 		inline INT_T data() const { return _flags; }
 		inline void set(INT_T i) { _flags = i;  }

@@ -791,18 +791,13 @@ namespace pilo
                 std::string token;
                 std::istringstream tokenStream(src);
                 ::pilo::i64_t idx = 0;
-                while (std::getline(tokenStream, token, delim)) {
+                while (std::getline(tokenStream, token, delim)) {  
+                    if (trim) {
+                        trim_string(token);                        
+                    }
+                    ret_arr[idx++] = token;
                     if (idx >= capa)
                         return idx;
-                    if (!trim) {
-                        ret_arr[idx++] = token;
-                    }
-                    else {
-                        ::pilo::i64_t s = token.find_first_not_of(' ');
-                        ::pilo::i64_t e = token.find_last_not_of(' ');
-                        ret_arr[idx++] = token.substr(s, e - s + 1);
-                    }
-
                 }
                 return idx;
             }
@@ -813,15 +808,10 @@ namespace pilo
                 std::string token;
                 std::istringstream tokenStream(src);
                 while (std::getline(tokenStream, token, delim)) {
-                    if (!trim) {
-                        ret.push_back(token);
+                    if (trim) {
+                        trim_string(token);
                     }
-                    else {
-                        ::pilo::i64_t s = token.find_first_not_of(' ');
-                        ::pilo::i64_t e = token.find_last_not_of(' ');
-                        ret.push_back(token.substr(s, e - s + 1));
-                    }
-
+                    ret.push_back(token);
                 }
                 return ret;
             }
