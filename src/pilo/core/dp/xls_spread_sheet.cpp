@@ -259,7 +259,7 @@ pilo::core::dp::xls_spread_sheet::~xls_spread_sheet()
 	try
 	{
 		::pilo::tlv* tlvp = nullptr;
-		if (cell.empty())
+		if (cell.value().type() == OpenXLSX::XLValueType::Empty)
 			return PILO_CONTEXT->allocate_tlv();
 
 		OpenXLSX::XLValueType ctp = cell.value().type();

@@ -108,7 +108,8 @@ namespace pilo
                     , _config_file_name(std::move(rhs._config_file_name))
                     , _ns(std::move(rhs._ns))
                     , _union_indices(std::move(rhs._union_indices))
-                    , _fields(std::move(rhs._fields))      
+                    , _fields(std::move(rhs._fields))   
+                    , _cls_fields_index_map(rhs._cls_fields_index_map)
 
                 {
                     _data = rhs._data;
@@ -137,6 +138,7 @@ namespace pilo
                 std::string _ns;
                 std::vector<std::vector<std::string>>  _union_indices;
                 std::vector<xls_config_field> _fields;
+                std::vector<std::pair<::pilo::i32_t, ::pilo::i32_t>> _cls_fields_index_map;
                 ::pilo::tlv *                 _data;
             };
 
@@ -195,12 +197,6 @@ namespace pilo
                 ::pilo::err_t parse(const std::string& sheet_name, const char* path_str, ::pilo::predefined_pilo_path prefix, std::string& errmsg);
                 ::pilo::err_t save_config_file(int which, const char* path_str, predefined_pilo_path prefix);
                 std::string to_string() const;
-
-
-            protected:
-                void _compose_errmsg(std::string& errmsg, ::pilo::u32_t row, ::pilo::u32_t col, const char* fmt, ...);
-                ::pilo::err_t _parse_field(int which, const std::string& field_str,::pilo::u32_t row, ::pilo::u32_t col);
-                ::pilo::err_t _parse_record(int which, ::pilo::u32_t row, ::pilo::core::dp::xls_spread_sheet* xssp, std::string& errmsg);
 
             private:
                 std::string                 _xls_name;
@@ -261,6 +257,7 @@ namespace pilo
                 ::pilo::err_t _parse_xls(const char* filename);
                 ::pilo::err_t _parse_worksheet(::pilo::core::dp::xls_spread_document & doc, const char* filename, ::pilo::u32_t ws_idx);
                 ::pilo::err_t _parse_field_spec(xls_config_set& cfg_set, int which, const std::string& field_str, ::pilo::u32_t row, ::pilo::u32_t col,const char* xlsfullfilepath, const char* wsnamecstr);
+                ::pilo::err_t _parse_record(xls_config_set& cfg_set, int which, ::pilo::u32_t row, ::pilo::core::dp::xls_spread_sheet* wsp, const char* xlsfullfilepath, const char* wsnamecstr);
                 bool _check_and_make_default_for_two_vars(const char* t1, const char* t2, std::string& a, std::string& b, const char* file, const char* wsname);
                 bool _check_duplicate_vars_in_header(const std::string& ccname, const std::string& scname, const std::string& ccfg, const std::string& scfg, const char* file, const char* wsname);
 

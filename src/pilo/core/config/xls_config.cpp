@@ -1,6 +1,7 @@
 ﻿#include	"xls_config.hpp"
 #include	"../dp/xls_spread_sheet.hpp"
 #include	<sstream>
+#include	<algorithm>
 #include	"../process/context.hpp"
 #include    "../ml/json_tlv_driver.hpp"
 #include	"../io/path.hpp"
@@ -54,6 +55,7 @@ pilo::core::config::xls_config& pilo::core::config::xls_config::operator=(xls_co
 		_ns = std::move(rhs._ns);
 		_union_indices = std::move(rhs._union_indices);
 		_fields = std::move(rhs._fields);
+		_cls_fields_index_map = std::move(rhs._cls_fields_index_map);
 
 		if (this->_data != nullptr) {
 			PILO_CONTEXT->deallocate_tlv(_data);
@@ -105,6 +107,10 @@ std::string pilo::core::config::xls_config::to_string() const
 	ss << '\t' << "Fields:" << std::endl;
 	for (size_t i = 0; i < _fields.size(); i++) {
 		ss << "\t\t" << _fields[i].to_string() << std::endl;
+	}
+	ss << '\t' << "Cls-Fields:" << std::endl;
+	for (size_t i = 0; i < _cls_fields_index_map.size(); i++) {
+		ss << "\t\t" << _fields[_cls_fields_index_map[i].second].pri() << " - " << _fields[_cls_fields_index_map[i].second].name() << std::endl;
 	}
 	ss << std::endl;
 	return ss.str();
@@ -377,25 +383,6 @@ std::string pilo::core::config::xls_config_set::to_string() const
 	return ss.str();
 }
 
-void pilo::core::config::xls_config_set::_compose_errmsg(std::string& errmsg, ::pilo::u32_t row, ::pilo::u32_t col, const char* fmt, ...)
-{
-	char buf[512] = { 0 };
-	::pilo::i64_t elen = ::pilo::core::io::string_formated_output(buf, sizeof(buf), "@ [%03u:%02u] -> ", row, col);
-	::pilo::i64_t remain_capa = sizeof(buf) - elen;
-
-	va_list args;
-
-	va_start(args, fmt);
-#               if defined(WINDOWS)
-	_vsnprintf_s(buf + elen, remain_capa, _TRUNCATE, fmt, args);
-#               else
-	vsnprintf(buf + elen, remain_capa, fmt, args);
-#               endif	
-	va_end(args);
-	errmsg = buf;
-}
-
-
 ::pilo::err_t pilo::core::config::xls_config_generator::_parse_field_spec(xls_config_set& cfg_set, int which, const std::string& field_str, ::pilo::u32_t row, ::pilo::u32_t col, const char* xlsfullfilepath, const char* wsnamecstr)
 {
 	::pilo::core::config::xls_config_field f;
@@ -516,100 +503,33 @@ void pilo::core::config::xls_config_set::_compose_errmsg(std::string& errmsg, ::
 	f._index = (::pilo::i32_t)cfg_set._configs[which]._fields.size();
 	f._column = col;
 
+	cfg_set._configs[which]._cls_fields_index_map.emplace_back(std::pair<::pilo::i32_t, ::pilo::i32_t>(f._pri, f._index));
+	std::stable_sort(cfg_set._configs[which]._cls_fields_index_map.begin(), cfg_set._configs[which]._cls_fields_index_map.end(), [](const auto& a, const auto& b) {
+		return a.first < b.first;  
+		});
+
 	cfg_set._configs[which]._fields.push_back(std::move(f));
 	return PILO_OK;
 }
 
-
-
-::pilo::err_t pilo::core::config::xls_config_set::_parse_field(int which, const std::string& field_str, ::pilo::u32_t row, ::pilo::u32_t col)
+::pilo::err_t pilo::core::config::xls_config_generator::_parse_record(xls_config_set& cfg_set, int which, ::pilo::u32_t row, ::pilo::core::dp::xls_spread_sheet* wsp, const char* xlsfullfilepath, const char* wsnamecstr)
 {
-	std::string errmsg;
-	::pilo::err_t err;
-	
+	xls_config& cfg_ref = cfg_set._configs[which];
 
-	::pilo::cstr_ref<char>	raw_fields[5];
-	::pilo::i64_t rcnt = ::pilo::core::string::split_fixed(field_str.c_str(), field_str.size(), ":", 1, raw_fields, 5, false, false, true, true);
-	if (rcnt < 2) {
-		_compose_errmsg(errmsg, row, col, "Parse Field Failed: Field (%s) too few parts", field_str.c_str());
-		return ::pilo::mk_perr(PERR_INC_DATA);
-	}
-	//parse pri
-	::pilo::i32_t pri = -1;
-	if (raw_fields[0].is_empty()) {
-		pri = this->_configs[which].find_lowest_pri_field();
-	} else {
-		err = ::pilo::core::string::string_to_number(pri, raw_fields[0].ptr, raw_fields[0].length);
-		if (err != PILO_OK) {
-			
-		}
-	}
-
-
-
-	::pilo::u8_t wt;
-	::pilo::u8_t kt;
-	::pilo::u16_t vt;
-	err = ::pilo::core::rtti::wired_type::wired_type::s_parse_cstr_type(wt, kt, vt, raw_fields[1].ptr, raw_fields[1].length);
-	if (err != PILO_OK) {
-		_compose_errmsg(errmsg, row, col, "Parse Field Failed: Field (%s) Invalid type Specifier.", field_str.c_str());
-		return ::pilo::mk_perr(PERR_INC_DATA);
-	}
-	::pilo::core::config::xls_config_field f;
-	if (raw_fields[0].ptr != nullptr && raw_fields[0].length > 0) {
-		f._name.assign(raw_fields[0].ptr, raw_fields[0].length);
-		f._index = (::pilo::i32_t) this->_configs[which]._fields.size();
-		f._column = col;
-		f._wired_type.set_wrapper_type(wt);
-		f._wired_type.set_value_type(vt);
-		f._wired_type.set_key_type(kt);	
-		if (rcnt > 2 && raw_fields[2].length > 0) {
-			for (int k = 0; k < raw_fields[2].length; k++) {
-				if (raw_fields[2].ptr[k] == 'p') {
-					f._flags.mark_value(xls_config_set::flag_primary_key);
-				} 
-				else if (raw_fields[2].ptr[k] == 'n') {
-					f._flags.mark_value(xls_config_set::flag_nullable);
-				}
-				else if (raw_fields[2].ptr[k] == 'i') {
-					f._flags.mark_value(xls_config_set::flag_index);
-				}
-				else if (raw_fields[2].ptr[k] == 'u') {
-					f._flags.mark_value(xls_config_set::flag_unique);
-				}
-				else
-				{
-					_compose_errmsg(errmsg, row, col, "Parse Field Failed: Field (%s) Invalid Flag Specifier (%c).", field_str.c_str(), raw_fields[2].ptr[k]);
-					return ::pilo::mk_perr(PERR_INC_DATA);
-				}
-			}
-		}
-		if (rcnt > 3 && raw_fields[3].length > 0) {
-			f._default_value_str.assign(raw_fields[3].ptr, raw_fields[3].length);
-		}	
-		this->_configs[which]._fields.push_back(std::move(f));
-	}
-
-	return PILO_OK;
-}
-
-::pilo::err_t pilo::core::config::xls_config_set::_parse_record(int which, ::pilo::u32_t row, ::pilo::core::dp::xls_spread_sheet* xssp, std::string& errmsg)
-{
 	::pilo::tlv* record = PILO_CONTEXT->allocate_tlv();
 	record->set_dict_type(::pilo::core::rtti::wired_type::key_type_str, ::pilo::core::rtti::wired_type::value_type_tlv);
 
-	for (::pilo::u32_t i = 0; i < _configs[which].field_count(); i++) {
-		::pilo::u32_t colno = _configs[which]._fields.at(i).column();
-		::pilo::tlv* val_ptr = xssp->value(row, colno);
+	for (::pilo::u32_t i = 0; i < cfg_ref.field_count(); i++) {
+		::pilo::u32_t colno = cfg_ref._fields.at(i).column();
+		::pilo::tlv* val_ptr = wsp->value(row, colno);
 		if (val_ptr == nullptr) {
 			PILO_CONTEXT->deallocate_tlv(record);
-			_compose_errmsg(errmsg, row, colno, "Extract data from cell failed");
+			this->add_log(::pilo::core::logging::level::error, row, colno, "Extract Value from cell failed. in %s.%s", xlsfullfilepath, wsnamecstr);
 			return ::pilo::mk_perr(PERR_INC_DATA);
 		}
-		record->insert<std::string, ::pilo::tlv*>(_configs[which]._fields.at(i).name(), val_ptr, false);
-
+		record->insert<std::string, ::pilo::tlv*>(cfg_ref._fields.at(i).name(), val_ptr, false);
 	}
-	this->_configs[which]._data->push_back(record, -1, true);
+	cfg_ref._data->push_back(record, -1, true);
 
 	return PILO_OK;
 }
@@ -641,6 +561,11 @@ std::string pilo::core::config::xls_config_field::to_string() const
 	pilo::core::config::xls_config_generator* pgen = (pilo::core::config::xls_config_generator*)ctx;
 	if (pgen == nullptr) {
 		return PERR_NULL_PTR;
+	}
+
+	if (src_path->extname() == nullptr) {
+		pgen->add_log(::pilo::core::logging::level::info, "File - [%s] Ignored", src_path->fullpath());
+		return PILO_OK;
 	}
 
 	if ((::pilo::core::string::i_compare(src_path->extname(), 0, "xlsx", 0, -1))
@@ -906,7 +831,6 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 				c_header_done = true;			
 
 		} else if (tmp_cell_str.size() == 1 && (tmp_cell_str.at(0) == 'S' || tmp_cell_str.at(0) == 's')) {
-
 			if (xls_config_generator::parse_phase_enum::row_data == pe) {
 				this->add_log(::pilo::core::logging::level::error, "Got server-col-spec instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
 				return PERR_INC_DATA;
@@ -948,8 +872,6 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 				return PERR_INC_DATA;
 			}
 
-
-
 			if (c_header_done) 
 				pe = xls_config_generator::parse_phase_enum::row_data;			
 			else
@@ -961,6 +883,11 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 		} else if (tmp_cell_str.empty()) {
 			if (xls_config_generator::parse_phase_enum::row_data != pe) {
 				this->add_log(::pilo::core::logging::level::error, "Got empty instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
+				return err;
+			}
+
+			err = this->_parse_record(cfg_set, xls_config_set::server, r, &ws, xls_fullpathname, wsname.c_str());
+			if (err != PILO_OK) {
 				return err;
 			}
 
