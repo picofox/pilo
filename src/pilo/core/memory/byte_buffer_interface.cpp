@@ -1,4 +1,4 @@
-﻿#include "./byte_buffer_interface.hpp"
+#include "./byte_buffer_interface.hpp"
 #include "../rtti/wired_type_deque.hpp"
 #include "../rtti/wired_type_map_creation.hpp"
 #include "../rtti/wired_type_map_comparation.hpp"

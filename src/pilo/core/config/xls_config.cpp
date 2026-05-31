@@ -1,4 +1,20 @@
-﻿#include	"xls_config.hpp"
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                    //
+//  .----------------.  .----------------.  .----------------.  .----------------.       Raid boss    //
+//  | .--------------. || .--------------. || .--------------. || .--------------. |    Lv.85 缺德猫   //
+//  | |   ______     | || |     _____    | || |   _____      | || |     ____     | |     |\.-"-./|    //
+//  | |  |_   __ \   | || |    |_   _|   | || |  |_   _|     | || |   .'    `.   | |     \`     `/    //
+//  | |    | |__) |  | || |      | |     | || |    | |       | || |  /  .--.  \  | |     |= ^Y^ =|    //
+//  | |    |  ___/   | || |      | |     | || |    | |   _   | || |  | |    | |  | |     \__ ^ __/    //
+//  | |   _| |_      | || |     _| |_    | || |   _| |__/ |  | || |  \  `- - '/  | |     /`=+o+=`\    //
+//  | |  |_____|     | || |    |_____|   | || |  |________|  | || |   `.____.'   | |    |         |   //
+//  | |              | || |              | || |              | || |              | |    | (     ) |   //
+//  | '--------------' || '--------------' || '--------------' || '--------------' |    (,,)---(,,)   // 
+//  '----------------'  '----------------'  '----------------'  '----------------'                    //
+//                                                                                                    //  
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include	"xls_config.hpp"
 #include	"../dp/xls_spread_sheet.hpp"
 #include	<sstream>
 #include	<algorithm>
@@ -116,16 +132,6 @@ std::string pilo::core::config::xls_config::to_string() const
 	return ss.str();
 }
 
-::pilo::err_t pilo::core::config::xls_config::save_config_file(const char* path_str, predefined_pilo_path prefix)
-{
-	::pilo::core::io::path pth(path_str, prefix);
-	pth.append(_config_file_name.c_str());
-	if (pth.invalid()) {
-		return ::pilo::mk_perr(PERR_INVALID_PATH);
-	}
-	::pilo::core::ml::json_tlv_driver jdrv(_data);
-	return jdrv.save(&pth);
-}
 
 ::pilo::i32_t pilo::core::config::xls_config::find_lowest_pri_field() const
 {
@@ -157,219 +163,6 @@ void pilo::core::config::xls_config_set::reset()
 	_desc.clear();
 }
 
-::pilo::err_t pilo::core::config::xls_config_set::parse(const std::string& sheet_name, const char* path_str, ::pilo::predefined_pilo_path prefix, std::string& errmsg)
-{
-	
-	PMC_UNUSED(sheet_name);
-	PMC_UNUSED(path_str);
-	PMC_UNUSED(prefix);
-	PMC_UNUSED(errmsg);
-
-	this->reset();
-
-	
-
-	/*
-
-	::pilo::cstr_ref<char> parts[6];
-	::pilo::i64_t parts_cnt = 0;
-	::pilo::core::dp::xls_spread_sheet xss;
-	::pilo::err_t err = xss.open(path_str, ::pilo::core::io::creation_mode::open_existing, prefix);
-	if (err != PILO_OK)
-		return err;
-	::pilo::u32_t rcnt = xss.row_count(sheet_name);
-	if (rcnt < 2 || rcnt == ::pilo::core::dp::xls_spread_sheet::invalid_count) {
-		return ::pilo::mk_perr(PERR_NON_EXIST);
-	}
-	err = xss.select_work_sheet(sheet_name);
-	if (err != PILO_OK)
-		return err;
-
-	_sheet_name = sheet_name;
-	std::string var_name;
-	std::string tmp_cell_str;
-	bool content_start = false;
-	for (::pilo::u32_t i = 1; i <= rcnt; i++) {
-		err = xss.strvalue(tmp_cell_str, i, 1);
-		if (err != PILO_OK)
-			return err;
-		::pilo::core::string::trim_string(tmp_cell_str);
-		if (tmp_cell_str.empty() && !content_start) {
-			_compose_errmsg(errmsg, i, 1, "format error! found empty 1st cell");
-			return ::pilo::mk_perr(PERR_INC_DATA);
-		}
-
-		if (tmp_cell_str[0] == '/') {
-			if (tmp_cell_str == "///end") {
-				if (!content_start) {
-					_compose_errmsg(errmsg, i, 1, "format error! document is incomplete.");
-					return ::pilo::mk_perr(PERR_INC_DATA);
-				}
-				break;
-			}
-			continue;
-		} 
-		else if (tmp_cell_str[0] == '$') {
-			if (content_start) {
-				_compose_errmsg(errmsg, i, 1, "Unacceptable Variable! content parsing has already started: (%s)", tmp_cell_str.c_str());
-				return ::pilo::mk_perr(PERR_INC_DATA);
-			}
-			parts_cnt = ::pilo::core::string::split_fixed(tmp_cell_str.c_str(), (::pilo::i64_t) tmp_cell_str.size(),
-				":", 1, parts, 2, false, true, false, false);
-			if (parts_cnt != 2) {
-				_compose_errmsg(errmsg, i, 1, "format error! found variable but extract value failed: (%s)", tmp_cell_str.c_str());
-				return ::pilo::mk_perr(PERR_INC_DATA);
-			}
-			if (parts[0].ptr == nullptr || parts[0].length < 2) {
-				_compose_errmsg(errmsg, i, 1, "format error! found variable but var name is invalid from - (%s)", tmp_cell_str.c_str());
-				return ::pilo::mk_perr(PERR_INC_DATA);
-			}
-			var_name.assign(parts[0].ptr, parts[0].length);
-			::pilo::core::string::to_upper_case_inplace(var_name);
-
-			if (var_name == "$NAME") {
-				if (parts[1].length < 1) {
-					_compose_errmsg(errmsg, i, 1, "missing content! no value for ($NAME) is found");
-					return ::pilo::mk_perr(PERR_INC_DATA);
-				}
-				_name.assign(parts[1].ptr, parts[1].length);
-			}
-			else if (var_name == "$DESC") {
-				if (parts[1].length > 0) {
-					_desc.assign(parts[1].ptr, parts[1].length);
-				}				
-			}
-			else if (var_name == "$CCNAME") {
-				if (parts[1].length > 0) {
-					this->_configs[xls_config_set::client]._cls_name.assign(parts[1].ptr, parts[1].length);
-				}
-				else {
-					this->_configs[xls_config_set::client]._cls_name = this->_name;
-				}				
-			}
-			else if (var_name == "$SCNAME") {
-				if (parts[1].length > 0) {
-					this->_configs[xls_config_set::server]._cls_name.assign(parts[1].ptr, parts[1].length);
-				}
-				else {
-					this->_configs[xls_config_set::server]._cls_name = this->_name;
-				}
-			}
-			else if (var_name == "$SCFG") {
-				if (parts[1].length > 0) {
-					this->_configs[xls_config_set::server]._config_file_name.assign(parts[1].ptr, parts[1].length);
-				}
-			}
-			else if (var_name == "$CCFG") {
-				if (parts[1].length > 0) {
-					this->_configs[xls_config_set::client]._config_file_name.assign(parts[1].ptr, parts[1].length);
-				}
-			}
-			else if (var_name == "$CNS") {
-				if (parts[1].length > 0) {
-					this->_configs[xls_config_set::client]._ns.assign(parts[1].ptr, parts[1].length);
-				}				
-			}
-			else if (var_name == "$SNS") {
-				if (parts[1].length > 0) {
-					this->_configs[xls_config_set::server]._ns.assign(parts[1].ptr, parts[1].length);
-				}				
-			}
-			else if (var_name == "$CUI") {
-				if (parts[1].length > 0) {
-					err = this->_configs[xls_config_set::client].parse_union_index(parts[1].ptr, parts[1].length);
-					if (err != PILO_OK) {
-						_compose_errmsg(errmsg, i, 1, "parser UI Key Failed!");
-						return ::pilo::mk_perr(PERR_INC_DATA);
-					}
-				}
-			}
-			else if (var_name == "$SUI") {
-				if (parts[1].length > 0) {
-					err = this->_configs[xls_config_set::server].parse_union_index(parts[1].ptr, parts[1].length);
-					if (err != PILO_OK) {
-						_compose_errmsg(errmsg, i, 1, "parser UI Key Failed!");
-						return ::pilo::mk_perr(PERR_INC_DATA);
-					}
-				}
-			}
-		}
-		else {
-			if (!content_start) {
-				if (_sheet_name.empty()) {
-					_compose_errmsg(errmsg, i, 1, "Got Content (%s) but ($NAME) is not assigned", tmp_cell_str.c_str());
-					return ::pilo::mk_perr(PERR_INC_DATA);
-				}
-				if (_configs[xls_config_set::client].cls_name().empty()) {
-					_compose_errmsg(errmsg, i, 1, "Got Content (%s) but client-($CCNAME) is assigned", tmp_cell_str.c_str());
-					return ::pilo::mk_perr(PERR_INC_DATA);
-				}
-				if (_configs[xls_config_set::server].cls_name().empty()) {
-					_compose_errmsg(errmsg, i, 1, "Got Content (%s) but server-($CCNAME) is assigned", tmp_cell_str.c_str());
-					return ::pilo::mk_perr(PERR_INC_DATA);
-				}
-
-				::pilo::u32_t ccnt = xss.col_count();
-				if (ccnt < 1) {
-					_compose_errmsg(errmsg, i, 1, "Invalid Column Count (%u)", ccnt);
-					return ::pilo::mk_perr(PERR_INC_DATA);
-				}
-
-				std::string tmp_fld_str;
-				std::string tmp_fld_str2;
-				for (::pilo::u32_t fld_no = 1; fld_no <= ccnt; fld_no++) {
-					err = xss.strvalue(tmp_fld_str, i, fld_no);
-					if (err != PILO_OK)
-						return err;
-					::pilo::core::string::trim_string(tmp_fld_str);
-					if (!tmp_fld_str.empty() && tmp_fld_str[0] != '#') {
-						err = this->_parse_field(xls_config_set::server,tmp_fld_str, i, fld_no);
-						if (err != PILO_OK)
-							return err;
-					}
-				}
-				i++;
-				for (::pilo::u32_t fld_no = 1; fld_no <= ccnt; fld_no++) {
-					err = xss.strvalue(tmp_fld_str, i, fld_no);
-					if (err != PILO_OK)
-						return err;
-					::pilo::core::string::trim_string(tmp_fld_str);
-					if (!tmp_fld_str.empty() && tmp_fld_str[0] != '#') {
-						err = this->_parse_field(xls_config_set::client, tmp_fld_str, i, fld_no);
-						if (err != PILO_OK)
-							return err;
-					}
-				}
-
-				content_start = true;
-			}
-			else {				
-				err = _parse_record(xls_config_set::server, i, &xss, errmsg);
-				if (err != PILO_OK) {
-					_compose_errmsg(errmsg, i, 1, "parser Record for server Failed!");
-					return ::pilo::mk_perr(PERR_INC_DATA);
-				}
-
-				err = _parse_record(xls_config_set::client, i, &xss, errmsg);
-				if (err != PILO_OK) {
-					_compose_errmsg(errmsg, i, 1, "parser Record for client Failed!");
-					return ::pilo::mk_perr(PERR_INC_DATA);
-				}
-			}
-		}
-
-	} //loop all lines
-
-
-	*/
-	
-	return PILO_OK;
-}
-
-::pilo::err_t pilo::core::config::xls_config_set::save_config_file(int which, const char* path_str, predefined_pilo_path prefix)
-{
-	return _configs[which].save_config_file(path_str, prefix);
-}
 
 std::string pilo::core::config::xls_config_set::to_string() const
 {
@@ -515,19 +308,39 @@ std::string pilo::core::config::xls_config_set::to_string() const
 ::pilo::err_t pilo::core::config::xls_config_generator::_parse_record(xls_config_set& cfg_set, int which, ::pilo::u32_t row, ::pilo::core::dp::xls_spread_sheet* wsp, const char* xlsfullfilepath, const char* wsnamecstr)
 {
 	xls_config& cfg_ref = cfg_set._configs[which];
-
+	::pilo::tlv* val_ptr = nullptr;
 	::pilo::tlv* record = PILO_CONTEXT->allocate_tlv();
 	record->set_dict_type(::pilo::core::rtti::wired_type::key_type_str, ::pilo::core::rtti::wired_type::value_type_tlv);
+	::pilo::err_t err = PILO_OK;
+	char errmsgbuff[PMI_XLS_GEN_ERR_BUFF_SIZE] = {0};
 
 	for (::pilo::u32_t i = 0; i < cfg_ref.field_count(); i++) {
 		::pilo::u32_t colno = cfg_ref._fields.at(i).column();
-		::pilo::tlv* val_ptr = wsp->value(row, colno);
+		val_ptr = PILO_CONTEXT->allocate_tlv();
 		if (val_ptr == nullptr) {
-			PILO_CONTEXT->deallocate_tlv(record);
-			this->add_log(::pilo::core::logging::level::error, row, colno, "Extract Value from cell failed. in %s.%s", xlsfullfilepath, wsnamecstr);
-			return ::pilo::mk_perr(PERR_INC_DATA);
+			this->add_log(::pilo::core::logging::level::error, row, colno, "Alloc tlv Failed. in %s.%s", xlsfullfilepath, wsnamecstr);
+			return mk_err(PERR_INSUF_HEAP);
 		}
-		record->insert<std::string, ::pilo::tlv*>(cfg_ref._fields.at(i).name(), val_ptr, false);
+		err = val_ptr->set_types(cfg_ref._fields.at(i).wrapper_type(), cfg_ref._fields.at(i).key_type(), cfg_ref._fields.at(i).value_type());
+		if (PILO_OK != err) {
+			PILO_CONTEXT->deallocate_tlv(val_ptr);
+			this->add_log(::pilo::core::logging::level::error, row, colno, "Set type for tlv Failed (%s). in %s.%s", ::pilo::str_err(err).c_str(), xlsfullfilepath, wsnamecstr);
+			return err;
+		}
+
+		err = wsp->value(val_ptr, row, colno, cfg_ref._fields.at(i).test_flag(xls_config_set::flag_nullable), cfg_ref._fields.at(i).default_value(), errmsgbuff, sizeof(errmsgbuff));
+		if (PILO_OK != err) {
+			PILO_CONTEXT->deallocate_tlv(val_ptr);
+			this->add_log(::pilo::core::logging::level::error, row, colno, "Compse tlv from cell Failed (%s). in %s.%s", errmsgbuff, xlsfullfilepath, wsnamecstr);
+			return err;
+		}
+
+		err = record->insert<std::string, ::pilo::tlv*>(cfg_ref._fields.at(i).name(), val_ptr, false);
+		if (PILO_OK != err) {
+			PILO_CONTEXT->deallocate_tlv(val_ptr);
+			this->add_log(::pilo::core::logging::level::error, row, colno, "Insert tlv to record Failed (%s). in %s.%s", ::pilo::str_err(err).c_str(), xlsfullfilepath, wsnamecstr);
+			return err;
+		}
 	}
 	cfg_ref._data->push_back(record, -1, true);
 
@@ -670,6 +483,40 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 	}
 	
 	return true;
+}
+
+::pilo::err_t pilo::core::config::xls_config_generator::_generate_config(int which, const char* name_of_which)
+{
+	::pilo::core::io::path dst_path;
+	::pilo::err_t err = PILO_OK;
+	std::map<std::string, xls_config_set>::const_iterator cit = _config_set_map.cbegin();
+
+	err = _dest_config_dir_path[which].create(::pilo::core::io::path::fs_node_type_dir, false);	
+	if (err != PILO_OK) {
+		this->add_log(::pilo::core::logging::level::error, "%s Config File Dest Path [%s] create Failed.",name_of_which, _dest_config_dir_path[which].fullpath());
+		return mk_err(err);
+	}
+
+	for (; cit != _config_set_map.cend(); cit++) {
+		dst_path = _dest_config_dir_path[which];
+		err = dst_path.append(cit->second._configs[which].config_file_name().c_str());
+		if (err != PILO_OK) {
+			this->add_log(::pilo::core::logging::level::error, "%s Config File generated failed. dest path compose Failed. append %s -> %s", name_of_which, cit->second._configs[xls_config_set::server].config_file_name().c_str(), dst_path.fullpath());
+			return mk_err(err);
+		}
+
+		::pilo::core::ml::json_tlv_driver jdrv(cit->second._configs[which]._data);
+		err = jdrv.save(&dst_path);
+		if (err != PILO_OK) {
+			this->add_log(::pilo::core::logging::level::error, "%s Config File generated failed. [%s] Serialize to Json Failedd %d ", name_of_which, cit->second._configs[xls_config_set::server].config_file_name().c_str(), err);
+			return mk_err(err);
+		}
+
+		this->add_log(::pilo::core::logging::level::info, "%s Config File [%s] has been created successfully.", name_of_which, dst_path.fullpath());
+
+	}
+
+	return PILO_OK;
 }
 
 ::pilo::err_t pilo::core::config::xls_config_generator::_parse_worksheet(::pilo::core::dp::xls_spread_document& doc, const char* xls_fullpathname, ::pilo::u32_t ws_idx)
@@ -948,24 +795,24 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 		_xls_dir_path.set(xls_dir_path, xls_dir_path_base);
 
 	if (nullptr == dest_server_config_dir_path)
-		_dest_server_config_dir_path.reset();
+		_dest_config_dir_path[xls_config_set::server].reset();
 	else
-		_dest_server_config_dir_path.set(dest_server_config_dir_path, dest_server_config_dir_path_base);
+		_dest_config_dir_path[xls_config_set::server].set(dest_server_config_dir_path, dest_server_config_dir_path_base);
 
 	if (nullptr == dest_client_config_dir_path)
-		_dest_client_config_dir_path.reset();
+		_dest_config_dir_path[xls_config_set::client].reset();
 	else
-		_dest_client_config_dir_path.set(dest_client_config_dir_path, dest_client_config_dir_path_base);
+		_dest_config_dir_path[xls_config_set::client].set(dest_client_config_dir_path, dest_client_config_dir_path_base);
 
 	if (nullptr == dest_server_source_dir_path)
-		_dest_server_source_dir_path.reset();
+		_dest_source_dir_path[xls_config_set::server].reset();
 	else
-		_dest_server_source_dir_path.set(dest_server_source_dir_path, dest_server_source_dir_path_base);
+		_dest_source_dir_path[xls_config_set::server].set(dest_server_source_dir_path, dest_server_source_dir_path_base);
 
 	if (nullptr == dest_client_source_dir_path)
-		_dest_client_source_dir_path.reset();
+		_dest_source_dir_path[xls_config_set::client].reset();
 	else
-		_dest_client_source_dir_path.set(dest_client_source_dir_path, dest_client_source_dir_path_base);
+		_dest_source_dir_path[xls_config_set::client].set(dest_client_source_dir_path, dest_client_source_dir_path_base);
 
 	return PILO_OK;
 }
@@ -973,10 +820,10 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 void pilo::core::config::xls_config_generator::clear()
 {
 	_xls_dir_path.reset();
-	_dest_server_config_dir_path.reset();
-	_dest_client_config_dir_path.reset();
-	_dest_server_source_dir_path.reset();
-	_dest_client_source_dir_path.reset();
+	_dest_config_dir_path[xls_config_set::server].reset();
+	_dest_config_dir_path[xls_config_set::client].reset();
+	_dest_source_dir_path[xls_config_set::server].reset();
+	_dest_source_dir_path[xls_config_set::client].reset();
 	_logs.clear();
 	_ccnames.clear();
 	_scnames.clear();
@@ -1008,14 +855,13 @@ void pilo::core::config::xls_config_generator::clear()
 
 ::pilo::err_t pilo::core::config::xls_config_generator::generate_server_config()
 {
-
-	return PILO_OK;
+	return _generate_config(xls_config_set::server, "Server");
 }
 
 ::pilo::err_t pilo::core::config::xls_config_generator::generate_client_config()
 {
 
-	return PILO_OK;
+	return _generate_config(xls_config_set::client, "Client");
 }
 
 ::pilo::err_t pilo::core::config::xls_config_generator::generate_server_source()

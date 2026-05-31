@@ -1,4 +1,4 @@
-﻿#include "zoned_clock.hpp"
+#include "zoned_clock.hpp"
 #include <sstream>
 #include <iomanip>
 #include <ctime>

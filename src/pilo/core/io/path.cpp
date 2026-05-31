@@ -1,4 +1,4 @@
-﻿#include "path.hpp"
+#include "path.hpp"
 #include "../i18n/encoding_conversion.hpp"
 #include "../memory/util.hpp"
 #include "../string/string_operation.hpp"

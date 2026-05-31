@@ -1,4 +1,4 @@
-﻿#include "../../pilo_func_test.hpp"
+#include "../../pilo_func_test.hpp"
 #include "pilo/core/testing/func_test_suite.hpp"
 #include "pilo/core/string/string_operation.hpp"
 #include "pilo/core/io/formatted_io.hpp"

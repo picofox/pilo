@@ -1,4 +1,4 @@
-﻿#ifndef __pilo_error_hpp_
+#ifndef __pilo_error_hpp_
 #define __pilo_error_hpp_
 
 #include "types.hpp"

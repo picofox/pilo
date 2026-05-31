@@ -1,4 +1,4 @@
-﻿#include "service_manager.hpp"
+#include "service_manager.hpp"
 
 #include "abstract_compensable_fixed_frequency_service.hpp"
 #include "abstract_fixed_frequency_service.hpp"

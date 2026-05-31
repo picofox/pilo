@@ -1,4 +1,4 @@
-﻿
+
 #include "./rac_service_group.hpp"
 
 

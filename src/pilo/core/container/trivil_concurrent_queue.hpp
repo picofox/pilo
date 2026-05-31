@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "../threading/spin_mutex.hpp"
 #include <queue>

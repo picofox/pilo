@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include	"pilo/core/testing/performance_test_case.hpp"
 

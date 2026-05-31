@@ -1,4 +1,4 @@
-﻿#ifndef __resource_cleaner_h_
+#ifndef __resource_cleaner_h_
 #define __resource_cleaner_h_
 
 #include <array>

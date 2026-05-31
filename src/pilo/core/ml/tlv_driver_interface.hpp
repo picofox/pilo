@@ -1,9 +1,27 @@
-﻿#ifndef _pilo_core_config_tlv_driver_interface_h_
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                    //
+//  .----------------.  .----------------.  .----------------.  .----------------.       Raid boss    //
+//  | .--------------. || .--------------. || .--------------. || .--------------. |    Lv.85 缺德猫   //
+//  | |   ______     | || |     _____    | || |   _____      | || |     ____     | |     |\.-"-./|    //
+//  | |  |_   __ \   | || |    |_   _|   | || |  |_   _|     | || |   .'    `.   | |     \`     `/    //
+//  | |    | |__) |  | || |      | |     | || |    | |       | || |  /  .--.  \  | |     |= ^Y^ =|    //
+//  | |    |  ___/   | || |      | |     | || |    | |   _   | || |  | |    | |  | |     \__ ^ __/    //
+//  | |   _| |_      | || |     _| |_    | || |   _| |__/ |  | || |  \  `- - '/  | |     /`=+o+=`\    //
+//  | |  |_____|     | || |    |_____|   | || |  |________|  | || |   `.____.'   | |    |         |   //
+//  | |              | || |              | || |              | || |              | |    | (     ) |   //
+//  | '--------------' || '--------------' || '--------------' || '--------------' |    (,,)---(,,)   // 
+//  '----------------'  '----------------'  '----------------'  '----------------'                    //
+//                                                                                                    //  
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+#ifndef _pilo_core_config_tlv_driver_interface_h_
 #define _pilo_core_config_tlv_driver_interface_h_
 
 
 #include "../../pilo.hpp"
 #include "../rtti/wired_type.hpp"
+#include "../logging/logger_def.hpp"
 
 
 namespace pilo {
@@ -63,6 +81,13 @@ namespace pilo {
                 virtual ::pilo::err_t get_value(const char* fqn, std::string& v);
                 virtual ::pilo::err_t get_value(const char* fqn, bool& v);
                 virtual ::pilo::err_t get_value(const char* fqn, const char*& cstr, ::pilo::i32_t& len, bool* is_bytes_as_cstr);
+
+            
+            public:
+                ::pilo::core::logging::info_item_set& logs() { return _logs; }
+
+            protected:
+                ::pilo::core::logging::info_item_set            _logs;
 
             };
         }

@@ -1,4 +1,4 @@
-﻿#include    "./meta_srcfile.hpp"
+#include    "./meta_srcfile.hpp"
 #include    <sstream>
 #include    "../string/string_operation.hpp"
 

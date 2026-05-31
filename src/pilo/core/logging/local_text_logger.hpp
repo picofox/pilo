@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_log_text_logger_hpp_
+#ifndef _pilo_core_log_text_logger_hpp_
 #define _pilo_core_log_text_logger_hpp_
 
 #include <ctime>

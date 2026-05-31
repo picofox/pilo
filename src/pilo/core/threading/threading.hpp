@@ -1,4 +1,4 @@
-﻿#ifndef __pilo_core_threading_hpp_
+#ifndef __pilo_core_threading_hpp_
 #define __pilo_core_threading_hpp_
 
 

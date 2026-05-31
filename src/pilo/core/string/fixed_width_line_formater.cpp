@@ -1,4 +1,4 @@
-﻿#include "./fixed_width_line_formater.hpp"
+#include "./fixed_width_line_formater.hpp"
 
 namespace pilo
 {

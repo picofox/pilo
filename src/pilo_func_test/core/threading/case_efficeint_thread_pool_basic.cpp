@@ -1,4 +1,4 @@
-﻿#include "../../pilo_func_test.hpp"
+#include "../../pilo_func_test.hpp"
 #include "pilo/core/testing/func_test_suite.hpp"
 #include "pilo/core/process/context.hpp"
 #include "pilo/core/threading/efficient_thread_pool.hpp"

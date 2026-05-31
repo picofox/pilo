@@ -1,4 +1,4 @@
-﻿#include "./env_vars_config.hpp"
+#include "./env_vars_config.hpp"
 #include "../process/context.hpp"
 
 namespace pilo {

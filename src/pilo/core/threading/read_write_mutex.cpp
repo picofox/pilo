@@ -1,4 +1,4 @@
-﻿#include "./read_write_mutex.hpp"
+#include "./read_write_mutex.hpp"
 
 namespace pilo
 {

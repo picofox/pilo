@@ -1,4 +1,4 @@
-﻿#include    "../rtti/wired_type.hpp"
+#include    "../rtti/wired_type.hpp"
 #include    <vector>
 #include    <array>
 #include    "../../tlv.hpp"
@@ -61,6 +61,7 @@ namespace pilo
                 const ::pilo::i16_t value_type() const { return _wired_type.value_type(); }
                 const ::pilo::i8_t key_type() const { return _wired_type.key_type(); }
                 const ::pilo::i8_t wrapper_type() const { return _wired_type.wrapper_type(); }
+                const std::string& default_value() const { return _default_value_str; }
                 
 
                 void set_name(const std::string& s) { _name = s; }
@@ -68,6 +69,7 @@ namespace pilo
                 void set_key_type(::pilo::i8_t kt) { _wired_type.set_key_type(kt); }
                 void set_wrapper_type(::pilo::i8_t wt) { _wired_type.set_wrapper_type(wt); }
                 void set_default_value_str(const std::string& s) { _default_value_str = s; }
+                bool test_flag(::pilo::u32_t flag) { return _flags.test_value(flag);  }
 
                 std::string to_string() const;
 
@@ -128,7 +130,6 @@ namespace pilo
                 void reset();
                 ::pilo::u32_t field_count() const;
                 std::string to_string() const;
-                ::pilo::err_t save_config_file(const char* path_str, predefined_pilo_path prefix);
                 ::pilo::i32_t find_lowest_pri_field() const;
                 ::pilo::i32_t find_existing_field_idx_by_name(const std::string& name) const;
 
@@ -194,8 +195,6 @@ namespace pilo
                 const std::string& desc() const { return _desc; }
                 const xls_config& server_config() const { return _configs[xls_config_set::server]; }
                 const xls_config& client_config() const { return _configs[xls_config_set::client]; }
-                ::pilo::err_t parse(const std::string& sheet_name, const char* path_str, ::pilo::predefined_pilo_path prefix, std::string& errmsg);
-                ::pilo::err_t save_config_file(int which, const char* path_str, predefined_pilo_path prefix);
                 std::string to_string() const;
 
             private:
@@ -261,14 +260,12 @@ namespace pilo
                 bool _check_and_make_default_for_two_vars(const char* t1, const char* t2, std::string& a, std::string& b, const char* file, const char* wsname);
                 bool _check_duplicate_vars_in_header(const std::string& ccname, const std::string& scname, const std::string& ccfg, const std::string& scfg, const char* file, const char* wsname);
 
-
+                ::pilo::err_t _generate_config(int which, const char* name_of_which);
 
             private:
-                ::pilo::core::io::path _xls_dir_path;
-                ::pilo::core::io::path _dest_server_config_dir_path;
-                ::pilo::core::io::path _dest_client_config_dir_path;
-                ::pilo::core::io::path _dest_server_source_dir_path;
-                ::pilo::core::io::path _dest_client_source_dir_path;
+                ::pilo::core::io::path          _xls_dir_path;
+                ::pilo::core::io::path          _dest_config_dir_path[2];
+                ::pilo::core::io::path          _dest_source_dir_path[2];
                 std::vector<::pilo::core::logging::info_item>   _logs;
                 std::map<std::string, std::string> _ccnames;
                 std::map<std::string, std::string> _scnames;

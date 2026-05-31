@@ -1,4 +1,4 @@
-﻿#include <thread>
+#include <thread>
 #include "../../pilo_performance_test.hpp"
 #include "pilo/core/testing/performance_test_suite.hpp"
 #include "pilo/core/string/string_operation.hpp"

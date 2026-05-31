@@ -1,4 +1,4 @@
-﻿#ifndef _io_device_h_
+#ifndef _io_device_h_
 #define _io_device_h_
 
 #include "../../pilo.hpp"

@@ -1,4 +1,4 @@
-﻿#ifndef __pilo_core_memory_linked_byte_buffer_hpp_
+#ifndef __pilo_core_memory_linked_byte_buffer_hpp_
 #define __pilo_core_memory_linked_byte_buffer_hpp_
 
 #include <mutex>

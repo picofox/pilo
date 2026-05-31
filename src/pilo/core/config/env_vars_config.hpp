@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_config_env_vars_config_hpp_
+#ifndef _pilo_core_config_env_vars_config_hpp_
 #define _pilo_core_config_env_vars_config_hpp_
 
 #include "../logging/logger_def.hpp"

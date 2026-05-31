@@ -1,4 +1,4 @@
-﻿#include "./environment_variable_manager.hpp"
+#include "./environment_variable_manager.hpp"
 #include "context.hpp"
 
 namespace pilo

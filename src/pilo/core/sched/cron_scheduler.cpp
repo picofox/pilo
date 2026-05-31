@@ -1,4 +1,4 @@
-﻿#include "./cron_scheduler.hpp"
+#include "./cron_scheduler.hpp"
 #include    "../process/context.hpp"
 #include    "./cron_resolving.hpp"
 #include    "../datetime/zoned_clock.hpp"

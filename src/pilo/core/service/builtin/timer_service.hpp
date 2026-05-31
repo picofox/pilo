@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_service_builtin_timer_service_hpp_
+#ifndef _pilo_core_service_builtin_timer_service_hpp_
 #define _pilo_core_service_builtin_timer_service_hpp_
 
 #include "../../sched/time_wheel.hpp"

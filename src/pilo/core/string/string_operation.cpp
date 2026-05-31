@@ -1,4 +1,4 @@
-﻿#include "string_operation.hpp"
+#include "string_operation.hpp"
 #include "../io/formatted_io.hpp"
 #include <cwchar>
 #include "../../error.hpp"

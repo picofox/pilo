@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "byte_buffer_interface.hpp"
 

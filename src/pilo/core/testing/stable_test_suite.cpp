@@ -1,4 +1,4 @@
-﻿#include "stable_test_suite.hpp"
+#include "stable_test_suite.hpp"
 #include "core/io/formatted_io.hpp"
 #include <iostream>
 

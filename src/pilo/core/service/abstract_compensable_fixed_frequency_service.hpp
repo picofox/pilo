@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_service_abstract_compensable_fixed_frequency_service_hpp_
+#ifndef _pilo_core_service_abstract_compensable_fixed_frequency_service_hpp_
 #define _pilo_core_service_abstract_compensable_fixed_frequency_service_hpp_
 
 #include "./service_interface.hpp"

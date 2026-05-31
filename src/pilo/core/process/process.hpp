@@ -1,4 +1,4 @@
-﻿#ifndef _process_hpp_
+#ifndef _process_hpp_
 #define _process_hpp_
 
 #include "../../pilo.hpp"

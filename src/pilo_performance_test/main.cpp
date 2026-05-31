@@ -1,4 +1,4 @@
-﻿#include "pilo/pilo.hpp"
+#include "pilo/pilo.hpp"
 #include "pilo/core/testing/performance_test_suite.hpp"
 #include "pilo_performance_test.hpp"
 #include "pilo/core/testing/fixsized_sample_object.hpp"

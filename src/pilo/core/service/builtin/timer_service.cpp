@@ -1,4 +1,4 @@
-﻿#include "./timer_service.hpp"
+#include "./timer_service.hpp"
 #include "../../logging/logger_interface.hpp"
 #include "../../process/context.hpp"
 

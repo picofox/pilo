@@ -1,4 +1,4 @@
-﻿#include "func_test_suite.hpp"
+#include "func_test_suite.hpp"
 #include "core/io/formatted_io.hpp"
 #include "../memory/util.hpp"
 #include <iostream>

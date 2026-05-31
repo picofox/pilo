@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../algorithm/find.hpp"
 #include "../memory/bits_operation.hpp"
 #include <uchar.h>
@@ -766,7 +766,17 @@ namespace pilo
 					{
 						b = false;
 						return PILO_OK;
-					}
+					} 
+                    else if (pc[beg] == '0')
+                    {
+                        b = false;
+                        return PILO_OK;
+                    }
+                    else if (pc[beg] == '1')
+                    {
+                        b = true;
+                        return PILO_OK;
+                    }
 					else
 					{
                         return ::pilo::mk_perr(PERR_NOOP);
@@ -802,6 +812,21 @@ namespace pilo
                 if (string_to_bool(b, pc, len) != PILO_OK)
                     return defval;
                 return b;
+            }
+
+            template<typename CHAR_T>
+            ::pilo::err_t string_to_bool_no_dfl(bool& b, const CHAR_T* pc, ::pilo::i64_t len)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (pc == nullptr) {
+                    b = false;
+                    return PILO_OK;
+                }
+                if (len < 0)
+                    len = ::pilo::core::string::character_count(pc);
+                if ( (err = string_to_bool(b, pc, len)) != PILO_OK)
+                    return err ;
+                return PILO_OK;
             }
 
             /**

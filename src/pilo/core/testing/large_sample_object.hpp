@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "../../pilo.hpp"
 #include "../io/formatted_io.hpp"

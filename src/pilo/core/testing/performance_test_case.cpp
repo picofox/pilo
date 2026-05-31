@@ -1,4 +1,4 @@
-﻿#include "performance_test_case.hpp"
+#include "performance_test_case.hpp"
 #include <chrono>
 #include "../io/formatted_io.hpp"
 #include "../datetime/timestamp.hpp"

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -995,7 +995,8 @@ namespace pilo
 
 		static ::pilo::err_t update_pool_object_stat(::pilo::core::stat::pool_object_stat_manager::stat_item * si);
 
-		::pilo::err_t set_value(const char* argv, ::pilo::i32_t len = -1);
+
+		::pilo::err_t set_value(const char* argv, ::pilo::i32_t len = -1, const char* delim = ",");
 
 		//single manipulations
 		inline ::pilo::err_t set_single_type(::pilo::u16_t valtype)
@@ -1337,6 +1338,29 @@ namespace pilo
 			if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
 			return ::pilo::_invalid_object_<TA_ARR_VT>::get();
 		}
+
+		const char* get_bytes(::pilo::i32_t index, ::pilo::err_t* err) const
+		{
+			if (this->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_array)
+			{
+				if (_dynamic_data == nullptr)
+				{
+					if (err != nullptr) *err = ::pilo::mk_perr(PERR_NON_EXIST);
+					return nullptr;
+				}
+				std::deque<char*>* ptr = (std::deque<char*>*) this->_dynamic_data;
+				if (index < 0 || index >= (::pilo::i32_t)ptr->size())
+				{
+					if (err != nullptr) *err = ::pilo::mk_perr(PERR_NON_EXIST);
+					return nullptr;
+				}
+				return ptr->at(index);
+			}
+
+			if (err != nullptr) *err = ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
+			return nullptr;
+		}
+
 		template<typename T> inline ::pilo::tlv* push_back_array_element(std::initializer_list<T> list, ::pilo::err_t* err)
 		{
 			if (this->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_array)

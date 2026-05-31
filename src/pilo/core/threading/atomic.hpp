@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../../pilo.hpp"
 
 #if (PMI_PFD_COMPILER_MSVC == 0) || (_MSC_VER >= 1700 && !defined(__cplusplus_cli))

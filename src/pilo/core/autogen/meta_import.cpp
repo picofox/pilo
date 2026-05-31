@@ -1,4 +1,4 @@
-﻿#include    "./meta_import.hpp"
+#include    "./meta_import.hpp"
 #include    <sstream>
 #include    "../string/string_operation.hpp"
 

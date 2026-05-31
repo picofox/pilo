@@ -1,4 +1,4 @@
-﻿#include "../../pilo.hpp"
+#include "../../pilo.hpp"
 #include "performance_test_case.hpp"
 #include <functional>
 #include <vector>

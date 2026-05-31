@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_container_sorted_vector_hpp_
+#ifndef _pilo_core_container_sorted_vector_hpp_
 #define _pilo_core_container_sorted_vector_hpp_
 
 #include	<deque>

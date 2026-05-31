@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #define KILO(x)        ((x)*1000)
 #define MEGA(x)        ((x)*1000000)

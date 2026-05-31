@@ -1,4 +1,4 @@
-﻿#include "stable_test_case.hpp"
+#include "stable_test_case.hpp"
 #include <chrono>
 #include "../io/formatted_io.hpp"
 #include "../datetime/timestamp.hpp"

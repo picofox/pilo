@@ -42,16 +42,20 @@ namespace pilo
 						return ::pilo::mk_perr(PERR_NON_EXIST);
 					}
 				}
+				::pilo::err_t value(::pilo::tlv* tlv_ptr, ::pilo::u32_t row, ::pilo::u32_t col, bool nullable, const std::string& dfl_val_str, char* errmsgbuff, ::pilo::i64_t errmsgbuff_len) const;
 				::pilo::err_t value(::pilo::tlv* tlv_ptr, ::pilo::u32_t row, ::pilo::u32_t col) const;
 				::pilo::tlv* value(::pilo::u32_t row, ::pilo::u32_t col) const;
 				::pilo::err_t strvalue(std::string& str, ::pilo::u32_t row, ::pilo::u32_t col) const;
 				
 
+
 			protected:
 				::pilo::tlv* _value(const OpenXLSX::XLCellAssignable& cell) const;
 				::pilo::tlv* _value(const OpenXLSX::XLCellAssignable& cell, ::pilo::i16_t t) const;
-				::pilo::err_t _value(::pilo::tlv* tlv_ptr, const OpenXLSX::XLCellAssignable& cell) const;
+				::pilo::err_t _value(::pilo::tlv* tlv_ptr, const OpenXLSX::XLCellAssignable& cell) const;				
 				::pilo::err_t _value(std::string& str, const OpenXLSX::XLCellAssignable& cell) const;
+
+				::pilo::err_t _value(::pilo::tlv* tlv_ptr, const OpenXLSX::XLCellAssignable& cell, bool nullable, const std::string & dfl_val_str, char* errmsgbuff, ::pilo::i64_t errmsgbuff_len) const;
 
 			protected:
 				OpenXLSX::XLWorksheet	_work_sheet;

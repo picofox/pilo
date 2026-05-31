@@ -1,4 +1,4 @@
-﻿#include "tlv.hpp"
+#include "tlv.hpp"
 #include <vector>
 #include <deque>
 #include "core/pattern/function_dispatcher.hpp"
@@ -3018,8 +3018,10 @@ namespace pilo
 
     }
 
-    ::pilo::err_t tlv::set_value(const char* cstr, ::pilo::i32_t len)
+
+    ::pilo::err_t tlv::set_value(const char* cstr, ::pilo::i32_t len, const char* delim)
     {
+        
         if (this->_type.wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_na) {
             return ::pilo::mk_perr(PERR_INC_DATA);
         }
@@ -3032,7 +3034,7 @@ namespace pilo
 
         if (len < 0)
             len = (::pilo::i32_t) ::pilo::core::string::character_count(cstr);
-            
+
         if (this->_type.is_single()) {
             return stc_single_from_cstr_dispatcher.dispatch(this->value_type())(this, cstr, len);
         }
@@ -3041,8 +3043,8 @@ namespace pilo
                 return ::pilo::mk_perr(PERR_NULL_PARAM);
             if (len <= 0 || cstr[0] == 0) {
                 return PILO_OK;
-            }  
-            ::pilo::core::string::iteratable_split(cstr, len, ",", 1, s_fill_tlv_arr_by_cstr, this, false, true, true, true);
+            }
+            ::pilo::core::string::iteratable_split(cstr, len, delim, 1, s_fill_tlv_arr_by_cstr, this, false, true, true, true);
         }
         else if (this->_type.is_dict()) {
             if (cstr == nullptr)
@@ -3050,7 +3052,7 @@ namespace pilo
             if (len <= 0 || cstr[0] == 0) {
                 return PILO_OK;
             }
-            ::pilo::core::string::iteratable_split(cstr, len, ",", 1, s_fill_tlv_dict_by_cstr, this, false, true, true, true);
+            ::pilo::core::string::iteratable_split(cstr, len, delim, 1, s_fill_tlv_dict_by_cstr, this, false, true, true, true);
         }
         else {
             return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);

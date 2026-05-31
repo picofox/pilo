@@ -1,4 +1,4 @@
-﻿#include    "./timer.hpp"
+#include    "./timer.hpp"
 #include	"../process/context.hpp"
 #include	"../algorithm/uint_sequence_generator.hpp"
 

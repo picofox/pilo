@@ -1,4 +1,4 @@
-﻿#include    "../process/context.hpp"
+#include    "../process/context.hpp"
 #include    "./cron_resolving.hpp"
 #include    "../datetime/zoned_clock.hpp"
 #include    "../algorithm/uint_sequence_generator.hpp"

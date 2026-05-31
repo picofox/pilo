@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <memory>
 #include "../memory/dynamic_memory_pool.hpp"

@@ -1,4 +1,4 @@
-﻿#include <iomanip>
+#include <iomanip>
 #include <sstream>
 #include "../../pilo.hpp"
 #include "system_information.hpp"

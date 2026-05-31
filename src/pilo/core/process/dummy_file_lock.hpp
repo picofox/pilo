@@ -1,4 +1,4 @@
-﻿#ifndef _dummy_dummy_file_lock_h_
+#ifndef _dummy_dummy_file_lock_h_
 #define _dummy_dummy_file_lock_h_
 
 #include "../io/io.hpp"

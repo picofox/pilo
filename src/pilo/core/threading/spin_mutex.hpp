@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../../pilo.hpp"
 
 #define PMC_DEAD_LOCK_DETECT

@@ -1,4 +1,4 @@
-﻿#include "io.hpp"
+#include "io.hpp"
 #include "path.hpp"
 
 #ifdef WINDOWS

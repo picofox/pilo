@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "pilo/core/testing/func_test_case.hpp"
 

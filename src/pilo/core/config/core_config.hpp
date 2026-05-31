@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_config_core_config_h_
+#ifndef _pilo_core_config_core_config_h_
 #define _pilo_core_config_core_config_h_
 
 #include <vector>

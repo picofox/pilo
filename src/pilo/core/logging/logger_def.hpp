@@ -1,14 +1,40 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                    //
+//  .----------------.  .----------------.  .----------------.  .----------------.       Raid boss    //
+//  | .--------------. || .--------------. || .--------------. || .--------------. |    Lv.85 缺德猫   //
+//  | |   ______     | || |     _____    | || |   _____      | || |     ____     | |     |\.-"-./|    //
+//  | |  |_   __ \   | || |    |_   _|   | || |  |_   _|     | || |   .'    `.   | |     \`     `/    //
+//  | |    | |__) |  | || |      | |     | || |    | |       | || |  /  .--.  \  | |     |= ^Y^ =|    //
+//  | |    |  ___/   | || |      | |     | || |    | |   _   | || |  | |    | |  | |     \__ ^ __/    //
+//  | |   _| |_      | || |     _| |_    | || |   _| |__/ |  | || |  \  `- - '/  | |     /`=+o+=`\    //
+//  | |  |_____|     | || |    |_____|   | || |  |________|  | || |   `.____.'   | |    |         |   //
+//  | |              | || |              | || |              | || |              | |    | (     ) |   //
+//  | '--------------' || '--------------' || '--------------' || '--------------' |    (,,)---(,,)   // 
+//  '----------------'  '----------------'  '----------------'  '----------------'                    //
+//                                                                                                    //  
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef _pilo_core_log_logger_def_hpp_
 #define _pilo_core_log_logger_def_hpp_
 
 #include    "../../pilo.hpp"
 #include    "../datetime/timestamp.hpp"
 #include    "../io/formatted_io.hpp"
+#include    <vector>
+
+
+#define PMF_BUFF_LOG_FAST(buff, bfsz, fmt, ...) \
+                ::pilo::core::io::string_formated_output(buff, bfsz, "[%s:%d] " fmt, __FILE__, __LINE__, ##__VA_ARGS__)
+
+
+
 
 
 namespace pilo {
     namespace core {
         namespace logging {
+
+            void buff_log(char* buff, int bfsz, const char* file, int line, const char* fmt, ...);
 
             const ::pilo::u32_t FlagBak = 0x00000001;
             const ::pilo::u32_t FlagZip = 0x00000002;
@@ -126,10 +152,11 @@ namespace pilo {
             const char* const g_flags[2]{
                 "FlagBak",
                 "FlagZip"
-            };
+            };            
 
             class info_item
-            {
+            {               
+
             public:
                 info_item() 
                     : _seq((::pilo::u32_t) ~0), _representative_type(::pilo::core::logging::representative_type::text)
@@ -147,6 +174,18 @@ namespace pilo {
                     _bin_type = bin_type;
                     _timestamp = ts;
                     _info = infocstr;
+                }
+
+
+                info_item(::pilo::u32_t seq, ::pilo::core::logging::representative_type  representative_type
+                    , ::pilo::core::logging::level level, ::pilo::u16_t bin_type, ::pilo::i64_t ts, const std::string& msg)
+                {
+                    _seq = seq;
+                    _representative_type = representative_type;
+                    _level = level;
+                    _bin_type = bin_type;
+                    _timestamp = ts;
+                    _info = msg;
                 }
 
                 info_item(const info_item& rhs) : _seq(rhs._seq), _representative_type(rhs._representative_type)
@@ -238,13 +277,126 @@ namespace pilo {
                 std::string                                     _info;
             };
 
+            class info_item_set
+            {
+            public:
+                info_item_set() = default;
+                info_item_set(const info_item_set&) = default;           
+                info_item_set(info_item_set&&) = default;                 
+                info_item_set& operator=(const info_item_set&) = default;
+                info_item_set& operator=(info_item_set&&) = default;
+                ~info_item_set() = default;       
 
+            public:
+                info_item& operator[](size_t index) {
+                    return _items[index];
+                }
+                const info_item& operator[](size_t index) const {
+                    return _items[index];
+                }
+                info_item& at(size_t index) {
+                    return _items.at(index);
+                }
+                const info_item& at(size_t index) const {
+                    return _items.at(index);
+                }
+
+                void append_item(info_item&& ii)
+                {
+                    _items.push_back(std::move(ii));
+                }
+
+                ::pilo::err_t append_text_item(::pilo::u32_t seq, ::pilo::core::logging::level level, const std::string & msg)
+                {
+                    _items.emplace_back(info_item(seq, ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), msg));
+                    return PILO_OK;
+                }
+
+                template<int BUFSZ = 1024>
+                ::pilo::err_t append_text_item(::pilo::u32_t seq, ::pilo::core::logging::level level, const char* file, int line, const char* fmt, ...)
+                {
+                    char buf[BUFSZ] = { 0 };
+
+                    int ret;
+                    va_list ap;
+
+                    va_start(ap, fmt);
+#if defined(WINDOWS)
+                    ret = _vsnprintf_s(buf, BUFSZ, _TRUNCATE, fmt, ap);
+#else
+                    ret = vsnprintf(buf, BUFSZ, fmt, args);
+#endif
+                    va_end(ap);
+
+                    int remain = BUFSZ - ret;
+                    if (ret < 0 || remain < 8) {
+                        return mk_perr(PERR_LEN_TOO_LARGE);
+                    }
+
+                    ::pilo::core::io::string_formated_output(buf + ret, remain, " <- (%s:%d)", file, line);
+
+                    _items.emplace_back(info_item(seq, ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), buf));
+                    return PILO_OK;
+                }
+
+                void travel(void* ctx, void(*callback)(void* ctx, const info_item& item)) const
+                {
+                    for (const auto& item : _items) {
+                        callback(ctx, item);
+                    }
+                }
+
+
+            private:
+                std::vector<info_item>              _items;
+
+            };
+
+            template<int BUFSZ = 1024>
+            info_item make_info_item_of_text(::pilo::u32_t seq, ::pilo::core::logging::level level, const char* file, int line, const char* fmt, ...)
+            {
+                char buf[BUFSZ] = {0};
+
+                int ret;
+                va_list ap;
+
+                va_start(ap, fmt);
+#if defined(WINDOWS)
+                ret = _vsnprintf_s(buf, BUFSZ, _TRUNCATE, fmt, ap);
+#else
+                ret = vsnprintf(buf, BUFSZ, fmt, args);
+#endif
+                va_end(ap);
+
+                int remain = BUFSZ - ret;
+                if (ret < 0 || remain < 8) {
+                    return info_item(seq, ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), "");
+                }
+
+                ::pilo::core::io::string_formated_output(buf + ret, remain, " <- (%s:%d)", file, line);
+
+                return info_item(seq, ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), buf);
+            }
         }
     }
 }
 
 
+#define PMF_BUFF_LOG(buff, bfsz, fmt, ...) \
+                ::pilo::core::logging::buff_log(buff, bfsz, __FILE__, __LINE__, fmt, ##__VA_ARGS__)
+
+#define PMF_MAKE_LOG_INFO_ITEM_OF_TEXT(BUFSZ, seq, level, fmt, ...) \
+                ::pilo::core::logging::make_info_item_of_text<BUFSZ>(seq, level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
+
+#define PMF_MAKE_LOG_INFO_ITEM_OF_TEXT_DFL(seq, level, fmt, ...) \
+                ::pilo::core::logging::make_info_item_of_text(seq, level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
 
 
+
+#define PMF_APPEND_TEXT_LOG(OBJ, BUFSZ, seq, level, fmt, ...) \
+                (OBJ).append_text_item<BUFSZ>(seq, level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
+
+#define PMF_APPEND_TEXT_LOG_DFL(OBJ, seq, level, fmt, ...) \
+                (OBJ).append_text_item(seq, level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
 
 #endif

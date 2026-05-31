@@ -1,4 +1,4 @@
-﻿#include "core_config.hpp"
+#include "core_config.hpp"
 #include "../process/context.hpp"
 #include "../../tlv.hpp"
 #include "../process/process.hpp"

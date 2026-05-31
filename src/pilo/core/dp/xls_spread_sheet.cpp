@@ -214,6 +214,98 @@ pilo::core::dp::xls_spread_sheet::~xls_spread_sheet()
 	}
 }
 
+::pilo::err_t pilo::core::dp::xls_spread_sheet::_value(::pilo::tlv* tlv_ptr, const OpenXLSX::XLCellAssignable& cell, bool nullable, const std::string& dfl_val_str, char* errmsgbuff, ::pilo::i64_t errmsgbuff_len) const
+{
+	/*
+	*  case XLValueType::string:  return v.get<std::string>();
+        case XLValueType::integer: return std::to_string(v.get<long long>());
+        case XLValueType::float_:  return std::to_string(v.get<double>());
+        case XLValueType::boolean: return v.get<bool>() ? "true" : "false";
+        case XLValueType::error:   return "#ERROR";
+	*/
+	
+
+	::pilo::err_t err = PILO_OK;
+	try
+	{
+		OpenXLSX::XLValueType ctp = cell.value().type();
+		std::string strval;
+
+		if (ctp == OpenXLSX::XLValueType::Empty) {
+			if (!nullable) {
+				::pilo::core::io::string_formated_output(errmsgbuff, errmsgbuff_len, "Empty Cell yet WITHOUT Nullable flag set, default=(%s).", dfl_val_str.c_str());
+				return ::pilo::mk_perr(PERR_INC_DATA);
+			}
+			strval = dfl_val_str;
+		}
+		else {
+			if (ctp == OpenXLSX::XLValueType::String) {
+				strval = cell.value().get<std::string>();
+			}
+			else if (ctp == OpenXLSX::XLValueType::Integer) {
+				strval = std::to_string(cell.value().get<::pilo::i64_t>());
+			}
+			else if (ctp == OpenXLSX::XLValueType::Float) {
+				strval = std::to_string(cell.value().get<::pilo::f64_t>());
+			}
+			else if (ctp == OpenXLSX::XLValueType::Boolean) {
+				strval = std::to_string(cell.value().get<bool>());
+			}
+			else {
+				::pilo::core::io::string_formated_output(errmsgbuff, errmsgbuff_len, "Invalid Cell type (%d) can Nod proceed.", (int)ctp);
+				return ::pilo::mk_perr(PERR_INC_DATA);
+			}
+		}		
+		
+
+		if (tlv_ptr->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_single) {
+			err = tlv_ptr->set_value(strval.c_str(), (::pilo::i32_t) strval.size());
+			if (PILO_OK != err) {
+				::pilo::core::io::string_formated_output(errmsgbuff, errmsgbuff_len, "Error on setting single value (%s) to TLV.", strval.c_str());
+				return err;
+			}
+		
+		} else if (tlv_ptr->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_array) {
+			err = tlv_ptr->set_value(strval.c_str(), (::pilo::i32_t)strval.size(), "|");
+			if (PILO_OK != err) {
+				::pilo::core::io::string_formated_output(errmsgbuff, errmsgbuff_len, "Error on setting array value (%s) to TLV.", strval.c_str());
+				return err;
+			}
+
+		} else if (tlv_ptr->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_dict) {
+			err = tlv_ptr->set_value(strval.c_str(), (::pilo::i32_t)strval.size(), "|");
+			if (PILO_OK != err) {
+				::pilo::core::io::string_formated_output(errmsgbuff, errmsgbuff_len, "Error on setting dict value (%s) to TLV.", strval.c_str());
+				return err;
+			}
+
+		} else {
+			::pilo::core::io::string_formated_output(errmsgbuff, errmsgbuff_len, "Passed TLV has invalid wrapper type %u", tlv_ptr->wrapper_type());
+			return ::pilo::mk_perr(PERR_INV_PARAM_DT);
+		}
+
+		return PILO_OK;
+	}
+	catch (const std::exception& e)
+	{
+		::pilo::core::io::string_formated_output(errmsgbuff, errmsgbuff_len, "Exception=(%s).", e.what());
+		return ::pilo::mk_perr(PERR_INC_DATA);
+	}
+}
+
+::pilo::err_t pilo::core::dp::xls_spread_sheet::value(::pilo::tlv* tlv_ptr, ::pilo::u32_t row, ::pilo::u32_t col, bool nullable, const std::string& dfl_val_str, char* errmsgbuff, ::pilo::i64_t errmsgbuff_len) const
+{
+	try
+	{
+		OpenXLSX::XLCellAssignable cell = _work_sheet.cell(row, (::pilo::u16_t)col);
+		return this->_value(tlv_ptr, cell, nullable, dfl_val_str, errmsgbuff, errmsgbuff_len);
+	}
+	catch (const std::exception&)
+	{
+		return ::pilo::mk_perr(PERR_NON_EXIST);
+	}
+}
+
 ::pilo::err_t pilo::core::dp::xls_spread_sheet::value(::pilo::tlv* tlv_ptr, ::pilo::u32_t row, ::pilo::u32_t col) const
 {
 	try
@@ -223,7 +315,7 @@ pilo::core::dp::xls_spread_sheet::~xls_spread_sheet()
 	}
 	catch (const std::exception&)
 	{
-		return ::pilo::mk_perr(PERR_INC_DATA);
+		return ::pilo::mk_perr(PERR_NON_EXIST);
 	}
 }
 
@@ -259,8 +351,6 @@ pilo::core::dp::xls_spread_sheet::~xls_spread_sheet()
 	try
 	{
 		::pilo::tlv* tlvp = nullptr;
-		if (cell.value().type() == OpenXLSX::XLValueType::Empty)
-			return PILO_CONTEXT->allocate_tlv();
 
 		OpenXLSX::XLValueType ctp = cell.value().type();
 		if (ctp == OpenXLSX::XLValueType::Integer) {
@@ -298,6 +388,7 @@ pilo::core::dp::xls_spread_sheet::~xls_spread_sheet()
 	}
 
 }
+
 
 pilo::core::dp::xls_spread_document::xls_spread_document() :_open_for_write(false)
 {

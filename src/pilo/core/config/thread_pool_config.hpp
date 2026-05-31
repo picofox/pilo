@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_config_thread_pool_config_h_
+#ifndef _pilo_core_config_thread_pool_config_h_
 #define _pilo_core_config_thread_pool_config_h_
 
 #include "../logging/logger_def.hpp"

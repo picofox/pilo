@@ -1,4 +1,4 @@
-﻿#include "meta_src_node.hpp"
+#include "meta_src_node.hpp"
 #include <vector>
 
 namespace pilo

@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_io_hpp_
+#ifndef _pilo_io_hpp_
 #define _pilo_io_hpp_
 
 #include "../../pilo.hpp"

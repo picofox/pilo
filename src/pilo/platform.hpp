@@ -1,4 +1,4 @@
-﻿#ifndef __pilo_platform_hpp_
+#ifndef __pilo_platform_hpp_
 #define __pilo_platform_hpp_
 
 #define PMI_OS_UNSUPPORT	(0)

@@ -1,4 +1,4 @@
-﻿#ifndef __pilo_types_hpp_
+#ifndef __pilo_types_hpp_
 #define __pilo_types_hpp_
 
 

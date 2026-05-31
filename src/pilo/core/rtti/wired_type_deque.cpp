@@ -1,4 +1,4 @@
-﻿#include "../../pilo.hpp"
+#include "../../pilo.hpp"
 #include "./wired_type.hpp"
 #include "../string/string_operation.hpp"
 #include <vector>

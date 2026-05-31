@@ -1,4 +1,4 @@
-﻿#include "../../pilo_stable_test.hpp"
+#include "../../pilo_stable_test.hpp"
 #include "pilo/core/process/context.hpp"
 #include "pilo/core/threading/performance_thread_pool.hpp"
 #include "pilo/core/threading/threading.hpp"

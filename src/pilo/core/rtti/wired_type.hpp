@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "../../types.hpp"
 #include "../../error.hpp"

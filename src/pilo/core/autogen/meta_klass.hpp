@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_autogen_meta_klass_hpp_
+#ifndef _pilo_core_autogen_meta_klass_hpp_
 #define _pilo_core_autogen_meta_klass_hpp_
 
 #include    <initializer_list>

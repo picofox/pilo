@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include "pilo/pilo.hpp"
 #include "pilo/core/testing/func_test_suite.hpp"
 #include "pilo_func_test.hpp"

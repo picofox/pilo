@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_config_json_tlv_driver_h_
+#ifndef _pilo_core_config_json_tlv_driver_h_
 #define _pilo_core_config_json_tlv_driver_h_
 
 #include "./tlv_driver_interface.hpp"
@@ -87,10 +87,144 @@ namespace pilo {
 
 
 
-                ::pilo::err_t _write_json_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType & allocator);
+                ::pilo::err_t _write_json_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType & allocator) ;
                 ::pilo::err_t _parse_json_object(::rapidjson::Value & obj, ::pilo::tlv* parent_tlv);
                 ::pilo::err_t _parse_json_array(::rapidjson::Value& obj, ::pilo::tlv* parent_tlv);
 
+                void _set_obj_values(::rapidjson::Value& value_obj, ::pilo::i8_t  iv) const { value_obj.SetInt((int) iv); }
+                void _set_obj_values(::rapidjson::Value& value_obj, ::pilo::u8_t  iv) const { value_obj.SetUint((unsigned int) iv); }
+                void _set_obj_values(::rapidjson::Value& value_obj, ::pilo::i16_t iv) const { value_obj.SetInt((int) iv); }
+                void _set_obj_values(::rapidjson::Value& value_obj, ::pilo::u16_t iv) const { value_obj.SetUint((unsigned int) iv); }
+                void _set_obj_values(::rapidjson::Value& value_obj, ::pilo::i32_t iv) const { value_obj.SetInt(iv); }
+                void _set_obj_values(::rapidjson::Value& value_obj, ::pilo::u32_t iv) const { value_obj.SetUint(iv); }
+                void _set_obj_values(::rapidjson::Value& value_obj, ::pilo::i64_t iv) const { value_obj.SetInt64(iv); }
+                void _set_obj_values(::rapidjson::Value& value_obj, ::pilo::u64_t iv) const { value_obj.SetUint64(iv); }
+                void _set_obj_values(::rapidjson::Value& value_obj, bool          bv) const { value_obj.SetBool(bv); }
+                void _set_obj_values(::rapidjson::Value& value_obj, ::pilo::f32_t fv) const { value_obj.SetFloat(fv); }
+                void _set_obj_values(::rapidjson::Value& value_obj, ::pilo::f64_t fv) const { value_obj.SetDouble(fv); }
+                void _set_obj_values(::rapidjson::Value& value_obj, char* cstrp, ::pilo::i32_t len) const { value_obj.SetString(cstrp, (rapidjson::SizeType) len); }
+                void _set_obj_values(::rapidjson::Value& value_obj, const std::string & sv) const { value_obj.SetString(sv.c_str(), (rapidjson::SizeType)sv.size()); }
+
+                template<typename VT>
+                ::pilo::err_t _set_str_key_dict_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+                {
+                    std::map<std::string, VT>* map_ptr = (std::map<std::string, VT>*) tlvp->daynamic_data();
+                    if (map_ptr == nullptr) {
+                        return PILO_OK;
+                    }
+                    std::map<std::string, VT>::const_iterator cit = map_ptr->cbegin();
+                    for (; cit != map_ptr->cend(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(cit->first.c_str(), allocator);
+                        _set_obj_values(tmp_val, cit->second);
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                    return PILO_OK;
+                }
+
+                template<typename KT, typename VT>
+                ::pilo::err_t _set_dict_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+                {
+                    std::map<KT, VT>* map_ptr = (std::map<KT, VT>*) tlvp->daynamic_data();
+                    if (map_ptr == nullptr) {
+                        return PILO_OK;
+                    }
+                    std::map<KT, VT>::const_iterator cit = map_ptr->cbegin();
+                    for (; cit != map_ptr->cend(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        _set_obj_values(tmp_val, (VT) cit->second);
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                    return PILO_OK;
+                }
+
+                template<typename KT>
+                ::pilo::err_t _set_dict_object_str(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+                {
+                    std::map<KT, std::string>* map_ptr = (std::map<KT, std::string>*) tlvp->daynamic_data();
+                    if (map_ptr == nullptr) {
+                        return PILO_OK;
+                    }
+                    std::map<KT, std::string>::const_iterator cit = map_ptr->cbegin();
+                    for (; cit != map_ptr->cend(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        _set_obj_values(tmp_val, cit->second);
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                    return PILO_OK;
+                }
+
+                ::pilo::err_t _set_str_key_dict_object_str(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+                {
+                    std::map<std::string, std::string>* map_ptr = (std::map<std::string, std::string>*) tlvp->daynamic_data();
+                    if (map_ptr == nullptr) {
+                        return PILO_OK;
+                    }
+                    std::map<std::string, std::string>::const_iterator cit = map_ptr->cbegin();
+                    for (; cit != map_ptr->cend(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(cit->first.c_str(), allocator);
+                        _set_obj_values(tmp_val, cit->second);
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                    return PILO_OK;
+                }
+
+                ::pilo::err_t _set_str_key_dict_object_bytes(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+                {
+                    std::map<std::string, char*>* map_ptr = (std::map<std::string, char*>*) tlvp->daynamic_data();
+                    if (map_ptr == nullptr) {
+                        return PILO_OK;
+                    }
+                    std::map<std::string, char*>::const_iterator cit = map_ptr->cbegin();
+                    for (; cit != map_ptr->cend(); cit++) {
+                        ::rapidjson::Value tmp_val;   
+                        ::rapidjson::Value key_value(cit->first.c_str(), allocator);
+                        if (cit->second == nullptr) {
+                            tmp_val.SetNull();
+                        } else {
+                            _set_obj_values(tmp_val, cit->second, (rapidjson::SizeType) ::pilo::core::string::character_count(cit->second));
+                        }
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                    return PILO_OK;
+                
+                }
+                
+
+                template<typename KT>
+                ::pilo::err_t _set_dict_object_bytes(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+                {
+                    std::map<KT, char*>* map_ptr = (std::map<KT, char*>*) tlvp->daynamic_data();
+                    if (map_ptr == nullptr) {
+                        return PILO_OK;
+                    }
+                    std::map<KT, char*>::const_iterator cit = map_ptr->cbegin();
+                    for (; cit != map_ptr->cend(); cit++) {
+                        ::rapidjson::Value tmp_val;   
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        if (cit->second == nullptr) {
+                            tmp_val.SetNull();
+                        } else {
+                            _set_obj_values(tmp_val, cit->second, (rapidjson::SizeType) ::pilo::core::string::character_count(cit->second));
+                        }
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                    return PILO_OK;
+                
+                }
+
+                ::pilo::err_t _set_dict_of_key_i8(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator);
+                ::pilo::err_t _set_dict_of_key_u8(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator);
+                ::pilo::err_t _set_dict_of_key_i16(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator);
+                ::pilo::err_t _set_dict_of_key_u16(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator);
+                ::pilo::err_t _set_dict_of_key_i32(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator);
+                ::pilo::err_t _set_dict_of_key_u32(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator);
+                ::pilo::err_t _set_dict_of_key_i64(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator);
+                ::pilo::err_t _set_dict_of_key_u64(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator);
+                ::pilo::err_t _set_dict_of_key_str(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator);
 
             protected:
 

@@ -1,4 +1,4 @@
-﻿#include "error.hpp"
+#include "error.hpp"
 #include "core/io/formatted_io.hpp"
 #include "core/string/string_operation.hpp"
 #include <sstream>

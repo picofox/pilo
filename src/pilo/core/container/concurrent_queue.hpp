@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_container_concurrent_queue_hpp_
+#ifndef _pilo_core_container_concurrent_queue_hpp_
 #define _pilo_core_container_concurrent_queue_hpp_
 
 #include "../../external/concurrentqueue/concurrentqueue.h"

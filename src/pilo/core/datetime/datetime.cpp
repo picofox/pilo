@@ -1,4 +1,4 @@
-﻿#include <mutex>
+#include <mutex>
 #include "datetime.hpp"
 #include "./timestamp.hpp"
 #include "../memory/bits_operation.hpp"

@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_autogen_autogen_hpp_
+#ifndef _pilo_core_autogen_autogen_hpp_
 #define _pilo_core_autogen_autogen_hpp_
 
 #include    <string>

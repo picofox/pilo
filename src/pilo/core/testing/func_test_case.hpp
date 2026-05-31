@@ -1,4 +1,4 @@
-﻿#ifndef __pilo_core_testing_func_test_case_hpp
+#ifndef __pilo_core_testing_func_test_case_hpp
 #define __pilo_core_testing_func_test_case_hpp
 
 #include "../../pilo.hpp"

@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <thread>
 #include "pilo/pilo.hpp"
 #include "pilo/core/testing/stable_test_suite.hpp"

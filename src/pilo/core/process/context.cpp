@@ -1,4 +1,4 @@
-﻿#include "./context.hpp"
+#include "./context.hpp"
 #include "../stat/system_information.hpp"
 #include "../../tlv.hpp"
 #include "../memory/linked_byte_buffer.hpp"

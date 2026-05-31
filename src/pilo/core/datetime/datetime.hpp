@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_datetime_datetime_h_
+#ifndef _pilo_core_datetime_datetime_h_
 #define _pilo_core_datetime_datetime_h_
 
 #include "../../pilo.hpp"

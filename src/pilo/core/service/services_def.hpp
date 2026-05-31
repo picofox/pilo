@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_service_service_def_hpp
+#ifndef _pilo_core_service_service_def_hpp
 #define _pilo_core_service_service_def_hpp
 
 #include "../../pilo.hpp"

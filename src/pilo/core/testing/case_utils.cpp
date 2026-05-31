@@ -1,4 +1,4 @@
-﻿#include "./case_utils.hpp"
+#include "./case_utils.hpp"
 #include "../datetime/timestamp.hpp"
 #include "../rtti/wired_type_map_creation.hpp"
 

@@ -1,4 +1,4 @@
-﻿#include "json_tlv_driver.hpp"
+#include "json_tlv_driver.hpp"
 #include "../../external/rapidjson/document.h"
 #include "../../external/rapidjson/prettywriter.h"
 #include "../../external/rapidjson/stringbuffer.h"
@@ -217,12 +217,512 @@ namespace pilo {
                 return PILO_OK;
             }
 
+            ::pilo::err_t json_tlv_driver::_set_dict_of_key_i8(::rapidjson::Value& obj, const::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i8) {
+                    err = _set_dict_object<::pilo::i8_t, ::pilo::i8_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u8) {
+                    err = _set_dict_object<::pilo::i8_t, ::pilo::u8_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i16) {
+                    err = _set_dict_object<::pilo::i8_t, ::pilo::i16_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u16) {
+                    err = _set_dict_object<::pilo::i8_t, ::pilo::u16_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i32) {
+                    err = _set_dict_object<::pilo::i8_t, ::pilo::i32_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u32) {
+                    err = _set_dict_object<::pilo::i8_t, ::pilo::u32_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                    err = _set_dict_object<::pilo::i8_t, ::pilo::i64_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                    err = _set_dict_object<::pilo::i8_t, ::pilo::u64_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                    err = _set_dict_object<::pilo::i8_t, bool>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+                    err = _set_dict_object<::pilo::i8_t, ::pilo::f32_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+                    err = _set_dict_object<::pilo::i8_t, ::pilo::f64_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                    err = _set_dict_object_bytes<::pilo::i8_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                    err = _set_dict_object_str<::pilo::i8_t>(obj, tlvp, allocator);
+                } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv) {
+                    std::map<::pilo::i8_t, ::pilo::tlv*>* map_ptr = (std::map<::pilo::i8_t, ::pilo::tlv*>*) tlvp->daynamic_data();
+                    auto cit = map_ptr->begin();
+                    for (; cit != map_ptr->end(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        err = _write_json_object(tmp_val, cit->second, allocator);
+                        if (err != PILO_OK)
+                            return err;
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                }
+                return err;
+            }
+
+            ::pilo::err_t json_tlv_driver::_set_dict_of_key_u8(::rapidjson::Value& obj, const::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i8) {
+                    err = _set_dict_object<::pilo::u8_t, ::pilo::i8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u8) {
+                    err = _set_dict_object<::pilo::u8_t, ::pilo::u8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i16) {
+                    err = _set_dict_object<::pilo::u8_t, ::pilo::i16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u16) {
+                    err = _set_dict_object<::pilo::u8_t, ::pilo::u16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i32) {
+                    err = _set_dict_object<::pilo::u8_t, ::pilo::i32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u32) {
+                    err = _set_dict_object<::pilo::u8_t, ::pilo::u32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                    err = _set_dict_object<::pilo::u8_t, ::pilo::i64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                    err = _set_dict_object<::pilo::u8_t, ::pilo::u64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                    err = _set_dict_object<::pilo::u8_t, bool>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+                    err = _set_dict_object<::pilo::u8_t, ::pilo::f32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+                    err = _set_dict_object<::pilo::u8_t, ::pilo::f64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                    err = _set_dict_object_bytes<::pilo::u8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                    err = _set_dict_object_str<::pilo::u8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv) {
+                    std::map<::pilo::u8_t, ::pilo::tlv*>* map_ptr = (std::map<::pilo::u8_t, ::pilo::tlv*>*) tlvp->daynamic_data();
+                    auto cit = map_ptr->begin();
+                    for (; cit != map_ptr->end(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        err = _write_json_object(tmp_val, cit->second, allocator);
+                        if (err != PILO_OK)
+                            return err;
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                }
+                return err;
+            }
+
+            ::pilo::err_t json_tlv_driver::_set_dict_of_key_i16(::rapidjson::Value& obj, const::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i8) {
+                    err = _set_dict_object<::pilo::i16_t, ::pilo::i8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u8) {
+                    err = _set_dict_object<::pilo::i16_t, ::pilo::u8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i16) {
+                    err = _set_dict_object<::pilo::i16_t, ::pilo::i16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u16) {
+                    err = _set_dict_object<::pilo::i16_t, ::pilo::u16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i32) {
+                    err = _set_dict_object<::pilo::i16_t, ::pilo::i32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u32) {
+                    err = _set_dict_object<::pilo::i16_t, ::pilo::u32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                    err = _set_dict_object<::pilo::i16_t, ::pilo::i64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                    err = _set_dict_object<::pilo::i16_t, ::pilo::u64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                    err = _set_dict_object<::pilo::i16_t, bool>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+                    err = _set_dict_object<::pilo::i16_t, ::pilo::f32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+                    err = _set_dict_object<::pilo::i16_t, ::pilo::f64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                    err = _set_dict_object_bytes<::pilo::i16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                    err = _set_dict_object_str<::pilo::i16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv) {
+                    std::map<::pilo::i16_t, ::pilo::tlv*>* map_ptr = (std::map<::pilo::i16_t, ::pilo::tlv*>*) tlvp->daynamic_data();
+                    auto cit = map_ptr->begin();
+                    for (; cit != map_ptr->end(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        err = _write_json_object(tmp_val, cit->second, allocator);
+                        if (err != PILO_OK)
+                            return err;
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                }
+                return err;
+            }
+
+            ::pilo::err_t json_tlv_driver::_set_dict_of_key_u16(::rapidjson::Value& obj, const::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i8) {
+                    err = _set_dict_object<::pilo::u16_t, ::pilo::i8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u8) {
+                    err = _set_dict_object<::pilo::u16_t, ::pilo::u8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i16) {
+                    err = _set_dict_object<::pilo::u16_t, ::pilo::i16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u16) {
+                    err = _set_dict_object<::pilo::u16_t, ::pilo::u16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i32) {
+                    err = _set_dict_object<::pilo::u16_t, ::pilo::i32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u32) {
+                    err = _set_dict_object<::pilo::u16_t, ::pilo::u32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                    err = _set_dict_object<::pilo::u16_t, ::pilo::i64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                    err = _set_dict_object<::pilo::u16_t, ::pilo::u64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                    err = _set_dict_object<::pilo::u16_t, bool>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+                    err = _set_dict_object<::pilo::u16_t, ::pilo::f32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+                    err = _set_dict_object<::pilo::u16_t, ::pilo::f64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                    err = _set_dict_object_bytes<::pilo::u16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                    err = _set_dict_object_str<::pilo::u16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv) {
+                    std::map<::pilo::u16_t, ::pilo::tlv*>* map_ptr = (std::map<::pilo::u16_t, ::pilo::tlv*>*) tlvp->daynamic_data();
+                    auto cit = map_ptr->begin();
+                    for (; cit != map_ptr->end(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        err = _write_json_object(tmp_val, cit->second, allocator);
+                        if (err != PILO_OK)
+                            return err;
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                }
+                return err;
+            }
+
+            ::pilo::err_t json_tlv_driver::_set_dict_of_key_i32(::rapidjson::Value& obj, const::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i8) {
+                    err = _set_dict_object<::pilo::i32_t, ::pilo::i8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u8) {
+                    err = _set_dict_object<::pilo::i32_t, ::pilo::u8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i16) {
+                    err = _set_dict_object<::pilo::i32_t, ::pilo::i16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u16) {
+                    err = _set_dict_object<::pilo::i32_t, ::pilo::u16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i32) {
+                    err = _set_dict_object<::pilo::i32_t, ::pilo::i32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u32) {
+                    err = _set_dict_object<::pilo::i32_t, ::pilo::u32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                    err = _set_dict_object<::pilo::i32_t, ::pilo::i64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                    err = _set_dict_object<::pilo::i32_t, ::pilo::u64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                    err = _set_dict_object<::pilo::i32_t, bool>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+                    err = _set_dict_object<::pilo::i32_t, ::pilo::f32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+                    err = _set_dict_object<::pilo::i32_t, ::pilo::f64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                    err = _set_dict_object_bytes<::pilo::i32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                    err = _set_dict_object_str<::pilo::i32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv) {
+                    std::map<::pilo::i32_t, ::pilo::tlv*>* map_ptr = (std::map<::pilo::i32_t, ::pilo::tlv*>*) tlvp->daynamic_data();
+                    auto cit = map_ptr->begin();
+                    for (; cit != map_ptr->end(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        err = _write_json_object(tmp_val, cit->second, allocator);
+                        if (err != PILO_OK)
+                            return err;
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                }
+                return err;
+            }
+
+            ::pilo::err_t json_tlv_driver::_set_dict_of_key_u32(::rapidjson::Value& obj, const::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i8) {
+                    err = _set_dict_object<::pilo::u32_t, ::pilo::i8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u8) {
+                    err = _set_dict_object<::pilo::u32_t, ::pilo::u8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i16) {
+                    err = _set_dict_object<::pilo::u32_t, ::pilo::i16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u16) {
+                    err = _set_dict_object<::pilo::u32_t, ::pilo::u16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i32) {
+                    err = _set_dict_object<::pilo::u32_t, ::pilo::i32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u32) {
+                    err = _set_dict_object<::pilo::u32_t, ::pilo::u32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                    err = _set_dict_object<::pilo::u32_t, ::pilo::i64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                    err = _set_dict_object<::pilo::u32_t, ::pilo::u64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                    err = _set_dict_object<::pilo::u32_t, bool>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+                    err = _set_dict_object<::pilo::u32_t, ::pilo::f32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+                    err = _set_dict_object<::pilo::u32_t, ::pilo::f64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                    err = _set_dict_object_bytes<::pilo::u32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                    err = _set_dict_object_str<::pilo::u32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv) {
+                    std::map<::pilo::u32_t, ::pilo::tlv*>* map_ptr = (std::map<::pilo::u32_t, ::pilo::tlv*>*) tlvp->daynamic_data();
+                    auto cit = map_ptr->begin();
+                    for (; cit != map_ptr->end(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        err = _write_json_object(tmp_val, cit->second, allocator);
+                        if (err != PILO_OK)
+                            return err;
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                }
+                return err;
+            }
+
+            ::pilo::err_t json_tlv_driver::_set_dict_of_key_i64(::rapidjson::Value& obj, const::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i8) {
+                    err = _set_dict_object<::pilo::i64_t, ::pilo::i8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u8) {
+                    err = _set_dict_object<::pilo::i64_t, ::pilo::u8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i16) {
+                    err = _set_dict_object<::pilo::i64_t, ::pilo::i16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u16) {
+                    err = _set_dict_object<::pilo::i64_t, ::pilo::u16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i32) {
+                    err = _set_dict_object<::pilo::i64_t, ::pilo::i32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u32) {
+                    err = _set_dict_object<::pilo::i64_t, ::pilo::u32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                    err = _set_dict_object<::pilo::i64_t, ::pilo::i64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                    err = _set_dict_object<::pilo::i64_t, ::pilo::u64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                    err = _set_dict_object<::pilo::i64_t, bool>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+                    err = _set_dict_object<::pilo::i64_t, ::pilo::f32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+                    err = _set_dict_object<::pilo::i64_t, ::pilo::f64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                    err = _set_dict_object_bytes<::pilo::i64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                    err = _set_dict_object_str<::pilo::i64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv) {
+                    std::map<::pilo::i64_t, ::pilo::tlv*>* map_ptr = (std::map<::pilo::i64_t, ::pilo::tlv*>*) tlvp->daynamic_data();
+                    auto cit = map_ptr->begin();
+                    for (; cit != map_ptr->end(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        err = _write_json_object(tmp_val, cit->second, allocator);
+                        if (err != PILO_OK)
+                            return err;
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                }
+                return err;
+            }
+
+            ::pilo::err_t json_tlv_driver::_set_dict_of_key_u64(::rapidjson::Value& obj, const::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i8) {
+                    err = _set_dict_object<::pilo::u64_t, ::pilo::i8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u8) {
+                    err = _set_dict_object<::pilo::u64_t, ::pilo::u8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i16) {
+                    err = _set_dict_object<::pilo::u64_t, ::pilo::i16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u16) {
+                    err = _set_dict_object<::pilo::u64_t, ::pilo::u16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i32) {
+                    err = _set_dict_object<::pilo::u64_t, ::pilo::i32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u32) {
+                    err = _set_dict_object<::pilo::u64_t, ::pilo::u32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                    err = _set_dict_object<::pilo::u64_t, ::pilo::i64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                    err = _set_dict_object<::pilo::u64_t, ::pilo::u64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                    err = _set_dict_object<::pilo::u64_t, bool>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+                    err = _set_dict_object<::pilo::u64_t, ::pilo::f32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+                    err = _set_dict_object<::pilo::u64_t, ::pilo::f64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                    err = _set_dict_object_bytes<::pilo::u64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                    err = _set_dict_object_str<::pilo::u64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv) {
+                    std::map<::pilo::u64_t, ::pilo::tlv*>* map_ptr = (std::map<::pilo::u64_t, ::pilo::tlv*>*) tlvp->daynamic_data();
+                    auto cit = map_ptr->begin();
+                    for (; cit != map_ptr->end(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        err = _write_json_object(tmp_val, cit->second, allocator);
+                        if (err != PILO_OK)
+                            return err;
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                }
+                return err;
+            }
+
+            ::pilo::err_t json_tlv_driver::_set_dict_of_key_str(::rapidjson::Value& obj, const::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            {
+                ::pilo::err_t err = PILO_OK;
+                if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i8) {
+                    err = _set_str_key_dict_object<::pilo::i8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u8) {
+                    err = _set_str_key_dict_object<::pilo::u8_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i16) {
+                    err = _set_str_key_dict_object<::pilo::i16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u16) {
+                    err = _set_str_key_dict_object<::pilo::u16_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i32) {
+                    err = _set_str_key_dict_object<::pilo::i32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u32) {
+                    err = _set_str_key_dict_object<::pilo::u32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                    err = _set_str_key_dict_object<::pilo::i64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                    err = _set_str_key_dict_object<::pilo::u64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                    err = _set_str_key_dict_object<bool>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+                    err = _set_str_key_dict_object<::pilo::f32_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+                    err = _set_str_key_dict_object<::pilo::f64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                    err = _set_str_key_dict_object_bytes(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                    err = _set_dict_object_str<::pilo::u64_t>(obj, tlvp, allocator);
+                }
+                else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv) {
+                    std::map<::pilo::u64_t, ::pilo::tlv*>* map_ptr = (std::map<::pilo::u64_t, ::pilo::tlv*>*) tlvp->daynamic_data();
+                    auto cit = map_ptr->begin();
+                    for (; cit != map_ptr->end(); cit++) {
+                        ::rapidjson::Value tmp_val;
+                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        err = _write_json_object(tmp_val, cit->second, allocator);
+                        if (err != PILO_OK)
+                            return err;
+                        obj.AddMember(key_value, tmp_val, allocator);
+                    }
+                }
+                return err;
+            }
+
             ::pilo::tlv* json_tlv_driver::make_value_node(const char* fqn, ::pilo::err_t& err)
             {
                 return this->_m_root_value->set_tlv(fqn, err);
             }
 
-            ::pilo::err_t json_tlv_driver::_write_json_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)
+            ::pilo::err_t json_tlv_driver::_write_json_object(::rapidjson::Value& obj, const ::pilo::tlv* tlvp, ::rapidjson::Document::AllocatorType& allocator)  
             {
                 ::pilo::err_t err = PILO_OK;
                 if (tlvp->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_single)
@@ -305,13 +805,72 @@ namespace pilo {
                 else if (tlvp->wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_array)
                 {
                     obj.SetArray();
-
                     for (::pilo::i32_t i = 0; i < tlvp->size(); i++) {
                         ::rapidjson::Value tmp_val;
-                        const ::pilo::tlv* sub_tlv = tlvp->get<::pilo::tlv*>(i, &err);
-                        err = _write_json_object(tmp_val, sub_tlv, allocator);
-                        if (err != PILO_OK)
+                        if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i8) {
+                            ::pilo::i8_t iv = tlvp->get<::pilo::i8_t>(i, &err);
+                            tmp_val.SetInt((int)iv);
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u8) {
+                            ::pilo::u8_t iv = tlvp->get<::pilo::u8_t>(i, &err);
+                            tmp_val.SetUint((int)iv);
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i16) {
+                            ::pilo::i16_t iv = tlvp->get<::pilo::i16_t>(i, &err);
+                            tmp_val.SetInt((int)iv);
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u16) {
+                            ::pilo::u16_t iv = tlvp->get<::pilo::u16_t>(i, &err);
+                            tmp_val.SetUint((int)iv);
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i32) {
+                            ::pilo::i32_t iv = tlvp->get<::pilo::i32_t>(i, &err);
+                            tmp_val.SetInt((int)iv);
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u32) {
+                            ::pilo::u32_t iv = tlvp->get<::pilo::u32_t>(i, &err);
+                            tmp_val.SetUint((int)iv);
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                            ::pilo::i64_t iv = tlvp->get<::pilo::i64_t>(i, &err);
+                            tmp_val.SetInt64((int)iv);
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                            ::pilo::u64_t iv = tlvp->get<::pilo::u64_t>(i, &err);
+                            tmp_val.SetInt64((int)iv);
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                            bool bv = tlvp->get<bool>(i, err);
+                            tmp_val.SetBool(bv);
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+                            ::pilo::f32_t fv = tlvp->get<::pilo::f32_t>(i, &err);
+                            tmp_val.SetFloat(fv);
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+                            ::pilo::f64_t fv = tlvp->get<::pilo::f64_t>(i, &err);
+                            tmp_val.SetDouble(fv);
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                            const char* cstrv = tlvp->get_bytes(i, &err);
+                            if (cstrv == nullptr) {
+                                tmp_val.SetNull();
+                            }
+                            else {
+                                tmp_val.SetString(cstrv, (rapidjson::SizeType) ::pilo::core::string::character_count(cstrv));
+                            }
+                        } else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                            const std::string& strp = tlvp->get<std::string>(i, &err);
+                            if (strp == ::pilo::_invalid_object_<std::string>::get()) {
+                                tmp_val.SetNull();
+                            }
+                            else {
+                                tmp_val.SetString(strp.c_str(), (::rapidjson::SizeType)strp.size());
+                            }
+                        }
+                        else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv) {
+                            const ::pilo::tlv* sub_tlv = tlvp->get<::pilo::tlv*>(i, &err);
+                            err = _write_json_object(tmp_val, sub_tlv, allocator);
+                            if (err != PILO_OK)
+                                return err;
+                        }
+                        else {
+                            err = PERR_MIS_DATA_TYPE;
+                        }
+
+                        if (err != PILO_OK) {
                             return err;
+                        }
+
                         obj.PushBack(tmp_val, allocator);                        
                     }
                 }
@@ -319,22 +878,38 @@ namespace pilo {
                 {
                     obj.SetObject();
                     if (tlvp->daynamic_data() != nullptr) {
-                        if (tlvp->key_type() != ::pilo::core::rtti::wired_type::key_type_str
-                            || tlvp->value_type() != ::pilo::core::rtti::wired_type::value_type_tlv) {
-                            return ::pilo::mk_perr(PERR_INV_KEY_TYPE);
+                        if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_i8) {
+                            err = this->_set_dict_of_key_i8(obj, tlvp, allocator);
+                        } else if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_u8) {
+                            err = this->_set_dict_of_key_u8(obj, tlvp, allocator);
+                        } else if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_i16) {
+                            err = this->_set_dict_of_key_i16(obj, tlvp, allocator);
+                        } else if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_u16) {
+                            err = this->_set_dict_of_key_u16(obj, tlvp, allocator);
+                        } else if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_i32) {
+                            err = this->_set_dict_of_key_i32(obj, tlvp, allocator);
+                        } else if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_u32) {
+                            err = this->_set_dict_of_key_u32(obj, tlvp, allocator);
+                        } else if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_i64) {
+                            err = this->_set_dict_of_key_i64(obj, tlvp, allocator);
+                        } else if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_u64) {
+                            err = this->_set_dict_of_key_u64(obj, tlvp, allocator);
+                        }
+                        else if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_str) {
+                            std::map<std::string, ::pilo::tlv*>* map_ptr = (std::map<std::string, ::pilo::tlv*>*) tlvp->daynamic_data();
+                            auto cit = map_ptr->begin();
+                            for (; cit != map_ptr->end(); cit++) {
+                                ::rapidjson::Value tmp_val;
+                                ::rapidjson::Value key_value(cit->first.c_str(), allocator);
+                                err = _write_json_object(tmp_val, cit->second, allocator);
+                                if (err != PILO_OK)
+                                    return err;
+
+                                obj.AddMember(key_value, tmp_val, allocator);
+                            }
                         }
 
-                        std::map<std::string, ::pilo::tlv*>* map_ptr = (std::map<std::string, ::pilo::tlv*>*) tlvp->daynamic_data();
-                        auto cit = map_ptr->begin();
-                        for (; cit != map_ptr->end(); cit++) {
-                            ::rapidjson::Value tmp_val;
-                            ::rapidjson::Value key_value(cit->first.c_str(), allocator);
-                            err = _write_json_object(tmp_val, cit->second, allocator);
-                            if (err != PILO_OK)
-                                return err;
-
-                            obj.AddMember(key_value, tmp_val, allocator);                            
-                        }                    
+                                           
                     }
 
                 }

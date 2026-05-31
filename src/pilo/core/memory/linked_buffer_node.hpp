@@ -1,4 +1,4 @@
-﻿#ifndef __pilo_core_memory_linked_buffer_node_hpp_
+#ifndef __pilo_core_memory_linked_buffer_node_hpp_
 #define __pilo_core_memory_linked_buffer_node_hpp_
 
 #include "../../pilo.hpp"

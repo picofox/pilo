@@ -1,4 +1,4 @@
-﻿#include "thread_pool_config.hpp"
+#include "thread_pool_config.hpp"
 #include "../process/context.hpp"
 
 ::pilo::i32_t pilo::core::config::thread_pool_config::workers_count() const

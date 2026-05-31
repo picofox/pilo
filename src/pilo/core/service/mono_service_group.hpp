@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_service_mono_service_group_hpp_
+#ifndef _pilo_core_service_mono_service_group_hpp_
 #define _pilo_core_service_mono_service_group_hpp_
 
 #include "service_group_interface.hpp"

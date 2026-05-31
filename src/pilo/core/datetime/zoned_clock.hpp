@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_datetime_system_clock_hpp_
+#ifndef _pilo_core_datetime_system_clock_hpp_
 #define _pilo_core_datetime_system_clock_hpp_
 
 

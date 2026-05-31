@@ -1,4 +1,4 @@
-﻿#include "threading.hpp"
+#include "threading.hpp"
 #include "../logging/logger_interface.hpp"
 #include "../process/context.hpp"
 

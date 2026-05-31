@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_sched_timer_hpp_
+#ifndef _pilo_core_sched_timer_hpp_
 #define _pilo_core_sched_timer_hpp_
 
 #include    "./task.hpp"

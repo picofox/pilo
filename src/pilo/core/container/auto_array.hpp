@@ -1,4 +1,4 @@
-﻿#ifndef __auto_array_h_
+#ifndef __auto_array_h_
 #define __auto_array_h_
 
 #include "../../pilo.hpp"

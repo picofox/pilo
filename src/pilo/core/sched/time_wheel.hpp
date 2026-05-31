@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_sched_time_wheel_hpp_
+#ifndef _pilo_core_sched_time_wheel_hpp_
 #define _pilo_core_sched_time_wheel_hpp_
 
 #include    "./timer.hpp"

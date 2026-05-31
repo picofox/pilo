@@ -1,4 +1,4 @@
-﻿#include "func_test_case.hpp"
+#include "func_test_case.hpp"
 #include <chrono>
 #include "../io/formatted_io.hpp"
 #include <cstdio>

@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_log_logger_interface_hpp_
+#ifndef _pilo_core_log_logger_interface_hpp_
 #define _pilo_core_log_logger_interface_hpp_
 
 #include "../config/core_config.hpp"

@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_hpp_
+#ifndef _pilo_hpp_
 #define _pilo_hpp_
 
 #include <memory>

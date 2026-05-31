@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_service_builtin_timer_service_group_hpp_
+#ifndef _pilo_core_service_builtin_timer_service_group_hpp_
 #define _pilo_core_service_builtin_timer_service_group_hpp_
 
 #include "../../service/mono_service_group.hpp"

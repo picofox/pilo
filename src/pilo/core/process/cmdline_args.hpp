@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_process_cmdline_args_hpp_
+#ifndef _pilo_core_process_cmdline_args_hpp_
 #define _pilo_core_process_cmdline_args_hpp_
 
 #include "../../pilo.hpp"

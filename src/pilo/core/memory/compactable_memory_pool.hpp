@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <mutex>
 #include "../threading/dummy_mutex.hpp"

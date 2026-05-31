@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_autogen_meta_variable_hpp_
+#ifndef _pilo_core_autogen_meta_variable_hpp_
 #define _pilo_core_autogen_meta_variable_hpp_
 
 #include    "../../pilo.hpp"

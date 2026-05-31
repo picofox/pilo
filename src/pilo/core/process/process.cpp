@@ -1,4 +1,4 @@
-﻿#include "process.hpp"
+#include "process.hpp"
 #include "../memory/util.hpp"
 #include "../string/string_operation.hpp"
 #include "../io/path.hpp"

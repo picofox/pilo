@@ -1,4 +1,4 @@
-﻿#include    "./meta_klass.hpp"
+#include    "./meta_klass.hpp"
 
 
 namespace pilo

@@ -1,4 +1,20 @@
-﻿#include "../../pilo_func_test.hpp"
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                    //
+//  .----------------.  .----------------.  .----------------.  .----------------.       Raid boss    //
+//  | .--------------. || .--------------. || .--------------. || .--------------. |    Lv.85 缺德猫   //
+//  | |   ______     | || |     _____    | || |   _____      | || |     ____     | |     |\.-"-./|    //
+//  | |  |_   __ \   | || |    |_   _|   | || |  |_   _|     | || |   .'    `.   | |     \`     `/    //
+//  | |    | |__) |  | || |      | |     | || |    | |       | || |  /  .--.  \  | |     |= ^Y^ =|    //
+//  | |    |  ___/   | || |      | |     | || |    | |   _   | || |  | |    | |  | |     \__ ^ __/    //
+//  | |   _| |_      | || |     _| |_    | || |   _| |__/ |  | || |  \  `- - '/  | |     /`=+o+=`\    //
+//  | |  |_____|     | || |    |_____|   | || |  |________|  | || |   `.____.'   | |    |         |   //
+//  | |              | || |              | || |              | || |              | |    | (     ) |   //
+//  | '--------------' || '--------------' || '--------------' || '--------------' |    (,,)---(,,)   // 
+//  '----------------'  '----------------'  '----------------'  '----------------'                    //
+//                                                                                                    //  
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include "../../pilo_func_test.hpp"
 #include "pilo/core/testing/func_test_suite.hpp"
 #include "pilo/core/string/string_operation.hpp"
 #include "pilo/core/io/formatted_io.hpp"
@@ -6,9 +22,10 @@
 #include "pilo/core/process/context.hpp"
 #include "pilo/core/config/xls_config.hpp"
 
+
 using namespace ::pilo::func_test;
 
-#define PILO_FBB_TEST_CNT_0 (100000)
+
 
 namespace pilo
 {
@@ -32,14 +49,19 @@ namespace pilo
 
 					xret = xconf_gen.parse();
 					if (xret != PILO_OK) {
-						for (size_t i = 0; i < xconf_gen.logs().size(); i++) {
-							printf("%s\n", xconf_gen.logs().at(i).to_string().c_str());
-						}
+						return p_case->error(xret, xconf_gen.logs().back().to_string().c_str());
+					}
+
+					xret = xconf_gen.generate_server_config();
+					if (xret != PILO_OK) {
+						return p_case->error(xret, xconf_gen.logs().back().to_string().c_str());
 					}
 
 					for (size_t i = 0; i < xconf_gen.logs().size(); i++) {
 						printf("%s\n", xconf_gen.logs().at(i).to_string().c_str());
 					}
+
+					
 
 					p_case->set_result(PILO_OK);
 					return PILO_OK;

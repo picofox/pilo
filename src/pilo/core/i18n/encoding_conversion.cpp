@@ -1,4 +1,4 @@
-﻿#include "./encoding_conversion.hpp"
+#include "./encoding_conversion.hpp"
 #include "../string/string_operation.hpp"
 
 #define PMI_CODE_PAGE_GBK		(936)

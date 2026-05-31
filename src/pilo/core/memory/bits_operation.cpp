@@ -1,4 +1,4 @@
-﻿#include "../../platform.hpp"
+#include "../../platform.hpp"
 #include "bits_operation.hpp"
 
 namespace pilo

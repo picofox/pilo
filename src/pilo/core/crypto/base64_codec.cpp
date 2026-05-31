@@ -1,4 +1,4 @@
-﻿#include "../../pilo.hpp"
+#include "../../pilo.hpp"
 #include "base64_codec.hpp"
 #include "../string/string_operation.hpp"
 

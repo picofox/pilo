@@ -1,4 +1,4 @@
-﻿#include "./abstract_fixed_frequency_service.hpp"
+#include "./abstract_fixed_frequency_service.hpp"
 #include "../datetime/timestamp.hpp"
 #include "./service_group_interface.hpp"
 #include "../process/context.hpp"

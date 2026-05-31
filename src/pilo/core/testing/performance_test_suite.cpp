@@ -1,4 +1,4 @@
-﻿#include "performance_test_suite.hpp"
+#include "performance_test_suite.hpp"
 #include "core/io/formatted_io.hpp"
 #include <iostream>
 #include "../memory/util.hpp"

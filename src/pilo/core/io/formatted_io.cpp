@@ -1,4 +1,4 @@
-﻿#include "./formatted_io.hpp"
+#include "./formatted_io.hpp"
 #include "../io/io.hpp"
 #               if defined(WINDOWS)
 #include "../memory/util.hpp"

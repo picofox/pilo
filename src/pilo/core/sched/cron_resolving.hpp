@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_sched_cron_resolving_hpp_
+#ifndef _pilo_core_sched_cron_resolving_hpp_
 #define _pilo_core_sched_cron_resolving_hpp_
 
 #include <vector>

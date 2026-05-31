@@ -1,4 +1,4 @@
-﻿#include "./service_interface.hpp"
+#include "./service_interface.hpp"
 #include "service_interface.hpp"
 #include "./service_manager.hpp"
 #include "./service_group_interface.hpp"

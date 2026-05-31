@@ -1,4 +1,4 @@
-﻿#include "../../pilo.hpp"
+#include "../../pilo.hpp"
 #include "../io/formatted_io.hpp"
 #include "../string/string_operation.hpp"
 #include "../datetime/timestamp.hpp"

@@ -1,4 +1,4 @@
-﻿#ifndef _pilo_core_service_service_group_interface_hpp_
+#ifndef _pilo_core_service_service_group_interface_hpp_
 #define _pilo_core_service_service_group_interface_hpp_
 
 #include "../config/service_config.hpp"
