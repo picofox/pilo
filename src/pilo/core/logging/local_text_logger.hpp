@@ -97,7 +97,7 @@ namespace pilo {
                     ::pilo::i64_t iret = 0;
                     va_list args;
                     _m_last_ts = ts;
-                    _write_header(lv);
+                    _write_header(lv, ts);
 
                     if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                         va_start(args, fmt);
@@ -181,7 +181,7 @@ namespace pilo {
                     va_list args;
                     _m_last_ts = ts;
 
-                    _write_header(lv);
+                    _write_header(lv, ts);
 
                     if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
                         va_start(args, fmt);
@@ -494,7 +494,7 @@ namespace pilo {
                     
                 }
 
-                void _write_header(::pilo::core::logging::level lv)
+                void _write_header(::pilo::core::logging::level lv, ::pilo::i64_t ts)
                 {
                     std::tm lt = { 0 };
                     ::pilo::i64_t micro_seconds = 0;
@@ -506,8 +506,8 @@ namespace pilo {
                                                
                         ) {
                        
-                        std::time_t unix_timestamp = _m_last_ts / 1000000;
-                        micro_seconds = _m_last_ts - unix_timestamp * 1000000;
+                        std::time_t unix_timestamp = ts / 1000000;
+                        micro_seconds = ts - unix_timestamp * 1000000;
 #ifdef WINDOWS
                         localtime_s(&lt, &unix_timestamp);
 #else
@@ -572,16 +572,15 @@ namespace pilo {
                     }
 
                     if (this->_m_config.headers().test_value(::pilo::core::logging::TimeStamp)) {
-                        ::pilo::i64_t tst = PILO_TIMESTAMP;
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevLogFile)) {
-                            tlen = this->_m_file.formatted_output(false, "%lld%s", tst, this->_m_config.field_sep().c_str());
+                            tlen = this->_m_file.formatted_output(false, "%lld%s", ts, this->_m_config.field_sep().c_str());
                             hlen += tlen;
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdOut)) {
-                            ::pilo::core::io::file_formatted_output(stdout, "%lld%s", tst, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stdout, "%lld%s", ts, this->_m_config.field_sep().c_str());
                         }
                         if (this->_m_config.outputs().test_value(::pilo::core::logging::DevStdErr)) {
-                            ::pilo::core::io::file_formatted_output(stderr, "%lld%s", tst, this->_m_config.field_sep().c_str());
+                            ::pilo::core::io::file_formatted_output(stderr, "%lld%s", ts, this->_m_config.field_sep().c_str());
                         }
                     }
 

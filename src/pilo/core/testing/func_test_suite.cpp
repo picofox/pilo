@@ -56,20 +56,32 @@ namespace pilo
 					if (_cases[i]->validate_result() != PILO_OK)
 					{
 						rcnt++;			
-						std::cout << this->_formater.format_field(2, "FAILED");
-						std::cout << this->_formater.format_field<::pilo::i32_t>(3, _cases[i]->result());
-						std::cout << this->_formater.format_field<::pilo::f64_t>(4, _cases[i]->time_cost());
-						std::cout << this->_formater.format_field(5, _cases[i]->desc());
-						std::cout << std::endl;
+						printf("%s", this->_formater.format_field(2, "FAILED").c_str());
+						printf("%s", this->_formater.format_field<::pilo::i32_t>(3, _cases[i]->result()).c_str());
+						printf("%s", this->_formater.format_field<::pilo::f64_t>(4, _cases[i]->time_cost()).c_str());
+						printf("%s", this->_formater.format_field(5, _cases[i]->desc()).c_str());
+						printf("\n");
+
+						//std::cout << this->_formater.format_field(2, "FAILED");
+						//std::cout << this->_formater.format_field<::pilo::i32_t>(3, _cases[i]->result());
+						//std::cout << this->_formater.format_field<::pilo::f64_t>(4, _cases[i]->time_cost());
+						//std::cout << this->_formater.format_field(5, _cases[i]->desc());
+						//std::cout << std::endl;
 						return rcnt;
 					}
 					else
 					{
-						std::cout << this->_formater.format_field(2, "OK");
-						std::cout << this->_formater.format_field<::pilo::i32_t>(3, _cases[i]->result());
-						std::cout << this->_formater.format_field<::pilo::f64_t>(4, _cases[i]->time_cost());
-						std::cout << this->_formater.format_field(5, _cases[i]->desc());
-						std::cout << std::endl;
+						printf("%s", this->_formater.format_field(2, "OK").c_str());
+						printf("%s", this->_formater.format_field<::pilo::i32_t>(3, _cases[i]->result()).c_str());
+						printf("%s", this->_formater.format_field<::pilo::f64_t>(4, _cases[i]->time_cost()).c_str());
+						printf("%s", this->_formater.format_field(5, _cases[i]->desc()).c_str());
+						printf("\n");
+
+						//std::cout << this->_formater.format_field(2, "OK");
+						//std::cout << this->_formater.format_field<::pilo::i32_t>(3, _cases[i]->result());
+						//std::cout << this->_formater.format_field<::pilo::f64_t>(4, _cases[i]->time_cost());
+						//std::cout << this->_formater.format_field(5, _cases[i]->desc());
+						//std::cout << std::endl;
 					}
 
 					rcnt++;

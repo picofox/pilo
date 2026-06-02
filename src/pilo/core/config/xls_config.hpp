@@ -1,3 +1,19 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                    //
+//  .----------------.  .----------------.  .----------------.  .----------------.       Raid boss    //
+//  | .--------------. || .--------------. || .--------------. || .--------------. |    Lv.85 缺德猫   //
+//  | |   ______     | || |     _____    | || |   _____      | || |     ____     | |     |\.-"-./|    //
+//  | |  |_   __ \   | || |    |_   _|   | || |  |_   _|     | || |   .'    `.   | |     \`     `/    //
+//  | |    | |__) |  | || |      | |     | || |    | |       | || |  /  .--.  \  | |     |= ^Y^ =|    //
+//  | |    |  ___/   | || |      | |     | || |    | |   _   | || |  | |    | |  | |     \__ ^ __/    //
+//  | |   _| |_      | || |     _| |_    | || |   _| |__/ |  | || |  \  `- - '/  | |     /`=+o+=`\    //
+//  | |  |_____|     | || |    |_____|   | || |  |________|  | || |   `.____.'   | |    |         |   //
+//  | |              | || |              | || |              | || |              | |    | (     ) |   //
+//  | '--------------' || '--------------' || '--------------' || '--------------' |    (,,)---(,,)   // 
+//  '----------------'  '----------------'  '----------------'  '----------------'                    //
+//                                                                                                    //  
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include    "../rtti/wired_type.hpp"
 #include    <vector>
 #include    <array>
@@ -58,9 +74,9 @@ namespace pilo
                 ::pilo::i32_t index() const { return _index;  };
                 ::pilo::u32_t column() const { return _column; }
                 const std::string& name() const { return _name; }
-                const ::pilo::i16_t value_type() const { return _wired_type.value_type(); }
-                const ::pilo::i8_t key_type() const { return _wired_type.key_type(); }
-                const ::pilo::i8_t wrapper_type() const { return _wired_type.wrapper_type(); }
+                const ::pilo::u16_t value_type() const { return _wired_type.value_type(); }
+                const ::pilo::u8_t key_type() const { return _wired_type.key_type(); }
+                const ::pilo::u8_t wrapper_type() const { return _wired_type.wrapper_type(); }
                 const std::string& default_value() const { return _default_value_str; }
                 
 
@@ -69,8 +85,55 @@ namespace pilo
                 void set_key_type(::pilo::i8_t kt) { _wired_type.set_key_type(kt); }
                 void set_wrapper_type(::pilo::i8_t wt) { _wired_type.set_wrapper_type(wt); }
                 void set_default_value_str(const std::string& s) { _default_value_str = s; }
-                bool test_flag(::pilo::u32_t flag) { return _flags.test_value(flag);  }
+                bool test_flag(::pilo::u32_t flag) const { return _flags.test_value(flag);  }
+                bool is_index_pk_unique() const 
+                {
+                    if (wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single)
+                        return false;
 
+                    if (value_type() >= ::pilo::core::rtti::wired_type::value_type_i8 && value_type() <= ::pilo::core::rtti::wired_type::value_type_u64) {
+                        return true;
+                    } else if (value_type() >= ::pilo::core::rtti::wired_type::value_type_str) {
+                        return true;
+                    }
+
+                    return false;
+                }
+                bool is_pk_arr() const
+                {
+                    if (wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single)
+                        return false;
+
+                    if (value_type() >= ::pilo::core::rtti::wired_type::value_type_i8 && value_type() <= ::pilo::core::rtti::wired_type::value_type_u64) {
+                        return true;
+                    }
+
+                    return false;
+                }
+                bool is_value_type_int() const
+                {
+                    if (wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single)
+                        return false;
+
+                    if (value_type() == ::pilo::core::rtti::wired_type::value_type_i8 || value_type() == ::pilo::core::rtti::wired_type::value_type_i16
+                        || value_type() == ::pilo::core::rtti::wired_type::value_type_i32 || value_type() == ::pilo::core::rtti::wired_type::value_type_i64) {
+                        return true;
+                    }
+
+                    return false;
+                }
+                bool is_value_type_uint() const
+                {
+                    if (wrapper_type() != ::pilo::core::rtti::wired_type::wrapper_single)
+                        return false;
+
+                    if (value_type() == ::pilo::core::rtti::wired_type::value_type_u8 || value_type() == ::pilo::core::rtti::wired_type::value_type_u16
+                        || value_type() == ::pilo::core::rtti::wired_type::value_type_u32 || value_type() == ::pilo::core::rtti::wired_type::value_type_u64) {
+                        return true;
+                    }
+
+                    return false;
+                }
                 std::string to_string() const;
 
             private:
@@ -132,7 +195,14 @@ namespace pilo
                 std::string to_string() const;
                 ::pilo::i32_t find_lowest_pri_field() const;
                 ::pilo::i32_t find_existing_field_idx_by_name(const std::string& name) const;
+                bool check_uniqe( char* buff, ::pilo::i64_t buffsz) const;
 
+            private:
+                bool _check_uniqe_str(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const;
+                bool _check_uniqe_int(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const;
+                bool _check_uniqe_uint(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const;
+                bool _check_pk_array_int(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const;
+                bool _check_pk_array_uint(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const;
             private:
                 std::string _cls_name;
                 std::string _config_file_name;
@@ -242,14 +312,11 @@ namespace pilo
                 ::pilo::err_t generate_server_config();
                 ::pilo::err_t generate_client_config();
                 ::pilo::err_t generate_server_source();
-                ::pilo::err_t generate_client_source();                
+                ::pilo::err_t generate_client_source(); 
 
-                void add_log(::pilo::core::logging::level level, ::pilo::u32_t row, ::pilo::u32_t col, const char* fmt, ...);
-                void add_log(::pilo::core::logging::level level, const char* fmt, ...);
-                void add_log(::pilo::core::logging::level level, const std::string & msg);
-
-                const std::vector<::pilo::core::logging::info_item>& logs() const { return _logs;  }
                 std::map<std::string, xls_config_set>& config_set() { return _config_set_map;  }
+                ::pilo::core::logging::info_item_set& log_set() { return _log_set; }
+
 
 
             private:
@@ -266,13 +333,14 @@ namespace pilo
                 ::pilo::core::io::path          _xls_dir_path;
                 ::pilo::core::io::path          _dest_config_dir_path[2];
                 ::pilo::core::io::path          _dest_source_dir_path[2];
-                std::vector<::pilo::core::logging::info_item>   _logs;
+                ::pilo::core::logging::info_item_set    _log_set;
                 std::map<std::string, std::string> _ccnames;
                 std::map<std::string, std::string> _scnames;
                 std::map<std::string, std::string> _ccfgs;
                 std::map<std::string, std::string> _scfgs;
                 std::map<std::string, xls_config_set>  _config_set_map;                
             };
+
 
             
         }

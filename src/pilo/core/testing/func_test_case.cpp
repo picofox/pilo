@@ -94,13 +94,13 @@ namespace pilo
 			{
 				if (err != cerr)
 				{
-					char buffer[256] = { 0 };
+					char buffer[4096] = { 0 };
 					va_list args;
 					va_start(args, fmt);
 #               if defined(WINDOWS)
-					_vsnprintf_s(buffer, 256, _TRUNCATE, fmt, args);
+					_vsnprintf_s(buffer, 4096, _TRUNCATE, fmt, args);
 #               else
-					vsnprintf(buffer, 256, fmt, args);
+					vsnprintf(buffer, 4096, fmt, args);
 #               endif
 					va_end(args);
 					set_result(err);
@@ -114,11 +114,11 @@ namespace pilo
 			{
 				if (err != PILO_OK)
 				{
-					char buffer[256] = { 0 };
+					char buffer[4096] = { 0 };
 					va_list args;
 					va_start(args, fmt);
 #               if defined(WINDOWS)
-					_vsnprintf_s(buffer, 256, _TRUNCATE, fmt, args);
+					_vsnprintf_s(buffer, 4096, _TRUNCATE, fmt, args);
 #               else
 					vsnprintf(buffer, sizeof(buffer), fmt, args);
 #               endif
@@ -131,11 +131,11 @@ namespace pilo
 			}
 			::pilo::err_t func_test_case::error(::pilo::err_t err, const char* fmt, ...)
 			{
-				char buffer[256] = { 0 };
+				char buffer[4096] = { 0 };
 				va_list args;
 				va_start(args, fmt);
 #               if defined(WINDOWS)
-				_vsnprintf_s(buffer, 256, _TRUNCATE, fmt, args);
+				_vsnprintf_s(buffer, 4096, _TRUNCATE, fmt, args);
 #               else
 				vsnprintf(buffer, sizeof(buffer), fmt, args);
 #               endif

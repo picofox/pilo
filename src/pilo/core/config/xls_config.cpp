@@ -154,6 +154,310 @@ std::string pilo::core::config::xls_config::to_string() const
 	return -1;
 }
 
+bool pilo::core::config::xls_config::check_uniqe(char* buff, ::pilo::i64_t buffsz) const
+{
+	for (size_t i = 0; i < _fields.size(); i++) {
+		if (_fields.at(i).test_flag(xls_config_set::flag_unique)){
+			if (_fields.at(i).test_flag(xls_config_set::flag_primary_key) 
+				|| _fields.at(i).test_flag(xls_config_set::flag_primary_key_array)
+				|| _fields.at(i).test_flag(xls_config_set::flag_index) 
+				|| _fields.at(i).test_flag(xls_config_set::flag_nullable)) {
+				::pilo::core::io::string_formated_output(buff, buffsz, "field_%llu (%s) mark as qunique, but conflict with p/P/i/n attributes those have been also assigned.", (::pilo::u64_t)i, _fields.at(i).name().c_str(), _fields.at(i).wrapper_type());
+				return false;
+			}
+
+			if (! _fields.at(i).is_index_pk_unique()) {
+				::pilo::core::io::string_formated_output(buff, buffsz, "field_%llu (%s) mark as unique, but has conflict wrapper type (%u) or value type (%u).", (::pilo::u64_t)i, _fields.at(i).name().c_str(), _fields.at(i).wrapper_type(), _fields.at(i).value_type());
+				return false;
+			}
+			
+
+		} else if (_fields.at(i).test_flag(xls_config_set::flag_primary_key)) {
+			if (_fields.at(i).test_flag(xls_config_set::flag_primary_key_array)
+				|| _fields.at(i).test_flag(xls_config_set::flag_index)
+				|| _fields.at(i).test_flag(xls_config_set::flag_nullable)) {
+				::pilo::core::io::string_formated_output(buff, buffsz, "field_%llu (%s) mark as PK, but conflict with u/P/i/n attributes those have been also assigned.", (::pilo::u64_t)i, _fields.at(i).name().c_str(), _fields.at(i).wrapper_type());
+				return false;
+			}
+
+			if (!_fields.at(i).is_index_pk_unique()) {
+				::pilo::core::io::string_formated_output(buff, buffsz, "field_%llu (%s) mark as PK, but has conflict wrapper type (%u) or value type (%u).", (::pilo::u64_t)i, _fields.at(i).name().c_str(), _fields.at(i).wrapper_type(), _fields.at(i).value_type());
+				return false;
+			}
+		} else if (_fields.at(i).test_flag(xls_config_set::flag_index)) {
+			if (_fields.at(i).test_flag(xls_config_set::flag_primary_key_array)
+				|| _fields.at(i).test_flag(xls_config_set::flag_primary_key)) {
+				::pilo::core::io::string_formated_output(buff, buffsz, "field_%llu (%s) mark as Index, but conflict with u/P/P/ attributes those have been also assigned.", (::pilo::u64_t)i, _fields.at(i).name().c_str(), _fields.at(i).wrapper_type());
+				return false;
+			}
+
+			if (!_fields.at(i).is_index_pk_unique()) {
+				::pilo::core::io::string_formated_output(buff, buffsz, "field_%llu (%s) mark as Index, but has conflict wrapper type (%u) or value type (%u).", (::pilo::u64_t)i, _fields.at(i).name().c_str(), _fields.at(i).wrapper_type(), _fields.at(i).value_type());
+				return false;
+			}
+		} else if (_fields.at(i).test_flag(xls_config_set::flag_primary_key_array)) {
+			if ( _fields.at(i).test_flag(xls_config_set::flag_index)
+				|| _fields.at(i).test_flag(xls_config_set::flag_nullable)) {
+				::pilo::core::io::string_formated_output(buff, buffsz, "field_%llu (%s) mark as PK_arr, but conflict with u/p/i/n attributes those have been also assigned.", (::pilo::u64_t)i, _fields.at(i).name().c_str(), _fields.at(i).wrapper_type());
+				return false;
+			}
+
+			if (!_fields.at(i).is_pk_arr()) {
+				::pilo::core::io::string_formated_output(buff, buffsz, "field_%llu (%s) mark as Index, but has conflict wrapper type (%u) or value type (%u).", (::pilo::u64_t)i, _fields.at(i).name().c_str(), _fields.at(i).wrapper_type(), _fields.at(i).value_type());
+				return false;
+			}
+		}
+
+		if (_fields.at(i).test_flag(xls_config_set::flag_unique) || _fields.at(i).test_flag(xls_config_set::flag_primary_key)) {
+			if (_fields.at(i).value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+				if (!_check_uniqe_str(_fields.at(i), buff, buffsz)) {
+					return false;
+				}
+			} else if (_fields.at(i).is_value_type_int()) {
+				if (!_check_uniqe_int(_fields.at(i), buff, buffsz)) {
+					return false;
+				}
+			} else if (_fields.at(i).is_value_type_uint()) {
+				if (!_check_uniqe_uint(_fields.at(i), buff, buffsz)) {
+					return false;
+				}
+			} 
+
+		} else if (_fields.at(i).test_flag(xls_config_set::flag_primary_key_array)) {
+			if (_fields.at(i).is_value_type_int()) {
+				if (!_check_pk_array_int(_fields.at(i), buff, buffsz)) {
+					return false;
+				}
+			}
+			else if (_fields.at(i).is_value_type_uint()) {
+				if (!_check_pk_array_uint(_fields.at(i), buff, buffsz)) {
+					return false;
+				}
+			}
+		}
+	}
+
+	
+
+
+
+	return true;
+}
+
+bool pilo::core::config::xls_config::_check_uniqe_str(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const
+{
+	::pilo::err_t err = PILO_OK;
+	::pilo::i32_t exist_line_no = -1;
+	::pilo::duplicate_map_checker<std::string, ::pilo::i32_t> checker;
+
+	for (::pilo::i32_t j = 0; j < _data->size(); j++) {
+
+		::pilo::tlv* record_tlv_ptr = _data->get<::pilo::tlv*>(j, &err);
+		if (record_tlv_ptr == nullptr || err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get Record_%d form root TLV data Failed. (%d)", j,  err);
+			return false;
+		}
+
+		::pilo::tlv* ret_tlv = nullptr;
+		err = record_tlv_ptr->get<std::string, ::pilo::tlv*>(fld_cref.name(), ret_tlv);
+		if (record_tlv_ptr == nullptr || err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get Field (%s) from Record_%d Failed. (%d)", fld_cref.name().c_str(), j, err);
+			return false;
+		}
+
+		const std::string* strp = ret_tlv->string_ptr();
+		if (strp == nullptr) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get string value from field (%s) Failed. (%d)", fld_cref.name().c_str(), j);
+			return false;
+		}
+		
+		if (! checker.check(*strp, j, exist_line_no)) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Duplciated value (%s) of field (%s) Found at record %d and %d", strp->c_str(), fld_cref.name().c_str(), j, exist_line_no);
+			return false;
+		}
+	}
+	return true;
+}
+
+bool pilo::core::config::xls_config::_check_uniqe_int(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const
+{
+	::pilo::err_t err = PILO_OK;
+	::pilo::i32_t exist_line_no = -1;
+	::pilo::duplicate_map_checker<::pilo::i64_t, ::pilo::i32_t> checker;
+
+	for (::pilo::i32_t j = 0; j < _data->size(); j++) {
+
+		::pilo::tlv* record_tlv_ptr = _data->get<::pilo::tlv*>(j, &err);
+		if (record_tlv_ptr == nullptr || err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get Record_%d form root TLV data Failed. (%d)", j, err);
+			return false;
+		}
+
+		::pilo::tlv* ret_tlv = nullptr;
+		err = record_tlv_ptr->get<std::string, ::pilo::tlv*>(fld_cref.name(), ret_tlv);
+		if (record_tlv_ptr == nullptr || err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get Field (%s) from Record_%d Failed. (%d)", fld_cref.name().c_str(), j, err);
+			return false;
+		}
+
+		::pilo::i64_t iv = ret_tlv->as_i64(&err);
+		if (err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get int value from field (%s) Failed. (%d)", fld_cref.name().c_str(), j);
+			return false;
+		}
+
+		if (!checker.check(iv, j, exist_line_no)) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Duplciated value (%lld) of field (%s) Found at record %d and %d", iv, fld_cref.name().c_str(), j, exist_line_no);
+			return false;
+		}
+	}
+	return true;
+}
+
+bool pilo::core::config::xls_config::_check_uniqe_uint(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const
+{
+	::pilo::err_t err = PILO_OK;
+	::pilo::i32_t exist_line_no = -1;
+	::pilo::duplicate_map_checker<::pilo::u64_t, ::pilo::i32_t> checker;
+
+	for (::pilo::i32_t j = 0; j < _data->size(); j++) {
+
+		::pilo::tlv* record_tlv_ptr = _data->get<::pilo::tlv*>(j, &err);
+		if (record_tlv_ptr == nullptr || err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get Record_%d form root TLV data Failed. (%d)", j, err);
+			return false;
+		}
+
+		::pilo::tlv* ret_tlv = nullptr;
+		err = record_tlv_ptr->get<std::string, ::pilo::tlv*>(fld_cref.name(), ret_tlv);
+		if (record_tlv_ptr == nullptr || err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get Field (%s) from Record_%d Failed. (%d)", fld_cref.name().c_str(), j, err);
+			return false;
+		}
+
+		::pilo::u64_t iv = ret_tlv->as_u64(&err);
+		if (err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get int value from field (%s) Failed. (%d)", fld_cref.name().c_str(), j);
+			return false;
+		}
+
+		if (!checker.check(iv, j, exist_line_no)) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Duplciated value (%lld) of field (%s) Found at record %d and %d", iv, fld_cref.name().c_str(), j, exist_line_no);
+			return false;
+		}
+	}
+	return true;
+}
+
+bool pilo::core::config::xls_config::_check_pk_array_int(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const
+{
+	::std::map<::pilo::i64_t, ::pilo::i32_t>	exsitence_map;
+	::pilo::err_t err = PILO_OK;
+	for (::pilo::i32_t j = 0; j < _data->size(); j++) {
+
+		::pilo::tlv* record_tlv_ptr = _data->get<::pilo::tlv*>(j, &err);
+		if (record_tlv_ptr == nullptr || err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get Record_%d form root TLV data Failed. (%d)", j, err);
+			return false;
+		}
+
+		::pilo::tlv* ret_tlv = nullptr;
+		err = record_tlv_ptr->get<std::string, ::pilo::tlv*>(fld_cref.name(), ret_tlv);
+		if (record_tlv_ptr == nullptr || err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get Field (%s) from Record_%d Failed. (%d)", fld_cref.name().c_str(), j, err);
+			return false;
+		}
+
+		::pilo::i64_t iv = ret_tlv->as_i64(&err);
+		if (err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get int value from field (%s) Failed. (%d)", fld_cref.name().c_str(), j);
+			return false;
+		}
+
+		::std::map<::pilo::i64_t, ::pilo::i32_t>::const_iterator cit = exsitence_map.find(iv);
+		if (cit != exsitence_map.cend() ) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Duplciated value (%lld) of field (%s) Found at record %d and %d", iv, fld_cref.name().c_str(), j, cit->second);
+			return false;
+		}
+
+		exsitence_map.insert(std::pair<::pilo::i64_t, ::pilo::i32_t>(iv, j));		
+	}
+
+	if (exsitence_map.size() != (size_t) _data->size() ) {
+		::pilo::core::io::string_formated_output(buff, buffsz, "Found duplicated value exists for field (%s), may be insert failed.",  fld_cref.name().c_str());
+		return false;
+	}
+
+	if (exsitence_map.begin()->first != 0) {
+		::pilo::core::io::string_formated_output(buff, buffsz, "Field (%s) NOT begin from ZERO, rules voilation.", fld_cref.name().c_str());
+		return false;
+	}
+
+	if ((int) exsitence_map.begin()->first !=  _data->size() - 1 ) {
+		::pilo::core::io::string_formated_output(buff, buffsz, "Field (%s) NOT end at %d, rules voilation.", fld_cref.name().c_str(), (int)_data->size() - 1);
+		return false;
+	}
+
+
+	return true;
+
+}
+
+bool pilo::core::config::xls_config::_check_pk_array_uint(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const
+{
+	::std::map<::pilo::u64_t, ::pilo::i32_t>	exsitence_map;
+	::pilo::err_t err = PILO_OK;
+	for (::pilo::i32_t j = 0; j < _data->size(); j++) {
+
+		::pilo::tlv* record_tlv_ptr = _data->get<::pilo::tlv*>(j, &err);
+		if (record_tlv_ptr == nullptr || err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get Record_%d form root TLV data Failed. (%d)", j, err);
+			return false;
+		}
+
+		::pilo::tlv* ret_tlv = nullptr;
+		err = record_tlv_ptr->get<std::string, ::pilo::tlv*>(fld_cref.name(), ret_tlv);
+		if (record_tlv_ptr == nullptr || err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get Field (%s) from Record_%d Failed. (%d)", fld_cref.name().c_str(), j, err);
+			return false;
+		}
+
+		::pilo::u64_t uv = ret_tlv->as_u64(&err);
+		if (err != PILO_OK) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Get int value from field (%s) Failed. (%d)", fld_cref.name().c_str(), j);
+			return false;
+		}
+
+		::std::map<::pilo::u64_t, ::pilo::i32_t>::const_iterator cit = exsitence_map.find(uv);
+		if (cit != exsitence_map.cend()) {
+			::pilo::core::io::string_formated_output(buff, buffsz, "Duplciated value (%llu) of field (%s) Found at record %d and %d", uv, fld_cref.name().c_str(), j, cit->second);
+			return false;
+		}
+
+		exsitence_map.insert(std::pair<::pilo::u64_t, ::pilo::i32_t>(uv, j));
+	}
+
+	if (exsitence_map.size() != (size_t)_data->size()) {
+		::pilo::core::io::string_formated_output(buff, buffsz, "Found duplicated value exists for field (%s), may be insert failed.", fld_cref.name().c_str());
+		return false;
+	}
+
+	if (exsitence_map.begin()->first != 0) {
+		::pilo::core::io::string_formated_output(buff, buffsz, "Field (%s) NOT begin from ZERO, rules voilation.", fld_cref.name().c_str());
+		return false;
+	}
+
+	if ((::pilo::i64_t)exsitence_map.begin()->first != (::pilo::i64_t) _data->size() - 1) {
+		::pilo::core::io::string_formated_output(buff, buffsz, "Field (%s) NOT end at %d, rules voilation.", fld_cref.name().c_str(), (int)_data->size() - 1);
+		return false;
+	}
+
+
+	return true;
+}
+
+
+
 void pilo::core::config::xls_config_set::reset()
 {
 	for (auto i = 0; i < 2; i++) {
@@ -184,7 +488,7 @@ std::string pilo::core::config::xls_config_set::to_string() const
 	::pilo::cstr_ref<char>	raw_fields[5];
 	::pilo::i64_t rcnt = ::pilo::core::string::split_fixed(field_str.c_str(), field_str.size(), ":", 1, raw_fields, 5, false, false, true, true);
 	if (rcnt < 3) {
-		add_log(::pilo::core::logging::level::error, row, col, "Low Count (%lld) Split field spec Failed (%s) in %s.%s", rcnt, field_str.c_str(), xlsfullfilepath, wsnamecstr);
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Low Count (%lld) Split field spec Failed (%s) in %s.%s", row, col, rcnt, field_str.c_str(), xlsfullfilepath, wsnamecstr);
 		return ::pilo::mk_perr(PERR_INC_DATA);
 	}
 
@@ -196,14 +500,14 @@ std::string pilo::core::config::xls_config_set::to_string() const
 	else {
 		err = ::pilo::core::string::string_to_number(f._pri, raw_fields[0].ptr, raw_fields[0].length);
 		if (err != PILO_OK) {
-			add_log(::pilo::core::logging::level::error, row, col, "Pri to number Failed (%s) in %s.%s", raw_fields[0], xlsfullfilepath, wsnamecstr);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Pri to number Failed (%s) in %s.%s", row, col, raw_fields[0], xlsfullfilepath, wsnamecstr);
 			return ::pilo::mk_perr(PERR_INC_DATA);
 		}
 	}
 
 	//parse name
 	if (raw_fields[1].is_empty()) {
-		add_log(::pilo::core::logging::level::error, row, col, "Name is empty in %s.%s", xlsfullfilepath, wsnamecstr);
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Name is Empty in %s.%s", row, col, xlsfullfilepath, wsnamecstr);
 		return ::pilo::mk_perr(PERR_INC_DATA);
 	}
 	else {
@@ -211,7 +515,7 @@ std::string pilo::core::config::xls_config_set::to_string() const
 	}
 	::pilo::i32_t existing_fld_pos = cfg_set._configs[which].find_existing_field_idx_by_name(f.name());
 	if (existing_fld_pos >= 0) {
-		add_log(::pilo::core::logging::level::error, row, col, "Name (%s) is existing at field_%d in %s.%s", f._name.c_str(), existing_fld_pos, xlsfullfilepath, wsnamecstr);
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Name (%s) is existing at field_%d in %s.%s", row, col, f._name.c_str(), xlsfullfilepath, wsnamecstr);
 		return ::pilo::mk_perr(PERR_INC_DATA);
 	}
 
@@ -223,28 +527,28 @@ std::string pilo::core::config::xls_config_set::to_string() const
 	type_tmp_str.assign(raw_fields[2].ptr, raw_fields[2].length);
 	err = ::pilo::core::rtti::wired_type::wired_type::s_parse_cstr_type(wt, kt, vt, type_tmp_str.c_str(), (::pilo::i64_t)type_tmp_str.size());
 	if (err != PILO_OK) {
-		add_log(::pilo::core::logging::level::error, row, col, "Type (%s) parse Failed. in %s.%s", type_tmp_str.c_str(), xlsfullfilepath, wsnamecstr);
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Type (%s) parse Failed. in %s.%s", row, col, type_tmp_str.c_str(), xlsfullfilepath, wsnamecstr);
 		return ::pilo::mk_perr(PERR_INC_DATA);
 	}
 	if (wt == ::pilo::core::rtti::wired_type::wrapper_single) {
 		if (vt == ::pilo::core::rtti::wired_type::value_type_na) {
-			add_log(::pilo::core::logging::level::error, row, col, "Type (%s) parse Failed. Got NA type for single type. in %s.%s", type_tmp_str.c_str(), xlsfullfilepath, wsnamecstr);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Type (%s) parse Failed. Got NA type for single type.  in %s.%s", row, col, type_tmp_str.c_str(), xlsfullfilepath, wsnamecstr);
 			return ::pilo::mk_perr(PERR_INC_DATA);
 		}
 	}
 	else if (wt == ::pilo::core::rtti::wired_type::wrapper_array) {
 		if (vt == ::pilo::core::rtti::wired_type::value_type_na) {
-			add_log(::pilo::core::logging::level::error, row, col, "Type (%s) parse Failed. Got NA type for array type. in %s.%s", type_tmp_str.c_str(), xlsfullfilepath, wsnamecstr);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Type (%s) parse Failed. Got NA type for array type. in %s.%s", row, col, type_tmp_str.c_str(), xlsfullfilepath, wsnamecstr);
 			return ::pilo::mk_perr(PERR_INC_DATA);
 		}
 	}
 	else if (wt == ::pilo::core::rtti::wired_type::wrapper_dict) {
 		if (kt == ::pilo::core::rtti::wired_type::key_type_na) {
-			add_log(::pilo::core::logging::level::error, row, col, "Type (%s) parse Failed. Got NA key type for hash type. in %s.%s", type_tmp_str.c_str(), xlsfullfilepath, wsnamecstr);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Type (%s) parse Failed. Got NA key type for hash type. in %s.%s", row, col, type_tmp_str.c_str(), xlsfullfilepath, wsnamecstr);
 			return ::pilo::mk_perr(PERR_INC_DATA);
 		}
 		if (vt == ::pilo::core::rtti::wired_type::value_type_na) {
-			add_log(::pilo::core::logging::level::error, row, col, "Type (%s) parse Failed. Got NA val type for hash type in %s.%s", type_tmp_str.c_str(), xlsfullfilepath, wsnamecstr);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Type (%s) parse Failed. Got NA val type for hash type. in %s.%s", row, col, type_tmp_str.c_str(), xlsfullfilepath, wsnamecstr);
 			return ::pilo::mk_perr(PERR_INC_DATA);
 		}
 	}
@@ -274,13 +578,13 @@ std::string pilo::core::config::xls_config_set::to_string() const
 			}
 			else
 			{
-				add_log(::pilo::core::logging::level::error, row, col, "Attr (%s) parse Failed. Got Invalid marker (%c) for field %s in %s.%s", attr_str.c_str(), attr_str.at(k),  f.name().c_str(), xlsfullfilepath, wsnamecstr);
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Attr (%s) parse Failed. Got Invalid marker (%c) for field %s. in %s.%s", row, col, attr_str.c_str(), attr_str.at(k), f.name().c_str(), xlsfullfilepath, wsnamecstr);
 				return ::pilo::mk_perr(PERR_INC_DATA);
 			}
 		}
 	}
 	if (f._flags.test_value(xls_config_set::flag_primary_key) && f._flags.test_value(xls_config_set::flag_primary_key_array)) {
-		add_log(::pilo::core::logging::level::error, row, col, "Attr (%s) parse Failed. Got pk and pk_arr both assigned in %s.%s", attr_str.c_str(),  xlsfullfilepath, wsnamecstr);
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Attr (%s) parse Failed. Got pk and pk_arr both assigned. in %s.%s", row, col, attr_str.c_str(), xlsfullfilepath, wsnamecstr);
 		return ::pilo::mk_perr(PERR_INC_DATA);
 	}
 
@@ -288,7 +592,7 @@ std::string pilo::core::config::xls_config_set::to_string() const
 	if (rcnt > 4 && raw_fields[4].length > 0) {
 		f._default_value_str.assign(raw_fields[4].ptr, raw_fields[4].length);
 		if (f._flags.test_value(xls_config_set::flag_nullable)) {
-			add_log(::pilo::core::logging::level::warn, row, col, "Default value (%s) Found but attr has no nullable assigned in %s.%s", f._default_value_str.c_str(), xlsfullfilepath, wsnamecstr);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Default value (%s) Found but attr has no nullable assigned. in %s.%s", row, col, f._default_value_str.c_str(), xlsfullfilepath, wsnamecstr);
 		}
 		
 	}
@@ -318,27 +622,27 @@ std::string pilo::core::config::xls_config_set::to_string() const
 		::pilo::u32_t colno = cfg_ref._fields.at(i).column();
 		val_ptr = PILO_CONTEXT->allocate_tlv();
 		if (val_ptr == nullptr) {
-			this->add_log(::pilo::core::logging::level::error, row, colno, "Alloc tlv Failed. in %s.%s", xlsfullfilepath, wsnamecstr);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Alloc tlv Failed. in %s.%s", row, colno, xlsfullfilepath, wsnamecstr);
 			return mk_err(PERR_INSUF_HEAP);
 		}
 		err = val_ptr->set_types(cfg_ref._fields.at(i).wrapper_type(), cfg_ref._fields.at(i).key_type(), cfg_ref._fields.at(i).value_type());
 		if (PILO_OK != err) {
 			PILO_CONTEXT->deallocate_tlv(val_ptr);
-			this->add_log(::pilo::core::logging::level::error, row, colno, "Set type for tlv Failed (%s). in %s.%s", ::pilo::str_err(err).c_str(), xlsfullfilepath, wsnamecstr);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Set type for tlv Failed (%s). in %s.%s", row, colno, ::pilo::str_err(err).c_str(), xlsfullfilepath, wsnamecstr);
 			return err;
 		}
 
 		err = wsp->value(val_ptr, row, colno, cfg_ref._fields.at(i).test_flag(xls_config_set::flag_nullable), cfg_ref._fields.at(i).default_value(), errmsgbuff, sizeof(errmsgbuff));
 		if (PILO_OK != err) {
 			PILO_CONTEXT->deallocate_tlv(val_ptr);
-			this->add_log(::pilo::core::logging::level::error, row, colno, "Compse tlv from cell Failed (%s). in %s.%s", errmsgbuff, xlsfullfilepath, wsnamecstr);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Compse tlv from cell Failed (%s).in %s.%s", row, colno, errmsgbuff, xlsfullfilepath, wsnamecstr);
 			return err;
 		}
 
 		err = record->insert<std::string, ::pilo::tlv*>(cfg_ref._fields.at(i).name(), val_ptr, false);
 		if (PILO_OK != err) {
 			PILO_CONTEXT->deallocate_tlv(val_ptr);
-			this->add_log(::pilo::core::logging::level::error, row, colno, "Insert tlv to record Failed (%s). in %s.%s", ::pilo::str_err(err).c_str(), xlsfullfilepath, wsnamecstr);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Cell@%u:%u: Insert tlv to record Failed (%s). in %s.%s", row, colno, ::pilo::str_err(err).c_str(), xlsfullfilepath, wsnamecstr);
 			return err;
 		}
 	}
@@ -377,24 +681,24 @@ std::string pilo::core::config::xls_config_field::to_string() const
 	}
 
 	if (src_path->extname() == nullptr) {
-		pgen->add_log(::pilo::core::logging::level::info, "File - [%s] Ignored", src_path->fullpath());
+		PMF_APPEND_TEXT_LOG_DFL((pgen->log_set()), ::pilo::core::logging::level::error, "File - [%s] Ignored", src_path->fullpath());
 		return PILO_OK;
 	}
 
 	if ((::pilo::core::string::i_compare(src_path->extname(), 0, "xlsx", 0, -1))
 		&& (::pilo::core::string::i_compare(src_path->extname(), 0, "xls", 0, -1))) {
-		pgen->add_log(::pilo::core::logging::level::info, "File - [%s] Ignored", src_path->fullpath());
+		PMF_APPEND_TEXT_LOG_DFL((pgen->log_set()), ::pilo::core::logging::level::error, "File - [%s] Ignored", src_path->fullpath());
 		return PILO_OK;
 	}
 
 	::pilo::pathlen_t rlen = 0;
 	if (src_path->basename(rlen)[0] == '~') {
-		pgen->add_log(::pilo::core::logging::level::info, "File - [%s] Ignored", src_path->fullpath());
+		PMF_APPEND_TEXT_LOG_DFL((pgen->log_set()), ::pilo::core::logging::level::error, "File - [%s] Ignored", src_path->fullpath());
 		return PILO_OK;
 	}
 
 	if (fsnt != ::pilo::core::io::path::fs_node_type_file) {
-		pgen->add_log(::pilo::core::logging::level::info, "File - [%s] Ignored", src_path->fullpath());
+		PMF_APPEND_TEXT_LOG_DFL((pgen->log_set()), ::pilo::core::logging::level::error, "File - [%s] Ignored", src_path->fullpath());
 		return PILO_OK;
 	}
 
@@ -409,19 +713,19 @@ std::string pilo::core::config::xls_config_field::to_string() const
 
 ::pilo::err_t pilo::core::config::xls_config_generator::_parse_xls(const char* xls_fullpath)
 {
-	this->add_log(::pilo::core::logging::level::info, "Parsing File - [%s]", xls_fullpath);
+	PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::info, "Parsing File - [%s]", xls_fullpath);
 
 	::pilo::core::dp::xls_spread_document doc;
 	::pilo::err_t eret = doc.open(xls_fullpath, ::pilo::core::io::creation_mode::open_existing, ::pilo::predefined_pilo_path::count);
 	if (eret != PILO_OK) {
-		this->add_log(::pilo::core::logging::level::error, "xls_conf_gen@0x%p Open file <%s> Failed", this, xls_fullpath);
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Open File Failed - [%s].", xls_fullpath);
 		return eret;
 	}
 
 	std::vector<std::string> name_lists;
 	eret = doc.get_all_worksheet_names(name_lists);
 	if (eret != PILO_OK) {
-		this->add_log(::pilo::core::logging::level::error, "xls_conf_gen@0x%p get worksheets name list of <%s> Failed", this, xls_fullpath);
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Obtain worksheets name list of [%s] Failed.", xls_fullpath);
 		return eret;
 	}
 
@@ -444,15 +748,15 @@ bool pilo::core::config::xls_config_generator::_check_and_make_default_for_two_v
 	if (a.size() > 0 && b.size() > 0) {		
 		return true;
 	} else if (a.empty()) {
-		add_log(::pilo::core::logging::level::warn, "Warn: var of %s not found in %s.%s, fallback to %s (%s) as its value", t1,  file, wsname, t2, b.c_str());
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "Var of %s not found in %s.%s, fallback to %s (%s) as its value", t1, file, wsname, t2, b.c_str());
 		a = b;
 		return true;
 	} else if (b.empty()) {
-		add_log(::pilo::core::logging::level::warn, "Warn: var of %s not found in %s.%s, fallback to %s (%s) as its value", t2, file, wsname, t1, a.c_str());
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "var of %s not found in %s.%s, fallback to %s (%s) as its value", t2, file, wsname, t1, b.c_str());
 		b = a;
 		return true;
 	}
-	this->add_log(::pilo::core::logging::level::warn, "value for both %s & %s of %s.%s not found", t1, t2, file, wsname);
+	PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "value for both %s & %s of %s.%s not found", t1, t2, file, wsname);
 	return false;
 }
 
@@ -460,25 +764,25 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 {
 	std::map<std::string, std::string>::const_iterator cit = _ccnames.find(ccname);
 	if (cit != _ccnames.cend()) {
-		this->add_log(::pilo::core::logging::level::error, "Duplicate CCNAME (%s) in %s.%s and %s", ccname.c_str(), file, wsname, cit->second.c_str());
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Duplicate CCNAME (%s) in %s.%s and %s", ccname.c_str(), file, wsname, cit->second.c_str());
 		return false;
 	}
 
 	cit = _scnames.find(scname);
 	if (cit != _scnames.cend()) {
-		this->add_log(::pilo::core::logging::level::error, "Duplicate SCNAME (%s) in %s.%s and %s", scname.c_str(), file, wsname, cit->second.c_str());
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Duplicate SCNAME (%s) in %s.%s and %s", scname.c_str(), file, wsname, cit->second.c_str());
 		return false;
 	}
 
 	cit = _ccfgs.find(ccfg);
 	if (cit != _ccfgs.cend()) {
-		this->add_log(::pilo::core::logging::level::error, "Duplicate CCFG (%s) in %s.%s and %s", ccfg.c_str(), file, wsname, cit->second.c_str());
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Duplicate CCFG (%s) in %s.%s and %s", ccfg.c_str(), file, wsname, cit->second.c_str());
 		return false;
 	}
 
 	cit = _scfgs.find(scfg);
 	if (cit != _scfgs.cend()) {
-		this->add_log(::pilo::core::logging::level::error, "Duplicate SCFG (%s) in %s.%s and %s", scfg.c_str(), file, wsname, cit->second.c_str());
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Duplicate SCFG (%s) in %s.%s and %s", scfg.c_str(), file, wsname, cit->second.c_str());
 		return false;
 	}
 	
@@ -493,7 +797,7 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 
 	err = _dest_config_dir_path[which].create(::pilo::core::io::path::fs_node_type_dir, false);	
 	if (err != PILO_OK) {
-		this->add_log(::pilo::core::logging::level::error, "%s Config File Dest Path [%s] create Failed.",name_of_which, _dest_config_dir_path[which].fullpath());
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Config File Dest Path [%s] create Failed.",name_of_which, _dest_config_dir_path[which].fullpath());
 		return mk_err(err);
 	}
 
@@ -501,18 +805,18 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 		dst_path = _dest_config_dir_path[which];
 		err = dst_path.append(cit->second._configs[which].config_file_name().c_str());
 		if (err != PILO_OK) {
-			this->add_log(::pilo::core::logging::level::error, "%s Config File generated failed. dest path compose Failed. append %s -> %s", name_of_which, cit->second._configs[xls_config_set::server].config_file_name().c_str(), dst_path.fullpath());
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Config File generated failed. dest path compose Failed. append %s -> %s", name_of_which, cit->second._configs[xls_config_set::server].config_file_name().c_str(), dst_path.fullpath());
 			return mk_err(err);
 		}
 
 		::pilo::core::ml::json_tlv_driver jdrv(cit->second._configs[which]._data);
 		err = jdrv.save(&dst_path);
 		if (err != PILO_OK) {
-			this->add_log(::pilo::core::logging::level::error, "%s Config File generated failed. [%s] Serialize to Json Failedd %d ", name_of_which, cit->second._configs[xls_config_set::server].config_file_name().c_str(), err);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Config File generated failed. [%s] Serialize to Json Failedd %d ", name_of_which, cit->second._configs[xls_config_set::server].config_file_name().c_str(), err);
 			return mk_err(err);
 		}
 
-		this->add_log(::pilo::core::logging::level::info, "%s Config File [%s] has been created successfully.", name_of_which, dst_path.fullpath());
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::info, "%s Config File [%s] has been created successfully.", name_of_which, dst_path.fullpath());
 
 	}
 
@@ -523,14 +827,15 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 {	
 	::pilo::core::dp::xls_spread_sheet ws = doc.worksheet_by_index(ws_idx);
 	std::string wsname = ws.name();
-	add_log(::pilo::core::logging::level::info, "Parsing Sheet [%s] in File - [%s]", wsname.c_str(), xls_fullpathname);
+
+	PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::info, "Parsing Sheet [%s] in File - [%s]", wsname.c_str(), xls_fullpathname);
 
 	std::string tmp_cell_str, tmp_varname_cell;
 	::pilo::err_t err = PILO_OK;
 	::pilo::u32_t rcnt = ws.row_count();
 	bool c_header_done = false;
 	bool s_header_done = false;
-
+	char errbuff[PMI_XLS_GEN_ERR_BUFF_SIZE] = {0};
 	std::string strkvpair[2];
 	std::string desc, ccname, scname, ccfg, scfg, cns, sns, cui, sui;
 
@@ -539,7 +844,7 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 	filepathname_n_ws += wsname;
 
 	if (_config_set_map.find(filepathname_n_ws) != _config_set_map.cend()) {
-		this->add_log(::pilo::core::logging::level::error, "Duplicate xls file and sheet exists. %s.%s", xls_fullpathname, wsname.c_str());
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Duplicate xls file and sheet exists. %s.%s", xls_fullpathname, wsname.c_str());
 		return err;
 	}
 
@@ -560,22 +865,22 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 		err = ws.strvalue(tmp_cell_str, r, 1);
 		::pilo::core::string::trim_string(tmp_cell_str);
 		if (err != PILO_OK) {
-			this->add_log(::pilo::core::logging::level::error, "Read instruct of %s.%s cell @[%03u:%02u] Failed.", xls_fullpathname, wsname.c_str(), r, 1);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Read instruct of %s.%s cell @[%03u:%02u] Failed.", xls_fullpathname, wsname.c_str(), r, 1);
 			return err;
 		}
 
 		if (tmp_cell_str.size() == 1 && tmp_cell_str.at(0) == '$') {
 			if (xls_config_generator::parse_phase_enum::col_spec == pe) {
-				this->add_log(::pilo::core::logging::level::error, "Got var instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Got var instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
 				return err;
 			} else if (xls_config_generator::parse_phase_enum::row_data == pe) {
 				err = ws.strvalue(tmp_varname_cell, r, 2);
 				::pilo::core::string::trim_string(tmp_varname_cell);
 				if (::pilo::core::string::i_compare(tmp_varname_cell.c_str(), 0, "END", 0, -1) == 0) {
-					add_log(::pilo::core::logging::level::info, r, 2, "Read data finished: %s.%s.", xls_fullpathname, wsname.c_str());
+					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::info, "Read data finished: %s.%s.", xls_fullpathname, wsname.c_str());
 					break;
 				} else {
-					this->add_log(::pilo::core::logging::level::error, "Got instruct at %s.%s @[%03u:%02u], phase is %d, but cmd is not /END/.", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
+					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Got instruct at %s.%s @[%03u:%02u], phase is %d, but cmd is not /END/.", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
 					return err;
 				}						
 			}
@@ -584,12 +889,12 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 			err = ws.strvalue(tmp_varname_cell, r, 2);
 			::pilo::core::string::trim_string(tmp_varname_cell);
 			if (err != PILO_OK) {
-				this->add_log(::pilo::core::logging::level::error, "Read var of %s.%s cell @[%03u:%02u] Failed.", xls_fullpathname, wsname.c_str(), r, 2);
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Read var of %s.%s cell @[%03u:%02u] Failed.", xls_fullpathname, wsname.c_str(), r, 2);
 				return err;
 			}
 			::pilo::i64_t idx_tmp = ::pilo::core::string::split(strkvpair, 2, tmp_varname_cell, ':', true);
 			if (idx_tmp < 1 || idx_tmp > 2) {
-				this->add_log(::pilo::core::logging::level::error, "Format of var of %s.%s cell @[%03u:%02u] Failed. shoudl be /key:value/", xls_fullpathname, wsname.c_str(), r, 2);
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Format of var of %s.%s cell @[%03u:%02u] Failed. shoudl be /key:value/", xls_fullpathname, wsname.c_str(), r, 2);
 				return err;
 			}
 
@@ -598,24 +903,24 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 			} else if (::pilo::core::string::i_compare(strkvpair[0].c_str(), 0, "CCNAME", 0, -1) == 0) {
 				ccname = strkvpair[1];
 				if (ccname.empty()) {
-					this->add_log(::pilo::core::logging::level::warn, "CCNAME (%s) not set, client class file wont be generated for %s.%s", ccname.c_str(), xls_fullpathname, wsname.c_str());
+					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "CCNAME (%s) not set, client class file wont be generated for %s.%s", ccname.c_str(), xls_fullpathname, wsname.c_str());
 				}
 			} else if (::pilo::core::string::i_compare(strkvpair[0].c_str(), 0, "SCNAME", 0, -1) == 0) {
 				scname = strkvpair[1];
 				if (scname.empty()) {
-					this->add_log(::pilo::core::logging::level::warn, "SCNAME (%s) not set, server class file wont be generated for %s.%s", scname.c_str(), xls_fullpathname, wsname.c_str());
+					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "SCNAME (%s) not set, server class file wont be generated for %s.%s", scname.c_str(), xls_fullpathname, wsname.c_str());
 				}
 			} else if (::pilo::core::string::i_compare(strkvpair[0].c_str(), 0, "CCFG", 0, -1) == 0) {
 				ccfg = strkvpair[1];
 				ccname = strkvpair[1];
 				if (ccname.empty()) {
-					this->add_log(::pilo::core::logging::level::warn, "CCFG (%s) not set, client data file wont be generated for %s.%s", ccfg.c_str(), xls_fullpathname, wsname.c_str());
+					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "CCFG (%s) not set, client data file wont be generated for %s.%s", ccfg.c_str(), xls_fullpathname, wsname.c_str());
 				}
 			} else if (::pilo::core::string::i_compare(strkvpair[0].c_str(), 0, "SCFG", 0, -1) == 0) {
 				scfg = strkvpair[1];
 				ccname = strkvpair[1];
 				if (ccname.empty()) {
-					this->add_log(::pilo::core::logging::level::warn, "SCFG (%s) not set, server data file wont be generated for %s.%s", scfg.c_str(), xls_fullpathname, wsname.c_str());
+					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "SCFG (%s) not set, server data file wont be generated for %s.%s", scfg.c_str(), xls_fullpathname, wsname.c_str());
 				}
 			} else if (::pilo::core::string::i_compare(strkvpair[0].c_str(), 0, "CNS", 0, -1) == 0) {
 				cns = strkvpair[1];
@@ -626,13 +931,13 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 			} else if (::pilo::core::string::i_compare(strkvpair[0].c_str(), 0, "SUI", 0, -1) == 0) {
 				sui = strkvpair[1];
 			} else {
-				this->add_log(::pilo::core::logging::level::error, "Varname of %s.%s cell @[%03u:%02u] not found.", xls_fullpathname, wsname.c_str(), r, 2);
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Varname of %s.%s cell @[%03u:%02u] not found.", xls_fullpathname, wsname.c_str(), r, 2);
 				return PERR_INC_DATA;
 			}
 			
 		} else if (tmp_cell_str.size() == 1 && (tmp_cell_str.at(0) == 'C' || tmp_cell_str.at(0) == 'c')) {
 			if (xls_config_generator::parse_phase_enum::row_data == pe) {
-				this->add_log(::pilo::core::logging::level::error, "Got client-col-spec instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Got client-col-spec instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
 				return PERR_INC_DATA;
 			} else if (xls_config_generator::parse_phase_enum::header_vars == pe) {
 				if (!_check_duplicate_vars_in_header(ccname, scname, ccfg, scfg, xls_fullpathname, wsname.c_str()))
@@ -642,14 +947,14 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 
 			::pilo::u32_t field_tmp_cnt = ws.col_count();
 			if (field_tmp_cnt < 1) {
-				this->add_log(::pilo::core::logging::level::error, "Client Fields Spec Got 0 or minus Count (row=%u) of %s.%s", r, xls_fullpathname, wsname.c_str());
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Client Fields Spec Got 0 or minus Count (row=%u) of %s.%s", r, xls_fullpathname, wsname.c_str());
 				return ::pilo::mk_perr(PERR_INC_DATA);
 			}
 			::pilo::u32_t field_real_cnt = 0;			
 			for (::pilo::u32_t c = 2; c <= field_tmp_cnt; c++) {				
 				err = ws.strvalue(tmp_fld_string, r, c);
 				if (err != PILO_OK) {
-					this->add_log(::pilo::core::logging::level::error, "Client Fields Spec Read Failed @[%03u:%02u]  of %s.%s", r, c, xls_fullpathname, wsname.c_str());
+					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Client Fields Spec Read Failed @[%03u:%02u]  of %s.%s", r, c, xls_fullpathname, wsname.c_str());
 					return ::pilo::mk_perr(PERR_INC_DATA);
 				}
 				if (tmp_fld_string.empty()) {
@@ -667,7 +972,7 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 			}
 
 			if ((::pilo::u32_t) cfg_set._configs[xls_config_set::client]._fields.size() != field_real_cnt) {
-				this->add_log(::pilo::core::logging::level::error, "Client Fields Spec Count Mismatch %u : %u,  %s.%s", (::pilo::u32_t) cfg_set._configs[xls_config_set::client]._fields.size() , field_real_cnt, xls_fullpathname, wsname.c_str());
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Client Fields Spec Count Mismatch %u : %u,  %s.%s", (::pilo::u32_t) cfg_set._configs[xls_config_set::client]._fields.size() , field_real_cnt, xls_fullpathname, wsname.c_str());
 				return PERR_INC_DATA;
 			}
 			
@@ -679,7 +984,7 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 
 		} else if (tmp_cell_str.size() == 1 && (tmp_cell_str.at(0) == 'S' || tmp_cell_str.at(0) == 's')) {
 			if (xls_config_generator::parse_phase_enum::row_data == pe) {
-				this->add_log(::pilo::core::logging::level::error, "Got server-col-spec instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Got server-col-spec instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
 				return PERR_INC_DATA;
 			} else if (xls_config_generator::parse_phase_enum::header_vars == pe) {
 				if (!_check_duplicate_vars_in_header(ccname, scname, ccfg, scfg, xls_fullpathname, wsname.c_str()))
@@ -689,7 +994,7 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 			}
 			::pilo::u32_t field_tmp_cnt = ws.col_count();
 			if (field_tmp_cnt < 1) {
-				this->add_log(::pilo::core::logging::level::error, "Server Fields Spec Got 0 or minus Count (row=%u) of %s.%s", r, xls_fullpathname, wsname.c_str());
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Server Fields Spec Got 0 or minus Count (row=%u) of %s.%s", r, xls_fullpathname, wsname.c_str());
 				return ::pilo::mk_perr(PERR_INC_DATA);
 			}
 
@@ -697,7 +1002,7 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 			for (::pilo::u32_t c = 2; c <= field_tmp_cnt; c++) {
 				err = ws.strvalue(tmp_fld_string, r, c);
 				if (err != PILO_OK) {
-					this->add_log(::pilo::core::logging::level::error, "Server Fields Spec Read Failed @[%03u:%02u]  of %s.%s", r, c, xls_fullpathname, wsname.c_str());
+					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Server Fields Spec Read Failed @[%03u:%02u]  of %s.%s", r, c, xls_fullpathname, wsname.c_str());
 					return ::pilo::mk_perr(PERR_INC_DATA);
 				}
 				if (tmp_fld_string.empty()) {
@@ -715,7 +1020,7 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 			}
 
 			if ((::pilo::u32_t)cfg_set._configs[xls_config_set::server]._fields.size() != field_real_cnt) {
-				this->add_log(::pilo::core::logging::level::error, "Server Fields Spec Count Mismatch %u : %u,  %s.%s", (::pilo::u32_t)cfg_set._configs[xls_config_set::server]._fields.size(), field_real_cnt, xls_fullpathname, wsname.c_str());
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Server Fields Spec Count Mismatch %u : %u,  %s.%s", (::pilo::u32_t)cfg_set._configs[xls_config_set::server]._fields.size(), field_real_cnt, xls_fullpathname, wsname.c_str());
 				return PERR_INC_DATA;
 			}
 
@@ -729,15 +1034,25 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 			continue;
 		} else if (tmp_cell_str.empty()) {
 			if (xls_config_generator::parse_phase_enum::row_data != pe) {
-				this->add_log(::pilo::core::logging::level::error, "Got empty instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
+				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Got empty instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
 				return err;
 			}
 
-			err = this->_parse_record(cfg_set, xls_config_set::server, r, &ws, xls_fullpathname, wsname.c_str());
-			if (err != PILO_OK) {
-				return err;
+			if (cfg_set._configs[xls_config_set::server].field_count() > 0) {
+				err = this->_parse_record(cfg_set, xls_config_set::server, r, &ws, xls_fullpathname, wsname.c_str());
+				if (err != PILO_OK) {
+					return err;
+				}
 			}
 
+			
+			if (cfg_set._configs[xls_config_set::client].field_count() > 0) {			
+				err = this->_parse_record(cfg_set, xls_config_set::client, r, &ws, xls_fullpathname, wsname.c_str());
+				if (err != PILO_OK) {
+					return err;
+				}
+			}
+			
 		}
 
 		
@@ -745,6 +1060,15 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 		
 	} //end of while
 
+	if (!cfg_set._configs[xls_config_set::server].check_uniqe(errbuff, PMI_XLS_GEN_ERR_BUFF_SIZE)) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Check Unique Failed against Server data in %s.%s.  (%s) ", xls_fullpathname, wsname.c_str(), errbuff);
+		return ::pilo::mk_perr(PERR_INC_DATA);
+	}
+
+	if (!cfg_set._configs[xls_config_set::client].check_uniqe(errbuff, PMI_XLS_GEN_ERR_BUFF_SIZE)) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Check Unique Failed against Client data in %s.%s.  (%s) ", xls_fullpathname, wsname.c_str(), errbuff);
+		return ::pilo::mk_perr(PERR_INC_DATA);
+	}
 
 	cfg_set._desc = desc;
 	cfg_set._sheet_name = wsname;
@@ -770,6 +1094,8 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 
 	_config_set_map.insert(std::pair<std::string, xls_config_set>(filepathname_n_ws, std::move(cfg_set)));
 
+	
+
 	return PILO_OK;
 }
 
@@ -783,12 +1109,12 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 	this->clear();
 
 	if (_xls_dir_path.fullpath() != nullptr) {
-		this->add_log(::pilo::core::logging::level::error, "xls_conf_gen@0x%p Already set!", this);
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "xls_conf_gen@0x%p Already set!", this);
 		return PERR_EXIST;
 	}
 
 	if (nullptr == xls_dir_path) {
-		this->add_log(::pilo::core::logging::level::error, "xls_conf_gen@0x%p xls dir path is null", this);
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "xls_conf_gen@0x%p xls dir path is null", this);
 		return PERR_NULL_PATH;
 	}
 	else
@@ -824,7 +1150,7 @@ void pilo::core::config::xls_config_generator::clear()
 	_dest_config_dir_path[xls_config_set::client].reset();
 	_dest_source_dir_path[xls_config_set::server].reset();
 	_dest_source_dir_path[xls_config_set::client].reset();
-	_logs.clear();
+	_log_set.clear();
 	_ccnames.clear();
 	_scnames.clear();
 	_ccfgs.clear();
@@ -833,7 +1159,7 @@ void pilo::core::config::xls_config_generator::clear()
 
 ::pilo::err_t pilo::core::config::xls_config_generator::parse()
 {
-	this->add_log(::pilo::core::logging::level::info, "Start Parsing dir - [%s]", _xls_dir_path.fullpath());
+	PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::info, "Start Parsing dir - [%s]", _xls_dir_path.fullpath());
 
 	::pilo::err_t ret = ::pilo::core::io::path::dfs_travel_path(&_xls_dir_path, s_xls_file_iter_func, this, false, ::pilo::core::io::path::evt_node_visiting);
 	if (ret != PILO_OK) {
@@ -845,7 +1171,7 @@ void pilo::core::config::xls_config_generator::clear()
 		ss.clear();
 		ss.str("");
 		ss << cit->first << "\n" << cit->second.to_string();
-		this->add_log(::pilo::core::logging::level::debug, ss.str());
+		_log_set.append_text_item(::pilo::core::logging::level::debug, ss.str(), __FILE__, __LINE__);
 	}
 
 	
@@ -874,59 +1200,6 @@ void pilo::core::config::xls_config_generator::clear()
 {
 
 	return PILO_OK;
-}
-
-
-
-void pilo::core::config::xls_config_generator::add_log(::pilo::core::logging::level level, ::pilo::u32_t row, ::pilo::u32_t col, const char* fmt, ...)
-{
-	char buf[PMI_XLS_GEN_ERR_BUFF_SIZE] = { 0 };
-	::pilo::i64_t elen = ::pilo::core::io::string_formated_output(buf, sizeof(buf), "XCG_0x%p => @[%03u:%02u] : ",this,  row, col);
-	::pilo::i64_t remain_capa = sizeof(buf) - elen;
-
-	va_list args;
-
-	va_start(args, fmt);
-#               if defined(WINDOWS)
-	_vsnprintf_s(buf + elen, remain_capa, _TRUNCATE, fmt, args);
-#               else
-	vsnprintf(buf + elen, remain_capa, fmt, args);
-#               endif	
-	va_end(args);
-
-	::pilo::core::logging::info_item ii((::pilo::u32_t)_logs.size(), ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), buf);
-	_logs.push_back(ii);
-}
-
-void pilo::core::config::xls_config_generator::add_log(::pilo::core::logging::level level, const char* fmt, ...)
-{
-	char buf[PMI_XLS_GEN_ERR_BUFF_SIZE] = { 0 };
-	::pilo::i64_t elen = ::pilo::core::io::string_formated_output(buf, sizeof(buf), "XCG_0x%p => @[NA Pos] : ", this);
-	::pilo::i64_t remain_capa = sizeof(buf) - elen;
-
-	va_list args;
-
-	va_start(args, fmt);
-#               if defined(WINDOWS)
-	_vsnprintf_s(buf + elen, remain_capa, _TRUNCATE, fmt, args);
-#               else
-	vsnprintf(buf + elen, remain_capa, fmt, args);
-#               endif	
-	va_end(args);
-
-	::pilo::core::logging::info_item ii((::pilo::u32_t)_logs.size(), ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), buf);
-	_logs.push_back(ii);
-}
-
-void pilo::core::config::xls_config_generator::add_log(::pilo::core::logging::level level, const std::string& msg)
-{
-	char buf[PMI_XLS_GEN_ERR_BUFF_SIZE] = { 0 };
-	::pilo::core::io::string_formated_output(buf, sizeof(buf), "XCG_0x%p => @[NA Pos] : ", this);
-
-	std::string s = buf;
-	s += msg;
-	::pilo::core::logging::info_item ii((::pilo::u32_t)_logs.size(), ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), s.c_str());
-	_logs.push_back(ii);
 }
 
 

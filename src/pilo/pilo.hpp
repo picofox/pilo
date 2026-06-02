@@ -4,6 +4,7 @@
 #include <memory>
 #include <thread>
 #include <atomic>
+#include <map>
 
 #include "error.hpp"
 #include "preprocessor.hpp"
@@ -530,7 +531,39 @@ namespace pilo
     };
 
 
+    template<typename KT, typename VT>
+    class duplicate_map_checker
+    {
+    public:
+        duplicate_map_checker() = default;                                  
+        duplicate_map_checker(const duplicate_map_checker&) = default;     
+        duplicate_map_checker& operator=(const duplicate_map_checker&) = default; 
+        ~duplicate_map_checker() = default;
+
+        bool check(KT k, const VT & v, VT& ret_v_ref)
+        {
+            auto cit = _data.find(k);
+            if (cit == _data.cend()) {
+                _data.insert(std::pair<KT, VT>(k,v));
+                return true;
+            }            
+            ret_v_ref = cit->second;
+            return false;
+        }
+
+        ::pilo::u64_t count() const
+        {
+            return _data.count();
+        }
+
+    private:
+        std::map<KT, VT>    _data;
+    };
+
+
 }
+
+
 
 
 

@@ -71,7 +71,6 @@ namespace pilo
                 }
                 
                 PLOG(::pilo::core::logging::level::info, SP_PMS_LOGMOD_ETP" Started.");
-
                 return PILO_OK;
             }
             ::pilo::err_t efficient_thread_pool::stop()

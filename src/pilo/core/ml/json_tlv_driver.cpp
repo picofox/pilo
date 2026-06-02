@@ -700,19 +700,22 @@ namespace pilo {
                     err = _set_str_key_dict_object_bytes(obj, tlvp, allocator);
                 }
                 else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
-                    err = _set_dict_object_str<::pilo::u64_t>(obj, tlvp, allocator);
+                    err = _set_str_key_dict_object_str(obj, tlvp, allocator);
                 }
                 else if (tlvp->value_type() == ::pilo::core::rtti::wired_type::value_type_tlv) {
-                    std::map<::pilo::u64_t, ::pilo::tlv*>* map_ptr = (std::map<::pilo::u64_t, ::pilo::tlv*>*) tlvp->daynamic_data();
+                    std::map<std::string, ::pilo::tlv*>* map_ptr = (std::map<std::string, ::pilo::tlv*>*) tlvp->daynamic_data();
                     auto cit = map_ptr->begin();
                     for (; cit != map_ptr->end(); cit++) {
                         ::rapidjson::Value tmp_val;
-                        ::rapidjson::Value key_value(std::to_string(cit->first).c_str(), allocator);
+                        ::rapidjson::Value key_value(cit->first.c_str(), allocator);
                         err = _write_json_object(tmp_val, cit->second, allocator);
                         if (err != PILO_OK)
                             return err;
                         obj.AddMember(key_value, tmp_val, allocator);
                     }
+                }
+                else {
+                    return mk_perr(PERR_INV_PARAM_DT);
                 }
                 return err;
             }
@@ -894,19 +897,8 @@ namespace pilo {
                             err = this->_set_dict_of_key_i64(obj, tlvp, allocator);
                         } else if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_u64) {
                             err = this->_set_dict_of_key_u64(obj, tlvp, allocator);
-                        }
-                        else if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_str) {
-                            std::map<std::string, ::pilo::tlv*>* map_ptr = (std::map<std::string, ::pilo::tlv*>*) tlvp->daynamic_data();
-                            auto cit = map_ptr->begin();
-                            for (; cit != map_ptr->end(); cit++) {
-                                ::rapidjson::Value tmp_val;
-                                ::rapidjson::Value key_value(cit->first.c_str(), allocator);
-                                err = _write_json_object(tmp_val, cit->second, allocator);
-                                if (err != PILO_OK)
-                                    return err;
-
-                                obj.AddMember(key_value, tmp_val, allocator);
-                            }
+                        } else if (tlvp->key_type() == ::pilo::core::rtti::wired_type::key_type_str) {
+                            err = this->_set_dict_of_key_str(obj, tlvp, allocator);
                         }
 
                                            

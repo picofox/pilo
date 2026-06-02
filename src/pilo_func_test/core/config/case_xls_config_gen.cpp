@@ -44,24 +44,26 @@ namespace pilo
 						, "test_xls/conf_src/server", ::pilo::predefined_pilo_path::tmp
 						, "test_xls/conf_src/client", ::pilo::predefined_pilo_path::tmp);
 					if (xret != PILO_OK) {
-						return p_case->error(xret, xconf_gen.logs().back().to_string().c_str());
+						return p_case->error(xret, xconf_gen.log_set().latest().to_string(0).c_str());
 					}
 
 					xret = xconf_gen.parse();
 					if (xret != PILO_OK) {
-						return p_case->error(xret, xconf_gen.logs().back().to_string().c_str());
+						return p_case->error(xret, xconf_gen.log_set().latest().to_string(0).c_str());
 					}
 
 					xret = xconf_gen.generate_server_config();
 					if (xret != PILO_OK) {
-						return p_case->error(xret, xconf_gen.logs().back().to_string().c_str());
+						return p_case->error(xret, xconf_gen.log_set().latest().to_string(xconf_gen.log_set().content_mask()).c_str());
 					}
 
-					for (size_t i = 0; i < xconf_gen.logs().size(); i++) {
-						printf("%s\n", xconf_gen.logs().at(i).to_string().c_str());
-					}
-
-					
+					xconf_gen.log_set().travel(&xconf_gen, [](void * ctx, const ::pilo::core::logging::info_item& ii)
+						{
+							::pilo::core::config::xls_config_generator* ptr = (::pilo::core::config::xls_config_generator*) ctx;
+							std::string sss = ii.to_string(ptr->log_set().content_mask());
+							printf("%s\n", sss.c_str());
+						});
+										
 
 					p_case->set_result(PILO_OK);
 					return PILO_OK;

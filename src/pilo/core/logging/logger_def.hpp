@@ -21,6 +21,7 @@
 #include    "../datetime/timestamp.hpp"
 #include    "../io/formatted_io.hpp"
 #include    <vector>
+#include    <unordered_set>
 
 
 #define PMF_BUFF_LOG_FAST(buff, bfsz, fmt, ...) \
@@ -55,6 +56,8 @@ namespace pilo {
             const ::pilo::u32_t PPid =          0x00000800;
             const ::pilo::u32_t SavedDate =     0x00001000;
             const ::pilo::u32_t SavedTime =     0x00002000;
+            const ::pilo::u32_t SrcLoc =        0x00004000;
+
 
             const ::pilo::u32_t DefaultHeaders = (Date | Time | Seq | TotalSeq | Level | Pid);
             const ::pilo::u32_t DefaultBakNameSuffix = (SavedDate | SavedTime);
@@ -155,97 +158,66 @@ namespace pilo {
             };            
 
             class info_item
-            {               
+            {        
 
             public:
                 info_item() 
-                    : _seq((::pilo::u32_t) ~0), _representative_type(::pilo::core::logging::representative_type::text)
-                    , _level(::pilo::core::logging::level::info), _bin_type(0),_timestamp(-1)
+                    : _representative_type(::pilo::core::logging::representative_type::text)
+                    , _level(::pilo::core::logging::level::info), _bin_type(0), _line_no(0), _timestamp(-1) , _filepathname(nullptr)
                 {
 
                 }
 
-                info_item(::pilo::u32_t seq, ::pilo::core::logging::representative_type  representative_type
-                    ,::pilo::core::logging::level level,::pilo::u16_t bin_type, ::pilo::i64_t ts, const char* infocstr)
+                info_item(::pilo::core::logging::representative_type  representative_type
+                    ,::pilo::core::logging::level level,::pilo::u16_t bin_type, ::pilo::u32_t line_no, ::pilo::i64_t ts, const char* infocstr, const char * filepathname)
                 {
-                    _seq = seq;
                     _representative_type = representative_type;
                     _level = level;
                     _bin_type = bin_type;
+                    _line_no = line_no;
                     _timestamp = ts;
                     _info = infocstr;
+                    _filepathname = filepathname;
                 }
 
 
-                info_item(::pilo::u32_t seq, ::pilo::core::logging::representative_type  representative_type
-                    , ::pilo::core::logging::level level, ::pilo::u16_t bin_type, ::pilo::i64_t ts, const std::string& msg)
+                info_item(::pilo::core::logging::representative_type  representative_type
+                    , ::pilo::core::logging::level level, ::pilo::u16_t bin_type, ::pilo::u32_t line_no, ::pilo::i64_t ts, const std::string& msg, const char * filepathname)
                 {
-                    _seq = seq;
                     _representative_type = representative_type;
                     _level = level;
                     _bin_type = bin_type;
+                    _line_no = line_no;
                     _timestamp = ts;
-                    _info = msg;
+                    _info = msg; 
+                    _filepathname = filepathname;
                 }
 
-                info_item(const info_item& rhs) : _seq(rhs._seq), _representative_type(rhs._representative_type)
-                    , _level(rhs._level), _bin_type(rhs._bin_type), _timestamp(rhs._timestamp), _info(rhs._info)
-                {
-                    
-                }
-
-                info_item& operator=(const info_item& rhs)
-                {
-                    if (this == &rhs) {
-                        return *this;
-                    }
-                    _seq = rhs._seq;
-                    _representative_type = rhs._representative_type;
-                    _level = rhs._level;
-                    _bin_type = rhs._bin_type;
-                    _timestamp = rhs._timestamp;
-                    _info = rhs._info;
-                }
-
-                void set(::pilo::u32_t seq, ::pilo::core::logging::representative_type  representative_type
-                    , ::pilo::core::logging::level level, ::pilo::u16_t bin_type, const char* info)
-                {
-                    _seq = seq;
-                    _representative_type = representative_type;
-                    _level = level;
-                    _bin_type = bin_type;
-                    _timestamp = ::pilo::core::datetime::timestamp_micro_system();
-                    _info = info;
-                }
-
-                void set_text(::pilo::u32_t seq, ::pilo::core::logging::level level, const char* info)
-                {
-                    _seq = seq;
-                    _representative_type = ::pilo::core::logging::representative_type::text;
-                    _level = level;
-                    _bin_type = 0;
-                    _timestamp = ::pilo::core::datetime::timestamp_micro_system();
-                    _info = info;
-                }
+                ~info_item() = default;
+                info_item(const info_item&) = default;
+                info_item& operator=(const info_item&) = default;
+                info_item(info_item&&) = default;
+                info_item& operator=(info_item&&) = default;
+                
 
                 void clear()
                 {
-                    _seq = (::pilo::u32_t)~0;
                     _representative_type = ::pilo::core::logging::representative_type::text;
                     _level = ::pilo::core::logging::level::info;
                     _bin_type = 0;
+                    _line_no = 0;
                     _timestamp = -1;
                     _info.clear();
+                    _filepathname = nullptr;
                 }
 
-                ::pilo::u32_t seq() const { return _seq; }
                 ::pilo::core::logging::representative_type representative_type() const { return _representative_type; }
                 ::pilo::core::logging::level level() const { return _level; }
                 ::pilo::u16_t bin_type() const { return _bin_type; }
                 ::pilo::i64_t timestamp() const { return _timestamp;  }
                 std::string info() const { return _info;  }
 
-                std::string to_string() const
+                std::string to_string(::pilo::u32_t mask) const
                 {
                     std::tm lt = { 0 };
                     ::pilo::i64_t micro_seconds = 0;
@@ -264,23 +236,51 @@ namespace pilo {
 
 
                     std::stringstream ss;
-                    ss << buff << '\t' << g_level_names[(int)_level] << '\t' << _info << "\n";
+                    if (mask & Date) {
+                        ::pilo::core::io::string_formated_output(buff, 128, "%04d-%02d-%02d", lt.tm_year + 1900, lt.tm_mon + 1, lt.tm_mday);
+                        ss << buff << "\t";
+                    }
+
+                    if (mask & TimeStamp)
+                        ss << _timestamp << "\t";                    
+
+                    if (mask & Time) {
+                        ::pilo::core::io::string_formated_output(buff, 128, "%02d:%02d:%02d.%06d", lt.tm_hour, lt.tm_min, lt.tm_sec, micro_seconds);
+                        ss << buff << "\t";
+                    }
+
+                    if (mask & Level) {
+                        ss << g_level_names[(int)_level] << '\t';
+                    }
+
+                    ss << _info << "\t";
+
+                    if ((mask & SrcLoc) && (_filepathname != nullptr)) {
+                        ss << "<- (" << _filepathname << ":" << _line_no << ")";
+                    }
+
                     return ss.str();
                 }
 
             private:
-                ::pilo::u32_t                                   _seq;
                 ::pilo::core::logging::representative_type      _representative_type;
                 ::pilo::core::logging::level                    _level;
-                ::pilo::u16_t                                   _bin_type;                
-                ::pilo::i64_t                                   _timestamp;                
+                ::pilo::u16_t                                   _bin_type; 
+                ::pilo::u32_t                                   _line_no;
+                ::pilo::i64_t                                   _timestamp;       
+                const char*                                     _filepathname;
                 std::string                                     _info;
+
+                
             };
 
             class info_item_set
             {
             public:
-                info_item_set() = default;
+                info_item_set()
+                {
+                    _content_mask.set(Date | Time | Level | SrcLoc);
+                }
                 info_item_set(const info_item_set&) = default;           
                 info_item_set(info_item_set&&) = default;                 
                 info_item_set& operator=(const info_item_set&) = default;
@@ -306,15 +306,48 @@ namespace pilo {
                     _items.push_back(std::move(ii));
                 }
 
-                ::pilo::err_t append_text_item(::pilo::u32_t seq, ::pilo::core::logging::level level, const std::string & msg)
+                void mark_content_mask(::pilo::u32_t mask)
                 {
-                    _items.emplace_back(info_item(seq, ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), msg));
+                    _content_mask.mark_value(mask);
+                }
+
+                void clear_content_mask(::pilo::u32_t mask)
+                {
+                    _content_mask.clear_value(mask);
+                }
+
+                ::pilo::u32_t content_mask() const { return _content_mask.data(); }
+
+                ::pilo::err_t append_text_item(::pilo::core::logging::level level, const std::string & msg, const char* file, ::pilo::u32_t line_no)
+                {
+                    if (file != nullptr) {
+                        auto cit = _filenames.find(file);
+                        if (cit != _filenames.cend()) {
+                            file = cit->c_str();
+                        }
+                        else {
+                            auto [insert_it, inserted] = _filenames.emplace(file);
+                            file = insert_it->c_str();
+                        }
+                    }
+                    _items.emplace_back(info_item(::pilo::core::logging::representative_type::text, level, 0, line_no, ::pilo::core::datetime::timestamp_micro_system(), msg, file));
                     return PILO_OK;
                 }
 
-                template<int BUFSZ = 1024>
-                ::pilo::err_t append_text_item(::pilo::u32_t seq, ::pilo::core::logging::level level, const char* file, int line, const char* fmt, ...)
+                template<int BUFSZ = 4096>
+                ::pilo::err_t append_text_item(::pilo::core::logging::level level, const char* file, ::pilo::u32_t  line, const char* fmt, ...)
                 {
+                    if (file != nullptr) {
+                        auto cit = _filenames.find(file);
+                        if (cit != _filenames.cend()) {
+                            file = cit->c_str();
+                        } else {
+                            auto [insert_it, inserted] = _filenames.emplace(file);
+                            file = insert_it->c_str();
+                        }
+                    }
+                    
+
                     char buf[BUFSZ] = { 0 };
 
                     int ret;
@@ -327,15 +360,16 @@ namespace pilo {
                     ret = vsnprintf(buf, BUFSZ, fmt, args);
 #endif
                     va_end(ap);
+                    
 
-                    int remain = BUFSZ - ret;
-                    if (ret < 0 || remain < 8) {
-                        return mk_perr(PERR_LEN_TOO_LARGE);
-                    }
+                    //int remain = BUFSZ - ret;
+                    //if (ret < 0 || remain < 8) {
+                    //    return mk_perr(PERR_LEN_TOO_LARGE);
+                    //}
 
-                    ::pilo::core::io::string_formated_output(buf + ret, remain, " <- (%s:%d)", file, line);
+                    //::pilo::core::io::string_formated_output(buf + ret, remain, " <- (%s:%d)", file, line);
 
-                    _items.emplace_back(info_item(seq, ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), buf));
+                    _items.emplace_back(info_item(::pilo::core::logging::representative_type::text, level, 0, line, ::pilo::core::datetime::timestamp_micro_system(), buf, file));
                     return PILO_OK;
                 }
 
@@ -346,14 +380,27 @@ namespace pilo {
                     }
                 }
 
+                const info_item & latest() const {return _items.back(); }
+
+                void clear()
+                {
+                    _items.clear();
+                }
+
+                void reset()
+                {
+                    _items.clear();
+                    _items.shrink_to_fit();
+                }
 
             private:
-                std::vector<info_item>              _items;
-
+                std::unordered_set<std::string>                 _filenames;
+                std::vector<info_item>                          _items;
+                ::pilo::bit_flag<::pilo::u32_t>                 _content_mask;
             };
 
             template<int BUFSZ = 1024>
-            info_item make_info_item_of_text(::pilo::u32_t seq, ::pilo::core::logging::level level, const char* file, int line, const char* fmt, ...)
+            info_item make_info_item_of_text(::pilo::core::logging::level level, const char* file, ::pilo::u32_t line, const char* fmt, ...)
             {
                 char buf[BUFSZ] = {0};
 
@@ -368,14 +415,14 @@ namespace pilo {
 #endif
                 va_end(ap);
 
-                int remain = BUFSZ - ret;
-                if (ret < 0 || remain < 8) {
-                    return info_item(seq, ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), "");
-                }
+                //int remain = BUFSZ - ret;
+                //if (ret < 0 || remain < 8) {
+                //    return info_item(::pilo::core::logging::representative_type::text, level, 0, line,  ::pilo::core::datetime::timestamp_micro_system(), "", file);
+                //}
 
-                ::pilo::core::io::string_formated_output(buf + ret, remain, " <- (%s:%d)", file, line);
+                //::pilo::core::io::string_formated_output(buf + ret, remain, " <- (%s:%d)", file, line);
 
-                return info_item(seq, ::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), buf);
+                return info_item(::pilo::core::logging::representative_type::text, level, 0, ::pilo::core::datetime::timestamp_micro_system(), buf);
             }
         }
     }
@@ -385,18 +432,18 @@ namespace pilo {
 #define PMF_BUFF_LOG(buff, bfsz, fmt, ...) \
                 ::pilo::core::logging::buff_log(buff, bfsz, __FILE__, __LINE__, fmt, ##__VA_ARGS__)
 
-#define PMF_MAKE_LOG_INFO_ITEM_OF_TEXT(BUFSZ, seq, level, fmt, ...) \
-                ::pilo::core::logging::make_info_item_of_text<BUFSZ>(seq, level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
+#define PMF_MAKE_LOG_INFO_ITEM_OF_TEXT(BUFSZ, level, fmt, ...) \
+                ::pilo::core::logging::make_info_item_of_text<BUFSZ>(level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
 
-#define PMF_MAKE_LOG_INFO_ITEM_OF_TEXT_DFL(seq, level, fmt, ...) \
-                ::pilo::core::logging::make_info_item_of_text(seq, level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
+#define PMF_MAKE_LOG_INFO_ITEM_OF_TEXT_DFL(level, fmt, ...) \
+                ::pilo::core::logging::make_info_item_of_text(level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
 
 
 
-#define PMF_APPEND_TEXT_LOG(OBJ, BUFSZ, seq, level, fmt, ...) \
-                (OBJ).append_text_item<BUFSZ>(seq, level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
+#define PMF_APPEND_TEXT_LOG(OBJ, BUFSZ,  level, fmt, ...) \
+                (OBJ).append_text_item<BUFSZ>(level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
 
-#define PMF_APPEND_TEXT_LOG_DFL(OBJ, seq, level, fmt, ...) \
-                (OBJ).append_text_item(seq, level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
+#define PMF_APPEND_TEXT_LOG_DFL(OBJ, level, fmt, ...) \
+                (OBJ).append_text_item(level, __FILE__, __LINE__, fmt, ##__VA_ARGS__ )
 
 #endif

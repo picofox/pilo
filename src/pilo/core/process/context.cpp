@@ -90,7 +90,6 @@ namespace pilo
                 _core_config = ::std::make_shared<::pilo::core::config::core_config>();     
                 this->_system_information = new ::pilo::core::stat::system_information();
                 this->_wired_type_facotry = new ::pilo::core::rtti::wired_type_factory();
-
                 this->_linked_buffer_node_pool = new linked_buffer_node_4k_pool_type();
                 
                 this->_service_manager = nullptr;
