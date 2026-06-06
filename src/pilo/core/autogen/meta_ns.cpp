@@ -37,7 +37,10 @@ namespace pilo
 
             meta_ns* meta_ns::add_ns_node(const std::string& ns_namestr)
             {
-                _m_nodes.push_back(std::move(std::make_unique<meta_ns>((::pilo::i16_t ) (this->_m_indent + 1), ns_namestr)));
+                if (this->meta_type() == ::pilo::core::autogen::meta_node_type_enum::ns)
+                    _m_nodes.push_back(std::move(std::make_unique<meta_ns>((::pilo::i16_t ) (this->_m_indent + 1), ns_namestr)));
+                else
+                    _m_nodes.push_back(std::move(std::make_unique<meta_ns>((::pilo::i16_t)(this->_m_indent), ns_namestr)));
 
                 return static_cast<meta_ns*>(_m_nodes.back().get());
             }
@@ -68,6 +71,13 @@ namespace pilo
                 _m_nodes.push_back(std::move(std::make_unique<meta_codeline>((::pilo::i16_t)(this->_m_indent + 1), modifiers, codeline_string, comment_string)));
 
                 return static_cast<meta_codeline*>(_m_nodes.back().get());
+            }
+            void meta_ns::add_empty_lines(::pilo::i32_t cnt)
+            {
+                std::string nls;
+                for (::pilo::i32_t i = 0; i < cnt; i++)
+                    nls += g_autogen_config.newline_sep();
+                _m_nodes.push_back(std::move(std::make_unique<meta_codeline>((::pilo::i16_t)(this->_m_indent), 0, nls, "")));
             }
         }
     }

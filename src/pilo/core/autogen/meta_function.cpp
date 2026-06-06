@@ -32,6 +32,46 @@ namespace pilo
 				return PILO_OK;
 			}
 
+			::pilo::err_t meta_function::add_wired_type_param(::pilo::u64_t modifiers, const std::string& namestr, const::pilo::core::rtti::wired_type& wt, const std::string& valuestr, const std::string& arr_typestr, const std::string& dict_typestr)
+			{			
+				if (wt.wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_single) {
+					if (wt.value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+						return add_param(modifiers | ::pilo::core::autogen::mod_cost_str, namestr, "std::string", valuestr);
+					} else if (wt.value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+						if (valuestr.empty())
+							return add_param(modifiers | ::pilo::core::autogen::mod_isbool, namestr, "bool", "false");
+						else
+							return add_param(modifiers | ::pilo::core::autogen::mod_isbool, namestr, "bool", valuestr);
+					} else if (wt.value_type() >= ::pilo::core::rtti::wired_type::value_type_i8 || wt.value_type() <= ::pilo::core::rtti::wired_type::value_type_u64) {
+						if (valuestr.empty())
+							return add_param(modifiers, namestr, ::pilo::core::rtti::wired_type::s_value_type_to_buildin_11_type_str(wt.value_type()), "0");
+						else
+							return add_param(modifiers, namestr, ::pilo::core::rtti::wired_type::s_value_type_to_buildin_11_type_str(wt.value_type()), valuestr);
+					} else if (wt.value_type() == ::pilo::core::rtti::wired_type::value_type_f32) {
+						if (valuestr.empty())
+							return add_param(modifiers, namestr, "float", "0.0f");
+						else
+							return add_param(modifiers, namestr, "float", valuestr);
+					} else if (wt.value_type() == ::pilo::core::rtti::wired_type::value_type_f64) {
+						if (valuestr.empty())
+							return add_param(modifiers, namestr, "double", "0.0");
+						else
+							return add_param(modifiers, namestr, "double", valuestr);
+					} else if (wt.value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+						if (valuestr.empty())
+							return add_param(modifiers | mod_isptr, namestr, "char*", "nullptr");
+						else
+							return add_param(modifiers | mod_isptr, namestr, "char*", valuestr);
+					} else {
+						return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
+					}
+				}
+				else {
+					return add_param(modifiers | mod_non_basetype, namestr, wt.to_typestr_cpp(arr_typestr, dict_typestr), "");
+				}
+			}
+
+
 			::pilo::err_t meta_function::add_bodyline(::pilo::i16_t rel_indent, ::pilo::u64_t modifiers, const std::string& line, const std::string cmt)
 			{
 				rel_indent += this->_m_indent;
@@ -84,11 +124,11 @@ namespace pilo
 
 					} else if (this->_m_func_type == meta_func_type::copycons) {
 						s_gen_indent_to_sstream(ss, this->indent());
-						ss << this->_m_name << "(const " << this->_m_name  << "& rhs) noexcept";
+						ss << this->_m_name << "(const " << this->_m_name  << "& rhs)";
 
 					} else if (this->_m_func_type == meta_func_type::copyops) {
 						s_gen_indent_to_sstream(ss, this->indent());
-						ss << this->_m_name  << "& operator=(const " << this->_m_name << "& rhs) noexcept";
+						ss << this->_m_name  << "& operator=(const " << this->_m_name << "& rhs)";
 
 					} else if (this->_m_func_type == meta_func_type::movecons) {
 						s_gen_indent_to_sstream(ss, this->indent());
@@ -283,10 +323,14 @@ namespace pilo
 
 						if (init_buff.size() > 0) {
 							ss << g_autogen_config.newline_sep();
-							s_gen_indent_to_sstream(ss, effect_indent);							
+							s_gen_indent_to_sstream(ss, effect_indent + 1);	
+
 							if (this->_m_base_init_param_list.size() > 1)
 							{
 								ss << ", ";
+							} else if (this->_m_base_init_param_list.size() == 0 && this->_m_member_var_list.size() > 0) {
+
+								ss << ": ";
 							}
 							ss << init_buff;
 						}
@@ -308,20 +352,25 @@ namespace pilo
 					else if (this->_m_func_type == meta_func_type::copycons) {
 						s_gen_indent_to_sstream(ss, effect_indent);
 						if (strparam.size() > 0)
-							ss << strparam << "::" << this->_m_name << "(const " << this->_m_name << "& rhs) noexcept";
+							ss << strparam << "::" << this->_m_name << "(const " << this->_m_name << "& rhs)";
 						else
-							ss << this->_m_name << "(const " << this->_m_name << "& rhs) noexcept";
+							ss << this->_m_name << "(const " << this->_m_name << "& rhs)";
 
 						if (this->test_modifier(mod_autofill)) {
 							if (this->_m_base_clsname.size() > 0) {
 								ss << g_autogen_config.newline_sep();
 								s_gen_indent_to_sstream(ss, effect_indent);
 								ss << ": " << _m_base_clsname << "(rhs)";
+							} else if (this->_m_base_init_param_list.size() == 0 && this->_m_member_var_list.size() > 0) {
+								ss << g_autogen_config.newline_sep();
+								s_gen_indent_to_sstream(ss, effect_indent+1);
+								ss << ": ";
 							}
 
+
 							if (this->_m_member_var_list.size() > 0) {
-								ss << g_autogen_config.newline_sep();
-								s_gen_indent_to_sstream(ss, effect_indent);
+								//ss << g_autogen_config.newline_sep();
+								//s_gen_indent_to_sstream(ss, effect_indent);
 								for (size_t i = 0; i < this->_m_member_var_list.size(); i++) {
 									if (i > 0 || (this->_m_base_clsname.size() > 0)) {
 										ss << ", ";
@@ -338,9 +387,9 @@ namespace pilo
 					else if (this->_m_func_type == meta_func_type::copyops) {
 						s_gen_indent_to_sstream(ss, effect_indent);
 						if (strparam.size() > 0)
-							ss << this->_m_name << "& " << this->_m_name<< "::" << "operator=(const " << this->_m_name << "& rhs) noexcept";
+							ss << this->_m_name << "& " << this->_m_name<< "::" << "operator=(const " << this->_m_name << "& rhs)";
 						else
-							ss << this->_m_name << "& " << "operator=(const " << this->_m_name << "& rhs) noexcept";
+							ss << this->_m_name << "& " << "operator=(const " << this->_m_name << "& rhs)";
 
 					}
 					else if (this->_m_func_type == meta_func_type::movecons) {
@@ -355,11 +404,16 @@ namespace pilo
 								ss << g_autogen_config.newline_sep();
 								s_gen_indent_to_sstream(ss, effect_indent);
 								ss << ": " << _m_base_clsname << "(std::move(rhs))";
+
+							} else if (this->_m_base_init_param_list.size() == 0 && this->_m_member_var_list.size() > 0) {
+								ss << g_autogen_config.newline_sep();
+								s_gen_indent_to_sstream(ss, effect_indent + 1);
+								ss << ": ";
 							}
 
 							if (this->_m_member_var_list.size() > 0) {
-								ss << g_autogen_config.newline_sep();
-								s_gen_indent_to_sstream(ss, effect_indent);
+								//ss << g_autogen_config.newline_sep();
+								//s_gen_indent_to_sstream(ss, effect_indent);
 								for (size_t i = 0; i < this->_m_member_var_list.size(); i++) {
 									if (i > 0 || (this->_m_base_clsname.size() > 0)) {
 										ss << ", ";

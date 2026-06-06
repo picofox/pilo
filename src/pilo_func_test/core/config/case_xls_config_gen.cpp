@@ -57,6 +57,17 @@ namespace pilo
 						return p_case->error(xret, xconf_gen.log_set().latest().to_string(xconf_gen.log_set().content_mask()).c_str());
 					}
 
+					xret = xconf_gen.generate_client_config();
+					if (xret != PILO_OK) {
+						return p_case->error(xret, xconf_gen.log_set().latest().to_string(xconf_gen.log_set().content_mask()).c_str());
+					}
+
+					xret = xconf_gen.generate_server_source(::pilo::core::autogen::lang_type::cpp);
+					if (xret != PILO_OK) {
+						return p_case->error(xret, xconf_gen.log_set().latest().to_string(xconf_gen.log_set().content_mask()).c_str());
+					}
+
+
 					xconf_gen.log_set().travel(&xconf_gen, [](void * ctx, const ::pilo::core::logging::info_item& ii)
 						{
 							::pilo::core::config::xls_config_generator* ptr = (::pilo::core::config::xls_config_generator*) ctx;

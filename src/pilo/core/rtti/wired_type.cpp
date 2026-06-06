@@ -10,6 +10,10 @@ namespace pilo
             static const char s_key_type_chars[] = "-cCwWdDqQs";
             static const char s_value_type_intrin_chars[] = "-cCwWdDqQbfFBst";
 
+            static ::pilo::id_value_mapper<15, std::string, ::pilo::u16_t> _s_value_type_to_buildin_11_type_map = { "", "int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t", "int64_t", "uint64_t", "bool", "float", "double", "char*", "std::string", "::pilo::tlv"};
+            static ::pilo::id_value_mapper<10, std::string, ::pilo::u16_t> _s_key_type_to_buildin_11_type_map = { "", "int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t", "int64_t", "uint64_t", "std::string"};
+
+
             ::pilo::u8_t wired_type::s_char_to_key_type(char ch)
             {
                 for (size_t i = 0; i < sizeof(s_key_type_chars); i++) {
@@ -173,6 +177,17 @@ namespace pilo
                 return ::pilo::mk_perr(PERR_INVALID_PARAM);
             }
 
+            const std::string & wired_type::s_value_type_to_buildin_11_type_str(::pilo::u16_t id)
+            {
+                return _s_value_type_to_buildin_11_type_map.get_value(id);
+            }
+
+            const std::string& wired_type::s_key_type_to_buildin_11_type_str(::pilo::u8_t id)
+            {
+                return _s_key_type_to_buildin_11_type_map.get_value(id);
+            }
+
+            
 
 
         }

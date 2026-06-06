@@ -49,7 +49,7 @@ namespace pilo
                 s_gen_indent_to_sstream(ss, this->indent());
                 ss << "{" << g_autogen_config.newline_sep();
 
-                if (_m_copycons_ops.size() > 0) {
+                if (_m_cons_des.size() > 0) {
                     need_priv = true;
                     ss << g_autogen_config.newline_sep();
                     s_gen_indent_to_sstream(ss, this->indent()+1);
@@ -297,10 +297,32 @@ namespace pilo
                 return PILO_OK;
             }
 
+            ::pilo::err_t meta_klass::add_wired_member_variable(const ::pilo::core::rtti::wired_type& wt, ::pilo::u64_t modifiers, ::pilo::u32_t accessor_flag, const std::string& namestr, const std::string& valuestr, const std::string& arr_typestr, const std::string& dict_typestr)
+            {
+                if (wt.wrapper_type() == ::pilo::core::rtti::wired_type::wrapper_single) {
+                    if (wt.value_type() == ::pilo::core::rtti::wired_type::value_type_str) {
+                        add_string_member_variable(modifiers, accessor_flag, namestr, ::pilo::core::rtti::wired_type::s_value_type_to_buildin_11_type_str(wt.value_type()), valuestr);
+                    } else if (wt.value_type() != ::pilo::core::rtti::wired_type::value_type_boolean && (wt.value_type() >= ::pilo::core::rtti::wired_type::value_type_i8 || wt.value_type() <= ::pilo::core::rtti::wired_type::value_type_f64)) {
+                        add_basetype_member_variable(modifiers, accessor_flag, namestr, ::pilo::core::rtti::wired_type::s_value_type_to_buildin_11_type_str(wt.value_type()), valuestr);
+                    } else if (wt.value_type() == ::pilo::core::rtti::wired_type::value_type_bytes) {
+                        add_ptr_member_variable(modifiers, accessor_flag, namestr, "char*", "");
+                    } else if (wt.value_type() == ::pilo::core::rtti::wired_type::value_type_boolean) {
+                        add_basetype_member_variable(modifiers | mod_isbool, accessor_flag, namestr, ::pilo::core::rtti::wired_type::s_value_type_to_buildin_11_type_str(wt.value_type()), valuestr);
+                    }
+                    else {
+                        return ::pilo::mk_perr(PERR_MIS_DATA_TYPE);
+                    }
+                }
+                else {
+                    add_nonbasetype_member_variable( modifiers, ::pilo::core::autogen::getter_rtype, namestr, wt.to_typestr_cpp(arr_typestr, dict_typestr), "");
+                }
+                return PILO_OK;
+            }
+
             ::pilo::err_t meta_klass::add_member_variable(::pilo::u64_t modifiers, ::pilo::u32_t accessor_flag,const std::string& namestr, const std::string& typestr, const std::string& valuestr)
             {
                 ::pilo::i16_t rel_indent = this->_m_indent + 1;   
-                ::pilo::u64_t getter_mods = mod_val_const | mod_const | mod_public ;
+                ::pilo::u64_t getter_mods = mod_const | mod_public ;
                 ::pilo::u64_t setter_mods = mod_public;
                 ::pilo::u64_t arg_mods = 0;
                 if (modifiers & mod_inline) {
@@ -311,7 +333,8 @@ namespace pilo
                 this->_m_member_variables.push_back(std::make_unique<meta_variable>(rel_indent, modifiers,  accessor_flag, namestr, typestr, valuestr));
                 if (accessor_flag & getter_rtype) {
                     if (modifiers & mod_non_basetype) {
-                        getter_mods |= mod_is_ref;
+                        getter_mods |= (mod_is_ref | mod_val_const);
+
                     }
 
                     auto mp = std::make_unique<meta_function>(rel_indent, getter_mods, meta_func_type::getter, s_name_to_getter(namestr), typestr);                    

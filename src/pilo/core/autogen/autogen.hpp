@@ -17,20 +17,28 @@
 #ifndef _pilo_core_autogen_autogen_hpp_
 #define _pilo_core_autogen_autogen_hpp_
 
-#include    <string>
-
-
 namespace pilo
 {
     namespace core
     {
         namespace autogen
-        {
-
+        {            
             
         }                
     }
 }
+
+
+
+#include    "meta_src_node.hpp"
+#include    "meta_srcfile.hpp"
+#include    "meta_ns.hpp"
+#include    "meta_klass.hpp"
+#include    "meta_function.hpp"
+#include    "meta_enum.hpp"
+#include    "meta_variable.hpp"
+#include    "meta_codeline.hpp"
+#include    "meta_import.hpp"
 
 
 

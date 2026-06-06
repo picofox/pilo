@@ -123,7 +123,7 @@ namespace pilo
                         return;
                     }
                     else {
-                        PLOG(::pilo::core::logging::level::debug, " call task @ <%016p> qic=%llu", task_ptr, _task_queue->size_approx());
+                        //PLOG(::pilo::core::logging::level::debug, " call task @ <%016p> qic=%llu", task_ptr, _task_queue->size_approx());
                         (*task_ptr)();                      
                     }
                 } while (has_task);

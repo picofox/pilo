@@ -6,7 +6,8 @@
 #include    <sstream>
 #include    "../algorithm/uint_sequence_generator.hpp"
 #include    <vector>
-#include    "autogen.hpp"
+#include    <cassert>
+
 
 namespace pilo
 {
@@ -14,6 +15,29 @@ namespace pilo
     {
         namespace autogen
         {
+            enum class lang_type
+            {
+                na = 0,
+                cpp,
+                csharp,
+                java ,
+                python,
+                go,
+                c,
+                count
+            };
+
+            const char* const g_lang_type_names[(const int)lang_type::count]{
+                "not_available",
+                "cpp",
+                "c#",
+                "java",
+                "python",
+                "go",
+                "c",
+            };
+            
+
             enum class meta_node_type_enum : short
             {
                 na = 0,    //0            
@@ -123,6 +147,7 @@ namespace pilo
             const ::pilo::u64_t mod_sentence_end        = 0x0000000000400000;
             const ::pilo::u64_t mod_map_to_member       = 0x0000000000800000;
             const ::pilo::u64_t mod_autofill            = 0x0000000001000000;
+            const ::pilo::u64_t mod_isbool              = 0x0000000002000000;
 
             const ::pilo::u64_t mod_cost_str = (mod_isstr |  mod_ptr_const);
 
@@ -147,6 +172,9 @@ namespace pilo
             const ::pilo::u32_t oflag_cmt_diff_line           = 0x00000080;
             const ::pilo::u32_t oflag_need_colsep             = 0x00000100;
             const ::pilo::u32_t oflag_supress_type            = 0x00000200;
+
+            std::string load_file_header_signature(const std::string & filepath);
+
            
             inline static std::string s_prefix_to_variable_name(const std::string& name, access_priv_type_enum apt)
             {
@@ -217,6 +245,18 @@ namespace pilo
                         else {
                             ss << " = " << v ;
                         }
+                    } else {
+                        if (modi.test_value(mod_isstr)) {
+                            ss << " = " << "\"" <<  "\"";
+                        } else if (modi.test_value(mod_isptr)) {
+                            ss << " = nullptr";
+                        } else if (modi.test_value(mod_non_basetype)) {
+                            assert(false && "non basetype vars need implict value to assign");
+                        } else if (modi.test_value(mod_isbool)) {
+                            ss << "= false";
+                        } else {
+                            ss << "= 0";
+                        }
                     }
                 }                
             }
@@ -279,6 +319,11 @@ namespace pilo
 
                 virtual ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags,  const std::string & strparam = "", ::pilo::i16_t effect_indent = -1) const = 0;
                 virtual meta_node_type_enum meta_type() const { return _m_type; }
+                //virtual meta_src_node* append_ns_node(const std::string& )
+                //{
+                //    assert(false && "append_ns_node() is not supported by current derivate class");
+                //}
+
                 unsigned int id() const { return _m_id; }
                 void set_indent(::pilo::i16_t indent) { _m_indent = indent; }
                 ::pilo::i16_t indent() const { return _m_indent; }

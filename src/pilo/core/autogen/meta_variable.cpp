@@ -17,7 +17,12 @@ namespace pilo
                     effect_indent = this->indent();
                 
                 if (flags & oflag_supress_type) {
-                    s_gen_indent_to_sstream(ss, effect_indent);
+                    if (!this->test_modifier(mod_non_basetype)) {
+                        s_gen_indent_to_sstream(ss, effect_indent);
+                        ss << _m_name;
+                    } else {
+                        return PILO_OK;
+                    }
                 }
                 else {
                     if (flags & oflag_need_priv) {
@@ -36,12 +41,13 @@ namespace pilo
                     ss << _m_type << ' ';
                     if (_m_modifiers.test_value(mod_val_const))
                         ss << "const ";
+                    ss << _m_name;
                 }
+                       
 
-                
-                ss << _m_name;
                 if (flags & oflag_need_value) {
-                    s_gen_value_assignment_cppstr(ss, _m_value, _m_modifiers);
+                    if (!this->test_modifier(mod_non_basetype))
+                        s_gen_value_assignment_cppstr(ss, _m_value, _m_modifiers);
                 }
                 
                 if (flags & oflag_codeline_sep) {

@@ -104,6 +104,15 @@ namespace pilo
                     return PILO_OK;
                 }
 
+                ::pilo::err_t set_path(const std::string & path)
+                {
+                    if (this->state() > state_code::initialized) {
+                        return ::pilo::mk_perr(PERR_EXIST);
+                    }
+                    this->_m_path.set(path.c_str());
+                    return PILO_OK;
+                }
+
                 ::pilo::core::io::path * path()
                 {
                     return &(this->_m_path);

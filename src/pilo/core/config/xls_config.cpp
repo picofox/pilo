@@ -1,18 +1,18 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                    //
-//  .----------------.  .----------------.  .----------------.  .----------------.       Raid boss    //
-//  | .--------------. || .--------------. || .--------------. || .--------------. |    Lv.85 缺德猫   //
-//  | |   ______     | || |     _____    | || |   _____      | || |     ____     | |     |\.-"-./|    //
-//  | |  |_   __ \   | || |    |_   _|   | || |  |_   _|     | || |   .'    `.   | |     \`     `/    //
-//  | |    | |__) |  | || |      | |     | || |    | |       | || |  /  .--.  \  | |     |= ^Y^ =|    //
-//  | |    |  ___/   | || |      | |     | || |    | |   _   | || |  | |    | |  | |     \__ ^ __/    //
-//  | |   _| |_      | || |     _| |_    | || |   _| |__/ |  | || |  \  `- - '/  | |     /`=+o+=`\    //
-//  | |  |_____|     | || |    |_____|   | || |  |________|  | || |   `.____.'   | |    |         |   //
-//  | |              | || |              | || |              | || |              | |    | (     ) |   //
-//  | '--------------' || '--------------' || '--------------' || '--------------' |    (,,)---(,,)   // 
-//  '----------------'  '----------------'  '----------------'  '----------------'                    //
-//                                                                                                    //  
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                //
+//  .----------------.  .----------------.  .----------------.  .----------------.     PILO by    //
+//  | .--------------. || .--------------. || .--------------. || .--------------. | 𝓓𝓪𝓶𝓷𝓮𝓭𝓒𝓪𝓽  //
+//  | |   ______     | || |     _____    | || |   _____      | || |     ____     | |              //
+//  | |  |_   __ \   | || |    |_   _|   | || |  |_   _|     | || |   .'    `.   | |  |\.-"-./|   //
+//  | |    | |__) |  | || |      | |     | || |    | |       | || |  /  .--.  \  | |  \`     `/   //
+//  | |    |  ___/   | || |      | |     | || |    | |   _   | || |  | |    | |  | |  |= ^Y^ =|   //
+//  | |   _| |_      | || |     _| |_    | || |   _| |__/ |  | || |  \  `- - '/  | |  \__ ^ __/   //
+//  | |  |_____|     | || |    |_____|   | || |  |________|  | || |   `.____.'   | |  /`=+o+=`\   //
+//  | |              | || |              | || |              | || |              | | |         |  //
+//  | '--------------' || '--------------' || '--------------' || '--------------' | | (     ) |  //
+//  '----------------'  '----------------'  '----------------'  '----------------'   (,,)---(,,)  //
+//                                                                                                //
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include	"xls_config.hpp"
 #include	"../dp/xls_spread_sheet.hpp"
@@ -21,6 +21,8 @@
 #include	"../process/context.hpp"
 #include    "../ml/json_tlv_driver.hpp"
 #include	"../io/path.hpp"
+#include	"../autogen/autogen.hpp"
+#include	"../io/file.hpp"
 
 ::pilo::err_t pilo::core::config::xls_config::s_ui_parser(const char* src, const char* ptr, ::pilo::i64_t len, void* ctx)
 {
@@ -33,7 +35,17 @@
 	::pilo::core::string::iteratable_split(ptr, len, ",", (::pilo::i64_t)1, pilo::core::config::xls_config::s_ui_sub_parser, (void*)&vec, false, true, true, true, &err);
 	if (err != PILO_OK)
 		return err;
-	cfg->_union_indices.push_back(std::move(vec));
+
+	std::vector<::pilo::i32_t> idx_vec;
+	for (size_t i = 0; i < vec.size(); i ++) {
+		::pilo::i32_t fidx = cfg->find_filed_by_name(vec[i]);
+		if (fidx < 0) {
+			return err;
+		}
+		idx_vec.push_back(fidx);
+	}
+
+	cfg->_union_indices.push_back(std::move(idx_vec));
 	return err;
 }
 
@@ -67,6 +79,7 @@ pilo::core::config::xls_config& pilo::core::config::xls_config::operator=(xls_co
 {
 	if (this != &rhs) {
 		_cls_name = std::move(rhs._cls_name);
+		_source_file_name = std::move(_source_file_name);
 		_config_file_name = std::move(rhs._config_file_name);
 		_ns = std::move(rhs._ns);
 		_union_indices = std::move(rhs._union_indices);
@@ -116,7 +129,7 @@ std::string pilo::core::config::xls_config::to_string() const
 	for (size_t i = 0; i < _union_indices.size(); i++) {
 		ss << "\t\t";
 		for (size_t j = 0; j < _union_indices[i].size(); j++) {
-			ss << _union_indices[i][j] << ',';
+			ss << this->_fields[_union_indices[i][j]].name() << ',';
 		}
 		ss << std::endl;
 	}
@@ -393,7 +406,7 @@ bool pilo::core::config::xls_config::_check_pk_array_int(const xls_config_field&
 		return false;
 	}
 
-	if ((int) exsitence_map.begin()->first !=  _data->size() - 1 ) {
+	if ((int) exsitence_map.rbegin()->first !=  _data->size() - 1 ) {
 		::pilo::core::io::string_formated_output(buff, buffsz, "Field (%s) NOT end at %d, rules voilation.", fld_cref.name().c_str(), (int)_data->size() - 1);
 		return false;
 	}
@@ -789,44 +802,286 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 	return true;
 }
 
-::pilo::err_t pilo::core::config::xls_config_generator::_generate_config(int which, const char* name_of_which)
+::pilo::err_t pilo::core::config::xls_config_generator::_generate_config(int which)
 {
 	::pilo::core::io::path dst_path;
 	::pilo::err_t err = PILO_OK;
-	std::map<std::string, xls_config_set>::const_iterator cit = _config_set_map.cbegin();
+	std::map<std::string, xls_config_set>::const_iterator cit = _config_set_map.cbegin();	
 
 	err = _dest_config_dir_path[which].create(::pilo::core::io::path::fs_node_type_dir, false);	
 	if (err != PILO_OK) {
-		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Config File Dest Path [%s] create Failed.",name_of_which, _dest_config_dir_path[which].fullpath());
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Config File Dest Path [%s] create Failed.", xls_config_set::config_type_tags[which], _dest_config_dir_path[which].fullpath());
 		return mk_err(err);
 	}
 
 	for (; cit != _config_set_map.cend(); cit++) {
+		std::string fname;
+		fname = ::pilo::core::string::rfind_substring(cit->first.c_str(), PMS_PATH_SEP_S_A, -1);
+		if (fname[0] == PMI_PATH_SEP) {
+			fname = fname.substr(1);
+		}
+
+		if (cit->second._configs[which].config_file_name().empty()) {
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Config File of (%s) Skipped, because of absent config name.", xls_config_set::config_type_tags[which], fname.c_str());
+			continue;
+		}
+
 		dst_path = _dest_config_dir_path[which];
 		err = dst_path.append(cit->second._configs[which].config_file_name().c_str());
 		if (err != PILO_OK) {
-			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Config File generated failed. dest path compose Failed. append %s -> %s", name_of_which, cit->second._configs[xls_config_set::server].config_file_name().c_str(), dst_path.fullpath());
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Config File generated failed. dest path compose Failed. append %s -> %s", xls_config_set::config_type_tags[which], cit->second._configs[xls_config_set::server].config_file_name().c_str(), dst_path.fullpath());
 			return mk_err(err);
 		}
 
 		::pilo::core::ml::json_tlv_driver jdrv(cit->second._configs[which]._data);
 		err = jdrv.save(&dst_path);
 		if (err != PILO_OK) {
-			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Config File generated failed. [%s] Serialize to Json Failedd %d ", name_of_which, cit->second._configs[xls_config_set::server].config_file_name().c_str(), err);
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Config File generated failed. [%s] Serialize to Json Failedd %d ", xls_config_set::config_type_tags[which], cit->second._configs[xls_config_set::server].config_file_name().c_str(), err);
 			return mk_err(err);
 		}
 
-		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::info, "%s Config File [%s] has been created successfully.", name_of_which, dst_path.fullpath());
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::info, "%s Config File [%s] has been created successfully.", xls_config_set::config_type_tags[which], dst_path.fullpath());
 
 	}
 
+	PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::info, "All %s Config File generation Done", xls_config_set::config_type_tags[which]);
+
 	return PILO_OK;
+}
+
+::pilo::err_t pilo::core::config::xls_config_generator::_generate_source(int which, ::pilo::core::autogen::lang_type ltype)
+{
+	::pilo::core::io::path dst_path;
+	::pilo::err_t err = PILO_OK;
+	std::map<std::string, xls_config_set>::const_iterator cit = _config_set_map.cbegin();
+
+	err = _dest_source_dir_path[which].create(::pilo::core::io::path::fs_node_type_dir, false);
+	if (err != PILO_OK) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Source File Dest Path [%s] create Failed.", xls_config_set::config_type_tags[which], _dest_config_dir_path[which].fullpath());
+		return mk_err(err);
+	}
+
+	for (; cit != _config_set_map.cend(); cit++) {
+		std::string fname;
+		fname = ::pilo::core::string::rfind_substring(cit->first.c_str(), PMS_PATH_SEP_S_A, -1);
+		if (fname[0] == PMI_PATH_SEP) {
+			fname = fname.substr(1);
+		}
+
+		if (cit->second._configs[which].source_file_name().empty()) {
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "%s Source File of (%s) Skipped, because of absent config name.", xls_config_set::config_type_tags[which], fname.c_str());
+			continue;
+		}
+
+		const xls_config_set& conf_set_ref = cit->second;
+
+		if ((err = _generate_one_source(fname, which,conf_set_ref, ltype)) != PILO_OK) {
+			return mk_err(err);
+		}
+
+	}
+
+	PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::info, "All %s Source File generation Done", xls_config_set::config_type_tags[which]);
+
+	return PILO_OK;
+}
+
+::pilo::err_t pilo::core::config::xls_config_generator::_generate_one_source(const std::string& cfg_pos, int which, const xls_config_set& conf_set_ref, ::pilo::core::autogen::lang_type ltype)
+{
+	const xls_config& conf_ref = conf_set_ref._configs[which];	
+	::pilo::err_t err = PILO_OK;
+
+	if (ltype == ::pilo::core::autogen::lang_type::na) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Invalid lang type (%d) for source %s from %s.", (int)ltype, conf_ref.cls_name().c_str(), cfg_pos.c_str());
+	}	
+	
+	if (ltype == ::pilo::core::autogen::lang_type::cpp) {
+		err = _generate_one_source_cpp(cfg_pos, which, conf_set_ref);
+	}
+
+	if (err != PILO_OK) {
+		return err;
+	}	
+	
+	return PILO_OK;
+}
+
+::pilo::err_t pilo::core::config::xls_config_generator::_generate_one_source_cpp(const std::string& cfg_pos, int which, const xls_config_set& conf_set_ref)
+{
+	const xls_config& conf_ref = conf_set_ref._configs[which];
+	
+	std::string hppname = conf_ref.cls_name() + ".hpp";
+	std::string item_klass_name = conf_ref.cls_name() + "_item";
+	const char* conf_target_type_str = xls_config_set::config_type_tags[which];
+	std::string subpath = conf_ref.ns();
+	replace(subpath.begin(), subpath.end(), '.', PMI_PATH_SEP);
+	std::string hdr_filepath;
+	std::string src_filepath;
+
+	::pilo::core::autogen::meta_srcfile msf(0);
+	msf.add_import(PMI_OS_UNSUPPORT, true, true, "cstdio");
+	msf.add_import(PMI_OS_UNSUPPORT, true, true, "cstdlib");
+	msf.add_import(PMI_OS_UNSUPPORT, true, true, "string");
+	msf.add_import(PMI_OS_UNSUPPORT, true, true, "cstdint");
+	msf.add_import(PMI_OS_UNSUPPORT, true, true, "vector");
+	msf.add_import(PMI_OS_UNSUPPORT, true, true, "map");
+	msf.add_import(PMI_OS_UNSUPPORT, true, true, "set");
+	msf.add_import(PMI_OS_UNSUPPORT, false, false, hppname);
+
+	msf.add_empty_lines(1);
+
+	::pilo::core::autogen::meta_ns* nsp = msf.get_or_create_ns_node(conf_ref.ns());
+	if (nsp == nullptr) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Creating ns (%s) failed for (%s) from %s. ", conf_ref.ns().c_str(), conf_ref.cls_name().c_str(), cfg_pos.c_str());
+		return ::pilo::mk_perr(PERR_NULL_PTR);
+	}
+
+	//add item klass 
+	::pilo::core::autogen::meta_klass* item_klass = nsp->add_klass_node(0, item_klass_name, "", 0);
+	if (item_klass == nullptr) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Creating Item Klass (%s) failed for (%s) from %s. ", item_klass_name.c_str(), conf_ref.cls_name().c_str(), cfg_pos.c_str());
+		return ::pilo::mk_perr(PERR_NULL_PTR);
+	}
+	std::string type_str;
+	int mod_tmp = ::pilo::core::autogen::mod_private;
+	::pilo::err_t err = PILO_OK;
+
+	for (size_t i = 0; i < conf_ref.field_count(); i ++) {
+		const xls_config_field* fldp = conf_ref.find_filed_by_pri_index(i);
+		if (fldp == nullptr) {
+			return ::pilo::mk_perr(PERR_NULL_PTR);
+		}
+
+		err = item_klass->add_wired_member_variable(fldp->_wired_type, mod_tmp, ::pilo::core::autogen::getter_rtype, fldp->name(), fldp->default_value(), "", "");
+		if (err != PILO_OK) {
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Invalid Value type (%u) for Field (%s.%s) from %s. ", fldp->value_type(), item_klass_name.c_str(), fldp->name().c_str(), cfg_pos.c_str());
+			return err;
+		}	
+
+	}
+	::pilo::core::autogen::meta_function* funcp = item_klass->add_constructor(::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_autofill, {});
+	if (funcp == nullptr) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Constructor of Klass (%s) created failed from %s. ", item_klass->name().c_str(), cfg_pos.c_str());
+		return ::pilo::mk_perr(PERR_NULL_PTR);;
+	}
+	for (size_t i = 0; i < conf_ref.field_count(); i++) {
+		const xls_config_field* fldp = conf_ref.find_filed_by_pri_index(i);
+		if (fldp == nullptr) {
+			return ::pilo::mk_perr(PERR_NULL_PTR);
+		}
+
+		err = funcp->add_wired_type_param(::pilo::core::autogen::mod_map_to_member | ::pilo::core::autogen::mod_private, fldp->name(), fldp->_wired_type, fldp->default_value(), "", "");
+		if (err != PILO_OK) {
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Add param for paramlized Constructor (%s) failed (%s) from %s. ", item_klass_name.c_str(), fldp->name().c_str(), cfg_pos.c_str());
+			return err;
+		}
+	}
+
+	mod_tmp = ::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_autofill;
+	funcp = item_klass->add_constructor(mod_tmp, { });
+	if (funcp == nullptr) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Constructor of Klass (%s) created failed from %s. ", item_klass->name().c_str(), cfg_pos.c_str());
+		return ::pilo::mk_perr(PERR_NULL_PTR);;
+	}
+
+	funcp = item_klass->add_desstructor(::pilo::core::autogen::mod_public);
+	if (funcp == nullptr) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Destructor of Klass (%s) created failed from %s. ", item_klass->name().c_str(), cfg_pos.c_str());
+		return ::pilo::mk_perr(PERR_NULL_PTR);;
+	}
+
+	funcp = item_klass->add_copy_constructor(::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_autofill);
+	if (funcp == nullptr) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Copy Constructor of Klass (%s) created failed from %s. ", item_klass->name().c_str(), cfg_pos.c_str());
+		return ::pilo::mk_perr(PERR_NULL_PTR);;
+	}
+
+	funcp = item_klass->add_copy_operator(::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_autofill);
+	if (funcp == nullptr) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Copy Operator of Klass (%s) created failed from %s. ", item_klass->name().c_str(), cfg_pos.c_str());
+		return ::pilo::mk_perr(PERR_NULL_PTR);;
+	}
+
+	funcp = item_klass->add_move_constructor(::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_autofill);
+	if (funcp == nullptr) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Move Constructor of Klass (%s) created failed from %s. ", item_klass->name().c_str(), cfg_pos.c_str());
+		return ::pilo::mk_perr(PERR_NULL_PTR);;
+	}
+
+	funcp = item_klass->add_move_operator(::pilo::core::autogen::mod_public | ::pilo::core::autogen::mod_autofill);
+	if (funcp == nullptr) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Move Operator of Klass (%s) created failed from %s. ", item_klass->name().c_str(), cfg_pos.c_str());
+		return ::pilo::mk_perr(PERR_NULL_PTR);;
+	}
+
+
+
+
+	std::stringstream ss;
+	msf.append_to_stringstream_cpp(ss, ::pilo::core::autogen::oflag_dec, "");
+	::pilo::core::io::path dstpath = _dest_source_dir_path[which];
+	dstpath.append(subpath.c_str());
+	err = _save_souce_file(ss, &dstpath, conf_ref.cls_name(), ".hpp");
+	if (err != PILO_OK)
+		return err;	
+	printf("\n-------------------------------\n");
+	printf("%s", ss.str().c_str());
+	printf("\n-------------------------------\n");
+
+	ss.str("");
+	msf.append_to_stringstream_cpp(ss, 0, "");
+	printf("\n-------------------------------\n");
+	printf("%s", ss.str().c_str());
+	printf("\n-------------------------------\n");
+
+	err = _save_souce_file(ss, &dstpath, conf_ref.cls_name(), ".cpp");
+	if (err != PILO_OK)
+		return err;
+
+	PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::info, "%s Source File for Class (%s) (%s) generated successfully from %s. ", conf_target_type_str, conf_ref.cls_name().c_str(), conf_ref.source_file_name().c_str(), cfg_pos.c_str());
+
+
+	
+
+	
+
+
+	return PILO_OK;
+}
+
+::pilo::err_t pilo::core::config::xls_config_generator::_save_souce_file(std::stringstream& ss, const::pilo::core::io::path* dir, const std::string filenamestr, const std::string& ext)
+{
+	std::string fullpath = dir->fullpath();
+	fullpath += PMI_PATH_SEP + filenamestr + ext;
+	::pilo::core::io::file f;
+	::pilo::err_t err  = f.set_path(fullpath);
+	if (err != PILO_OK) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Source File generated failed. Set path (%s) to file Failed", fullpath.c_str());
+		return err;
+	}
+	err = f.open(::pilo::core::io::creation_mode::create_always, ::pilo::core::io::access_permission::write, ::pilo::core::io::dev_open_flags::none);
+	if (err != PILO_OK) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Source File generated failed. Open file (%s) Failed",  fullpath.c_str());
+		return mk_err(err);
+	}
+
+	std::string strbuf = ss.str();
+	::pilo::i64_t bs_wrote = 0;
+	err = f.write(strbuf.c_str(), (::pilo::i64_t)strbuf.size(), &bs_wrote);
+	if (err != PILO_OK || bs_wrote != (::pilo::i64_t)strbuf.size()) {
+		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Source File generated failed. Write file (%s) Failed bs=(%lld)", fullpath.c_str(), bs_wrote);
+		return mk_err(err);
+	}
+
+	f.close();
+
+	return ::pilo::err_t();
 }
 
 ::pilo::err_t pilo::core::config::xls_config_generator::_parse_worksheet(::pilo::core::dp::xls_spread_document& doc, const char* xls_fullpathname, ::pilo::u32_t ws_idx)
 {	
 	::pilo::core::dp::xls_spread_sheet ws = doc.worksheet_by_index(ws_idx);
-	std::string wsname = ws.name();
+	std::string wsname = ws.name();	
 
 	PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::info, "Parsing Sheet [%s] in File - [%s]", wsname.c_str(), xls_fullpathname);
 
@@ -837,7 +1092,7 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 	bool s_header_done = false;
 	char errbuff[PMI_XLS_GEN_ERR_BUFF_SIZE] = {0};
 	std::string strkvpair[2];
-	std::string desc, ccname, scname, ccfg, scfg, cns, sns, cui, sui;
+	std::string desc, ccname, scname, ccfg, scfg, cns, sns, cui, sui, ssrc, csrc;
 
 	std::string filepathname_n_ws = xls_fullpathname;
 	filepathname_n_ws += '.';
@@ -910,16 +1165,26 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 				if (scname.empty()) {
 					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "SCNAME (%s) not set, server class file wont be generated for %s.%s", scname.c_str(), xls_fullpathname, wsname.c_str());
 				}
+			} else if (::pilo::core::string::i_compare(strkvpair[0].c_str(), 0, "CSRC", 0, -1) == 0) {
+				csrc = strkvpair[1];
+				if (csrc.empty()) {
+					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "CSRC (%s) is Assigned, but empty, cant continue. %s.%s", scname.c_str(), xls_fullpathname, wsname.c_str());
+					return PERR_INC_DATA;
+				}
+			} else if (::pilo::core::string::i_compare(strkvpair[0].c_str(), 0, "SSRC", 0, -1) == 0) {
+				ssrc = strkvpair[1];
+				if (ssrc.empty()) {
+					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "SSRC (%s) is Assigned, but empty, cant continue. %s.%s", scname.c_str(), xls_fullpathname, wsname.c_str());
+					return PERR_INC_DATA;
+				}
 			} else if (::pilo::core::string::i_compare(strkvpair[0].c_str(), 0, "CCFG", 0, -1) == 0) {
 				ccfg = strkvpair[1];
-				ccname = strkvpair[1];
-				if (ccname.empty()) {
+				if (ccfg.empty()) {
 					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "CCFG (%s) not set, client data file wont be generated for %s.%s", ccfg.c_str(), xls_fullpathname, wsname.c_str());
 				}
 			} else if (::pilo::core::string::i_compare(strkvpair[0].c_str(), 0, "SCFG", 0, -1) == 0) {
 				scfg = strkvpair[1];
-				ccname = strkvpair[1];
-				if (ccname.empty()) {
+				if (scfg.empty()) {
 					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "SCFG (%s) not set, server data file wont be generated for %s.%s", scfg.c_str(), xls_fullpathname, wsname.c_str());
 				}
 			} else if (::pilo::core::string::i_compare(strkvpair[0].c_str(), 0, "CNS", 0, -1) == 0) {
@@ -976,11 +1241,12 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 				return PERR_INC_DATA;
 			}
 			
-			
+			c_header_done = true;
+
 			if (s_header_done)
 				pe = xls_config_generator::parse_phase_enum::row_data;
-			else 
-				c_header_done = true;			
+
+						
 
 		} else if (tmp_cell_str.size() == 1 && (tmp_cell_str.at(0) == 'S' || tmp_cell_str.at(0) == 's')) {
 			if (xls_config_generator::parse_phase_enum::row_data == pe) {
@@ -1024,21 +1290,37 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 				return PERR_INC_DATA;
 			}
 
+			s_header_done = true;
+
 			if (c_header_done) 
 				pe = xls_config_generator::parse_phase_enum::row_data;			
-			else
-				s_header_done = true;	
+
 
 		}
 		else if (tmp_cell_str.size() > 0 && tmp_cell_str.at(0) == '/' && tmp_cell_str.at(1) == '/') {
 			continue;
 		} else if (tmp_cell_str.empty()) {
 			if (xls_config_generator::parse_phase_enum::row_data != pe) {
-				PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Got empty instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
-				return err;
+				if (xls_config_generator::parse_phase_enum::col_spec == pe) {
+					if (! s_header_done && ! c_header_done) {
+						PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "No Header Specs Found before data begins: %s.%s", xls_fullpathname, wsname.c_str());
+						return err;
+					} else if (!s_header_done) {
+						PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "No Server Header Specs Found!, still we begin with client: %s.%s", xls_fullpathname, wsname.c_str());
+						pe = xls_config_generator::parse_phase_enum::row_data;
+					} else if (!c_header_done) {
+						PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::warn, "No Client Header Specs Found!, still we begin with server: %s.%s", xls_fullpathname, wsname.c_str());
+						pe = xls_config_generator::parse_phase_enum::row_data;
+					}
+
+				} else {
+					PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Got empty instruct section at %s.%s @[%03u:%02u], phase is %d ", xls_fullpathname, wsname.c_str(), r, 1, (int)pe);
+					return err;
+				}
+				
 			}
 
-			if (cfg_set._configs[xls_config_set::server].field_count() > 0) {
+			if (s_header_done && cfg_set._configs[xls_config_set::server].field_count() > 0) {
 				err = this->_parse_record(cfg_set, xls_config_set::server, r, &ws, xls_fullpathname, wsname.c_str());
 				if (err != PILO_OK) {
 					return err;
@@ -1046,7 +1328,7 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 			}
 
 			
-			if (cfg_set._configs[xls_config_set::client].field_count() > 0) {			
+			if (c_header_done && cfg_set._configs[xls_config_set::client].field_count() > 0) {
 				err = this->_parse_record(cfg_set, xls_config_set::client, r, &ws, xls_fullpathname, wsname.c_str());
 				if (err != PILO_OK) {
 					return err;
@@ -1059,16 +1341,21 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 			
 		
 	} //end of while
-
-	if (!cfg_set._configs[xls_config_set::server].check_uniqe(errbuff, PMI_XLS_GEN_ERR_BUFF_SIZE)) {
-		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Check Unique Failed against Server data in %s.%s.  (%s) ", xls_fullpathname, wsname.c_str(), errbuff);
-		return ::pilo::mk_perr(PERR_INC_DATA);
+	
+	if (cfg_set._configs[xls_config_set::server].field_count() < 1) {
+		if (!cfg_set._configs[xls_config_set::server].check_uniqe(errbuff, PMI_XLS_GEN_ERR_BUFF_SIZE)) {
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Check Unique Failed against Server data in %s.%s.  (%s) ", xls_fullpathname, wsname.c_str(), errbuff);
+			return ::pilo::mk_perr(PERR_INC_DATA);
+		}
 	}
-
-	if (!cfg_set._configs[xls_config_set::client].check_uniqe(errbuff, PMI_XLS_GEN_ERR_BUFF_SIZE)) {
-		PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Check Unique Failed against Client data in %s.%s.  (%s) ", xls_fullpathname, wsname.c_str(), errbuff);
-		return ::pilo::mk_perr(PERR_INC_DATA);
+	
+	if (cfg_set._configs[xls_config_set::client].field_count() < 1) {
+		if (!cfg_set._configs[xls_config_set::client].check_uniqe(errbuff, PMI_XLS_GEN_ERR_BUFF_SIZE)) {
+			PMF_APPEND_TEXT_LOG_DFL(_log_set, ::pilo::core::logging::level::error, "Check Unique Failed against Client data in %s.%s.  (%s) ", xls_fullpathname, wsname.c_str(), errbuff);
+			return ::pilo::mk_perr(PERR_INC_DATA);
+		}
 	}
+	
 
 	cfg_set._desc = desc;
 	cfg_set._sheet_name = wsname;
@@ -1079,6 +1366,15 @@ bool pilo::core::config::xls_config_generator::_check_duplicate_vars_in_header(c
 	cfg_set._configs[xls_config_set::client]._cls_name = ccname;
 	cfg_set._configs[xls_config_set::client]._config_file_name = ccfg;
 	cfg_set._configs[xls_config_set::client]._ns = cns;
+	if (ssrc.empty())
+		cfg_set._configs[xls_config_set::server]._source_file_name = scname;
+	else
+		cfg_set._configs[xls_config_set::server]._source_file_name = ssrc;
+	if (csrc.empty())
+		cfg_set._configs[xls_config_set::client]._source_file_name = ccname;
+	else
+		cfg_set._configs[xls_config_set::client]._source_file_name = csrc;
+
 	cfg_set._configs[xls_config_set::server].parse_union_index(sui.c_str(), (pilo::i64_t)sui.size());
 	cfg_set._configs[xls_config_set::client].parse_union_index(cui.c_str(), (pilo::i64_t)cui.size());
 
@@ -1181,25 +1477,25 @@ void pilo::core::config::xls_config_generator::clear()
 
 ::pilo::err_t pilo::core::config::xls_config_generator::generate_server_config()
 {
-	return _generate_config(xls_config_set::server, "Server");
+	return _generate_config(xls_config_set::server);
 }
 
 ::pilo::err_t pilo::core::config::xls_config_generator::generate_client_config()
 {
 
-	return _generate_config(xls_config_set::client, "Client");
+	return _generate_config(xls_config_set::client);
 }
 
-::pilo::err_t pilo::core::config::xls_config_generator::generate_server_source()
+::pilo::err_t pilo::core::config::xls_config_generator::generate_server_source(::pilo::core::autogen::lang_type ltype)
 {
 
-	return PILO_OK;
+	return _generate_source(xls_config_set::server, ltype);
 }
 
-::pilo::err_t pilo::core::config::xls_config_generator::generate_client_source()
+::pilo::err_t pilo::core::config::xls_config_generator::generate_client_source(::pilo::core::autogen::lang_type ltype)
 {
 
-	return PILO_OK;
+	return _generate_source(xls_config_set::client, ltype);
 }
 
 

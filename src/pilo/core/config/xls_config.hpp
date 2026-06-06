@@ -20,6 +20,7 @@
 #include    "../../tlv.hpp"
 #include    "../dp/xls_spread_sheet.hpp"
 #include    "../logging/logger_def.hpp"
+#include    "../autogen/autogen.hpp"
  
 
 #define     PMI_XLS_GEN_ERR_BUFF_SIZE   (1024)
@@ -170,6 +171,7 @@ namespace pilo
 
                 xls_config(xls_config&& rhs) noexcept
                     : _cls_name(std::move(rhs._cls_name))
+                    , _source_file_name(std::move(_source_file_name))
                     , _config_file_name(std::move(rhs._config_file_name))
                     , _ns(std::move(rhs._ns))
                     , _union_indices(std::move(rhs._union_indices))
@@ -187,15 +189,31 @@ namespace pilo
             public:
                 const std::string& cls_name() const { return _cls_name;  }
                 const std::string& config_file_name() const { return _config_file_name; }
+                const std::string& source_file_name() const { return _config_file_name; }
                 const std::string& ns() const { return _ns; }
                 ::pilo::err_t parse_union_index(const char* ptr, ::pilo::i64_t len);
-                const std::vector<std::string>& union_index_at(int idx) { return _union_indices[idx];}
+                const std::vector<::pilo::i32_t>& union_index_at(int idx) { return _union_indices[idx];}
                 void reset();
                 ::pilo::u32_t field_count() const;
                 std::string to_string() const;
                 ::pilo::i32_t find_lowest_pri_field() const;
                 ::pilo::i32_t find_existing_field_idx_by_name(const std::string& name) const;
                 bool check_uniqe( char* buff, ::pilo::i64_t buffsz) const;
+                ::pilo::i32_t find_filed_by_name(const std::string& name)
+                {
+                    for (size_t j = 0; j < _fields.size(); j++) {
+                        if (_fields[j].name() == name) {
+                            return (::pilo::i32_t) j;
+                        }
+                    }
+
+                    return -1;
+                }
+
+                const xls_config_field* find_filed_by_pri_index(size_t i) const
+                {
+                    return &(_fields.at(_cls_fields_index_map.at(i).second)) ;
+                }
 
             private:
                 bool _check_uniqe_str(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const;
@@ -205,9 +223,10 @@ namespace pilo
                 bool _check_pk_array_uint(const xls_config_field& fld_cref, char* buff, ::pilo::i64_t buffsz) const;
             private:
                 std::string _cls_name;
+                std::string _source_file_name;
                 std::string _config_file_name;
                 std::string _ns;
-                std::vector<std::vector<std::string>>  _union_indices;
+                std::vector<std::vector<::pilo::i32_t>>  _union_indices;
                 std::vector<xls_config_field> _fields;
                 std::vector<std::pair<::pilo::i32_t, ::pilo::i32_t>> _cls_fields_index_map;
                 ::pilo::tlv *                 _data;
@@ -222,6 +241,7 @@ namespace pilo
             public:
                 const static int server = 0;
                 const static int client = 1;
+                static constexpr const char* config_type_tags[2] = { "server", "client" };
                 const static ::pilo::u32_t   flag_primary_key = 0x1; //p
                 const static ::pilo::u32_t   flag_unique = 0x2; //u
                 const static ::pilo::u32_t   flag_index = 0x4; //i
@@ -311,8 +331,8 @@ namespace pilo
                 ::pilo::err_t parse();
                 ::pilo::err_t generate_server_config();
                 ::pilo::err_t generate_client_config();
-                ::pilo::err_t generate_server_source();
-                ::pilo::err_t generate_client_source(); 
+                ::pilo::err_t generate_server_source(::pilo::core::autogen::lang_type ltype);
+                ::pilo::err_t generate_client_source(::pilo::core::autogen::lang_type ltype);
 
                 std::map<std::string, xls_config_set>& config_set() { return _config_set_map;  }
                 ::pilo::core::logging::info_item_set& log_set() { return _log_set; }
@@ -327,7 +347,13 @@ namespace pilo
                 bool _check_and_make_default_for_two_vars(const char* t1, const char* t2, std::string& a, std::string& b, const char* file, const char* wsname);
                 bool _check_duplicate_vars_in_header(const std::string& ccname, const std::string& scname, const std::string& ccfg, const std::string& scfg, const char* file, const char* wsname);
 
-                ::pilo::err_t _generate_config(int which, const char* name_of_which);
+                ::pilo::err_t _generate_config(int which);
+                ::pilo::err_t _generate_source(int which, ::pilo::core::autogen::lang_type ltype);
+                ::pilo::err_t _generate_one_source(const std::string & cfg_pos, int which, const xls_config_set& conf_set_ref, ::pilo::core::autogen::lang_type ltype);
+
+                ::pilo::err_t _generate_one_source_cpp(const std::string& cfg_pos, int which, const xls_config_set& conf_set_ref);
+
+                ::pilo::err_t _save_souce_file(std::stringstream & ss, const ::pilo::core::io::path * dir, const std::string filenamestr, const std::string & ext);
 
             private:
                 ::pilo::core::io::path          _xls_dir_path;

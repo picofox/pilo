@@ -7,6 +7,7 @@
 #include    "./meta_variable.hpp"
 #include    "./meta_codeline.hpp"
 #include    <memory>
+#include    "../rtti/wired_type.hpp"
 
 namespace pilo
 {
@@ -30,6 +31,8 @@ namespace pilo
                 ::pilo::err_t append_to_stringstream_cpp(std::stringstream& ss, ::pilo::u32_t flags, const std::string& strparam = "", ::pilo::i16_t effect_indent = -1) const override;
 
                 ::pilo::err_t add_param(::pilo::u64_t modifiers, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
+                ::pilo::err_t add_wired_type_param(::pilo::u64_t modifiers, const std::string& namestr, const ::pilo::core::rtti::wired_type& wt  ,const std::string& valuestr, const std::string& arr_typestr, const std::string& dict_typestr);
+
                 ::pilo::err_t add_bodyline(::pilo::i16_t rel_indent, ::pilo::u64_t modifiers, const std::string & line, const std::string cmt = "");
 
                 void set_base_clsname(const std::string& name) { _m_base_clsname = name; }

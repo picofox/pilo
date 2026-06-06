@@ -23,6 +23,8 @@ namespace pilo
 				static ::pilo::err_t s_parse_cstr_type(::pilo::u8_t &wt, ::pilo::u8_t &kt, ::pilo::u16_t & vt, const char* cstr, ::pilo::i64_t len);
 				static ::pilo::err_t s_to_wired_type_cstr(char * buffer, ::pilo::i64_t capa, ::pilo::u8_t wt, ::pilo::u8_t kt, ::pilo::u16_t vt);
 				static ::pilo::err_t s_parse_cstr_bool(bool& bv, const char* cstr, ::pilo::i64_t len);
+				static const std::string& s_value_type_to_buildin_11_type_str(::pilo::u16_t id);
+				static const std::string& s_key_type_to_buildin_11_type_str(::pilo::u8_t id);
 
 			public:
 				const static ::pilo::u16_t value_type_na = 0;
@@ -261,6 +263,28 @@ namespace pilo
 					_attribute = 0;
 					_flags = 0;
 					_value_type = 0;
+				}
+
+				std::string to_typestr_cpp(const std::string& vec_type_str, const std::string& dict_type_str) const
+				{
+					std::string effective_vec_type_str = vec_type_str;
+					std::string effective_dict_type_str = dict_type_str;
+
+					if (effective_vec_type_str.empty())
+						effective_vec_type_str = "std::vector";
+					if (effective_dict_type_str.empty())
+						effective_dict_type_str = "std::map";
+
+
+					if (this->wrapper_type() == wired_type::wrapper_single) {
+						return s_value_type_to_buildin_11_type_str(this->value_type());
+					} else if (this->wrapper_type() == wired_type::wrapper_array) {
+						return effective_vec_type_str + "<" + s_value_type_to_buildin_11_type_str(this->value_type()) +">";
+					} else if (this->wrapper_type() == wired_type::wrapper_dict) {
+						return effective_dict_type_str + "<" +  s_key_type_to_buildin_11_type_str(this->key_type()) + "," + s_value_type_to_buildin_11_type_str(this->value_type()) + ">";
+					}
+
+					return "";
 				}
 
 			private:

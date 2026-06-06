@@ -6,7 +6,7 @@
 #include    <vector>
 #include    <memory>
 #include    "./meta_function.hpp"
-
+#include    "../rtti/wired_type.hpp"
 
 namespace pilo
 {
@@ -35,6 +35,7 @@ namespace pilo
 
 
                 std::string name() const { return _m_name;  };
+                ::pilo::err_t add_wired_member_variable(const  ::pilo::core::rtti::wired_type& wt, ::pilo::u64_t modifiers, ::pilo::u32_t accessor_flag, const std::string& namestr,  const std::string& valuestr, const std::string& arr_typestr, const std::string& dict_typestr);
                 ::pilo::err_t add_member_variable(::pilo::u64_t modifiers, ::pilo::u32_t accessor_flag, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
                 ::pilo::err_t add_basetype_member_variable(::pilo::u64_t modifiers, ::pilo::u32_t accessor_flag, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
                 ::pilo::err_t add_ptr_member_variable(::pilo::u64_t modifiers, ::pilo::u32_t accessor_flag, const std::string& namestr, const std::string& typestr, const std::string& valuestr);
